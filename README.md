@@ -15,6 +15,7 @@ main.js            theme updates, local time, copyright year, Motion animations
 notas/             Notes index (index.html, notas.css)
 notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
 notas/design-system/  design system note (index.html, design-system.css)
+notas/github-aws-oidc/  GitHub Actions → AWS OIDC CI/CD note (index.html, oidc.css)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
 favicon.svg/.ico   icons

@@ -1,0 +1,83 @@
+/* ==========================================================================
+   GitHub → AWS OIDC note. Builds on ../design-system/design-system.css
+   and the tokens in ../../styles.css.
+   ========================================================================== */
+
+.ds-guide h3 {
+  font-size: 20px;
+  font-weight: 500;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  margin: 36px 0 12px;
+}
+
+.ds-guide p + p,
+.ds-guide pre + p,
+.ds-guide .ds-list + p {
+  margin-top: 16px;
+}
+
+.ds-steps {
+  margin-top: 16px;
+  padding-left: 1.3em;
+  display: grid;
+  gap: 10px;
+  color: var(--muted);
+}
+
+.ds-steps li::marker {
+  font-family: var(--mono);
+  color: var(--ink);
+}
+
+.hero-lede code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  color: var(--ink);
+}
+
+.callout {
+  margin: 24px 0;
+  padding: 4px 0 4px 20px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.callout .icon {
+  color: var(--ink);
+}
+
+.callout.warn {
+  border-left-color: var(--ink);
+}
+
+.callout.personal {
+  border-left-style: dashed;
+  border-left-color: var(--ink);
+}
+
+.callout strong {
+  color: var(--ink);
+}
+
+.sources {
+  margin-top: 40px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.sources ul {
+  margin-top: 8px;
+  padding-left: 1.1em;
+  list-style: disc;
+}
+
+.sources a {
+  word-break: break-word;
+}
+
+.ds-guide pre code {
+  white-space: pre;
+}
