@@ -101,7 +101,7 @@ The mark is a circle resting on a horizon line:
 
 ## Run locally
 
-ES modules don't load from `file://`, so serve the folder:
+Scripts are plain (not ES modules), so the site also works from `file://`; a local server is still the closest to production:
 
 ```bash
 python3 -m http.server 8000
