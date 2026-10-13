@@ -21,6 +21,7 @@
       "nav.about": "About",
       "nav.practice": "Practice",
       "nav.principles": "Principles",
+      "nav.aws": "AWS Notes",
       "languageToggle.label": "PT",
       "languageToggle.description": "Ver em português",
 
@@ -52,6 +53,14 @@
       "dayPeriod.day": "day",
       "dayPeriod.night": "night",
 
+      "aws.metaTitle": "AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more | Baselarte",
+      "aws.metaDescription": "Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.",
+      "aws.kicker": "Based on the official docs",
+      "aws.heroTitle": "Learn <em>AWS</em> visually and interactively.",
+      "aws.heroLede": "From accounts and permissions to networking, servers, databases and domains. Click, simulate and test what you learned in every section.",
+      "aws.sectionsToggle": "Sections",
+      "aws.disclaimer": "Content based on the official AWS documentation (each section lists its links and last-verified date). Items without an official source are marked as personal notes. Independent project, not affiliated with or endorsed by Amazon Web Services.",
+
       "notFound.metaTitle": "Not found — Baselarte",
       "notFound.title": "Nothing <em>here, yet.</em>",
       "notFound.backHome": "Back to baselarte.com"
@@ -68,6 +77,7 @@
       "nav.about": "Sobre",
       "nav.practice": "Prática",
       "nav.principles": "Princípios",
+      "nav.aws": "Notas de AWS",
       "languageToggle.label": "EN",
       "languageToggle.description": "View in English",
 
@@ -98,6 +108,14 @@
       "footer.localTime": "Hora local",
       "dayPeriod.day": "dia",
       "dayPeriod.night": "noite",
+
+      "aws.metaTitle": "Notas de AWS — IAM, Organizations, VPC, ECS, RDS, S3 e mais | Baselarte",
+      "aws.metaDescription": "Guia interativo de AWS baseado na documentação oficial: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 e Route 53, com diagramas e simuladores.",
+      "aws.kicker": "Baseado na documentação oficial",
+      "aws.heroTitle": "Aprenda <em>AWS</em> de forma visual e interativa.",
+      "aws.heroLede": "Das contas e permissões até rede, servidores, bancos de dados e domínios. Clique, simule e teste o que aprendeu em cada seção.",
+      "aws.sectionsToggle": "Seções",
+      "aws.disclaimer": "Conteúdo baseado na documentação oficial da AWS (cada seção traz os links e a data da última verificação). Itens sem fonte oficial aparecem marcados como nota pessoal. Projeto independente, sem afiliação ou endorsement da Amazon Web Services.",
 
       "notFound.metaTitle": "Página não encontrada — Baselarte",
       "notFound.title": "Nada <em>aqui, ainda.</em>",

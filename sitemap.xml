@@ -7,4 +7,7 @@
       <image:loc>https://baselarte.com/assets/og-image.jpg</image:loc>
     </image:image>
   </url>
+  <url>
+    <loc>https://baselarte.com/aws/</loc>
+  </url>
 </urlset>

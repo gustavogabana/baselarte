@@ -1,6 +1,6 @@
 # Baselarte
 
-Landing page for **Baselarte Ltda.**, a software engineering and creative technology company. It lives at [baselarte.com](https://baselarte.com).
+Landing page and AWS study guide for **Baselarte Ltda.**, a software engineering and creative technology company. It lives at [baselarte.com](https://baselarte.com).
 
 It's a static site with plain HTML, CSS and JavaScript. There's no build step and no `node_modules`. The only runtime dependency is [Motion](https://motion.dev) (`motion@14.0.0`), loaded from jsDelivr.
 
@@ -12,6 +12,7 @@ boot.js            runs in <head>: theme by local time, initial language, shared
 styles.css         design tokens, layout, light/dark themes
 i18n.js            English / Brazilian Portuguese strings and switcher
 main.js            theme updates, local time, copyright year, Motion animations
+aws/               AWS Notes page: index.html, aws.css, aws.js
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
 favicon.svg/.ico   icons
@@ -33,6 +34,12 @@ The page is a single centered reading column, inspired by the calm, text-first s
 - a footer with columns for Company, Language, Index and Local time.
 
 Motion is kept quiet. Text fades up on load and as each section scrolls into view, and the language switch cross-fades. If the visitor prefers reduced motion, or the library fails to load, the page shows everything without animation.
+
+## AWS Notes
+
+`aws/` is a second page (served at `/aws/`), an interactive AWS study guide: topic sections, a sticky section list, diagrams and small simulators (load balancer, security groups, CIDR, Organizations, SSH handshake). It reuses `boot.js`, `i18n.js`, `main.js` and `styles.css`, so it follows the same theme, language switch and header/footer. `aws/aws.css` only adds what the guide needs, on top of the same tokens; `aws/aws.js` holds its interactions.
+
+The guide's body text carries both languages in the HTML (`<span class="pt">` / `<span class="en">`) and CSS hides the inactive one by `<html lang>`. The page chrome (hero, meta, nav) uses the usual `data-i18n` keys (`aws.*`).
 
 ## Theme
 
