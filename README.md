@@ -14,6 +14,7 @@ i18n.js            English / Brazilian Portuguese strings and switcher
 main.js            theme updates, local time, copyright year, Motion animations
 notas/             Notes index (index.html, notas.css)
 notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
+notas/design-system/  design system note (index.html, design-system.css)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
 favicon.svg/.ico   icons
@@ -41,6 +42,8 @@ Motion is kept quiet. Text fades up on load and as each section scrolls into vie
 `notas/` is the notes index (served at `/notas/`) and `notas/aws/` is its first entry, an interactive AWS study guide (`/notas/aws/`). The guide has topic sections, a sticky section list, diagrams and small simulators (load balancer, security groups, CIDR, Organizations, SSH handshake). It reuses `boot.js`, `i18n.js`, `main.js` and `styles.css`, so it follows the same theme, language switch and header/footer. `notas/aws/aws.css` only adds what the guide needs, on top of the same tokens; `notas/aws/aws.js` holds its interactions.
 
 The guide's body text carries both languages in the HTML (`<span class="pt">` / `<span class="en">`) and CSS hides the inactive one by `<html lang>`. The page chrome (hero, meta, nav) uses the usual `data-i18n` keys (`aws.*`).
+
+`notas/design-system/` documents this site's own design system (tokens, type, layout, icon set, motion, theme, language). When a token or convention changes, update that note too.
 
 Every inner page has back buttons under the header (`.page-nav`): one to the previous screen and one to Home. Links between pages point to explicit `index.html` files, so they also work when the folder is opened without a web server.
 
