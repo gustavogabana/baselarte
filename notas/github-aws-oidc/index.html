@@ -86,239 +86,255 @@
       <p class="hero-lede" data-i18n="oidc.heroLede">A push to <code>develop</code> or <code>main</code> deploys to the matching AWS environment, using OpenID Connect instead of long-lived access keys.</p>
     </section>
 
-    <article class="reading-column ds-guide">
-      <section class="content-section" aria-labelledby="how">
-        <h2 id="how"><span class="pt">Como funciona</span><span class="en">How it works</span></h2>
-        <p><span class="pt">Em vez de guardar chaves de acesso da AWS nos secrets do GitHub, o GitHub Actions emite um token OIDC de curta duração para cada execução. A AWS confia no GitHub como provedor de identidade e troca esse token por credenciais temporárias de uma role IAM.</span><span class="en">Instead of storing AWS access keys in GitHub secrets, GitHub Actions issues a short-lived OIDC token for each run. AWS trusts GitHub as an identity provider and exchanges that token for temporary credentials of an IAM role.</span></p>
-        <ol class="ds-steps">
-          <li><span class="pt">O job pede um token ao GitHub (precisa de <code>id-token: write</code>).</span><span class="en">The job asks GitHub for a token (it needs <code>id-token: write</code>).</span></li>
-          <li><span class="pt">A action <code>aws-actions/configure-aws-credentials</code> envia o token à AWS (<code>sts:AssumeRoleWithWebIdentity</code>).</span><span class="en">The <code>aws-actions/configure-aws-credentials</code> action sends the token to AWS (<code>sts:AssumeRoleWithWebIdentity</code>).</span></li>
-          <li><span class="pt">A AWS confere a <em>trust policy</em> da role: emissor, audiência (<code>aud</code>) e quem está pedindo (<code>sub</code>).</span><span class="en">AWS checks the role’s <em>trust policy</em>: issuer, audience (<code>aud</code>) and who is asking (<code>sub</code>).</span></li>
-          <li><span class="pt">Se bater, devolve credenciais temporárias (por padrão, 1 hora) que os passos seguintes usam.</span><span class="en">If it matches, AWS returns temporary credentials (1 hour by default) that the following steps use.</span></li>
-        </ol>
-        <p><span class="pt">Não há segredo para vazar nem para rotacionar. O controle de quem pode fazer deploy passa a morar na trust policy.</span><span class="en">There is no secret to leak or rotate. Control over who can deploy now lives in the trust policy.</span></p>
-      </section>
+    <div class="page-layout">
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#how"><span class="pt">Como funciona</span><span class="en">How it works</span></a></li>
+        <li><a href="#plan"><span class="pt">O desenho</span><span class="en">The layout</span></a></li>
+        <li><a href="#provider"><span class="pt">1. Provedor OIDC na AWS</span><span class="en">1. OIDC provider in AWS</span></a></li>
+        <li><a href="#roles"><span class="pt">2. Roles IAM e trust policy</span><span class="en">2. IAM roles and trust policy</span></a></li>
+        <li><a href="#environments"><span class="pt">3. Environments no GitHub</span><span class="en">3. GitHub Environments</span></a></li>
+        <li><a href="#workflow"><span class="pt">4. O workflow</span><span class="en">4. The workflow</span></a></li>
+        <li><a href="#checks"><span class="pt">Cuidados e problemas comuns</span><span class="en">Safety and common problems</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+        <section class="content-section" aria-labelledby="how">
+          <h2 id="how"><span class="pt">Como funciona</span><span class="en">How it works</span></h2>
+          <p><span class="pt">Em vez de guardar chaves de acesso da AWS nos secrets do GitHub, o GitHub Actions emite um token OIDC de curta duração para cada execução. A AWS confia no GitHub como provedor de identidade e troca esse token por credenciais temporárias de uma role IAM.</span><span class="en">Instead of storing AWS access keys in GitHub secrets, GitHub Actions issues a short-lived OIDC token for each run. AWS trusts GitHub as an identity provider and exchanges that token for temporary credentials of an IAM role.</span></p>
+          <ol class="ds-steps">
+            <li><span class="pt">O job pede um token ao GitHub (precisa de <code>id-token: write</code>).</span><span class="en">The job asks GitHub for a token (it needs <code>id-token: write</code>).</span></li>
+            <li><span class="pt">A action <code>aws-actions/configure-aws-credentials</code> envia o token à AWS (<code>sts:AssumeRoleWithWebIdentity</code>).</span><span class="en">The <code>aws-actions/configure-aws-credentials</code> action sends the token to AWS (<code>sts:AssumeRoleWithWebIdentity</code>).</span></li>
+            <li><span class="pt">A AWS confere a <em>trust policy</em> da role: emissor, audiência (<code>aud</code>) e quem está pedindo (<code>sub</code>).</span><span class="en">AWS checks the role’s <em>trust policy</em>: issuer, audience (<code>aud</code>) and who is asking (<code>sub</code>).</span></li>
+            <li><span class="pt">Se bater, devolve credenciais temporárias (por padrão, 1 hora) que os passos seguintes usam.</span><span class="en">If it matches, AWS returns temporary credentials (1 hour by default) that the following steps use.</span></li>
+          </ol>
+          <p><span class="pt">Não há segredo para vazar nem para rotacionar. O controle de quem pode fazer deploy passa a morar na trust policy.</span><span class="en">There is no secret to leak or rotate. Control over who can deploy now lives in the trust policy.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="plan">
-        <h2 id="plan"><span class="pt">O desenho</span><span class="en">The layout</span></h2>
-        <ul class="ds-list">
-          <li><span class="pt"><em>Branch <code>develop</code></em> → ambiente <code>develop</code> na AWS.</span><span class="en"><em>Branch <code>develop</code></em> → <code>develop</code> environment on AWS.</span></li>
-          <li><span class="pt"><em>Branch <code>main</code></em> → ambiente <code>production</code> na AWS.</span><span class="en"><em>Branch <code>main</code></em> → <code>production</code> environment on AWS.</span></li>
-          <li><span class="pt">Um <em>GitHub Environment</em> por ambiente, cada um com sua role IAM e suas variáveis.</span><span class="en">One <em>GitHub Environment</em> per environment, each with its own IAM role and variables.</span></li>
-        </ul>
-        <p><span class="pt">O exemplo faz deploy de uma imagem Docker no Amazon ECR e atualiza um serviço do Amazon ECS, o mesmo caminho das notas de AWS. Se o seu destino for outro (S3, EC2, Lambda), as etapas 1 a 3 não mudam; só as permissões da role e os passos de deploy do workflow.</span><span class="en">The example deploys a Docker image to Amazon ECR and updates an Amazon ECS service, the same path as the AWS notes. If your target is something else (S3, EC2, Lambda), steps 1 to 3 stay the same; only the role’s permissions and the workflow’s deploy steps change.</span></p>
-        <p><span class="pt">Se develop e produção ficam em contas AWS diferentes, repita as etapas 1 e 2 em cada conta: o provedor OIDC usado na trust policy precisa estar na mesma conta da role.</span><span class="en">If develop and production live in different AWS accounts, repeat steps 1 and 2 in each account: the OIDC provider used in a trust policy must be in the same account as the role.</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="plan">
+          <h2 id="plan"><span class="pt">O desenho</span><span class="en">The layout</span></h2>
+          <ul class="ds-list">
+            <li><span class="pt"><em>Branch <code>develop</code></em> → ambiente <code>develop</code> na AWS.</span><span class="en"><em>Branch <code>develop</code></em> → <code>develop</code> environment on AWS.</span></li>
+            <li><span class="pt"><em>Branch <code>main</code></em> → ambiente <code>production</code> na AWS.</span><span class="en"><em>Branch <code>main</code></em> → <code>production</code> environment on AWS.</span></li>
+            <li><span class="pt">Um <em>GitHub Environment</em> por ambiente, cada um com sua role IAM e suas variáveis.</span><span class="en">One <em>GitHub Environment</em> per environment, each with its own IAM role and variables.</span></li>
+          </ul>
+          <p><span class="pt">O exemplo faz deploy de uma imagem Docker no Amazon ECR e atualiza um serviço do Amazon ECS, o mesmo caminho das notas de AWS. Se o seu destino for outro (S3, EC2, Lambda), as etapas 1 a 3 não mudam; só as permissões da role e os passos de deploy do workflow.</span><span class="en">The example deploys a Docker image to Amazon ECR and updates an Amazon ECS service, the same path as the AWS notes. If your target is something else (S3, EC2, Lambda), steps 1 to 3 stay the same; only the role’s permissions and the workflow’s deploy steps change.</span></p>
+          <p><span class="pt">Se develop e produção ficam em contas AWS diferentes, repita as etapas 1 e 2 em cada conta: o provedor OIDC usado na trust policy precisa estar na mesma conta da role.</span><span class="en">If develop and production live in different AWS accounts, repeat steps 1 and 2 in each account: the OIDC provider used in a trust policy must be in the same account as the role.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="provider">
-        <h2 id="provider"><span class="pt">1. Provedor OIDC na AWS</span><span class="en">1. OIDC provider in AWS</span></h2>
-        <p><span class="pt">Faça uma vez por conta: IAM → Identity providers → Add provider → OpenID Connect.</span><span class="en">Do it once per account: IAM → Identity providers → Add provider → OpenID Connect.</span></p>
-        <ul class="ds-list">
-          <li><b>Provider URL</b> · <code>https://token.actions.githubusercontent.com</code></li>
-          <li><b>Audience</b> · <code>sts.amazonaws.com</code></li>
-        </ul>
-        <p><span class="pt">Pela CLI, o comando é o abaixo (confira na referência da CLI se ele pede a lista de thumbprints na sua versão).</span><span class="en">From the CLI, the command is the one below (check the CLI reference for whether your version asks for a thumbprint list).</span></p>
-        <pre><code>aws iam create-open-id-connect-provider --url https://token.actions.githubusercontent.com --client-id-list sts.amazonaws.com</code></pre>
-        <p><span class="pt">Sobre thumbprints: a AWS valida o certificado do endpoint do provedor com a sua biblioteca de autoridades raiz confiáveis, e só recorre aos thumbprints cadastrados se o certificado não for assinado por uma delas.</span><span class="en">About thumbprints: AWS verifies the provider endpoint’s certificate with its library of trusted root CAs, and only falls back to the configured thumbprints if the certificate is not signed by one of them.</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="provider">
+          <h2 id="provider"><span class="pt">1. Provedor OIDC na AWS</span><span class="en">1. OIDC provider in AWS</span></h2>
+          <p><span class="pt">Faça uma vez por conta: IAM → Identity providers → Add provider → OpenID Connect.</span><span class="en">Do it once per account: IAM → Identity providers → Add provider → OpenID Connect.</span></p>
+          <ul class="ds-list">
+            <li><b>Provider URL</b> · <code>https://token.actions.githubusercontent.com</code></li>
+            <li><b>Audience</b> · <code>sts.amazonaws.com</code></li>
+          </ul>
+          <p><span class="pt">Pela CLI, o comando é o abaixo (confira na referência da CLI se ele pede a lista de thumbprints na sua versão).</span><span class="en">From the CLI, the command is the one below (check the CLI reference for whether your version asks for a thumbprint list).</span></p>
+          <pre><code>aws iam create-open-id-connect-provider --url https://token.actions.githubusercontent.com --client-id-list sts.amazonaws.com</code></pre>
+          <p><span class="pt">Sobre thumbprints: a AWS valida o certificado do endpoint do provedor com a sua biblioteca de autoridades raiz confiáveis, e só recorre aos thumbprints cadastrados se o certificado não for assinado por uma delas.</span><span class="en">About thumbprints: AWS verifies the provider endpoint’s certificate with its library of trusted root CAs, and only falls back to the configured thumbprints if the certificate is not signed by one of them.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="roles">
-        <h2 id="roles"><span class="pt">2. Roles IAM e trust policy</span><span class="en">2. IAM roles and trust policy</span></h2>
-        <p><span class="pt">Crie uma role por ambiente (por exemplo <code>github-deploy-develop</code> e <code>github-deploy-production</code>). A trust policy diz quem pode assumir a role. A condição em <code>sub</code> é obrigatória: sem ela, qualquer repositório do GitHub poderia pedir acesso.</span><span class="en">Create one role per environment (for example <code>github-deploy-develop</code> and <code>github-deploy-production</code>). The trust policy says who may assume the role. The <code>sub</code> condition is required: without it, any repository on GitHub could ask for access.</span></p>
-        <pre><code>{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Statement&quot;: [
-    {
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Principal&quot;: {
-        &quot;Federated&quot;: &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:oidc-provider/token.actions.githubusercontent.com&quot;
-      },
-      &quot;Action&quot;: &quot;sts:AssumeRoleWithWebIdentity&quot;,
-      &quot;Condition&quot;: {
-        &quot;StringEquals&quot;: {
-          &quot;token.actions.githubusercontent.com:aud&quot;: &quot;sts.amazonaws.com&quot;,
-          &quot;token.actions.githubusercontent.com:sub&quot;: &quot;repo:&lt;ORG&gt;/&lt;REPO&gt;:environment:develop&quot;
+        <section class="content-section" aria-labelledby="roles">
+          <h2 id="roles"><span class="pt">2. Roles IAM e trust policy</span><span class="en">2. IAM roles and trust policy</span></h2>
+          <p><span class="pt">Crie uma role por ambiente (por exemplo <code>github-deploy-develop</code> e <code>github-deploy-production</code>). A trust policy diz quem pode assumir a role. A condição em <code>sub</code> é obrigatória: sem ela, qualquer repositório do GitHub poderia pedir acesso.</span><span class="en">Create one role per environment (for example <code>github-deploy-develop</code> and <code>github-deploy-production</code>). The trust policy says who may assume the role. The <code>sub</code> condition is required: without it, any repository on GitHub could ask for access.</span></p>
+          <pre><code>{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+      {
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Principal&quot;: {
+          &quot;Federated&quot;: &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:oidc-provider/token.actions.githubusercontent.com&quot;
+        },
+        &quot;Action&quot;: &quot;sts:AssumeRoleWithWebIdentity&quot;,
+        &quot;Condition&quot;: {
+          &quot;StringEquals&quot;: {
+            &quot;token.actions.githubusercontent.com:aud&quot;: &quot;sts.amazonaws.com&quot;,
+            &quot;token.actions.githubusercontent.com:sub&quot;: &quot;repo:&lt;ORG&gt;/&lt;REPO&gt;:environment:develop&quot;
+          }
         }
       }
-    }
-  ]
-}</code></pre>
-        <p><span class="pt">Na role de produção, troque o final do <code>sub</code> por <code>environment:production</code>.</span><span class="en">On the production role, change the end of <code>sub</code> to <code>environment:production</code>.</span></p>
-        <h3><span class="pt">Como o <code>sub</code> é montado</span><span class="en">How <code>sub</code> is built</span></h3>
-        <div class="scroll-x">
-          <table class="ds-table">
-            <thead><tr><th><span class="pt">Quando o job</span><span class="en">When the job</span></th><th><code>sub</code></th></tr></thead>
-            <tbody>
-              <tr><td><span class="pt">referencia um environment</span><span class="en">references an environment</span></td><td><code>repo:ORG/REPO:environment:NAME</code></td></tr>
-              <tr><td><span class="pt">roda de uma branch (sem environment)</span><span class="en">runs from a branch (no environment)</span></td><td><code>repo:ORG/REPO:ref:refs/heads/BRANCH</code></td></tr>
-              <tr><td><span class="pt">roda por pull request (sem environment)</span><span class="en">runs for a pull request (no environment)</span></td><td><code>repo:ORG/REPO:pull_request</code></td></tr>
-              <tr><td><span class="pt">roda de uma tag (sem environment)</span><span class="en">runs from a tag (no environment)</span></td><td><code>repo:ORG/REPO:ref:refs/tags/TAG</code></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando o job referencia um environment, o <code>sub</code> usa a forma <code>environment:NAME</code> e não mais a da branch. Por isso a trust policy acima usa <code>environment:develop</code>, e não <code>ref:refs/heads/develop</code>.</span><span class="en">When a job references an environment, <code>sub</code> uses the <code>environment:NAME</code> form, not the branch form. That is why the trust policy above uses <code>environment:develop</code> rather than <code>ref:refs/heads/develop</code>.</span></div>
-        <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Repositórios criados depois de 15/07/2026, ou que optaram por isso, usam o formato imutável com IDs do dono e do repositório. Nesse caso uma trust policy só com nomes falha com “Not authorized to perform sts:AssumeRoleWithWebIdentity”. O valor passa a ser, por exemplo: <code>repo:&lt;ORG&gt;@&lt;ORG_ID&gt;/&lt;REPO&gt;@&lt;REPO_ID&gt;:environment:develop</code>.</span><span class="en">Repositories created after July 15, 2026, or that opted in, use the immutable format with the owner and repository IDs. In that case a name-only trust policy fails with “Not authorized to perform sts:AssumeRoleWithWebIdentity”. The value becomes, for example: <code>repo:&lt;ORG&gt;@&lt;ORG_ID&gt;/&lt;REPO&gt;@&lt;REPO_ID&gt;:environment:develop</code>.</span></div>
-        <h3><span class="pt">Permissões da role</span><span class="en">Role permissions</span></h3>
-        <p><span class="pt">A role só precisa do mínimo para este deploy. A lista abaixo junta as permissões que as documentações das actions de ECR e ECS indicam; ajuste ARNs e, se usar CodeDeploy, acrescente o que a documentação da action pedir.</span><span class="en">The role only needs the minimum for this deploy. The list below combines the permissions that the ECR and ECS action docs call for; adjust the ARNs and, if you use CodeDeploy, add what the action docs ask for.</span></p>
-        <pre><code>{
-  &quot;Version&quot;: &quot;2012-10-17&quot;,
-  &quot;Statement&quot;: [
-    {
-      &quot;Sid&quot;: &quot;EcrLogin&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Action&quot;: &quot;ecr:GetAuthorizationToken&quot;,
-      &quot;Resource&quot;: &quot;*&quot;
-    },
-    {
-      &quot;Sid&quot;: &quot;EcrPush&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Action&quot;: [
-        &quot;ecr:BatchGetImage&quot;,
-        &quot;ecr:BatchCheckLayerAvailability&quot;,
-        &quot;ecr:CompleteLayerUpload&quot;,
-        &quot;ecr:GetDownloadUrlForLayer&quot;,
-        &quot;ecr:InitiateLayerUpload&quot;,
-        &quot;ecr:PutImage&quot;,
-        &quot;ecr:UploadLayerPart&quot;
-      ],
-      &quot;Resource&quot;: &quot;arn:aws:ecr:&lt;REGION&gt;:&lt;ACCOUNT_ID&gt;:repository/&lt;ECR_REPOSITORY&gt;&quot;
-    },
-    {
-      &quot;Sid&quot;: &quot;EcsRegister&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Action&quot;: &quot;ecs:RegisterTaskDefinition&quot;,
-      &quot;Resource&quot;: &quot;*&quot;
-    },
-    {
-      &quot;Sid&quot;: &quot;EcsPassRoles&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Action&quot;: &quot;iam:PassRole&quot;,
-      &quot;Resource&quot;: [
-        &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;TASK_ROLE&gt;&quot;,
-        &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;TASK_EXECUTION_ROLE&gt;&quot;
-      ]
-    },
-    {
-      &quot;Sid&quot;: &quot;EcsDeploy&quot;,
-      &quot;Effect&quot;: &quot;Allow&quot;,
-      &quot;Action&quot;: [
-        &quot;ecs:UpdateService&quot;,
-        &quot;ecs:DescribeServices&quot;
-      ],
-      &quot;Resource&quot;: &quot;arn:aws:ecs:&lt;REGION&gt;:&lt;ACCOUNT_ID&gt;:service/&lt;CLUSTER&gt;/&lt;SERVICE&gt;&quot;
-    }
-  ]
-}</code></pre>
-      </section>
+    ]
+  }</code></pre>
+          <p><span class="pt">Na role de produção, troque o final do <code>sub</code> por <code>environment:production</code>.</span><span class="en">On the production role, change the end of <code>sub</code> to <code>environment:production</code>.</span></p>
+          <h3><span class="pt">Como o <code>sub</code> é montado</span><span class="en">How <code>sub</code> is built</span></h3>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Quando o job</span><span class="en">When the job</span></th><th><code>sub</code></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt">referencia um environment</span><span class="en">references an environment</span></td><td><code>repo:ORG/REPO:environment:NAME</code></td></tr>
+                <tr><td><span class="pt">roda de uma branch (sem environment)</span><span class="en">runs from a branch (no environment)</span></td><td><code>repo:ORG/REPO:ref:refs/heads/BRANCH</code></td></tr>
+                <tr><td><span class="pt">roda por pull request (sem environment)</span><span class="en">runs for a pull request (no environment)</span></td><td><code>repo:ORG/REPO:pull_request</code></td></tr>
+                <tr><td><span class="pt">roda de uma tag (sem environment)</span><span class="en">runs from a tag (no environment)</span></td><td><code>repo:ORG/REPO:ref:refs/tags/TAG</code></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando o job referencia um environment, o <code>sub</code> usa a forma <code>environment:NAME</code> e não mais a da branch. Por isso a trust policy acima usa <code>environment:develop</code>, e não <code>ref:refs/heads/develop</code>.</span><span class="en">When a job references an environment, <code>sub</code> uses the <code>environment:NAME</code> form, not the branch form. That is why the trust policy above uses <code>environment:develop</code> rather than <code>ref:refs/heads/develop</code>.</span></div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Repositórios criados depois de 15/07/2026, ou que optaram por isso, usam o formato imutável com IDs do dono e do repositório. Nesse caso uma trust policy só com nomes falha com “Not authorized to perform sts:AssumeRoleWithWebIdentity”. O valor passa a ser, por exemplo: <code>repo:&lt;ORG&gt;@&lt;ORG_ID&gt;/&lt;REPO&gt;@&lt;REPO_ID&gt;:environment:develop</code>.</span><span class="en">Repositories created after July 15, 2026, or that opted in, use the immutable format with the owner and repository IDs. In that case a name-only trust policy fails with “Not authorized to perform sts:AssumeRoleWithWebIdentity”. The value becomes, for example: <code>repo:&lt;ORG&gt;@&lt;ORG_ID&gt;/&lt;REPO&gt;@&lt;REPO_ID&gt;:environment:develop</code>.</span></div>
+          <h3><span class="pt">Permissões da role</span><span class="en">Role permissions</span></h3>
+          <p><span class="pt">A role só precisa do mínimo para este deploy. A lista abaixo junta as permissões que as documentações das actions de ECR e ECS indicam; ajuste ARNs e, se usar CodeDeploy, acrescente o que a documentação da action pedir.</span><span class="en">The role only needs the minimum for this deploy. The list below combines the permissions that the ECR and ECS action docs call for; adjust the ARNs and, if you use CodeDeploy, add what the action docs ask for.</span></p>
+          <pre><code>{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [
+      {
+        &quot;Sid&quot;: &quot;EcrLogin&quot;,
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: &quot;ecr:GetAuthorizationToken&quot;,
+        &quot;Resource&quot;: &quot;*&quot;
+      },
+      {
+        &quot;Sid&quot;: &quot;EcrPush&quot;,
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: [
+          &quot;ecr:BatchGetImage&quot;,
+          &quot;ecr:BatchCheckLayerAvailability&quot;,
+          &quot;ecr:CompleteLayerUpload&quot;,
+          &quot;ecr:GetDownloadUrlForLayer&quot;,
+          &quot;ecr:InitiateLayerUpload&quot;,
+          &quot;ecr:PutImage&quot;,
+          &quot;ecr:UploadLayerPart&quot;
+        ],
+        &quot;Resource&quot;: &quot;arn:aws:ecr:&lt;REGION&gt;:&lt;ACCOUNT_ID&gt;:repository/&lt;ECR_REPOSITORY&gt;&quot;
+      },
+      {
+        &quot;Sid&quot;: &quot;EcsRegister&quot;,
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: &quot;ecs:RegisterTaskDefinition&quot;,
+        &quot;Resource&quot;: &quot;*&quot;
+      },
+      {
+        &quot;Sid&quot;: &quot;EcsPassRoles&quot;,
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: &quot;iam:PassRole&quot;,
+        &quot;Resource&quot;: [
+          &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;TASK_ROLE&gt;&quot;,
+          &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/&lt;TASK_EXECUTION_ROLE&gt;&quot;
+        ]
+      },
+      {
+        &quot;Sid&quot;: &quot;EcsDeploy&quot;,
+        &quot;Effect&quot;: &quot;Allow&quot;,
+        &quot;Action&quot;: [
+          &quot;ecs:UpdateService&quot;,
+          &quot;ecs:DescribeServices&quot;
+        ],
+        &quot;Resource&quot;: &quot;arn:aws:ecs:&lt;REGION&gt;:&lt;ACCOUNT_ID&gt;:service/&lt;CLUSTER&gt;/&lt;SERVICE&gt;&quot;
+      }
+    ]
+  }</code></pre>
+        </section>
 
-      <section class="content-section" aria-labelledby="environments">
-        <h2 id="environments"><span class="pt">3. Environments no GitHub</span><span class="en">3. GitHub Environments</span></h2>
-        <p><span class="pt">No repositório: Settings → Environments → New environment. Crie <code>develop</code> e <code>production</code>.</span><span class="en">In the repository: Settings → Environments → New environment. Create <code>develop</code> and <code>production</code>.</span></p>
-        <ul class="ds-list">
-          <li><span class="pt"><em>Deployment branches.</em> Em <code>develop</code>, permita só a branch <code>develop</code>; em <code>production</code>, só a <code>main</code>. É o que impede outra branch de obter acesso à role.</span><span class="en"><em>Deployment branches.</em> On <code>develop</code>, allow only the <code>develop</code> branch; on <code>production</code>, only <code>main</code>. This is what stops another branch from reaching the role.</span></li>
-          <li><span class="pt"><em>Required reviewers</em> em <code>production</code> (até 6 pessoas ou times; basta uma aprovação), se quiser aprovação manual antes do deploy.</span><span class="en"><em>Required reviewers</em> on <code>production</code> (up to 6 people or teams; one approval is enough), if you want manual approval before deploying.</span></li>
-          <li><span class="pt"><em>Variables</em> por ambiente: <code>AWS_ROLE_ARN</code>, <code>AWS_REGION</code>, <code>ECR_REPOSITORY</code>, <code>ECS_CLUSTER</code>, <code>ECS_SERVICE</code>. Ficam disponíveis só para jobs que usam o environment, pelo contexto <code>vars</code>.</span><span class="en"><em>Variables</em> per environment: <code>AWS_ROLE_ARN</code>, <code>AWS_REGION</code>, <code>ECR_REPOSITORY</code>, <code>ECS_CLUSTER</code>, <code>ECS_SERVICE</code>. They are available only to jobs that use the environment, through the <code>vars</code> context.</span></li>
-        </ul>
-        <div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O ARN de uma role não é segredo, então variáveis bastam: não há chave nenhuma para guardar.</span><span class="en">A role ARN is not a secret, so variables are enough: there is no key to store.</span></div>
-        <p><span class="pt">A AWS recomenda proteger environments usados em políticas OIDC com regras de proteção, como a restrição de branches e tags de deploy.</span><span class="en">AWS recommends protecting environments used in OIDC policies with protection rules, such as deployment branch and tag restrictions.</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="environments">
+          <h2 id="environments"><span class="pt">3. Environments no GitHub</span><span class="en">3. GitHub Environments</span></h2>
+          <p><span class="pt">No repositório: Settings → Environments → New environment. Crie <code>develop</code> e <code>production</code>.</span><span class="en">In the repository: Settings → Environments → New environment. Create <code>develop</code> and <code>production</code>.</span></p>
+          <ul class="ds-list">
+            <li><span class="pt"><em>Deployment branches.</em> Em <code>develop</code>, permita só a branch <code>develop</code>; em <code>production</code>, só a <code>main</code>. É o que impede outra branch de obter acesso à role.</span><span class="en"><em>Deployment branches.</em> On <code>develop</code>, allow only the <code>develop</code> branch; on <code>production</code>, only <code>main</code>. This is what stops another branch from reaching the role.</span></li>
+            <li><span class="pt"><em>Required reviewers</em> em <code>production</code> (até 6 pessoas ou times; basta uma aprovação), se quiser aprovação manual antes do deploy.</span><span class="en"><em>Required reviewers</em> on <code>production</code> (up to 6 people or teams; one approval is enough), if you want manual approval before deploying.</span></li>
+            <li><span class="pt"><em>Variables</em> por ambiente: <code>AWS_ROLE_ARN</code>, <code>AWS_REGION</code>, <code>ECR_REPOSITORY</code>, <code>ECS_CLUSTER</code>, <code>ECS_SERVICE</code>. Ficam disponíveis só para jobs que usam o environment, pelo contexto <code>vars</code>.</span><span class="en"><em>Variables</em> per environment: <code>AWS_ROLE_ARN</code>, <code>AWS_REGION</code>, <code>ECR_REPOSITORY</code>, <code>ECS_CLUSTER</code>, <code>ECS_SERVICE</code>. They are available only to jobs that use the environment, through the <code>vars</code> context.</span></li>
+          </ul>
+          <div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O ARN de uma role não é segredo, então variáveis bastam: não há chave nenhuma para guardar.</span><span class="en">A role ARN is not a secret, so variables are enough: there is no key to store.</span></div>
+          <p><span class="pt">A AWS recomenda proteger environments usados em políticas OIDC com regras de proteção, como a restrição de branches e tags de deploy.</span><span class="en">AWS recommends protecting environments used in OIDC policies with protection rules, such as deployment branch and tag restrictions.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="workflow">
-        <h2 id="workflow"><span class="pt">4. O workflow</span><span class="en">4. The workflow</span></h2>
-        <p><span class="pt">Um único arquivo atende os dois ambientes: o nome do environment sai do nome da branch. Arquivos no repositório:</span><span class="en">One file serves both environments: the environment name comes from the branch name. Files in the repository:</span></p>
-        <pre><code>.github/workflows/deploy.yml
-.aws/task-definition.json     # aws ecs register-task-definition --generate-cli-skeleton</code></pre>
-        <pre><code>name: Deploy
+        <section class="content-section" aria-labelledby="workflow">
+          <h2 id="workflow"><span class="pt">4. O workflow</span><span class="en">4. The workflow</span></h2>
+          <p><span class="pt">Um único arquivo atende os dois ambientes: o nome do environment sai do nome da branch. Arquivos no repositório:</span><span class="en">One file serves both environments: the environment name comes from the branch name. Files in the repository:</span></p>
+          <pre><code>.github/workflows/deploy.yml
+  .aws/task-definition.json     # aws ecs register-task-definition --generate-cli-skeleton</code></pre>
+          <pre><code>name: Deploy
 
-on:
-  push:
-    branches:
-      - develop
-      - main
+  on:
+    push:
+      branches:
+        - develop
+        - main
 
-# One deploy at a time per branch; a newer push waits for the running one.
-concurrency:
-  group: deploy-${{ github.ref_name }}
-  cancel-in-progress: false
+  # One deploy at a time per branch; a newer push waits for the running one.
+  concurrency:
+    group: deploy-${{ github.ref_name }}
+    cancel-in-progress: false
 
-permissions:
-  id-token: write   # lets the job request the OIDC token
-  contents: read    # actions/checkout
+  permissions:
+    id-token: write   # lets the job request the OIDC token
+    contents: read    # actions/checkout
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: ${{ github.ref_name == &#x27;main&#x27; &amp;&amp; &#x27;production&#x27; || &#x27;develop&#x27; }}
-    env:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
-      ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
-      ECS_SERVICE: ${{ vars.ECS_SERVICE }}
-      ECS_TASK_DEFINITION: .aws/task-definition.json
-      CONTAINER_NAME: app
-    steps:
-      - uses: actions/checkout@v6
+  jobs:
+    deploy:
+      runs-on: ubuntu-latest
+      environment: ${{ github.ref_name == &#x27;main&#x27; &amp;&amp; &#x27;production&#x27; || &#x27;develop&#x27; }}
+      env:
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        ECR_REPOSITORY: ${{ vars.ECR_REPOSITORY }}
+        ECS_CLUSTER: ${{ vars.ECS_CLUSTER }}
+        ECS_SERVICE: ${{ vars.ECS_SERVICE }}
+        ECS_TASK_DEFINITION: .aws/task-definition.json
+        CONTAINER_NAME: app
+      steps:
+        - uses: actions/checkout@v6
 
-      - name: Configure AWS credentials (OIDC)
-        uses: aws-actions/configure-aws-credentials@v6
-        with:
-          role-to-assume: ${{ vars.AWS_ROLE_ARN }}
-          role-session-name: gh-${{ github.run_id }}
-          aws-region: ${{ env.AWS_REGION }}
+        - name: Configure AWS credentials (OIDC)
+          uses: aws-actions/configure-aws-credentials@v6
+          with:
+            role-to-assume: ${{ vars.AWS_ROLE_ARN }}
+            role-session-name: gh-${{ github.run_id }}
+            aws-region: ${{ env.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        - name: Log in to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and push the image
-        id: build-image
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: ${{ github.sha }}
-        run: |
-          docker build -t &quot;$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot; .
-          docker push &quot;$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot;
-          echo &quot;image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;
+        - name: Build and push the image
+          id: build-image
+          env:
+            REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            IMAGE_TAG: ${{ github.sha }}
+          run: |
+            docker build -t &quot;$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot; .
+            docker push &quot;$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot;
+            echo &quot;image=$REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;
 
-      - name: Render the task definition
-        id: render
-        uses: aws-actions/amazon-ecs-render-task-definition@v1
-        with:
-          task-definition: ${{ env.ECS_TASK_DEFINITION }}
-          container-name: ${{ env.CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.image }}
+        - name: Render the task definition
+          id: render
+          uses: aws-actions/amazon-ecs-render-task-definition@v1
+          with:
+            task-definition: ${{ env.ECS_TASK_DEFINITION }}
+            container-name: ${{ env.CONTAINER_NAME }}
+            image: ${{ steps.build-image.outputs.image }}
 
-      - name: Deploy to Amazon ECS
-        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-        with:
-          task-definition: ${{ steps.render.outputs.task-definition }}
-          service: ${{ env.ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
-          wait-for-service-stability: true</code></pre>
-        <ul class="ds-list">
-          <li><span class="pt"><code>permissions: id-token: write</code> permite pedir o token OIDC e não dá acesso de escrita a nenhum recurso; <code>contents: read</code> é para o checkout.</span><span class="en"><code>permissions: id-token: write</code> lets the job request the OIDC token and grants no write access to any resource; <code>contents: read</code> is for the checkout.</span></li>
-          <li><span class="pt"><code>concurrency</code> faz dois pushes na mesma branch não implantarem ao mesmo tempo.</span><span class="en"><code>concurrency</code> keeps two pushes to the same branch from deploying at the same time.</span></li>
-          <li><span class="pt">A imagem é marcada com o SHA do commit, então cada deploy é rastreável e reversível.</span><span class="en">The image is tagged with the commit SHA, so each deploy is traceable and reversible.</span></li>
-          <li><span class="pt"><code>role-session-name</code> com o ID da execução faz o CloudTrail mostrar qual execução do workflow fez cada chamada.</span><span class="en"><code>role-session-name</code> with the run ID makes CloudTrail show which workflow run made each call.</span></li>
-          <li><span class="pt"><code>wait-for-service-stability: true</code> faz o job esperar o serviço estabilizar; se o deploy falhar, o job falha.</span><span class="en"><code>wait-for-service-stability: true</code> makes the job wait for the service to stabilise; if the deploy fails, the job fails.</span></li>
-        </ul>
-        <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Estas actions não são certificadas pelo GitHub. A documentação do GitHub recomenda fixar actions por SHA de commit; os exemplos usam tags (<code>@v6</code>, <code>@v2</code>, <code>@v1</code>) por legibilidade. Em produção, fixe por SHA.</span><span class="en">These actions are not certified by GitHub. GitHub’s docs recommend pinning actions to a commit SHA; the examples use tags (<code>@v6</code>, <code>@v2</code>, <code>@v1</code>) for readability. In production, pin to a SHA.</span></div>
-      </section>
+        - name: Deploy to Amazon ECS
+          uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+          with:
+            task-definition: ${{ steps.render.outputs.task-definition }}
+            service: ${{ env.ECS_SERVICE }}
+            cluster: ${{ env.ECS_CLUSTER }}
+            wait-for-service-stability: true</code></pre>
+          <ul class="ds-list">
+            <li><span class="pt"><code>permissions: id-token: write</code> permite pedir o token OIDC e não dá acesso de escrita a nenhum recurso; <code>contents: read</code> é para o checkout.</span><span class="en"><code>permissions: id-token: write</code> lets the job request the OIDC token and grants no write access to any resource; <code>contents: read</code> is for the checkout.</span></li>
+            <li><span class="pt"><code>concurrency</code> faz dois pushes na mesma branch não implantarem ao mesmo tempo.</span><span class="en"><code>concurrency</code> keeps two pushes to the same branch from deploying at the same time.</span></li>
+            <li><span class="pt">A imagem é marcada com o SHA do commit, então cada deploy é rastreável e reversível.</span><span class="en">The image is tagged with the commit SHA, so each deploy is traceable and reversible.</span></li>
+            <li><span class="pt"><code>role-session-name</code> com o ID da execução faz o CloudTrail mostrar qual execução do workflow fez cada chamada.</span><span class="en"><code>role-session-name</code> with the run ID makes CloudTrail show which workflow run made each call.</span></li>
+            <li><span class="pt"><code>wait-for-service-stability: true</code> faz o job esperar o serviço estabilizar; se o deploy falhar, o job falha.</span><span class="en"><code>wait-for-service-stability: true</code> makes the job wait for the service to stabilise; if the deploy fails, the job fails.</span></li>
+          </ul>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Estas actions não são certificadas pelo GitHub. A documentação do GitHub recomenda fixar actions por SHA de commit; os exemplos usam tags (<code>@v6</code>, <code>@v2</code>, <code>@v1</code>) por legibilidade. Em produção, fixe por SHA.</span><span class="en">These actions are not certified by GitHub. GitHub’s docs recommend pinning actions to a commit SHA; the examples use tags (<code>@v6</code>, <code>@v2</code>, <code>@v1</code>) for readability. In production, pin to a SHA.</span></div>
+        </section>
 
-      <section class="content-section" aria-labelledby="checks">
-        <h2 id="checks"><span class="pt">Cuidados e problemas comuns</span><span class="en">Safety and common problems</span></h2>
-        <ul class="ds-list">
-          <li><span class="pt"><em>“Not authorized to perform sts:AssumeRoleWithWebIdentity”.</em> O <code>sub</code> da trust policy não bate com o do token: confira se o job referencia o environment, o nome exato dele e o formato imutável.</span><span class="en"><em>“Not authorized to perform sts:AssumeRoleWithWebIdentity”.</em> The trust policy’s <code>sub</code> does not match the token’s: check that the job references the environment, its exact name, and the immutable format.</span></li>
-          <li><span class="pt"><em>Nunca</em> use só curinga no <code>sub</code>. O IAM rejeita uma trust policy do GitHub sem a condição, ou com valor que seja só <code>*</code>.</span><span class="en"><em>Never</em> use only a wildcard in <code>sub</code>. IAM rejects a GitHub trust policy without the condition, or whose value is only <code>*</code>.</span></li>
-          <li><span class="pt">Evite <code>ForAllValues:</code> em statements <code>Allow</code>: pode liberar acesso quando a claim está ausente ou escrita errada. Use <code>StringEquals</code> ou <code>StringLike</code>.</span><span class="en">Avoid <code>ForAllValues:</code> in <code>Allow</code> statements: it can grant access when a claim is absent or misspelled. Use <code>StringEquals</code> or <code>StringLike</code>.</span></li>
-          <li><span class="pt">Cuidado com gatilhos <code>pull_request_target</code>. Jobs do Dependabot têm <code>event_name</code> igual a <code>dynamic</code>; se a trust policy deve valer só para Actions, restrinja os eventos esperados.</span><span class="en">Be careful with <code>pull_request_target</code> triggers. Dependabot jobs have <code>event_name</code> set to <code>dynamic</code>; if the trust policy should cover only Actions, restrict the expected events.</span></li>
-          <li><span class="pt">A AWS não suporta claims OIDC personalizadas; o GitHub permite personalizar o formato do <code>sub</code>, mas crie antes a condição correspondente na AWS.</span><span class="en">AWS does not support custom OIDC claims; GitHub lets you customise the <code>sub</code> format, but create the matching condition in AWS first.</span></li>
-          <li><span class="pt">A sessão dura 1 hora por padrão (<code>role-duration-seconds</code>, de 15 min a 12 h). Deploys longos precisam de uma duração maior.</span><span class="en">The session lasts 1 hour by default (<code>role-duration-seconds</code>, from 15 min to 12 h). Long deploys need a longer duration.</span></li>
-        </ul>
-        <div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Nota pessoal, não verificada nas fontes:</strong> o exemplo do GitHub para ECS usa chaves de acesso em secrets. A troca delas por OIDC (esta página) segue a documentação de OIDC do GitHub e das actions da AWS, mas a combinação completa não aparece num único exemplo oficial.</span><span class="en"><strong>Personal note, not verified in the sources:</strong> GitHub’s own ECS example uses access keys in secrets. Replacing them with OIDC (this page) follows the GitHub and AWS-action OIDC docs, but the full combination does not appear in a single official example.</span></div>
-        <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b><ul><li><a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws">GitHub Docs · Configuring OpenID Connect in Amazon Web Services</a></li><li><a href="https://docs.github.com/en/actions/reference/security/oidc">GitHub Docs · OpenID Connect reference (sub claim formats)</a></li><li><a href="https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments">GitHub Docs · Managing environments for deployment</a></li><li><a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">GitHub Docs · Workflow syntax (push branches, concurrency, permissions, environment)</a></li><li><a href="https://docs.github.com/en/actions/how-tos/deploy/deploy-to-third-party-platforms/amazon-elastic-container-service">GitHub Docs · Deploying to Amazon Elastic Container Service</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html">AWS Docs · Create an OpenID Connect (OIDC) identity provider in IAM</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_oidc.html">AWS Docs · Create a role for OpenID Connect federation (GitHub section)</a></li><li><a href="https://github.com/aws-actions/configure-aws-credentials">aws-actions/configure-aws-credentials</a></li><li><a href="https://github.com/aws-actions/amazon-ecr-login">aws-actions/amazon-ecr-login</a></li><li><a href="https://github.com/aws-actions/amazon-ecs-deploy-task-definition">aws-actions/amazon-ecs-deploy-task-definition</a></li></ul></div>
-      </section>
-    </article>
+        <section class="content-section" aria-labelledby="checks">
+          <h2 id="checks"><span class="pt">Cuidados e problemas comuns</span><span class="en">Safety and common problems</span></h2>
+          <ul class="ds-list">
+            <li><span class="pt"><em>“Not authorized to perform sts:AssumeRoleWithWebIdentity”.</em> O <code>sub</code> da trust policy não bate com o do token: confira se o job referencia o environment, o nome exato dele e o formato imutável.</span><span class="en"><em>“Not authorized to perform sts:AssumeRoleWithWebIdentity”.</em> The trust policy’s <code>sub</code> does not match the token’s: check that the job references the environment, its exact name, and the immutable format.</span></li>
+            <li><span class="pt"><em>Nunca</em> use só curinga no <code>sub</code>. O IAM rejeita uma trust policy do GitHub sem a condição, ou com valor que seja só <code>*</code>.</span><span class="en"><em>Never</em> use only a wildcard in <code>sub</code>. IAM rejects a GitHub trust policy without the condition, or whose value is only <code>*</code>.</span></li>
+            <li><span class="pt">Evite <code>ForAllValues:</code> em statements <code>Allow</code>: pode liberar acesso quando a claim está ausente ou escrita errada. Use <code>StringEquals</code> ou <code>StringLike</code>.</span><span class="en">Avoid <code>ForAllValues:</code> in <code>Allow</code> statements: it can grant access when a claim is absent or misspelled. Use <code>StringEquals</code> or <code>StringLike</code>.</span></li>
+            <li><span class="pt">Cuidado com gatilhos <code>pull_request_target</code>. Jobs do Dependabot têm <code>event_name</code> igual a <code>dynamic</code>; se a trust policy deve valer só para Actions, restrinja os eventos esperados.</span><span class="en">Be careful with <code>pull_request_target</code> triggers. Dependabot jobs have <code>event_name</code> set to <code>dynamic</code>; if the trust policy should cover only Actions, restrict the expected events.</span></li>
+            <li><span class="pt">A AWS não suporta claims OIDC personalizadas; o GitHub permite personalizar o formato do <code>sub</code>, mas crie antes a condição correspondente na AWS.</span><span class="en">AWS does not support custom OIDC claims; GitHub lets you customise the <code>sub</code> format, but create the matching condition in AWS first.</span></li>
+            <li><span class="pt">A sessão dura 1 hora por padrão (<code>role-duration-seconds</code>, de 15 min a 12 h). Deploys longos precisam de uma duração maior.</span><span class="en">The session lasts 1 hour by default (<code>role-duration-seconds</code>, from 15 min to 12 h). Long deploys need a longer duration.</span></li>
+          </ul>
+          <div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Nota pessoal, não verificada nas fontes:</strong> o exemplo do GitHub para ECS usa chaves de acesso em secrets. A troca delas por OIDC (esta página) segue a documentação de OIDC do GitHub e das actions da AWS, mas a combinação completa não aparece num único exemplo oficial.</span><span class="en"><strong>Personal note, not verified in the sources:</strong> GitHub’s own ECS example uses access keys in secrets. Replacing them with OIDC (this page) follows the GitHub and AWS-action OIDC docs, but the full combination does not appear in a single official example.</span></div>
+          <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b><ul><li><a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws">GitHub Docs · Configuring OpenID Connect in Amazon Web Services</a></li><li><a href="https://docs.github.com/en/actions/reference/security/oidc">GitHub Docs · OpenID Connect reference (sub claim formats)</a></li><li><a href="https://docs.github.com/en/actions/how-tos/deploy/configure-and-manage-deployments/manage-environments">GitHub Docs · Managing environments for deployment</a></li><li><a href="https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax">GitHub Docs · Workflow syntax (push branches, concurrency, permissions, environment)</a></li><li><a href="https://docs.github.com/en/actions/how-tos/deploy/deploy-to-third-party-platforms/amazon-elastic-container-service">GitHub Docs · Deploying to Amazon Elastic Container Service</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_oidc.html">AWS Docs · Create an OpenID Connect (OIDC) identity provider in IAM</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_oidc.html">AWS Docs · Create a role for OpenID Connect federation (GitHub section)</a></li><li><a href="https://github.com/aws-actions/configure-aws-credentials">aws-actions/configure-aws-credentials</a></li><li><a href="https://github.com/aws-actions/amazon-ecr-login">aws-actions/amazon-ecr-login</a></li><li><a href="https://github.com/aws-actions/amazon-ecs-deploy-task-definition">aws-actions/amazon-ecs-deploy-task-definition</a></li></ul></div>
+        </section>
+      </article>
+    </div>
   </main>
 
   <footer class="site-footer">

@@ -6,6 +6,9 @@
   // Keep in sync with the <link rel="modulepreload"> in index.html.
   const MOTION_MODULE_URL = "https://cdn.jsdelivr.net/npm/motion@14.0.0/+esm";
   const LOCAL_TIME_REFRESH_MS = 15_000;
+  // A section is "current" while it crosses this band of the viewport.
+  const SCROLL_SPY_ROOT_MARGIN = "-20% 0px -70% 0px";
+  const ARROW_UP_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27V6M7 14l9-9 9 9"/></svg>';
   // Slightly longer than the 1.2s colour transition in styles.css (html.theme-transition).
   const THEME_TRANSITION_MS = 1300;
 
@@ -24,6 +27,73 @@
   document.querySelectorAll("[data-current-year]").forEach((yearElement) => {
     yearElement.textContent = String(new Date().getFullYear());
   });
+
+  /* --------------------------------------------------------------------------
+     Side navigation: small-screen toggle and highlight of the current section.
+     Markup: <aside class="side-nav" id="side-nav"> with in-page links, or links to other pages.
+     -------------------------------------------------------------------------- */
+
+  const sideNavElement = document.querySelector(".side-nav");
+
+  if (sideNavElement) {
+    const sideNavToggle = document.createElement("button");
+    sideNavToggle.type = "button";
+    sideNavToggle.className = "side-nav-toggle monospace-label";
+    sideNavToggle.setAttribute("aria-controls", sideNavElement.id);
+    sideNavToggle.setAttribute("aria-expanded", "false");
+    sideNavToggle.dataset.i18n = "sideNav.toggle";
+    sideNavToggle.textContent = window.i18n.translate("sideNav.toggle");
+    sideNavElement.before(sideNavToggle);
+
+    function setSideNavOpen(isOpen) {
+      sideNavElement.classList.toggle("open", isOpen);
+      sideNavToggle.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    sideNavToggle.addEventListener("click", () => {
+      setSideNavOpen(!sideNavElement.classList.contains("open"));
+    });
+
+    const sideNavLinks = new Map();
+    sideNavElement.querySelectorAll('a[href^="#"]').forEach((sideNavLink) => {
+      sideNavLink.addEventListener("click", () => setSideNavOpen(false));
+      const targetElement = document.getElementById(sideNavLink.getAttribute("href").slice(1));
+      // Headings are tiny; watch the whole section that contains them.
+      const watchedElement = targetElement?.closest("section") ?? targetElement;
+      if (watchedElement) sideNavLinks.set(watchedElement, sideNavLink);
+    });
+
+    const scrollSpy = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        sideNavLinks.forEach((sideNavLink) => sideNavLink.classList.remove("active"));
+        sideNavLinks.get(entry.target)?.classList.add("active");
+      });
+    }, { rootMargin: SCROLL_SPY_ROOT_MARGIN });
+    sideNavLinks.forEach((sideNavLink, watchedElement) => scrollSpy.observe(watchedElement));
+  }
+
+  /* --------------------------------------------------------------------------
+     Back to top: appears once the hero has scrolled out of view.
+     -------------------------------------------------------------------------- */
+
+  const heroElement = document.querySelector(".hero");
+
+  if (heroElement) {
+    const backToTopButton = document.createElement("button");
+    backToTopButton.type = "button";
+    backToTopButton.className = "back-to-top";
+    backToTopButton.dataset.i18nAttributes = "aria-label:backToTop.label";
+    backToTopButton.setAttribute("aria-label", window.i18n.translate("backToTop.label"));
+    backToTopButton.innerHTML = ARROW_UP_ICON_MARKUP;
+    backToTopButton.addEventListener("click", () => window.scrollTo({ top: 0 }));
+    document.body.append(backToTopButton);
+
+    new IntersectionObserver(([heroEntry]) => {
+      const hasScrolledPastHero = !heroEntry.isIntersecting && heroEntry.boundingClientRect.bottom < 0;
+      backToTopButton.classList.toggle("is-visible", hasScrolledPastHero);
+    }).observe(heroElement);
+  }
 
   /* --------------------------------------------------------------------------
      Theme and local time. Day/night hours live in boot.js.
@@ -81,7 +151,7 @@
     }, { amount: 0.4 });
 
     // Cross-fade translated text when the language changes (used by i18n.js).
-    const translatedRegions = "main, .site-nav a, .language-toggle, .footer-column h2, [data-day-period]";
+    const translatedRegions = "main, .side-nav, .side-nav-toggle, .site-nav a, .language-toggle, .footer-column h2, [data-day-period]";
     window.languageTransition = {
       fadeOut: () => animate(translatedRegions, { opacity: 0 }, { duration: 0.2 }),
       fadeIn: () => animate(translatedRegions, { opacity: 1 }, { duration: 0.35 }),

@@ -16,6 +16,7 @@
   --gutter: clamp(20px, 4vw, 48px);
   --column: 40rem;
   --wide: 72rem;
+  --side-nav-width: 14rem;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 
   color-scheme: light;
@@ -260,6 +261,126 @@ ul {
 }
 
 /* ==========================================================================
+   Page layout: side navigation ("legenda lateral") + content
+   Every content page uses <div class="page-layout"> with an <aside class="side-nav">
+   first; main.js adds the small-screen toggle and highlights the current section.
+   ========================================================================== */
+
+.page-layout {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: flex-start;
+  gap: clamp(32px, 5vw, 72px);
+  border-top: 1px solid var(--line);
+}
+
+.page-layout > :not(.side-nav) {
+  flex: 1;
+  min-width: 0;
+  max-width: calc(var(--column) + 8rem);
+}
+
+.page-layout > .reading-column {
+  margin: 0;
+  padding-inline: 0;
+}
+
+.side-nav {
+  position: sticky;
+  top: 0;
+  flex: none;
+  width: var(--side-nav-width);
+  max-height: 100vh;
+  overflow-y: auto;
+  padding: 40px 0 48px;
+}
+
+.side-nav h2 {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink);
+  margin: 28px 0 8px;
+}
+
+.side-nav h2:first-child {
+  margin-top: 0;
+}
+
+.side-nav li a {
+  display: block;
+  padding: 3px 0 3px 14px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 15px;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.side-nav li a:hover,
+.side-nav li a.active {
+  color: var(--ink);
+}
+
+.side-nav li a.active {
+  border-left-color: var(--ink);
+}
+
+.side-nav-toggle {
+  display: none;
+  margin: 24px 0 0;
+  padding: 6px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+
+/* ==========================================================================
+   Back to top (added by main.js once the visitor scrolls past the hero)
+   ========================================================================== */
+
+.back-to-top {
+  position: fixed;
+  right: calc(env(safe-area-inset-right, 0px) + var(--gutter));
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--muted);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.3s var(--ease), transform 0.3s var(--ease),
+    visibility 0.3s, color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: none;
+}
+
+.back-to-top:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.back-to-top .icon {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  vertical-align: baseline;
+}
+
+/* ==========================================================================
    Hero (centered)
    ========================================================================== */
 
@@ -476,6 +597,36 @@ html:not(.js-enabled) .requires-js {
   }
 }
 
+@media (max-width: 900px) {
+  .page-layout {
+    display: block;
+  }
+
+  .page-layout > :not(.side-nav) {
+    max-width: none;
+  }
+
+  .side-nav-toggle {
+    display: inline-block;
+  }
+
+  .side-nav {
+    position: static;
+    width: auto;
+    max-height: none;
+    padding: 16px 0 0;
+  }
+
+  /* Collapsed behind the toggle only when JavaScript can open it. */
+  .js-enabled .side-nav {
+    display: none;
+  }
+
+  .js-enabled .side-nav.open {
+    display: block;
+  }
+}
+
 @media (max-width: 560px) {
   .site-nav a {
     display: none;
@@ -491,4 +642,9 @@ html:not(.js-enabled) .requires-js {
   .motion-pending [data-animate-reveal] {
     opacity: 1;
   }
+}
+
+/* The layout already draws the rule above the first section. */
+.page-layout .content-section:first-child {
+  border-top: 0;
 }

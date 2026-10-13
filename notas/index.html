@@ -81,45 +81,58 @@
       <p class="hero-lede" data-i18n="notes.heroLede">Short, practical references on the tools and platforms we build with. Pick a topic.</p>
     </section>
 
-    <div class="reading-column">
-      <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-        <symbol id="i-cloud" viewBox="0 0 32 32"><path d="M9 25a6 6 0 0 1-.5-12A8 8 0 0 1 24 11.5 6.8 6.8 0 0 1 23 25z"/></symbol>
-        <symbol id="i-pipeline" viewBox="0 0 32 32"><circle cx="6" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="26" cy="16" r="3"/><path d="M9 16h4M19 16h4"/></symbol>
-        <symbol id="i-layout" viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="3"/><path d="M14 4v24M14 15h14"/></symbol>
-      </svg>
-      <ul class="note-list">
-        <li>
-          <a class="note-link" href="aws/index.html">
-            <svg class="icon note-icon" aria-hidden="true"><use href="#i-cloud"/></svg>
-            <span class="note-text">
-              <span class="note-title" data-i18n="notes.aws.title">AWS</span>
-              <span class="note-description" data-i18n="notes.aws.description">An interactive guide based on the official documentation: IAM, VPC, ECS, RDS, S3, Route 53 and more, with diagrams and simulators.</span>
-            </span>
-            <span class="note-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li>
-          <a class="note-link" href="design-system/index.html">
-            <svg class="icon note-icon" aria-hidden="true"><use href="#i-layout"/></svg>
-            <span class="note-text">
-              <span class="note-title" data-i18n="notes.ds.title">Design system</span>
-              <span class="note-description" data-i18n="notes.ds.description">How this site is designed: colour, type, layout, icons, motion, theme and language.</span>
-            </span>
-            <span class="note-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
-        <li>
-          <a class="note-link" href="github-aws-oidc/index.html">
-            <svg class="icon note-icon" aria-hidden="true"><use href="#i-pipeline"/></svg>
-            <span class="note-text">
-              <span class="note-title" data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span>
-              <span class="note-description" data-i18n="notes.oidc.description">CI/CD with GitHub Actions: a push to develop or main deploys to AWS using OIDC, with no stored access keys.</span>
-            </span>
-            <span class="note-arrow" aria-hidden="true">→</span>
-          </a>
-        </li>
-      </ul>
+    <div class="page-layout">
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.notes">Notes</h2>
+          <ul>
+        <li><a href="aws/index.html">AWS</a></li>
+        <li><a href="design-system/index.html"><span data-i18n="notes.ds.title">Design system</span></a></li>
+        <li><a href="github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <div class="reading-column">
+        <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <symbol id="i-cloud" viewBox="0 0 32 32"><path d="M9 25a6 6 0 0 1-.5-12A8 8 0 0 1 24 11.5 6.8 6.8 0 0 1 23 25z"/></symbol>
+          <symbol id="i-pipeline" viewBox="0 0 32 32"><circle cx="6" cy="16" r="3"/><circle cx="16" cy="16" r="3"/><circle cx="26" cy="16" r="3"/><path d="M9 16h4M19 16h4"/></symbol>
+          <symbol id="i-layout" viewBox="0 0 32 32"><rect x="4" y="4" width="24" height="24" rx="3"/><path d="M14 4v24M14 15h14"/></symbol>
+        </svg>
+        <ul class="note-list">
+          <li>
+            <a class="note-link" href="aws/index.html">
+              <svg class="icon note-icon" aria-hidden="true"><use href="#i-cloud"/></svg>
+              <span class="note-text">
+                <span class="note-title" data-i18n="notes.aws.title">AWS</span>
+                <span class="note-description" data-i18n="notes.aws.description">An interactive guide based on the official documentation: IAM, VPC, ECS, RDS, S3, Route 53 and more, with diagrams and simulators.</span>
+              </span>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a class="note-link" href="design-system/index.html">
+              <svg class="icon note-icon" aria-hidden="true"><use href="#i-layout"/></svg>
+              <span class="note-text">
+                <span class="note-title" data-i18n="notes.ds.title">Design system</span>
+                <span class="note-description" data-i18n="notes.ds.description">How this site is designed: colour, type, layout, icons, motion, theme and language.</span>
+              </span>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a class="note-link" href="github-aws-oidc/index.html">
+              <svg class="icon note-icon" aria-hidden="true"><use href="#i-pipeline"/></svg>
+              <span class="note-text">
+                <span class="note-title" data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span>
+                <span class="note-description" data-i18n="notes.oidc.description">CI/CD with GitHub Actions: a push to develop or main deploys to AWS using OIDC, with no stored access keys.</span>
+              </span>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
+
   </main>
 
   <footer class="site-footer">

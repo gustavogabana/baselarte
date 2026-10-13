@@ -130,150 +130,179 @@
       <p class="hero-lede" data-i18n="ds.heroLede">How this site is designed: a handful of tokens, three typefaces, one column, a small set of icons and motion that stays out of the way.</p>
     </section>
 
-    <article class="reading-column ds-guide">
-      <section class="content-section" aria-labelledby="principles">
-        <h2 id="principles"><span class="pt">Princípios</span><span class="en">Principles</span></h2>
-        <p><span class="pt">Texto primeiro, ornamento nunca. Cada decisão visual tem de ser explicável em uma frase, e cada valor vive em um único lugar.</span><span class="en">Text first, ornament never. Every visual decision has to be explainable in a sentence, and every value lives in exactly one place.</span></p>
-        <ul class="ds-list">
-          <li><span class="pt"><em>Clareza sobre abstração.</em> Poucos componentes, nomes descritivos, nada de utilitários genéricos.</span><span class="en"><em>Clarity over abstraction.</em> Few components, descriptive names, no generic utilities.</span></li>
-          <li><span class="pt"><em>Uma fonte para cada valor.</em> Cores e espaçamentos em <code>styles.css</code>, horários e idiomas em <code>boot.js</code>, textos em <code>i18n.js</code>.</span><span class="en"><em>One source for each value.</em> Colours and spacing in <code>styles.css</code>, hours and languages in <code>boot.js</code>, copy in <code>i18n.js</code>.</span></li>
-          <li><span class="pt"><em>Funciona sem enfeite.</em> Sem JavaScript, o texto em inglês está no HTML. Sem animação, tudo aparece de uma vez.</span><span class="en"><em>Works without the decoration.</em> Without JavaScript the English text is in the HTML. Without animation everything simply appears.</span></li>
-        </ul>
-      </section>
+    <div class="page-layout">
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#principles"><span class="pt">Princípios</span><span class="en">Principles</span></a></li>
+        <li><a href="#colour"><span class="pt">Cor</span><span class="en">Colour</span></a></li>
+        <li><a href="#type"><span class="pt">Tipografia</span><span class="en">Typography</span></a></li>
+        <li><a href="#layout"><span class="pt">Layout</span><span class="en">Layout</span></a></li>
+        <li><a href="#navigation"><span class="pt">Navegação</span><span class="en">Navigation</span></a></li>
+        <li><a href="#icons"><span class="pt">Ícones</span><span class="en">Icons</span></a></li>
+        <li><a href="#motion"><span class="pt">Movimento</span><span class="en">Motion</span></a></li>
+        <li><a href="#theme"><span class="pt">Tema e hora local</span><span class="en">Theme and local time</span></a></li>
+        <li><a href="#language"><span class="pt">Idioma</span><span class="en">Language</span></a></li>
+        <li><a href="#conventions"><span class="pt">Convenções de código</span><span class="en">Code conventions</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+        <section class="content-section" aria-labelledby="principles">
+          <h2 id="principles"><span class="pt">Princípios</span><span class="en">Principles</span></h2>
+          <p><span class="pt">Texto primeiro, ornamento nunca. Cada decisão visual tem de ser explicável em uma frase, e cada valor vive em um único lugar.</span><span class="en">Text first, ornament never. Every visual decision has to be explainable in a sentence, and every value lives in exactly one place.</span></p>
+          <ul class="ds-list">
+            <li><span class="pt"><em>Clareza sobre abstração.</em> Poucos componentes, nomes descritivos, nada de utilitários genéricos.</span><span class="en"><em>Clarity over abstraction.</em> Few components, descriptive names, no generic utilities.</span></li>
+            <li><span class="pt"><em>Uma fonte para cada valor.</em> Cores e espaçamentos em <code>styles.css</code>, horários e idiomas em <code>boot.js</code>, textos em <code>i18n.js</code>.</span><span class="en"><em>One source for each value.</em> Colours and spacing in <code>styles.css</code>, hours and languages in <code>boot.js</code>, copy in <code>i18n.js</code>.</span></li>
+            <li><span class="pt"><em>Funciona sem enfeite.</em> Sem JavaScript, o texto em inglês está no HTML. Sem animação, tudo aparece de uma vez.</span><span class="en"><em>Works without the decoration.</em> Without JavaScript the English text is in the HTML. Without animation everything simply appears.</span></li>
+          </ul>
+        </section>
 
-      <section class="content-section" aria-labelledby="colour">
-        <h2 id="colour"><span class="pt">Cor</span><span class="en">Colour</span></h2>
-        <p><span class="pt">A paleta é de papel e tinta: quatro tokens, dois temas. Os temas trocam sozinhos pelo relógio do visitante, escuro das 18h às 6h.</span><span class="en">The palette is paper and ink: four tokens, two themes. The theme switches by the visitor’s own clock, dark from 18:00 to 06:00.</span></p>
-        <div class="scroll-x">
-          <table class="ds-table">
-            <thead><tr><th>Token</th><th><span class="pt">Claro</span><span class="en">Light</span></th><th><span class="pt">Escuro</span><span class="en">Dark</span></th><th><span class="pt">Uso</span><span class="en">Use</span></th></tr></thead>
-            <tbody>
-<tr><td><span class="swatch" style="background:var(--paper)"></span> <code>--paper</code></td><td><code>#f3f1ec</code></td><td><code>#0d0d0c</code></td><td><span class="pt">Fundo da página.</span><span class="en">Page background.</span></td></tr>
-<tr><td><span class="swatch" style="background:var(--ink)"></span> <code>--ink</code></td><td><code>#141413</code></td><td><code>#ebe9e3</code></td><td><span class="pt">Texto, traços, ícones e o logo.</span><span class="en">Text, strokes, icons and the logo.</span></td></tr>
-<tr><td><span class="swatch" style="background:var(--muted)"></span> <code>--muted</code></td><td><code>#6c6a65</code></td><td><code>#8f8c86</code></td><td><span class="pt">Texto secundário.</span><span class="en">Secondary text.</span></td></tr>
-<tr><td><span class="swatch" style="background:var(--line)"></span> <code>--line</code></td><td><code>rgba(20, 20, 19, 0.12)</code></td><td><code>rgba(235, 233, 227, 0.12)</code></td><td><span class="pt">Filetes e bordas de 1px.</span><span class="en">1px rules and borders.</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-        <p><span class="pt">Não há cor de destaque. A hierarquia vem de peso, tamanho e do contraste entre tinta e texto secundário. A única exceção são o verde e o vermelho de estado (permitido e bloqueado) nas Notas de AWS.</span><span class="en">There is no accent colour. Hierarchy comes from weight, size and the contrast between ink and muted text. The only exception is the green and red of state (allowed and blocked) in the AWS notes.</span></p>
-      </section>
-
-      <section class="content-section" aria-labelledby="type">
-        <h2 id="type"><span class="pt">Tipografia</span><span class="en">Typography</span></h2>
-        <div class="ds-specimens">
-          <div class="specimen">
-            <p class="monospace-label">Geist · <span class="pt">texto e títulos</span><span class="en">text and headings</span></p>
-            <p class="specimen-sans"><span class="pt">Engenharia de software, feita com calma.</span><span class="en">Software engineering, built calmly.</span></p>
+        <section class="content-section" aria-labelledby="colour">
+          <h2 id="colour"><span class="pt">Cor</span><span class="en">Colour</span></h2>
+          <p><span class="pt">A paleta é de papel e tinta: quatro tokens, dois temas. Os temas trocam sozinhos pelo relógio do visitante, escuro das 18h às 6h.</span><span class="en">The palette is paper and ink: four tokens, two themes. The theme switches by the visitor’s own clock, dark from 18:00 to 06:00.</span></p>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th>Token</th><th><span class="pt">Claro</span><span class="en">Light</span></th><th><span class="pt">Escuro</span><span class="en">Dark</span></th><th><span class="pt">Uso</span><span class="en">Use</span></th></tr></thead>
+              <tbody>
+  <tr><td><span class="swatch" style="background:var(--paper)"></span> <code>--paper</code></td><td><code>#f3f1ec</code></td><td><code>#0d0d0c</code></td><td><span class="pt">Fundo da página.</span><span class="en">Page background.</span></td></tr>
+  <tr><td><span class="swatch" style="background:var(--ink)"></span> <code>--ink</code></td><td><code>#141413</code></td><td><code>#ebe9e3</code></td><td><span class="pt">Texto, traços, ícones e o logo.</span><span class="en">Text, strokes, icons and the logo.</span></td></tr>
+  <tr><td><span class="swatch" style="background:var(--muted)"></span> <code>--muted</code></td><td><code>#6c6a65</code></td><td><code>#8f8c86</code></td><td><span class="pt">Texto secundário.</span><span class="en">Secondary text.</span></td></tr>
+  <tr><td><span class="swatch" style="background:var(--line)"></span> <code>--line</code></td><td><code>rgba(20, 20, 19, 0.12)</code></td><td><code>rgba(235, 233, 227, 0.12)</code></td><td><span class="pt">Filetes e bordas de 1px.</span><span class="en">1px rules and borders.</span></td></tr>
+              </tbody>
+            </table>
           </div>
-          <div class="specimen">
-            <p class="monospace-label">Instrument Serif · <span class="pt">ênfase</span><span class="en">emphasis</span></p>
-            <p class="specimen-serif"><em><span class="pt">precisão silenciosa.</span><span class="en">quiet precision.</span></em></p>
+          <p><span class="pt">Não há cor de destaque. A hierarquia vem de peso, tamanho e do contraste entre tinta e texto secundário. A única exceção são o verde e o vermelho de estado (permitido e bloqueado) nas Notas de AWS.</span><span class="en">There is no accent colour. Hierarchy comes from weight, size and the contrast between ink and muted text. The only exception is the green and red of state (allowed and blocked) in the AWS notes.</span></p>
+        </section>
+
+        <section class="content-section" aria-labelledby="type">
+          <h2 id="type"><span class="pt">Tipografia</span><span class="en">Typography</span></h2>
+          <div class="ds-specimens">
+            <div class="specimen">
+              <p class="monospace-label">Geist · <span class="pt">texto e títulos</span><span class="en">text and headings</span></p>
+              <p class="specimen-sans"><span class="pt">Engenharia de software, feita com calma.</span><span class="en">Software engineering, built calmly.</span></p>
+            </div>
+            <div class="specimen">
+              <p class="monospace-label">Instrument Serif · <span class="pt">ênfase</span><span class="en">emphasis</span></p>
+              <p class="specimen-serif"><em><span class="pt">precisão silenciosa.</span><span class="en">quiet precision.</span></em></p>
+            </div>
+            <div class="specimen">
+              <p class="monospace-label">Geist Mono · <span class="pt">rótulos</span><span class="en">labels</span></p>
+              <p class="monospace-label specimen-mono"><span class="pt">Hora local · 20:42 · noite</span><span class="en">Local time · 20:42 · night</span></p>
+            </div>
           </div>
-          <div class="specimen">
-            <p class="monospace-label">Geist Mono · <span class="pt">rótulos</span><span class="en">labels</span></p>
-            <p class="monospace-label specimen-mono"><span class="pt">Hora local · 20:42 · noite</span><span class="en">Local time · 20:42 · night</span></p>
+          <p><span class="pt">O corpo usa 17px com entrelinha 1,65. Títulos têm espaçamento negativo (−0,02em a −0,035em). Qualquer <code>&lt;em&gt;</code> vira serifa itálica; é a única forma de ênfase do site.</span><span class="en">Body text is 17px on a 1.65 line height. Headings are tightened (−0.02em to −0.035em). Any <code>&lt;em&gt;</code> becomes italic serif; it is the site’s only form of emphasis.</span></p>
+        </section>
+
+        <section class="content-section" aria-labelledby="layout">
+          <h2 id="layout"><span class="pt">Layout</span><span class="en">Layout</span></h2>
+          <p><span class="pt">Uma coluna de leitura centralizada de 40rem para texto corrido, dentro de um contêiner largo de 72rem para cabeçalho e rodapé. O respiro lateral é <code>--gutter</code>, que cresce com a tela. Seções são separadas por um filete de 1px, não por caixas.</span><span class="en">A single centred reading column of 40rem for prose, inside a 72rem wide container for header and footer. Side padding is <code>--gutter</code>, which grows with the screen. Sections are separated by a 1px rule, not by boxes.</span></p>
+          <ul class="ds-list">
+            <li><code>--column</code> · 40rem</li>
+            <li><code>--wide</code> · 72rem</li>
+            <li><code>--gutter</code> · clamp(20px, 4vw, 48px)</li>
+          </ul>
+          <p><span class="pt">Páginas internas têm botões de voltar logo abaixo do cabeçalho: um para a tela anterior e um para o início.</span><span class="en">Inner pages have back buttons right under the header: one for the previous screen and one for Home.</span></p>
+          <div class="ds-demo">
+            <a class="pill-link" href="#layout"><span aria-hidden="true">←</span> <span class="pt">Notas</span><span class="en">Notes</span></a>
+            <a class="pill-link" href="#layout"><svg class="icon" aria-hidden="true"><use href="#i-house"/></svg> <span class="pt">Início</span><span class="en">Home</span></a>
           </div>
-        </div>
-        <p><span class="pt">O corpo usa 17px com entrelinha 1,65. Títulos têm espaçamento negativo (−0,02em a −0,035em). Qualquer <code>&lt;em&gt;</code> vira serifa itálica; é a única forma de ênfase do site.</span><span class="en">Body text is 17px on a 1.65 line height. Headings are tightened (−0.02em to −0.035em). Any <code>&lt;em&gt;</code> becomes italic serif; it is the site’s only form of emphasis.</span></p>
-      </section>
+        </section>
 
-      <section class="content-section" aria-labelledby="layout">
-        <h2 id="layout"><span class="pt">Layout</span><span class="en">Layout</span></h2>
-        <p><span class="pt">Uma coluna de leitura centralizada de 40rem para texto corrido, dentro de um contêiner largo de 72rem para cabeçalho e rodapé. O respiro lateral é <code>--gutter</code>, que cresce com a tela. Seções são separadas por um filete de 1px, não por caixas.</span><span class="en">A single centred reading column of 40rem for prose, inside a 72rem wide container for header and footer. Side padding is <code>--gutter</code>, which grows with the screen. Sections are separated by a 1px rule, not by boxes.</span></p>
-        <ul class="ds-list">
-          <li><code>--column</code> · 40rem</li>
-          <li><code>--wide</code> · 72rem</li>
-          <li><code>--gutter</code> · clamp(20px, 4vw, 48px)</li>
-        </ul>
-        <p><span class="pt">Páginas internas têm botões de voltar logo abaixo do cabeçalho: um para a tela anterior e um para o início.</span><span class="en">Inner pages have back buttons right under the header: one for the previous screen and one for Home.</span></p>
-        <div class="ds-demo">
-          <a class="pill-link" href="#layout"><span aria-hidden="true">←</span> <span class="pt">Notas</span><span class="en">Notes</span></a>
-          <a class="pill-link" href="#layout"><svg class="icon" aria-hidden="true"><use href="#i-house"/></svg> <span class="pt">Início</span><span class="en">Home</span></a>
-        </div>
-      </section>
+        <section class="content-section" aria-labelledby="navigation">
+          <h2 id="navigation"><span class="pt">Navegação</span><span class="en">Navigation</span></h2>
+          <p><span class="pt">Toda página de conteúdo tem uma legenda lateral: a lista de seções da página, fixa ao rolar, com a seção atual destacada. Em telas pequenas ela se recolhe atrás do botão “Seções”. Na lista de Notas, a legenda lista as próprias notas.</span><span class="en">Every content page has a side navigation: the list of the page’s sections, sticky while scrolling, with the current section highlighted. On small screens it collapses behind a “Sections” button. On the Notes index, it lists the notes themselves.</span></p>
+          <pre><code>&lt;div class="page-layout"&gt;
+  &lt;aside class="side-nav" id="side-nav"&gt;…&lt;/aside&gt;
+  &lt;article class="reading-column"&gt;…&lt;/article&gt;
+&lt;/div&gt;</code></pre>
+          <p><span class="pt">Assim que o visitante rola para além da área do hero, aparece um botão redondo no canto inferior direito que volta ao topo da página. Ele e o botão “Seções” são criados pelo <code>main.js</code>, então o HTML não precisa repetir nada.</span><span class="en">As soon as the visitor scrolls past the hero area, a round button appears in the bottom-right corner that returns to the top of the page. It and the “Sections” button are created by <code>main.js</code>, so the HTML does not repeat them.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="icons">
-        <h2 id="icons"><span class="pt">Ícones</span><span class="en">Icons</span></h2>
-        <p><span class="pt">Sem emoji e sem biblioteca de ícones. O conjunto é desenhado na mesma grade 32×32 do logo: só traço, sem preenchimento, pontas arredondadas, cor herdada do texto (<code>currentColor</code>). Cada ícone nomeia um conceito (um bucket é um balde, um load balancer é uma balança) e nada além disso.</span><span class="en">No emoji and no icon library. The set is drawn on the same 32×32 grid as the logo: stroke only, no fill, round caps, colour inherited from the text (<code>currentColor</code>). Each icon names one concept (a bucket is a pail, a load balancer is a scale) and nothing more.</span></p>
-        <pre><code>&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-globe"/&gt;&lt;/svg&gt;</code></pre>
-        <ul class="icon-gallery">
-<li><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="monospace-label">alert</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-badge"/></svg><span class="monospace-label">badge</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg><span class="monospace-label">balance</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-ban"/></svg><span class="monospace-label">ban</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg><span class="monospace-label">bolt</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg><span class="monospace-label">box</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="monospace-label">briefcase</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg><span class="monospace-label">bucket</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg><span class="monospace-label">building</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span class="monospace-label">calendar</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="monospace-label">cart</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span class="monospace-label">check</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-chip"/></svg><span class="monospace-label">chip</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-client"/></svg><span class="monospace-label">client</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg><span class="monospace-label">cloud</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-crown"/></svg><span class="monospace-label">crown</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><span class="monospace-label">database</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg><span class="monospace-label">disc</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><span class="monospace-label">doc</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg><span class="monospace-label">folder</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-gateway"/></svg><span class="monospace-label">gateway</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span class="monospace-label">gear</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span class="monospace-label">globe</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg><span class="monospace-label">grid</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-house"/></svg><span class="monospace-label">house</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg><span class="monospace-label">institution</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg><span class="monospace-label">key</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg><span class="monospace-label">layers</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-listener"/></svg><span class="monospace-label">listener</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="monospace-label">lock</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg><span class="monospace-label">network</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="monospace-label">pin</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg><span class="monospace-label">play</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="monospace-label">refresh</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-rules"/></svg><span class="monospace-label">rules</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg><span class="monospace-label">server</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span class="monospace-label">shield</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><span class="monospace-label">sparkle</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg><span class="monospace-label">steps</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg><span class="monospace-label">swap</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg><span class="monospace-label">target</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-terminal"/></svg><span class="monospace-label">terminal</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg><span class="monospace-label">ticket</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg><span class="monospace-label">trash</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg><span class="monospace-label">tree</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="monospace-label">user</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg><span class="monospace-label">users</span></li>
-<li><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg><span class="monospace-label">x</span></li>
-        </ul>
-      </section>
+        <section class="content-section" aria-labelledby="icons">
+          <h2 id="icons"><span class="pt">Ícones</span><span class="en">Icons</span></h2>
+          <p><span class="pt">Sem emoji e sem biblioteca de ícones. O conjunto é desenhado na mesma grade 32×32 do logo: só traço, sem preenchimento, pontas arredondadas, cor herdada do texto (<code>currentColor</code>). Cada ícone nomeia um conceito (um bucket é um balde, um load balancer é uma balança) e nada além disso.</span><span class="en">No emoji and no icon library. The set is drawn on the same 32×32 grid as the logo: stroke only, no fill, round caps, colour inherited from the text (<code>currentColor</code>). Each icon names one concept (a bucket is a pail, a load balancer is a scale) and nothing more.</span></p>
+          <pre><code>&lt;svg class="icon" aria-hidden="true"&gt;&lt;use href="#i-globe"/&gt;&lt;/svg&gt;</code></pre>
+          <ul class="icon-gallery">
+  <li><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg><span class="monospace-label">alert</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-badge"/></svg><span class="monospace-label">badge</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg><span class="monospace-label">balance</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-ban"/></svg><span class="monospace-label">ban</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg><span class="monospace-label">bolt</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg><span class="monospace-label">box</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg><span class="monospace-label">briefcase</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg><span class="monospace-label">bucket</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg><span class="monospace-label">building</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg><span class="monospace-label">calendar</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg><span class="monospace-label">cart</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg><span class="monospace-label">check</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-chip"/></svg><span class="monospace-label">chip</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-client"/></svg><span class="monospace-label">client</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg><span class="monospace-label">cloud</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-crown"/></svg><span class="monospace-label">crown</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg><span class="monospace-label">database</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg><span class="monospace-label">disc</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg><span class="monospace-label">doc</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg><span class="monospace-label">folder</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-gateway"/></svg><span class="monospace-label">gateway</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg><span class="monospace-label">gear</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg><span class="monospace-label">globe</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg><span class="monospace-label">grid</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-house"/></svg><span class="monospace-label">house</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg><span class="monospace-label">institution</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg><span class="monospace-label">key</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg><span class="monospace-label">layers</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-listener"/></svg><span class="monospace-label">listener</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg><span class="monospace-label">lock</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg><span class="monospace-label">network</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg><span class="monospace-label">pin</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg><span class="monospace-label">play</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg><span class="monospace-label">refresh</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-rules"/></svg><span class="monospace-label">rules</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg><span class="monospace-label">server</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg><span class="monospace-label">shield</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg><span class="monospace-label">sparkle</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg><span class="monospace-label">steps</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg><span class="monospace-label">swap</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg><span class="monospace-label">target</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-terminal"/></svg><span class="monospace-label">terminal</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg><span class="monospace-label">ticket</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg><span class="monospace-label">trash</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg><span class="monospace-label">tree</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg><span class="monospace-label">user</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg><span class="monospace-label">users</span></li>
+  <li><svg class="icon" aria-hidden="true"><use href="#i-x"/></svg><span class="monospace-label">x</span></li>
+          </ul>
+        </section>
 
-      <section class="content-section" aria-labelledby="motion">
-        <h2 id="motion"><span class="pt">Movimento</span><span class="en">Motion</span></h2>
-        <p><span class="pt">Movimento é só um fade-up suave ao carregar e ao rolar (16px, 0,9s, curva ease-out expo) e uma transição cruzada na troca de idioma. É feito com <a href="https://motion.dev">Motion</a>. Se o visitante prefere menos movimento, ou a biblioteca não carrega, a página aparece inteira sem animação.</span><span class="en">Motion is just a soft fade-up on load and on scroll (16px, 0.9s, ease-out expo) and a cross-fade when the language changes. It is built with <a href="https://motion.dev">Motion</a>. If the visitor prefers reduced motion, or the library fails to load, the page shows everything without animation.</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="motion">
+          <h2 id="motion"><span class="pt">Movimento</span><span class="en">Motion</span></h2>
+          <p><span class="pt">Movimento é só um fade-up suave ao carregar e ao rolar (16px, 0,9s, curva ease-out expo) e uma transição cruzada na troca de idioma. É feito com <a href="https://motion.dev">Motion</a>. Se o visitante prefere menos movimento, ou a biblioteca não carrega, a página aparece inteira sem animação.</span><span class="en">Motion is just a soft fade-up on load and on scroll (16px, 0.9s, ease-out expo) and a cross-fade when the language changes. It is built with <a href="https://motion.dev">Motion</a>. If the visitor prefers reduced motion, or the library fails to load, the page shows everything without animation.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="theme">
-        <h2 id="theme"><span class="pt">Tema e hora local</span><span class="en">Theme and local time</span></h2>
-        <p><span class="pt">O tema é definido em <code>&lt;head&gt;</code> por <code>boot.js</code>, antes da primeira pintura, para não haver flash. Depois, <code>main.js</code> confere o relógio a cada 15 segundos e faz uma transição de 1,2s quando cruza 6h ou 18h. O rodapé mostra a hora local e o período do dia.</span><span class="en">The theme is set in <code>&lt;head&gt;</code> by <code>boot.js</code>, before first paint, so there is no flash. Then <code>main.js</code> checks the clock every 15 seconds and cross-fades over 1.2s when it crosses 06:00 or 18:00. The footer shows the local time and day period.</span></p>
-        <p><span class="pt">Os scripts são clássicos, não módulos, então o site também funciona aberto direto do disco (<code>file://</code>).</span><span class="en">Scripts are classic, not modules, so the site also works when opened straight from disk (<code>file://</code>).</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="theme">
+          <h2 id="theme"><span class="pt">Tema e hora local</span><span class="en">Theme and local time</span></h2>
+          <p><span class="pt">O tema é definido em <code>&lt;head&gt;</code> por <code>boot.js</code>, antes da primeira pintura, para não haver flash. Depois, <code>main.js</code> confere o relógio a cada 15 segundos e faz uma transição de 1,2s quando cruza 6h ou 18h. O rodapé mostra a hora local e o período do dia.</span><span class="en">The theme is set in <code>&lt;head&gt;</code> by <code>boot.js</code>, before first paint, so there is no flash. Then <code>main.js</code> checks the clock every 15 seconds and cross-fades over 1.2s when it crosses 06:00 or 18:00. The footer shows the local time and day period.</span></p>
+          <p><span class="pt">Os scripts são clássicos, não módulos, então o site também funciona aberto direto do disco (<code>file://</code>).</span><span class="en">Scripts are classic, not modules, so the site also works when opened straight from disk (<code>file://</code>).</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="language">
-        <h2 id="language"><span class="pt">Idioma</span><span class="en">Language</span></h2>
-        <p><span class="pt">Inglês e português do Brasil. A primeira visita segue o idioma do navegador; depois vale a escolha salva. Os textos ficam em <code>i18n.js</code>, ligados ao HTML por <code>data-i18n</code>. Em páginas longas, como as Notas de AWS, os dois idiomas ficam no HTML e o CSS esconde o inativo.</span><span class="en">English and Brazilian Portuguese. The first visit follows the browser language; after that the saved choice wins. Copy lives in <code>i18n.js</code>, wired to the HTML with <code>data-i18n</code>. On long pages, like the AWS notes, both languages sit in the HTML and CSS hides the inactive one.</span></p>
-      </section>
+        <section class="content-section" aria-labelledby="language">
+          <h2 id="language"><span class="pt">Idioma</span><span class="en">Language</span></h2>
+          <p><span class="pt">Inglês e português do Brasil. A primeira visita segue o idioma do navegador; depois vale a escolha salva. Os textos ficam em <code>i18n.js</code>, ligados ao HTML por <code>data-i18n</code>. Em páginas longas, como as Notas de AWS, os dois idiomas ficam no HTML e o CSS esconde o inativo.</span><span class="en">English and Brazilian Portuguese. The first visit follows the browser language; after that the saved choice wins. Copy lives in <code>i18n.js</code>, wired to the HTML with <code>data-i18n</code>. On long pages, like the AWS notes, both languages sit in the HTML and CSS hides the inactive one.</span></p>
+        </section>
 
-      <section class="content-section" aria-labelledby="conventions">
-        <h2 id="conventions"><span class="pt">Convenções de código</span><span class="en">Code conventions</span></h2>
-        <ul class="ds-list">
-          <li><span class="pt">Nada dependente do tempo é fixo no código: ano, hora e período vêm do relógio do visitante.</span><span class="en">Nothing time-dependent is hardcoded: year, time and day period come from the visitor’s clock.</span></li>
-          <li><span class="pt">Nenhum erro é engolido em silêncio: todo <code>catch</code> se recupera de forma definida e registra o motivo.</span><span class="en">No error is swallowed silently: every <code>catch</code> recovers in a defined way and logs why.</span></li>
-          <li><span class="pt">Nomes descritivos, como <code>.site-header</code>, <code>.reading-column</code>, <code>data-animate-reveal</code>.</span><span class="en">Descriptive names, such as <code>.site-header</code>, <code>.reading-column</code>, <code>data-animate-reveal</code>.</span></li>
-          <li><span class="pt">Sem etapa de build e sem <code>node_modules</code>: HTML, CSS e JavaScript simples.</span><span class="en">No build step and no <code>node_modules</code>: plain HTML, CSS and JavaScript.</span></li>
-        </ul>
-      </section>
-    </article>
+        <section class="content-section" aria-labelledby="conventions">
+          <h2 id="conventions"><span class="pt">Convenções de código</span><span class="en">Code conventions</span></h2>
+          <ul class="ds-list">
+            <li><span class="pt">Nada dependente do tempo é fixo no código: ano, hora e período vêm do relógio do visitante.</span><span class="en">Nothing time-dependent is hardcoded: year, time and day period come from the visitor’s clock.</span></li>
+            <li><span class="pt">Nenhum erro é engolido em silêncio: todo <code>catch</code> se recupera de forma definida e registra o motivo.</span><span class="en">No error is swallowed silently: every <code>catch</code> recovers in a defined way and logs why.</span></li>
+            <li><span class="pt">Nomes descritivos, como <code>.site-header</code>, <code>.reading-column</code>, <code>data-animate-reveal</code>.</span><span class="en">Descriptive names, such as <code>.site-header</code>, <code>.reading-column</code>, <code>data-animate-reveal</code>.</span></li>
+            <li><span class="pt">Sem etapa de build e sem <code>node_modules</code>: HTML, CSS e JavaScript simples.</span><span class="en">No build step and no <code>node_modules</code>: plain HTML, CSS and JavaScript.</span></li>
+          </ul>
+        </section>
+      </article>
+    </div>
   </main>
 
   <footer class="site-footer">

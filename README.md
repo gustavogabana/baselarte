@@ -46,6 +46,8 @@ The guide's body text carries both languages in the HTML (`<span class="pt">` / 
 
 `notas/design-system/` documents this site's own design system (tokens, type, layout, icon set, motion, theme, language). When a token or convention changes, update that note too.
 
+Every content page has a side navigation (`<div class="page-layout">` with an `<aside class="side-nav" id="side-nav">` before the content). `main.js` adds its small-screen "Sections" toggle and highlights the current section. `main.js` also adds a round back-to-top button that appears once the `.hero` has scrolled out of view. Both need only the markup above; styles live in `styles.css`.
+
 Every inner page has back buttons under the header (`.page-nav`): one to the previous screen and one to Home. Links between pages point to explicit `index.html` files, so they also work when the folder is opened without a web server.
 
 Icons are a small custom set drawn on the logo's 32×32 grid (stroke only, `currentColor`), defined as an inline SVG sprite in `notas/aws/index.html` and used with `<svg class="icon"><use href="#i-name"/></svg>`. No emoji.

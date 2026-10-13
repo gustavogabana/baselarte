@@ -12,9 +12,7 @@
   // Network and subnet maths for the CIDR calculator: AWS reserves 5 addresses per subnet.
   const IPV4_ADDRESS_BITS = 32;
   const AWS_RESERVED_ADDRESSES_PER_SUBNET = 5;
-  // A section counts as "current" while it crosses this band of the viewport.
-  const SCROLL_SPY_ROOT_MARGIN = "-20% 0px -70% 0px";
-
+  
   // Inbound rules of the EC2 security group used by the simulator.
   const SECURITY_GROUP_INBOUND_RULES = [
     { port: "3000", source: "lb" },
@@ -45,25 +43,6 @@
       y: elementBox.top - containerBox.top + elementBox.height / 2,
     };
   }
-
-  /* --------------------------------------------------------------------------
-     Sections menu (small screens)
-     -------------------------------------------------------------------------- */
-
-  const sectionsToggle = findOne("[data-sections-toggle]");
-  const sectionsNav = findOne("#sections-nav");
-
-  function setSectionsMenuOpen(isOpen) {
-    sectionsNav.classList.toggle("open", isOpen);
-    sectionsToggle.setAttribute("aria-expanded", String(isOpen));
-  }
-
-  sectionsToggle.addEventListener("click", () => {
-    setSectionsMenuOpen(!sectionsNav.classList.contains("open"));
-  });
-  findAll("a", sectionsNav).forEach((sectionLink) => {
-    sectionLink.addEventListener("click", () => setSectionsMenuOpen(false));
-  });
 
   /* --------------------------------------------------------------------------
      Copy buttons on code blocks
@@ -124,23 +103,6 @@
   } else {
     scrollProgressBar.style.display = "none";
   }
-
-  /* --------------------------------------------------------------------------
-     Scroll spy: highlight the section being read in the sections list
-     -------------------------------------------------------------------------- */
-
-  const sectionLinks = new Map(
-    findAll("a", sectionsNav).map((sectionLink) => [sectionLink.getAttribute("href").slice(1), sectionLink])
-  );
-  const scrollSpy = new IntersectionObserver(
-    (entries) => entries.forEach((entry) => {
-      if (!entry.isIntersecting) return;
-      sectionLinks.forEach((sectionLink) => sectionLink.classList.remove("active"));
-      sectionLinks.get(entry.target.id)?.classList.add("active");
-    }),
-    { rootMargin: SCROLL_SPY_ROOT_MARGIN }
-  );
-  findAll(".topic").forEach((topicSection) => scrollSpy.observe(topicSection));
 
   /* --------------------------------------------------------------------------
      Flashcards
