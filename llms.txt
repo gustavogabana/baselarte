@@ -2,7 +2,7 @@
 
 > Baselarte (Baselarte Ltda.) is a software engineering and creative technology company. It builds systems, interfaces and infrastructure that are simple on the surface and rigorous underneath.
 
-The public website is a landing page plus an AWS study guide, available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
+The public website is a landing page plus a notes section (currently one AWS study guide), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
 
 ## Practice
 
@@ -25,5 +25,6 @@ The site quotes an IBM internal training presentation (1979): "A computer can ne
 ## Pages
 
 - [Home](https://baselarte.com/): landing page describing the company, its practice and principles.
-- [AWS Notes](https://baselarte.com/aws/): interactive AWS study guide (IAM, Organizations, VPC, ECS, RDS, S3, Route 53 and more) based on the official documentation, in English and Brazilian Portuguese.
+- [Notes](https://baselarte.com/notas/): index of study notes.
+- [AWS Notes](https://baselarte.com/notas/aws/): interactive AWS study guide (IAM, Organizations, VPC, ECS, RDS, S3, Route 53 and more) based on the official documentation, in English and Brazilian Portuguese.
 - [Sitemap](https://baselarte.com/sitemap.xml)

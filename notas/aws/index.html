@@ -13,13 +13,13 @@
   <meta name="theme-color" content="#f3f1ec">
 
   <!-- Sets theme (by local time) and language before first paint. -->
-  <script src="../boot.js"></script>
-  <link rel="canonical" href="https://baselarte.com/aws/">
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/aws/">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Baselarte">
-  <meta property="og:url" content="https://baselarte.com/aws/">
+  <meta property="og:url" content="https://baselarte.com/notas/aws/">
   <meta property="og:title" data-i18n-attributes="content:aws.metaTitle" content="AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more | Baselarte">
   <meta property="og:description" data-i18n-attributes="content:aws.metaDescription" content="Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.">
   <meta property="og:image" content="https://baselarte.com/assets/og-image.jpg">
@@ -36,10 +36,10 @@
   <meta name="twitter:image" content="https://baselarte.com/assets/og-image.jpg">
 
   <!-- Icons & manifest -->
-  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="../favicon.ico" sizes="48x48">
-  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
-  <link rel="manifest" href="../site.webmanifest">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
 
   <!-- Performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +47,7 @@
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/motion@14.0.0/+esm" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
-  <link rel="stylesheet" href="../styles.css">
+  <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="aws.css">
 
   <!-- Structured data -->
@@ -67,24 +67,78 @@
   </script>
 </head>
 <body>
+  <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-badge" viewBox="0 0 32 32"><rect x="3" y="7" width="26" height="18" rx="2"/><circle cx="12" cy="15" r="3"/><path d="M7 22c.5-3 2.5-4 5-4s4.5 1 5 4M20 13h6M20 18h5"/></symbol>
+  <symbol id="i-balance" viewBox="0 0 32 32"><path d="M16 5v22M8 27h16M5 10h22M5 10l-3 8h6zM27 10l-3 8h6z"/></symbol>
+  <symbol id="i-ban" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M8 8l16 16"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 32 32"><path d="M18 3 6 18h9l-1 11 12-15h-9z"/></symbol>
+  <symbol id="i-box" viewBox="0 0 32 32"><path d="M16 3 4 9.5v13L16 29l12-6.5v-13zM4 9.5 16 16l12-6.5M16 16v13"/></symbol>
+  <symbol id="i-briefcase" viewBox="0 0 32 32"><rect x="3" y="10" width="26" height="17" rx="2"/><path d="M11 10V6h10v4M3 18h26"/></symbol>
+  <symbol id="i-bucket" viewBox="0 0 32 32"><ellipse cx="16" cy="8" rx="10" ry="3.5"/><path d="M6 8l3 17c.3 1.8 3.5 3 7 3s6.7-1.2 7-3l3-17"/></symbol>
+  <symbol id="i-building" viewBox="0 0 32 32"><rect x="8" y="4" width="16" height="24"/><path d="M12 9h2M18 9h2M12 14h2M18 14h2M12 19h2M18 19h2M14 28v-4h4v4"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 32 32"><rect x="4" y="7" width="24" height="21" rx="2"/><path d="M4 14h24M10 4v6M22 4v6"/></symbol>
+  <symbol id="i-cart" viewBox="0 0 32 32"><path d="M3 5h4l3 15h15l3-11H8"/><circle cx="12" cy="26" r="1.8"/><circle cx="23" cy="26" r="1.8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-chip" viewBox="0 0 32 32"><rect x="8" y="8" width="16" height="16" rx="2"/><rect x="13" y="13" width="6" height="6"/><path d="M12 3v5M20 3v5M12 24v5M20 24v5M3 12h5M3 20h5M24 12h5M24 20h5"/></symbol>
+  <symbol id="i-client" viewBox="0 0 32 32"><rect x="4" y="6" width="24" height="16" rx="1.5"/><path d="M11 27h10M16 22v5"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 32 32"><path d="M9 25a6 6 0 0 1-.5-12A8 8 0 0 1 24 11.5 6.8 6.8 0 0 1 23 25z"/></symbol>
+  <symbol id="i-crown" viewBox="0 0 32 32"><path d="M4 24 3 9l7 6 6-9 6 9 7-6-1 15zM5 28h22"/></symbol>
+  <symbol id="i-database" viewBox="0 0 32 32"><ellipse cx="16" cy="8" rx="10" ry="3.5"/><path d="M6 8v16c0 2 4.5 3.5 10 3.5s10-1.5 10-3.5V8M6 16c0 2 4.5 3.5 10 3.5s10-1.5 10-3.5"/></symbol>
+  <symbol id="i-disc" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="4"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 32 32"><path d="M8 3h11l6 6v20H8zM19 3v6h6M12 15h9M12 20h9M12 25h6"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 32 32"><path d="M4 9a2 2 0 0 1 2-2h6l3 3h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></symbol>
+  <symbol id="i-gateway" viewBox="0 0 32 32"><path d="M6 28V14a10 10 0 0 1 20 0v14M3 28h26M16 28V16"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 32 32"><circle cx="16" cy="16" r="5"/><path d="M16 3v5M16 24v5M3 16h5M24 16h5M6.8 6.8l3.5 3.5M21.7 21.7l3.5 3.5M25.2 6.8l-3.5 3.5M10.3 21.7l-3.5 3.5"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><ellipse cx="16" cy="16" rx="5" ry="12"/><path d="M4 16h24"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 32 32"><rect x="5" y="5" width="9" height="9"/><rect x="18" y="5" width="9" height="9"/><rect x="5" y="18" width="9" height="9"/><rect x="18" y="18" width="9" height="9"/></symbol>
+  <symbol id="i-institution" viewBox="0 0 32 32"><path d="M16 4 4 11h24zM7 14v9M13 14v9M19 14v9M25 14v9M4 27h24"/></symbol>
+  <symbol id="i-key" viewBox="0 0 32 32"><circle cx="10" cy="16" r="5"/><path d="M15 16h13M24 16v5M28 16v4"/></symbol>
+  <symbol id="i-layers" viewBox="0 0 32 32"><path d="M16 4 3 11l13 7 13-7zM3 16.5l13 7 13-7M3 22l13 7 13-7"/></symbol>
+  <symbol id="i-listener" viewBox="0 0 32 32"><circle cx="16" cy="16" r="2.5"/><path d="M10 10a8.5 8.5 0 0 0 0 12M22 10a8.5 8.5 0 0 1 0 12M5.5 5.5a15 15 0 0 0 0 21M26.5 5.5a15 15 0 0 1 0 21"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 32 32"><rect x="6" y="14" width="20" height="14" rx="2"/><path d="M10 14v-4a6 6 0 0 1 12 0v4"/></symbol>
+  <symbol id="i-network" viewBox="0 0 32 32"><circle cx="16" cy="7" r="3"/><circle cx="6" cy="24" r="3"/><circle cx="26" cy="24" r="3"/><path d="M14.5 9.6 7.5 21.4M17.5 9.6l7 11.8M9 24h14"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 32 32"><path d="M16 29s9-8 9-15a9 9 0 0 0-18 0c0 7 9 15 9 15z"/><circle cx="16" cy="14" r="3"/></symbol>
+  <symbol id="i-play" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M13 10.5v11l9-5.5z"/></symbol>
+  <symbol id="i-refresh" viewBox="0 0 32 32"><path d="M26 14a10 10 0 0 0-18-4L5 13M5 5v8h8M6 18a10 10 0 0 0 18 4l3-3M27 27v-8h-8"/></symbol>
+  <symbol id="i-rules" viewBox="0 0 32 32"><path d="M12 8h15M12 16h15M12 24h15M5 8h.01M5 16h.01M5 24h.01"/></symbol>
+  <symbol id="i-server" viewBox="0 0 32 32"><rect x="5" y="5" width="22" height="9" rx="1.5"/><rect x="5" y="18" width="22" height="9" rx="1.5"/><path d="M9.5 9.5h.01M9.5 22.5h.01"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 32 32"><path d="M16 3 6 7v8c0 7 4.5 11 10 14 5.5-3 10-7 10-14V7z"/></symbol>
+  <symbol id="i-sparkle" viewBox="0 0 32 32"><path d="M16 3c1 7 3 10 10 13-7 3-9 6-10 13-1-7-3-10-10-13 7-3 9-6 10-13z"/></symbol>
+  <symbol id="i-steps" viewBox="0 0 32 32"><path d="M4 27h7v-7h7v-7h8V6"/></symbol>
+  <symbol id="i-swap" viewBox="0 0 32 32"><path d="M5 12h20l-5-5M27 20H7l5 5"/></symbol>
+  <symbol id="i-target" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><circle cx="16" cy="16" r="7"/><circle cx="16" cy="16" r="2"/></symbol>
+  <symbol id="i-terminal" viewBox="0 0 32 32"><rect x="3" y="5" width="26" height="22" rx="2"/><path d="M8 12l5 4-5 4M16 21h8"/></symbol>
+  <symbol id="i-ticket" viewBox="0 0 32 32"><path d="M3 9h26v5a2.5 2.5 0 0 0 0 5v5H3v-5a2.5 2.5 0 0 0 0-5zM21 9v3M21 15v2M21 20v4"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 32 32"><path d="M5 8h22M12 8V5h8v3M8 8l1.5 20h13L24 8M13 13v10M19 13v10"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 32 32"><circle cx="16" cy="6" r="3"/><path d="M16 9v6M7 15h18M7 15v6M16 15v6M25 15v6"/><circle cx="7" cy="24" r="3"/><circle cx="16" cy="24" r="3"/><circle cx="25" cy="24" r="3"/></symbol>
+  <symbol id="i-user" viewBox="0 0 32 32"><circle cx="16" cy="11" r="5"/><path d="M6 27c0-5.5 4.5-9 10-9s10 3.5 10 9"/></symbol>
+  <symbol id="i-users" viewBox="0 0 32 32"><circle cx="12" cy="11" r="4.5"/><path d="M3 26c0-5 4-8 9-8s9 3 9 8M21 7a4.5 4.5 0 0 1 0 8.5M25 19c2.5 1 4 3.5 4 7"/></symbol>
+  <symbol id="i-x" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M11 11l10 10M21 11 11 21"/></symbol>
+</svg>
   <div id="scroll-progress" aria-hidden="true"></div>
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="site-header">
-    <a class="site-wordmark" href="../" aria-label="Baselarte">
+    <a class="site-wordmark" href="../../index.html" aria-label="Baselarte">
       <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="8.5"/><path d="M4.5 19h23"/></svg>
       <span>baselarte</span>
     </a>
     <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
-      <a href="../#about" data-i18n="nav.about">About</a>
-      <a href="../#practice" data-i18n="nav.practice">Practice</a>
-      <a href="../#principles" data-i18n="nav.principles">Principles</a>
-      <a href="./" aria-current="page" data-i18n="nav.aws">AWS Notes</a>
+      <a href="../../index.html#about" data-i18n="nav.about">About</a>
+      <a href="../../index.html#practice" data-i18n="nav.practice">Practice</a>
+      <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+      <a href="../index.html" aria-current="true" data-i18n="nav.notes">Notes</a>
       <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
         <span data-i18n="languageToggle.label">PT</span>
       </button>
     </nav>
   </header>
+
+  <nav class="page-nav" data-i18n-attributes="aria-label:back.label" aria-label="Page navigation">
+    <a class="pill-link" href="../index.html"><span aria-hidden="true">←</span> <span data-i18n="back.notes">Notes</span></a>
+    <a class="pill-link" href="../../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></svg> <span data-i18n="back.home">Home</span></a>
+  </nav>
 
   <section class="hero" aria-labelledby="hero-title">
     <p class="monospace-label hero-kicker" data-i18n="aws.kicker">Based on the official docs</p>
@@ -155,17 +209,17 @@
   <div class="widget" data-explorer>
     <div class="wtitle"><span class="pt">Explorador</span><span class="en">Explorer</span></div>
     <div class="flow">
-      <button class="node" data-t="x-dns">🌐 DNS</button><span class="arrow">→</span>
-      <button class="node" data-t="x-elb">⚖️ ELB</button><span class="arrow">→</span>
-      <button class="node" data-t="x-ec2">🖥️ EC2</button><span class="arrow">→</span>
-      <button class="node" data-t="x-rds">🗄️ RDS</button>
+      <button class="node" data-t="x-dns"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> DNS</button><span class="arrow">→</span>
+      <button class="node" data-t="x-elb"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ELB</button><span class="arrow">→</span>
+      <button class="node" data-t="x-ec2"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2</button><span class="arrow">→</span>
+      <button class="node" data-t="x-rds"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> RDS</button>
     </div>
     <div class="flow">
-      <button class="node" data-t="x-iam">🔐 IAM</button>
-      <button class="node" data-t="x-vpc">🕸️ VPC</button>
-      <button class="node" data-t="x-s3">🪣 S3</button>
-      <button class="node" data-t="x-ecr">📦 ECR</button>
-      <button class="node" data-t="x-ecs">🧩 ECS</button>
+      <button class="node" data-t="x-iam"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> IAM</button>
+      <button class="node" data-t="x-vpc"><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg> VPC</button>
+      <button class="node" data-t="x-s3"><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg> S3</button>
+      <button class="node" data-t="x-ecr"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR</button>
+      <button class="node" data-t="x-ecs"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> ECS</button>
     </div>
     <div class="panel">
       <div id="x-dns"><span class="pt"><b>Route 53</b> traduz <code>meusite.com.br</code> no endereço do load balancer.</span><span class="en"><b>Route 53</b> translates <code>mysite.com</code> into the load balancer's address.</span></div>
@@ -190,10 +244,10 @@
   </header>
 
   <div class="grid">
-    <div class="card"><h4>👑 Root user</h4><span class="pt">Identidade criada junto com a conta, com acesso total. A AWS recomenda <b>não</b> usá-la no dia a dia. Algumas tarefas exigem o root, e a documentação lista quais.</span><span class="en">The identity created with the account, with complete access. AWS recommends <b>not</b> using it for everyday tasks. A few tasks do require root, and the docs list them.</span></div>
-    <div class="card"><h4>🙋 User</h4><span class="pt">Identidade com credenciais de longo prazo (senha, access keys). A AWS recomenda usá-lo só quando federação e roles não servem, por exemplo em ferramentas de terceiros que não suportam o IAM Identity Center.</span><span class="en">An identity with long-term credentials (password, access keys). AWS recommends it only when federation and roles do not fit, for example third-party tools that do not support IAM Identity Center.</span></div>
-    <div class="card"><h4>👥 User Group</h4><span class="pt">Coleção de usuários IAM: anexe a política ao grupo e todos herdam. Um usuário pode estar em vários grupos. Grupos <b>não</b> podem ser aninhados e não podem ser <code>Principal</code> em uma política.</span><span class="en">A collection of IAM users: attach the policy to the group and everyone inherits it. A user can be in many groups. Groups <b>cannot</b> be nested and cannot be a <code>Principal</code> in a policy.</span></div>
-    <div class="card"><h4>🎭 Role</h4><span class="pt">Identidade sem credenciais próprias de longo prazo, feita para ser <b>assumida</b> por quem precisar (pessoas, outras contas, serviços AWS ou IdPs externos). Ao assumir, você recebe credenciais temporárias da sessão.</span><span class="en">An identity with no long-term credentials of its own, meant to be <b>assumed</b> by whoever needs it (people, other accounts, AWS services or external IdPs). On assuming it, you get temporary session credentials.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-crown"/></svg> Root user</h4><span class="pt">Identidade criada junto com a conta, com acesso total. A AWS recomenda <b>não</b> usá-la no dia a dia. Algumas tarefas exigem o root, e a documentação lista quais.</span><span class="en">The identity created with the account, with complete access. AWS recommends <b>not</b> using it for everyday tasks. A few tasks do require root, and the docs list them.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> User</h4><span class="pt">Identidade com credenciais de longo prazo (senha, access keys). A AWS recomenda usá-lo só quando federação e roles não servem, por exemplo em ferramentas de terceiros que não suportam o IAM Identity Center.</span><span class="en">An identity with long-term credentials (password, access keys). AWS recommends it only when federation and roles do not fit, for example third-party tools that do not support IAM Identity Center.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> User Group</h4><span class="pt">Coleção de usuários IAM: anexe a política ao grupo e todos herdam. Um usuário pode estar em vários grupos. Grupos <b>não</b> podem ser aninhados e não podem ser <code>Principal</code> em uma política.</span><span class="en">A collection of IAM users: attach the policy to the group and everyone inherits it. A user can be in many groups. Groups <b>cannot</b> be nested and cannot be a <code>Principal</code> in a policy.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-badge"/></svg> Role</h4><span class="pt">Identidade sem credenciais próprias de longo prazo, feita para ser <b>assumida</b> por quem precisar (pessoas, outras contas, serviços AWS ou IdPs externos). Ao assumir, você recebe credenciais temporárias da sessão.</span><span class="en">An identity with no long-term credentials of its own, meant to be <b>assumed</b> by whoever needs it (people, other accounts, AWS services or external IdPs). On assuming it, you get temporary session credentials.</span></div>
   </div>
 
   <div class="callout"><strong><span class="pt">Role = permissões + confiança</span><span class="en">Role = permissions + trust</span></strong>
@@ -203,9 +257,9 @@
 
   <h3><span class="pt">Fluxo comum com grupos</span><span class="en">Common flow with groups</span></h3>
   <div class="flow">
-    <span class="node">📜 Policy</span><span class="arrow">→</span>
-    <span class="node">👥 User Group (Devs)</span><span class="arrow">→</span>
-    <span class="node">🙋 Users</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Policy</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-users"/></svg> User Group (Devs)</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Users</span>
   </div>
 
   <h3><span class="pt">Anatomia de uma política</span><span class="en">Anatomy of a policy</span></h3>
@@ -254,8 +308,8 @@
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Roles para serviços e CI/CD; grupos + políticas quando houver usuários IAM; Access Analyzer para revisar permissões.</span><span class="en">Roles for services and CI/CD; groups + policies when IAM users exist; Access Analyzer to review permissions.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Usuário IAM com access key de longo prazo para pessoas ou para workloads que poderiam usar role; uso do root no dia a dia.</span><span class="en">IAM users with long-term access keys for people, or for workloads that could use a role; everyday use of root.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Roles para serviços e CI/CD; grupos + políticas quando houver usuários IAM; Access Analyzer para revisar permissões.</span><span class="en">Roles for services and CI/CD; groups + policies when IAM users exist; Access Analyzer to review permissions.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Usuário IAM com access key de longo prazo para pessoas ou para workloads que poderiam usar role; uso do root no dia a dia.</span><span class="en">IAM users with long-term access keys for people, or for workloads that could use a role; everyday use of root.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -284,10 +338,10 @@
   </header>
 
   <div class="grid">
-    <div class="card"><h4>🏛️ Management account</h4><span class="pt">Conta que administra a organização. <b>SCPs não afetam</b> usuários e roles dela, só as contas-membro.</span><span class="en">The account that administers the organization. <b>SCPs do not affect</b> its users and roles, only member accounts.</span></div>
-    <div class="card"><h4>🏢 Member accounts</h4><span class="pt">As demais contas. Cada conta AWS é um limite natural de permissão, segurança, custo e carga de trabalho.</span><span class="en">All other accounts. Each AWS account is a natural boundary for permissions, security, cost and workloads.</span></div>
-    <div class="card"><h4>📁 OU</h4><span class="pt">Organizational Unit: grupo de contas (por exemplo, as que atendem a uma aplicação ou a um ambiente). Políticas anexadas a uma OU valem para as contas dentro dela.</span><span class="en">Organizational Unit: a group of accounts (for example those serving one application or environment). Policies attached to an OU apply to the accounts inside it.</span></div>
-    <div class="card"><h4>🛡️ SCP</h4><span class="pt">Service Control Policy: define o <b>máximo de permissões</b> disponível para IAM users e roles das contas. Não concede nada.</span><span class="en">Service Control Policy: defines the <b>maximum permissions</b> available to IAM users and roles in the accounts. It grants nothing.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</h4><span class="pt">Conta que administra a organização. <b>SCPs não afetam</b> usuários e roles dela, só as contas-membro.</span><span class="en">The account that administers the organization. <b>SCPs do not affect</b> its users and roles, only member accounts.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> Member accounts</h4><span class="pt">As demais contas. Cada conta AWS é um limite natural de permissão, segurança, custo e carga de trabalho.</span><span class="en">All other accounts. Each AWS account is a natural boundary for permissions, security, cost and workloads.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU</h4><span class="pt">Organizational Unit: grupo de contas (por exemplo, as que atendem a uma aplicação ou a um ambiente). Políticas anexadas a uma OU valem para as contas dentro dela.</span><span class="en">Organizational Unit: a group of accounts (for example those serving one application or environment). Policies attached to an OU apply to the accounts inside it.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> SCP</h4><span class="pt">Service Control Policy: define o <b>máximo de permissões</b> disponível para IAM users e roles das contas. Não concede nada.</span><span class="en">Service Control Policy: defines the <b>maximum permissions</b> available to IAM users and roles in the accounts. It grants nothing.</span></div>
   </div>
 
   <h3><span class="pt">Por que separar contas por ambiente</span><span class="en">Why separate accounts by environment</span></h3>
@@ -296,10 +350,10 @@
   <div class="vpc">
     <div class="label"><span class="pt">Organização</span><span class="en">Organization</span></div>
     <div class="flow">
-      <span class="node">🏛️ Management</span><span class="arrow">→</span>
-      <span class="node">📁 OU Prod<br><small>&lt;ID_CONTA_PROD&gt;</small></span>
-      <span class="node">📁 OU Non-prod<br><small>&lt;ID_CONTA_STAGING&gt;</small></span>
-      <span class="node">📁 OU Shared<br><small><span class="pt">tooling: ECR, CI/CD</span><span class="en">tooling: ECR, CI/CD</span> · &lt;ID_CONTA_TOOLING&gt;</small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management</span><span class="arrow">→</span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod<br><small>&lt;ID_CONTA_PROD&gt;</small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod<br><small>&lt;ID_CONTA_STAGING&gt;</small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared<br><small><span class="pt">tooling: ECR, CI/CD</span><span class="en">tooling: ECR, CI/CD</span> · &lt;ID_CONTA_TOOLING&gt;</small></span>
     </div>
   </div>
   <p><span class="pt">A conta de <b>tooling/compartilhada</b> costuma guardar o que várias contas usam, como o repositório de imagens no <a href="#ecr">ECR</a> (acesso entre contas via repository policy).</span><span class="en">The <b>tooling/shared</b> account usually holds what several accounts use, such as the image repository in <a href="#ecr">ECR</a> (cross-account access through a repository policy).</span></p>
@@ -308,20 +362,20 @@
   <div class="widget" data-org>
     <div class="wtitle"><span class="pt">Clique em um nó da árvore</span><span class="en">Click a node of the tree</span></div>
     <ul class="tree root">
-      <li><button class="node" id="o-root" data-scp="full deny-leave" aria-pressed="true">🌳 Root</button>
+      <li><button class="node" id="o-root" data-scp="full deny-leave" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg> Root</button>
         <ul class="tree">
-          <li><button class="node" id="o-mgmt" data-parent="o-root" data-exempt="1">🏛️ Management account</button></li>
-          <li><button class="node" id="o-prod" data-parent="o-root" data-scp="regions">📁 OU Prod</button>
+          <li><button class="node" id="o-mgmt" data-parent="o-root" data-exempt="1"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</button></li>
+          <li><button class="node" id="o-prod" data-parent="o-root" data-scp="regions"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod</button>
             <ul class="tree">
-              <li><button class="node" id="o-app" data-parent="o-prod">🏢 prod</button></li>
+              <li><button class="node" id="o-app" data-parent="o-prod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> prod</button></li>
             </ul></li>
-          <li><button class="node" id="o-nonprod" data-parent="o-root" data-scp="costly">📁 OU Non-prod</button>
+          <li><button class="node" id="o-nonprod" data-parent="o-root" data-scp="costly"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod</button>
             <ul class="tree">
-              <li><button class="node" id="o-stg" data-parent="o-nonprod">🏢 staging</button></li>
+              <li><button class="node" id="o-stg" data-parent="o-nonprod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> staging</button></li>
             </ul></li>
-          <li><button class="node" id="o-shared" data-parent="o-root">📁 OU Shared</button>
+          <li><button class="node" id="o-shared" data-parent="o-root"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared</button>
             <ul class="tree">
-              <li><button class="node" id="o-tool" data-parent="o-shared">🏢 tooling</button></li>
+              <li><button class="node" id="o-tool" data-parent="o-shared"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> tooling</button></li>
             </ul></li>
         </ul></li>
     </ul>
@@ -331,7 +385,7 @@
       <span class="chip" data-id="regions"><span class="pt">Só regiões aprovadas</span><span class="en">Approved regions only</span></span>
       <span class="chip" data-id="costly"><span class="pt">Negar instâncias caras</span><span class="en">Deny expensive instances</span></span>
     </div>
-    <p class="org-note" hidden><span class="pt">⚠️ SCPs <b>não</b> afetam a management account.</span><span class="en">⚠️ SCPs do <b>not</b> affect the management account.</span></p>
+    <p class="org-note" hidden><span class="pt"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs <b>não</b> afetam a management account.</span><span class="en"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs do <b>not</b> affect the management account.</span></p>
     <p class="muted"><span class="pt">As SCPs destacadas são as efetivas: cada conta só tem o que é permitido por todos os níveis acima dela. Os nomes das SCPs aqui são ilustrativos.</span><span class="en">Highlighted SCPs are the effective ones: an account only has what every level above it allows. The SCP names here are illustrative.</span></p>
   </div>
 
@@ -363,8 +417,8 @@
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Mais de um ambiente ou time; necessidade de guardrails (regiões, serviços); fatura única; compartilhamento central de recursos.</span><span class="en">More than one environment or team; need for guardrails (regions, services); a single bill; central resource sharing.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Aplicar SCP direto na raiz sem teste; esperar que SCP libere permissões; rodar cargas de trabalho na management account (ela não é limitada por SCP).</span><span class="en">Applying an SCP straight to the root without testing; expecting an SCP to grant permissions; running workloads in the management account (it is not limited by SCPs).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Mais de um ambiente ou time; necessidade de guardrails (regiões, serviços); fatura única; compartilhamento central de recursos.</span><span class="en">More than one environment or team; need for guardrails (regions, services); a single bill; central resource sharing.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Aplicar SCP direto na raiz sem teste; esperar que SCP libere permissões; rodar cargas de trabalho na management account (ela não é limitada por SCP).</span><span class="en">Applying an SCP straight to the root without testing; expecting an SCP to grant permissions; running workloads in the management account (it is not limited by SCPs).</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -393,16 +447,16 @@
   <p><span class="pt">O IAM Identity Center (antigo AWS Single Sign-On) conecta o seu provedor de identidade existente, sincronizando usuários e grupos, ou permite criar e gerenciar usuários direto nele. Para acesso a contas, a AWS o recomenda como forma de dar acesso a pessoas. Não há cobrança adicional pelo IAM Identity Center; você paga pelos recursos que usa.</span><span class="en">IAM Identity Center (formerly AWS Single Sign-On) connects your existing identity provider, syncing users and groups, or lets you create and manage users directly in it. For account access, AWS recommends it as the way to give access to people. There is no additional charge for IAM Identity Center; you pay for the resources you use.</span></p>
 
   <div class="flow">
-    <span class="node">🙋 <span class="pt">Pessoa</span><span class="en">Person</span></span><span class="arrow">→</span>
-    <span class="node">🚪 AWS access portal</span><span class="arrow">→</span>
-    <span class="node">🎫 Permission set</span><span class="arrow">→</span>
-    <span class="node">🏢 <span class="pt">Contas staging / prod</span><span class="en">staging / prod accounts</span></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> <span class="pt">Pessoa</span><span class="en">Person</span></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gateway"/></svg> AWS access portal</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg> Permission set</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> <span class="pt">Contas staging / prod</span><span class="en">staging / prod accounts</span></span>
   </div>
 
   <div class="grid">
-    <div class="card"><h4>🏛️ <span class="pt">Instância da organização</span><span class="en">Organization instance</span></h4><span class="pt">É a melhor prática e a única que permite gerenciar acesso a contas AWS. Fica na management account do Organizations.</span><span class="en">It is the best practice and the only one that lets you manage access to AWS accounts. It lives in the Organizations management account.</span></div>
-    <div class="card"><h4>🎫 Permission set</h4><span class="pt">Modelo que reúne uma ou mais políticas IAM. Ao atribuí-lo a um usuário ou grupo em uma conta, o Identity Center cria e mantém uma role IAM nela e anexa as políticas.</span><span class="en">A template grouping one or more IAM policies. When you assign it to a user or group in an account, Identity Center creates and maintains an IAM role there and attaches the policies.</span></div>
-    <div class="card"><h4>🔑 <span class="pt">Credenciais temporárias</span><span class="en">Temporary credentials</span></h4><span class="pt">A duração da sessão da conta vem do permission set (padrão de 1 hora, máximo de 12 horas). A sessão no portal tem outro limite (padrão de 8 horas, máximo de 90 dias).</span><span class="en">Account session length comes from the permission set (default 1 hour, maximum 12 hours). The portal session has its own limit (default 8 hours, maximum 90 days).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> <span class="pt">Instância da organização</span><span class="en">Organization instance</span></h4><span class="pt">É a melhor prática e a única que permite gerenciar acesso a contas AWS. Fica na management account do Organizations.</span><span class="en">It is the best practice and the only one that lets you manage access to AWS accounts. It lives in the Organizations management account.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-ticket"/></svg> Permission set</h4><span class="pt">Modelo que reúne uma ou mais políticas IAM. Ao atribuí-lo a um usuário ou grupo em uma conta, o Identity Center cria e mantém uma role IAM nela e anexa as políticas.</span><span class="en">A template grouping one or more IAM policies. When you assign it to a user or group in an account, Identity Center creates and maintains an IAM role there and attaches the policies.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> <span class="pt">Credenciais temporárias</span><span class="en">Temporary credentials</span></h4><span class="pt">A duração da sessão da conta vem do permission set (padrão de 1 hora, máximo de 12 horas). A sessão no portal tem outro limite (padrão de 8 horas, máximo de 90 dias).</span><span class="en">Account session length comes from the permission set (default 1 hour, maximum 12 hours). The portal session has its own limit (default 8 hours, maximum 90 days).</span></div>
   </div>
 
   <h3><span class="pt">Permission sets na prática</span><span class="en">Permission sets in practice</span></h3>
@@ -422,8 +476,8 @@ aws sso logout</code></pre>
   <p class="muted"><span class="pt">Quando as credenciais do SSO expiram, é preciso fazer login de novo. Veja também a seção <a href="#cli">AWS CLI</a>.</span><span class="en">When SSO credentials expire you must sign in again. See also the <a href="#cli">AWS CLI</a> section.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Pessoas que acessam várias contas (staging, prod, tooling); quando se quer um único ponto de login e permissões centralizadas por perfil de trabalho.</span><span class="en">People who access several accounts (staging, prod, tooling); when you want a single sign-in point and permissions centralized per job role.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Para pipelines de CI/CD e workloads (use roles com <a href="#oidc">OIDC</a>); instâncias de conta para gerenciar acesso a várias contas (só a instância da organização faz isso).</span><span class="en">For CI/CD pipelines and workloads (use roles with <a href="#oidc">OIDC</a>); account instances to manage access across accounts (only the organization instance does that).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Pessoas que acessam várias contas (staging, prod, tooling); quando se quer um único ponto de login e permissões centralizadas por perfil de trabalho.</span><span class="en">People who access several accounts (staging, prod, tooling); when you want a single sign-in point and permissions centralized per job role.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Para pipelines de CI/CD e workloads (use roles com <a href="#oidc">OIDC</a>); instâncias de conta para gerenciar acesso a várias contas (só a instância da organização faz isso).</span><span class="en">For CI/CD pipelines and workloads (use roles with <a href="#oidc">OIDC</a>); account instances to manage access across accounts (only the organization instance does that).</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -450,10 +504,10 @@ aws sso logout</code></pre>
   <p><span class="pt">A AWS recomenda <b>não</b> guardar credenciais de longo prazo em aplicações fora da AWS. Com OIDC, o provedor emite um JSON Web Token (JWT); a AWS valida o token e devolve credenciais temporárias de uma role IAM. A operação da API é <code>AssumeRoleWithWebIdentity</code> (AWS STS).</span><span class="en">AWS recommends <b>not</b> storing long-term credentials in applications outside AWS. With OIDC, the provider issues a JSON Web Token (JWT); AWS validates it and returns temporary credentials for an IAM role. The API operation is <code>AssumeRoleWithWebIdentity</code> (AWS STS).</span></p>
 
   <div class="flow">
-    <span class="node">⚙️ GitHub Actions</span><span class="arrow">①&nbsp;JWT →</span>
-    <span class="node">🪪 <span class="pt">Provedor OIDC no IAM</span><span class="en">OIDC provider in IAM</span></span><span class="arrow">②&nbsp;AssumeRoleWithWebIdentity →</span>
-    <span class="node">🎭 Role + trust policy</span><span class="arrow">③&nbsp;<span class="pt">credenciais temporárias</span><span class="en">temporary credentials</span> →</span>
-    <span class="node">☁️ <span class="pt">Recursos AWS</span><span class="en">AWS resources</span></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg> GitHub Actions</span><span class="arrow">①&nbsp;JWT →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-badge"/></svg> <span class="pt">Provedor OIDC no IAM</span><span class="en">OIDC provider in IAM</span></span><span class="arrow">②&nbsp;AssumeRoleWithWebIdentity →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-badge"/></svg> Role + trust policy</span><span class="arrow">③&nbsp;<span class="pt">credenciais temporárias</span><span class="en">temporary credentials</span> →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg> <span class="pt">Recursos AWS</span><span class="en">AWS resources</span></span>
   </div>
 
   <h3><span class="pt">1 · Criar o provedor OIDC no IAM</span><span class="en">1 · Create the OIDC provider in IAM</span></h3>
@@ -525,8 +579,8 @@ jobs:
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">CI/CD que precisa chamar a AWS (push no ECR, deploy no ECS, sync no S3) sem access keys guardadas como secret.</span><span class="en">CI/CD that needs to call AWS (ECR push, ECS deploy, S3 sync) without access keys stored as secrets.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Trust policy com <code>sub</code> aberto (ex.: <code>repo:ORG/*</code> em produção); pessoas fazendo login (prefira <a href="#identity-center">Identity Center</a>).</span><span class="en">A trust policy with an open <code>sub</code> (e.g. <code>repo:ORG/*</code> in production); people signing in (prefer <a href="#identity-center">Identity Center</a>).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">CI/CD que precisa chamar a AWS (push no ECR, deploy no ECS, sync no S3) sem access keys guardadas como secret.</span><span class="en">CI/CD that needs to call AWS (ECR push, ECS deploy, S3 sync) without access keys stored as secrets.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Trust policy com <code>sub</code> aberto (ex.: <code>repo:ORG/*</code> em produção); pessoas fazendo login (prefira <a href="#identity-center">Identity Center</a>).</span><span class="en">A trust policy with an open <code>sub</code> (e.g. <code>repo:ORG/*</code> in production); people signing in (prefer <a href="#identity-center">Identity Center</a>).</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -578,8 +632,8 @@ aws --version</code></pre>
 <pre><code>aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 111122223333.dkr.ecr.us-east-1.amazonaws.com</code></pre>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Automação, scripts, diagnóstico rápido e tarefas repetíveis que o console não resolve bem.</span><span class="en">Automation, scripts, quick diagnostics and repeatable tasks the console does not handle well.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Access keys fixas em arquivo para pessoas (prefira SSO) ou em CI (prefira <a href="#oidc">OIDC</a>).</span><span class="en">Static access keys in files for people (prefer SSO) or in CI (prefer <a href="#oidc">OIDC</a>).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Automação, scripts, diagnóstico rápido e tarefas repetíveis que o console não resolve bem.</span><span class="en">Automation, scripts, quick diagnostics and repeatable tasks the console does not handle well.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Access keys fixas em arquivo para pessoas (prefira SSO) ou em CI (prefira <a href="#oidc">OIDC</a>).</span><span class="en">Static access keys in files for people (prefer SSO) or in CI (prefer <a href="#oidc">OIDC</a>).</span></div>
   </div>
 
   <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
@@ -624,8 +678,8 @@ aws --version</code></pre>
     <div class="wtitle"><span class="pt">Animação</span><span class="en">Animation</span></div>
     <div class="stage">
       <div class="line"></div>
-      <span class="node c">💻 Client</span>
-      <span class="node s">🖥️ Server</span>
+      <span class="node c"><svg class="icon" aria-hidden="true"><use href="#i-client"/></svg> Client</span>
+      <span class="node s"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> Server</span>
       <div class="dot"></div>
     </div>
     <ol class="steps">
@@ -655,8 +709,8 @@ aws --version</code></pre>
 
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Depuração pontual em instâncias de teste, com porta 22 restrita ao seu IP.</span><span class="en">Occasional debugging on test instances, with port 22 limited to your IP.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Porta 22 aberta para a internet; acesso rotineiro em produção (prefira Session Manager).</span><span class="en">Port 22 open to the internet; routine production access (prefer Session Manager).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Depuração pontual em instâncias de teste, com porta 22 restrita ao seu IP.</span><span class="en">Occasional debugging on test instances, with port 22 limited to your IP.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Porta 22 aberta para a internet; acesso rotineiro em produção (prefira Session Manager).</span><span class="en">Port 22 open to the internet; routine production access (prefer Session Manager).</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -680,9 +734,9 @@ aws --version</code></pre>
   </header>
 
   <div class="grid">
-    <div class="card"><h4>💿 AMI</h4><span class="pt">Amazon Machine Image: fornece o software para iniciar a instância e um mapeamento de dispositivos de bloco (os discos a anexar). É específica de Region, sistema operacional, arquitetura de processador, tipo de volume raiz e tipo de virtualização. Dá para copiar para outra Region e compartilhar com outras contas.</span><span class="en">Amazon Machine Image: provides the software to boot the instance and a block device mapping (the disks to attach). It is specific to Region, operating system, processor architecture, root volume type and virtualization type. You can copy it to another Region and share it with other accounts.</span></div>
-    <div class="card"><h4>⚡ Instance type</h4><span class="pt">Define o hardware (CPU, memória, armazenamento, rede). Os tipos são agrupados em famílias; os nomes seguem uma convenção (família, geração, processador, capacidades, tamanho). Há instâncias <i>burstable</i> (como a série T). Como o faturamento é por segundo, é barato testar vários tipos.</span><span class="en">Defines the hardware (CPU, memory, storage, network). Types are grouped into families; names follow a convention (family, generation, processor, capabilities, size). There are <i>burstable</i> instances (such as the T series). Since billing is per second, testing several types is cheap.</span></div>
-    <div class="card"><h4>🌍 Public IPv4</h4><span class="pt">O IP público automático vem do pool da Amazon e <b>não</b> é seu: é liberado ao parar, hibernar ou encerrar, e a instância recebe outro ao iniciar de novo. Para um endereço fixo, use <a href="#eip">Elastic IP</a>. A AWS cobra por todo IPv4 público.</span><span class="en">The automatic public IP comes from Amazon's pool and is <b>not</b> yours: it is released on stop, hibernate or terminate, and the instance gets a new one on start. For a fixed address use an <a href="#eip">Elastic IP</a>. AWS charges for every public IPv4 address.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg> AMI</h4><span class="pt">Amazon Machine Image: fornece o software para iniciar a instância e um mapeamento de dispositivos de bloco (os discos a anexar). É específica de Region, sistema operacional, arquitetura de processador, tipo de volume raiz e tipo de virtualização. Dá para copiar para outra Region e compartilhar com outras contas.</span><span class="en">Amazon Machine Image: provides the software to boot the instance and a block device mapping (the disks to attach). It is specific to Region, operating system, processor architecture, root volume type and virtualization type. You can copy it to another Region and share it with other accounts.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg> Instance type</h4><span class="pt">Define o hardware (CPU, memória, armazenamento, rede). Os tipos são agrupados em famílias; os nomes seguem uma convenção (família, geração, processador, capacidades, tamanho). Há instâncias <i>burstable</i> (como a série T). Como o faturamento é por segundo, é barato testar vários tipos.</span><span class="en">Defines the hardware (CPU, memory, storage, network). Types are grouped into families; names follow a convention (family, generation, processor, capabilities, size). There are <i>burstable</i> instances (such as the T series). Since billing is per second, testing several types is cheap.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Public IPv4</h4><span class="pt">O IP público automático vem do pool da Amazon e <b>não</b> é seu: é liberado ao parar, hibernar ou encerrar, e a instância recebe outro ao iniciar de novo. Para um endereço fixo, use <a href="#eip">Elastic IP</a>. A AWS cobra por todo IPv4 público.</span><span class="en">The automatic public IP comes from Amazon's pool and is <b>not</b> yours: it is released on stop, hibernate or terminate, and the instance gets a new one on start. For a fixed address use an <a href="#eip">Elastic IP</a>. AWS charges for every public IPv4 address.</span></div>
   </div>
 
   <h3>Snapshot vs. <span class="pt">Imagem</span><span class="en">Image</span></h3>
@@ -719,16 +773,16 @@ aws --version</code></pre>
 
   <h3>Scaling policies</h3>
   <div class="grid">
-    <div class="card"><h4>🎯 Target tracking</h4><span class="pt">Escolhe uma métrica e um valor-alvo, como um termostato. Recomendada pela AWS; use métricas que variem de forma inversamente proporcional à capacidade (CPU média, requisições por target). O Auto Scaling cria os alarmes do CloudWatch por você.</span><span class="en">Pick a metric and a target value, like a thermostat. Recommended by AWS; use metrics that move inversely with capacity (average CPU, request count per target). Auto Scaling creates the CloudWatch alarms for you.</span></div>
-    <div class="card"><h4>🪜 Step / simple</h4><span class="pt">Ajustes por faixa de violação do alarme (step) ou um único ajuste com cooldown (simple). Cuidado ao combinar com target tracking: conflitos podem causar comportamento indesejado.</span><span class="en">Adjustments by alarm-breach size (step) or one adjustment with a cooldown (simple). Be careful combining with target tracking: conflicts can cause unwanted behavior.</span></div>
-    <div class="card"><h4>📅 Scheduled</h4><span class="pt">Ações agendadas mudam a capacidade em horários definidos (única ou recorrente, com cron e fuso horário). Bom para picos previsíveis.</span><span class="en">Scheduled actions change capacity at set times (one-off or recurring, with cron and time zone). Good for predictable peaks.</span></div>
-    <div class="card"><h4>🔮 Predictive</h4><span class="pt">Analisa a carga histórica para achar padrões diários ou semanais e prever a demanda, lançando capacidade antes do pico. Indicado para tráfego cíclico e aplicações lentas para iniciar.</span><span class="en">Analyzes historical load to detect daily or weekly patterns and forecast demand, launching capacity ahead of the peak. Suited to cyclical traffic and slow-starting apps.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg> Target tracking</h4><span class="pt">Escolhe uma métrica e um valor-alvo, como um termostato. Recomendada pela AWS; use métricas que variem de forma inversamente proporcional à capacidade (CPU média, requisições por target). O Auto Scaling cria os alarmes do CloudWatch por você.</span><span class="en">Pick a metric and a target value, like a thermostat. Recommended by AWS; use metrics that move inversely with capacity (average CPU, request count per target). Auto Scaling creates the CloudWatch alarms for you.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg> Step / simple</h4><span class="pt">Ajustes por faixa de violação do alarme (step) ou um único ajuste com cooldown (simple). Cuidado ao combinar com target tracking: conflitos podem causar comportamento indesejado.</span><span class="en">Adjustments by alarm-breach size (step) or one adjustment with a cooldown (simple). Be careful combining with target tracking: conflicts can cause unwanted behavior.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg> Scheduled</h4><span class="pt">Ações agendadas mudam a capacidade em horários definidos (única ou recorrente, com cron e fuso horário). Bom para picos previsíveis.</span><span class="en">Scheduled actions change capacity at set times (one-off or recurring, with cron and time zone). Good for predictable peaks.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Predictive</h4><span class="pt">Analisa a carga histórica para achar padrões diários ou semanais e prever a demanda, lançando capacidade antes do pico. Indicado para tráfego cíclico e aplicações lentas para iniciar.</span><span class="en">Analyzes historical load to detect daily or weekly patterns and forecast demand, launching capacity ahead of the peak. Suited to cyclical traffic and slow-starting apps.</span></div>
   </div>
   <p class="muted"><span class="pt">Sempre dentro do mínimo e do máximo do grupo. Se mais de uma política pedir mudança ao mesmo tempo, prevalece a que resulta em mais capacidade.</span><span class="en">Always within the group's min and max. If more than one policy asks for a change at once, the one giving the most capacity wins.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicação com carga variável ou que precisa se recuperar sozinha de falhas; servidores idênticos atrás de um load balancer.</span><span class="en">Apps with variable load or that must self-heal from failures; identical servers behind a load balancer.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Servidor único com estado em disco local, sem automação de configuração; quando containers no <a href="#ecs">ECS</a> já resolvem o problema.</span><span class="en">A single server with state on local disk and no configuration automation; when containers on <a href="#ecs">ECS</a> already solve the problem.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicação com carga variável ou que precisa se recuperar sozinha de falhas; servidores idênticos atrás de um load balancer.</span><span class="en">Apps with variable load or that must self-heal from failures; identical servers behind a load balancer.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Servidor único com estado em disco local, sem automação de configuração; quando containers no <a href="#ecs">ECS</a> já resolvem o problema.</span><span class="en">A single server with state on local disk and no configuration automation; when containers on <a href="#ecs">ECS</a> already solve the problem.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -758,7 +812,7 @@ aws --version</code></pre>
   </header>
   <p><span class="pt">O Elastic IP é alocado à sua conta e é seu até você liberá-lo. Você pode "mascarar" a falha de uma instância remapeando o endereço para outra instância da conta, ou usá-lo em um registro DNS do seu domínio.</span><span class="en">An Elastic IP is allocated to your account and stays yours until you release it. You can mask an instance failure by remapping the address to another instance in your account, or use it in a DNS record for your domain.</span></p>
   <div class="flow">
-    <span class="node">🖥️ EC2 A ❌</span><span class="arrow">⇢</span><span class="node">📍 Elastic IP</span><span class="arrow">⇢</span><span class="node">🖥️ EC2 B ✅</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 A <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Elastic IP</span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 B <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
   </div>
   <ul>
     <li><span class="pt">É específico de uma Region e não pode ser movido para outra. Não há Elastic IP para IPv6.</span><span class="en">It is specific to one Region and cannot be moved to another. There are no Elastic IPs for IPv6.</span></li>
@@ -773,8 +827,8 @@ aws --version</code></pre>
   <p><span class="pt">A documentação ainda sugere reduzir o número de IPv4 públicos usando um load balancer na frente das instâncias, desligando o "auto-assign public IP" onde não for preciso.</span><span class="en">The docs also suggest reducing the number of public IPv4 addresses by putting a load balancer in front of the instances and turning off "auto-assign public IP" where not needed.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Endereço fixo que precisa sobreviver à troca de instância e que alguém registra (DNS, allowlist de um parceiro).</span><span class="en">A fixed address that must survive an instance swap and that someone registers (DNS, a partner's allowlist).</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Quando um load balancer com nome DNS (<a href="#route53">Alias</a>) resolve; e o IP não deve ficar ocioso, pois é cobrado.</span><span class="en">When a load balancer with a DNS name (<a href="#route53">Alias</a>) solves it; and do not leave it idle, since it is billed.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Endereço fixo que precisa sobreviver à troca de instância e que alguém registra (DNS, allowlist de um parceiro).</span><span class="en">A fixed address that must survive an instance swap and that someone registers (DNS, a partner's allowlist).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Quando um load balancer com nome DNS (<a href="#route53">Alias</a>) resolve; e o IP não deve ficar ocioso, pois é cobrado.</span><span class="en">When a load balancer with a DNS name (<a href="#route53">Alias</a>) solves it; and do not leave it idle, since it is billed.</span></div>
   </div>
 
   <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
@@ -795,15 +849,15 @@ aws --version</code></pre>
   </header>
 
   <div class="flow">
-    <span class="node">⚙️ CI <span class="pt">(build)</span><span class="en">(build)</span></span><span class="arrow">push →</span>
-    <span class="node">📦 ECR <span class="pt">(conta tooling)</span><span class="en">(tooling account)</span></span><span class="arrow">← pull</span>
-    <span class="node">🖥️ ECS / EKS / EC2 <span class="pt">(staging, prod)</span><span class="en">(staging, prod)</span></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg> CI <span class="pt">(build)</span><span class="en">(build)</span></span><span class="arrow">push →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR <span class="pt">(conta tooling)</span><span class="en">(tooling account)</span></span><span class="arrow">← pull</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> ECS / EKS / EC2 <span class="pt">(staging, prod)</span><span class="en">(staging, prod)</span></span>
   </div>
 
   <div class="grid">
-    <div class="card"><h4>🗂️ Repository</h4><span class="pt">Repositório privado com permissões baseadas em recurso. Ele precisa existir antes do push, ou você precisa de um <i>repository creation template</i>.</span><span class="en">A private repository with resource-based permissions. It must exist before the push, or you need a <i>repository creation template</i>.</span></div>
-    <div class="card"><h4>🔑 Auth</h4><span class="pt">O token de autenticação vale <b>12 horas</b> e é por registry. No <code>docker login</code> o usuário é <code>AWS</code>. A identidade precisa da permissão <code>ecr:GetAuthorizationToken</code> via política IAM.</span><span class="en">The authentication token is valid for <b>12 hours</b> and is per registry. In <code>docker login</code> the user is <code>AWS</code>. The identity needs <code>ecr:GetAuthorizationToken</code> via an IAM policy.</span></div>
-    <div class="card"><h4>🧰 <span class="pt">Recursos</span><span class="en">Features</span></h4><span class="pt">Lifecycle policies (limpeza de imagens), scan de vulnerabilidades no push, replicação entre Regions e contas, pull through cache e assinatura gerenciada.</span><span class="en">Lifecycle policies (image cleanup), vulnerability scan on push, replication across Regions and accounts, pull through cache and managed signing.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Repository</h4><span class="pt">Repositório privado com permissões baseadas em recurso. Ele precisa existir antes do push, ou você precisa de um <i>repository creation template</i>.</span><span class="en">A private repository with resource-based permissions. It must exist before the push, or you need a <i>repository creation template</i>.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> Auth</h4><span class="pt">O token de autenticação vale <b>12 horas</b> e é por registry. No <code>docker login</code> o usuário é <code>AWS</code>. A identidade precisa da permissão <code>ecr:GetAuthorizationToken</code> via política IAM.</span><span class="en">The authentication token is valid for <b>12 hours</b> and is per registry. In <code>docker login</code> the user is <code>AWS</code>. The identity needs <code>ecr:GetAuthorizationToken</code> via an IAM policy.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg> <span class="pt">Recursos</span><span class="en">Features</span></h4><span class="pt">Lifecycle policies (limpeza de imagens), scan de vulnerabilidades no push, replicação entre Regions e contas, pull through cache e assinatura gerenciada.</span><span class="en">Lifecycle policies (image cleanup), vulnerability scan on push, replication across Regions and accounts, pull through cache and managed signing.</span></div>
   </div>
 
   <h3><span class="pt">Push passo a passo</span><span class="en">Push step by step</span></h3>
@@ -851,8 +905,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Imagens que rodam em ECS, EKS ou EC2 na AWS; repositório central em uma conta de tooling compartilhado entre ambientes.</span><span class="en">Images that run on ECS, EKS or EC2 in AWS; a central repository in a tooling account shared across environments.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Repository policy com <code>Principal: "*"</code> sem condição; tags mutáveis em produção quando você precisa saber exatamente qual imagem rodou; acumular imagens sem lifecycle policy.</span><span class="en">A repository policy with <code>Principal: "*"</code> and no condition; mutable tags in production when you must know exactly which image ran; piling up images with no lifecycle policy.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Imagens que rodam em ECS, EKS ou EC2 na AWS; repositório central em uma conta de tooling compartilhado entre ambientes.</span><span class="en">Images that run on ECS, EKS or EC2 in AWS; a central repository in a tooling account shared across environments.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Repository policy com <code>Principal: "*"</code> sem condição; tags mutáveis em produção quando você precisa saber exatamente qual imagem rodou; acumular imagens sem lifecycle policy.</span><span class="en">A repository policy with <code>Principal: "*"</code> and no condition; mutable tags in production when you must know exactly which image ran; piling up images with no lifecycle policy.</span></div>
   </div>
 
   <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
@@ -875,18 +929,18 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </header>
 
   <div class="flow">
-    <span class="node">📦 ECR</span><span class="arrow">→</span>
-    <span class="node">📋 Task definition</span><span class="arrow">→</span>
-    <span class="node">🧩 Service</span><span class="arrow">→</span>
-    <span class="node">🏃 Tasks <span class="pt">no cluster</span><span class="en">in the cluster</span></span><span class="arrow">←</span>
-    <span class="node">⚖️ ALB</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Tasks <span class="pt">no cluster</span><span class="en">in the cluster</span></span><span class="arrow">←</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB</span>
   </div>
 
   <div class="grid">
-    <div class="card"><h4>📋 Task definition</h4><span class="pt">O "projeto" da aplicação: quais containers rodam e como.</span><span class="en">The application's "blueprint": which containers run and how.</span></div>
-    <div class="card"><h4>🧱 Cluster</h4><span class="pt">A infraestrutura onde a aplicação roda.</span><span class="en">The infrastructure the application runs on.</span></div>
-    <div class="card"><h4>🏃 Task</h4><span class="pt">Uma execução da aplicação, como um job em lote que trabalha e termina.</span><span class="en">One run of the application, like a batch job that works and stops.</span></div>
-    <div class="card"><h4>🧩 Service</h4><span class="pt">Aplicação de longa duração e sem estado: o ECS mantém o número desejado de tasks rodando e faz os deploys.</span><span class="en">A long-running stateless application: ECS keeps the desired number of tasks running and performs deployments.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</h4><span class="pt">O "projeto" da aplicação: quais containers rodam e como.</span><span class="en">The application's "blueprint": which containers run and how.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg> Cluster</h4><span class="pt">A infraestrutura onde a aplicação roda.</span><span class="en">The infrastructure the application runs on.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Task</h4><span class="pt">Uma execução da aplicação, como um job em lote que trabalha e termina.</span><span class="en">One run of the application, like a batch job that works and stops.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</h4><span class="pt">Aplicação de longa duração e sem estado: o ECS mantém o número desejado de tasks rodando e faz os deploys.</span><span class="en">A long-running stateless application: ECS keeps the desired number of tasks running and performs deployments.</span></div>
   </div>
   <p><span class="pt"><b>Capacidade</b> (onde os containers rodam): Fargate (serverless, sem gerenciar servidores), instâncias EC2 que você gerencia, ECS Managed Instances (EC2 com a infraestrutura gerenciada pela AWS) ou servidores externos com ECS Anywhere. O custo depende da capacidade escolhida; veja as páginas de preços do ECS e do Fargate.</span><span class="en"><b>Capacity</b> (where containers run): Fargate (serverless, no servers to manage), EC2 instances you manage, ECS Managed Instances (EC2 with AWS-managed infrastructure) or external servers with ECS Anywhere. Cost depends on the chosen capacity; see the ECS and Fargate pricing pages.</span></p>
 
@@ -909,8 +963,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <p><span class="pt">O ALB consegue registrar tasks do ECS em um target group, inclusive escolhendo uma porta livre quando a task é agendada. Os health checks do target group definem se a task está saudável. Veja <a href="#elb">Load Balancer</a>.</span><span class="en">The ALB can register ECS tasks in a target group, even choosing an unused port when the task is scheduled. The target group's health checks decide whether a task is healthy. See <a href="#elb">Load Balancer</a>.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações em containers que precisam de deploy repetível, rollback e escala sem operar um plano de controle próprio.</span><span class="en">Containerized apps needing repeatable deploys, rollback and scaling without running your own control plane.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Cargas que não são containers; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> que impedem qualquer substituição; esperar que um valor mudado no Parameter Store apareça em tasks já rodando.</span><span class="en">Non-container workloads; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> values that block any replacement; expecting a changed Parameter Store value to show up in running tasks.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações em containers que precisam de deploy repetível, rollback e escala sem operar um plano de controle próprio.</span><span class="en">Containerized apps needing repeatable deploys, rollback and scaling without running your own control plane.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Cargas que não são containers; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> que impedem qualquer substituição; esperar que um valor mudado no Parameter Store apareça em tasks já rodando.</span><span class="en">Non-container workloads; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> values that block any replacement; expecting a changed Parameter Store value to show up in running tasks.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -939,17 +993,17 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
     <div class="label">VPC · 10.0.0.0/16 <span class="pt">(exemplo)</span><span class="en">(example)</span></div>
     <div class="az-row">
       <div class="az"><div class="label">AZ A</div>
-        <div class="subnet pub">🌍 <b><span class="pt">Pública</span><span class="en">Public</span></b> 10.0.1.0/24<br><small>ALB · NAT Gateway</small></div>
-        <div class="subnet priv">🔒 <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.11.0/24<br><small><span class="pt">Aplicação (ECS/EC2)</span><span class="en">Application (ECS/EC2)</span></small></div>
-        <div class="subnet priv">🔒 <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.21.0/24<br><small><span class="pt">Banco de dados (RDS)</span><span class="en">Database (RDS)</span></small></div>
+        <div class="subnet pub"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <b><span class="pt">Pública</span><span class="en">Public</span></b> 10.0.1.0/24<br><small>ALB · NAT Gateway</small></div>
+        <div class="subnet priv"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.11.0/24<br><small><span class="pt">Aplicação (ECS/EC2)</span><span class="en">Application (ECS/EC2)</span></small></div>
+        <div class="subnet priv"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.21.0/24<br><small><span class="pt">Banco de dados (RDS)</span><span class="en">Database (RDS)</span></small></div>
       </div>
       <div class="az"><div class="label">AZ B</div>
-        <div class="subnet pub">🌍 <b><span class="pt">Pública</span><span class="en">Public</span></b> 10.0.2.0/24<br><small>ALB · NAT Gateway</small></div>
-        <div class="subnet priv">🔒 <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.12.0/24<br><small><span class="pt">Aplicação (ECS/EC2)</span><span class="en">Application (ECS/EC2)</span></small></div>
-        <div class="subnet priv">🔒 <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.22.0/24<br><small><span class="pt">Banco de dados (RDS)</span><span class="en">Database (RDS)</span></small></div>
+        <div class="subnet pub"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <b><span class="pt">Pública</span><span class="en">Public</span></b> 10.0.2.0/24<br><small>ALB · NAT Gateway</small></div>
+        <div class="subnet priv"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.12.0/24<br><small><span class="pt">Aplicação (ECS/EC2)</span><span class="en">Application (ECS/EC2)</span></small></div>
+        <div class="subnet priv"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <b><span class="pt">Privada</span><span class="en">Private</span></b> 10.0.22.0/24<br><small><span class="pt">Banco de dados (RDS)</span><span class="en">Database (RDS)</span></small></div>
       </div>
     </div>
-    <div class="igw">🚪 Internet Gateway ⇄ 🌐 Internet <small>(<span class="pt">rota 0.0.0.0/0 → IGW nas públicas; nas privadas, 0.0.0.0/0 → NAT Gateway</span><span class="en">0.0.0.0/0 → IGW route in public subnets; in private ones, 0.0.0.0/0 → NAT Gateway</span>)</small></div>
+    <div class="igw"><svg class="icon" aria-hidden="true"><use href="#i-gateway"/></svg> Internet Gateway ⇄ <svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Internet <small>(<span class="pt">rota 0.0.0.0/0 → IGW nas públicas; nas privadas, 0.0.0.0/0 → NAT Gateway</span><span class="en">0.0.0.0/0 → IGW route in public subnets; in private ones, 0.0.0.0/0 → NAT Gateway</span>)</small></div>
   </div>
   <p class="muted"><span class="pt">Os blocos CIDR acima são apenas um exemplo didático de desenho; a AWS não define um padrão obrigatório.</span><span class="en">The CIDR blocks above are only a teaching example of a layout; AWS does not mandate a standard.</span></p>
 
@@ -972,8 +1026,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
   <h3><span class="pt">Subnets públicas e privadas</span><span class="en">Public and private subnets</span></h3>
   <div class="grid">
-    <div class="card"><h4>🌍 <span class="pt">Pública</span><span class="en">Public</span></h4><span class="pt">A route table tem uma rota para o internet gateway. Abriga o que precisa ser alcançado de fora: <a href="#elb">load balancer</a> e NAT gateway.</span><span class="en">The route table has a route to the internet gateway. Home to what must be reached from outside: the <a href="#elb">load balancer</a> and the NAT gateway.</span></div>
-    <div class="card"><h4>🔒 <span class="pt">Privada</span><span class="en">Private</span></h4><span class="pt">Sem rota para o internet gateway. Para sair para a internet, usa um NAT gateway; para falar com serviços AWS, pode usar VPC endpoints. Boa para aplicação e banco de dados.</span><span class="en">No route to the internet gateway. To reach the internet it uses a NAT gateway; to talk to AWS services it can use VPC endpoints. Good for application and database.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <span class="pt">Pública</span><span class="en">Public</span></h4><span class="pt">A route table tem uma rota para o internet gateway. Abriga o que precisa ser alcançado de fora: <a href="#elb">load balancer</a> e NAT gateway.</span><span class="en">The route table has a route to the internet gateway. Home to what must be reached from outside: the <a href="#elb">load balancer</a> and the NAT gateway.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <span class="pt">Privada</span><span class="en">Private</span></h4><span class="pt">Sem rota para o internet gateway. Para sair para a internet, usa um NAT gateway; para falar com serviços AWS, pode usar VPC endpoints. Boa para aplicação e banco de dados.</span><span class="en">No route to the internet gateway. To reach the internet it uses a NAT gateway; to talk to AWS services it can use VPC endpoints. Good for application and database.</span></div>
   </div>
   <div class="scroll-x"><table>
     <tr><th><span class="pt">Route table</span><span class="en">Route table</span></th><th>Destination</th><th>Target</th></tr>
@@ -986,7 +1040,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
   <h3>NAT Gateway</h3>
   <p><span class="pt">Permite que instâncias em subnet privada <b>iniciem</b> conexões para fora da VPC, enquanto serviços externos não conseguem iniciar conexão com elas. O NAT gateway <b>público</b> (padrão) fica numa <b>subnet pública</b>, exige um Elastic IP e roteia o tráfego para o internet gateway. O <b>privado</b> serve para outras VPCs ou redes on-premises (via transit gateway ou virtual private gateway) e não aceita Elastic IP. Existe também o NAT gateway regional, com expansão multi-AZ automática.</span><span class="en">Lets instances in a private subnet <b>initiate</b> connections out of the VPC, while external services cannot start connections to them. The <b>public</b> NAT gateway (default) lives in a <b>public subnet</b>, needs an Elastic IP and routes traffic to the internet gateway. The <b>private</b> one is for other VPCs or on-premises networks (through a transit gateway or virtual private gateway) and does not accept an Elastic IP. There is also a regional NAT gateway with automatic multi-AZ expansion.</span></p>
-  <div class="flow"><span class="node">🔒 <span class="pt">Subnet privada</span><span class="en">Private subnet</span></span><span class="arrow">0.0.0.0/0 →</span><span class="node">🔁 NAT <span class="pt">(subnet pública)</span><span class="en">(public subnet)</span></span><span class="arrow">→</span><span class="node">🚪 IGW</span><span class="arrow">→</span><span class="node">🌐 Internet</span></div>
+  <div class="flow"><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <span class="pt">Subnet privada</span><span class="en">Private subnet</span></span><span class="arrow">0.0.0.0/0 →</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-swap"/></svg> NAT <span class="pt">(subnet pública)</span><span class="en">(public subnet)</span></span><span class="arrow">→</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gateway"/></svg> IGW</span><span class="arrow">→</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Internet</span></div>
   <div class="callout warn"><strong><span class="pt">Custo</span><span class="en">Cost</span></strong>
     <span class="pt">O NAT gateway é um componente cobrado. A documentação mostra como comparar o custo com IPv4 públicos e sugere alternativas como VPC endpoints (PrivateLink) para falar com serviços AWS. Veja os preços na <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">página de preços da VPC</a>.</span>
     <span class="en">The NAT gateway is a billed component. The docs show how to compare its cost against public IPv4 addresses and suggest alternatives such as VPC endpoints (PrivateLink) to reach AWS services. See prices on the <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">VPC pricing page</a>.</span>
@@ -1001,8 +1055,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <p class="muted"><span class="pt">Exemplo: instâncias sem IP público podem usar o Session Manager com VPC endpoints do Systems Manager (veja <a href="#ssm">Systems Manager</a>).</span><span class="en">Example: instances without a public IP can use Session Manager with Systems Manager VPC endpoints (see <a href="#ssm">Systems Manager</a>).</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Sempre que houver mais de um ambiente ou camada: borda (ALB) em subnets públicas, aplicação e banco em privadas, em pelo menos duas AZs.</span><span class="en">Whenever there is more than one environment or tier: edge (ALB) in public subnets, application and database in private ones, in at least two AZs.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Colocar instâncias de aplicação com IP público só por conveniência; usar NAT gateway quando um endpoint resolveria; CIDRs sobrepostos se houver planos de peering ou transit gateway.</span><span class="en">Giving application instances public IPs just for convenience; using a NAT gateway when an endpoint would do; overlapping CIDRs if peering or a transit gateway is planned.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Sempre que houver mais de um ambiente ou camada: borda (ALB) em subnets públicas, aplicação e banco em privadas, em pelo menos duas AZs.</span><span class="en">Whenever there is more than one environment or tier: edge (ALB) in public subnets, application and database in private ones, in at least two AZs.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Colocar instâncias de aplicação com IP público só por conveniência; usar NAT gateway quando um endpoint resolveria; CIDRs sobrepostos se houver planos de peering ou transit gateway.</span><span class="en">Giving application instances public IPs just for convenience; using a NAT gateway when an endpoint would do; overlapping CIDRs if peering or a transit gateway is planned.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1046,10 +1100,10 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <h3><span class="pt">Security Groups encadeados</span><span class="en">Chained Security Groups</span></h3>
   <p><span class="pt">Em vez de liberar por IP, use como origem o <b>ID de outro SG</b>. A regra vale para as instâncias associadas àquele SG, pelo IP privado delas, e sobrevive à troca de instâncias. Exemplo clássico da documentação (load balancer, web e banco):</span><span class="en">Instead of allowing by IP, use <b>another SG's ID</b> as the source. The rule applies to instances associated with that SG, through their private IPs, and survives instance replacement. The docs' classic example (load balancer, web and database):</span></p>
   <div class="flow">
-    <span class="node">🌐 Internet</span><span class="arrow">80/443 →</span>
-    <span class="node">⚖️ sg-alb<br><small>in: 0.0.0.0/0</small></span><span class="arrow">app port →</span>
-    <span class="node">🖥️ sg-app<br><small>in: sg-alb</small></span><span class="arrow">db port →</span>
-    <span class="node">🗄️ sg-db<br><small>in: sg-app</small></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Internet</span><span class="arrow">80/443 →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> sg-alb<br><small>in: 0.0.0.0/0</small></span><span class="arrow">app port →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> sg-app<br><small>in: sg-alb</small></span><span class="arrow">db port →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> sg-db<br><small>in: sg-app</small></span>
   </div>
   <ul>
     <li><span class="pt">Referenciar um SG <b>não copia</b> as regras dele para o SG que referencia.</span><span class="en">Referencing an SG does <b>not</b> copy its rules into the referencing SG.</span></li>
@@ -1064,10 +1118,10 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
     <div class="row">
       <label><span class="pt">Origem</span><span class="en">Source</span>
         <select class="sg-source">
-          <option value="net">🌐 Internet (0.0.0.0/0)</option>
-          <option value="lb" selected>⚖️ SG load balancer</option>
-          <option value="me">🏠 My IP</option>
-          <option value="other">🧩 Other SG</option>
+          <option value="net">Internet (0.0.0.0/0)</option>
+          <option value="lb" selected>SG load balancer</option>
+          <option value="me">My IP</option>
+          <option value="other">Other SG</option>
         </select></label>
       <label><span class="pt">Porta</span><span class="en">Port</span>
         <select class="port"><option>80</option><option>443</option><option>22</option><option selected>3000</option></select></label>
@@ -1094,8 +1148,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">SG por papel (alb, app, db) encadeados por referência; prefix lists para conjuntos de IPs que mudam e se repetem em várias regras.</span><span class="en">One SG per role (alb, app, db) chained by reference; prefix lists for IP sets that change and repeat across many rules.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Origem <code>0.0.0.0/0</code> em portas administrativas ou de banco; prefix list com máximo de entradas grande sem necessidade (consome cota); depender de SG para filtrar DNS.</span><span class="en">Source <code>0.0.0.0/0</code> on admin or database ports; a prefix list with a large max size for no reason (it eats quota); relying on SGs to filter DNS.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">SG por papel (alb, app, db) encadeados por referência; prefix lists para conjuntos de IPs que mudam e se repetem em várias regras.</span><span class="en">One SG per role (alb, app, db) chained by reference; prefix lists for IP sets that change and repeat across many rules.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Origem <code>0.0.0.0/0</code> em portas administrativas ou de banco; prefix list com máximo de entradas grande sem necessidade (consome cota); depender de SG para filtrar DNS.</span><span class="en">Source <code>0.0.0.0/0</code> on admin or database ports; a prefix list with a large max size for no reason (it eats quota); relying on SGs to filter DNS.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1130,11 +1184,11 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
   <h3><span class="pt">Peças do ALB</span><span class="en">ALB components</span></h3>
   <div class="flow">
-    <span class="node">🌐 Cliente</span><span class="arrow">→</span>
-    <span class="node">👂 Listener<br><small>HTTPS :443</small></span><span class="arrow">→</span>
-    <span class="node">📏 Rules<br><small>host / path</small></span><span class="arrow">→</span>
-    <span class="node">🎯 Target group</span><span class="arrow">→</span>
-    <span class="node">🖥️ Targets</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Cliente</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-listener"/></svg> Listener<br><small>HTTPS :443</small></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-rules"/></svg> Rules<br><small>host / path</small></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg> Target group</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> Targets</span>
   </div>
   <ul>
     <li><b>Listener:</b> <span class="pt">verifica pedidos de conexão com o protocolo e a porta que você configura. Toda listener tem uma <i>regra default</i>, e você pode adicionar outras.</span><span class="en">checks for connection requests using the protocol and port you configure. Every listener has a <i>default rule</i>, and you can add others.</span></li>
@@ -1145,8 +1199,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <div class="widget" data-lb>
     <div class="wtitle"><span class="pt">Demo: round-robin e health check</span><span class="en">Demo: round-robin and health check</span></div>
     <div class="lb-demo">
-      <span class="node user">👤 <span class="pt">Usuário</span><span class="en">User</span></span>
-      <span class="node lb">⚖️ ALB</span>
+      <span class="node user"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> <span class="pt">Usuário</span><span class="en">User</span></span>
+      <span class="node lb"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB</span>
       <div class="targets">
         <div class="node" data-name="EC2-1">EC2-1 <button class="btn"><span class="pt">derrubar</span><span class="en">kill</span></button></div>
         <div class="node" data-name="EC2-2">EC2-2 <button class="btn"><span class="pt">derrubar</span><span class="en">kill</span></button></div>
@@ -1197,8 +1251,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <p><span class="pt">Security Groups: o do ALB libera 80/443 da internet; o da aplicação libera a porta da app <b>só do SG do ALB</b> (veja <a href="#sg">Security Groups encadeados</a>).</span><span class="en">Security Groups: the ALB's allows 80/443 from the internet; the app's allows the app port <b>only from the ALB's SG</b> (see <a href="#sg">chained Security Groups</a>).</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações HTTP/HTTPS, vários serviços ou domínios atrás de um único ponto de entrada, containers no <a href="#ecs">ECS</a>, redirect HTTP→HTTPS.</span><span class="en">HTTP/HTTPS apps, several services or domains behind one entry point, containers on <a href="#ecs">ECS</a>, HTTP→HTTPS redirect.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Tráfego TCP/UDP genérico ou necessidade de IP estático (NLB); inspeção por appliances (GWLB); health check em WebSocket ou que depende de redirects.</span><span class="en">Generic TCP/UDP traffic or a need for static IPs (NLB); appliance inspection (GWLB); health checks over WebSocket or relying on redirects.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações HTTP/HTTPS, vários serviços ou domínios atrás de um único ponto de entrada, containers no <a href="#ecs">ECS</a>, redirect HTTP→HTTPS.</span><span class="en">HTTP/HTTPS apps, several services or domains behind one entry point, containers on <a href="#ecs">ECS</a>, HTTP→HTTPS redirect.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Tráfego TCP/UDP genérico ou necessidade de IP estático (NLB); inspeção por appliances (GWLB); health check em WebSocket ou que depende de redirects.</span><span class="en">Generic TCP/UDP traffic or a need for static IPs (NLB); appliance inspection (GWLB); health checks over WebSocket or relying on redirects.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1227,11 +1281,11 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </header>
 
   <div class="flow">
-    <span class="node">📝 <span class="pt">Pedir certificado</span><span class="en">Request certificate</span></span><span class="arrow">→</span>
-    <span class="node">🔑 <span class="pt">ACM devolve um CNAME</span><span class="en">ACM returns a CNAME</span></span><span class="arrow">→</span>
-    <span class="node">📖 <span class="pt">Você cria o CNAME no DNS</span><span class="en">You create the CNAME in DNS</span></span><span class="arrow">→</span>
-    <span class="node">✅ Issued</span><span class="arrow">→</span>
-    <span class="node">⚖️ <span class="pt">Listener HTTPS do ALB</span><span class="en">ALB HTTPS listener</span></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> <span class="pt">Pedir certificado</span><span class="en">Request certificate</span></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> <span class="pt">ACM devolve um CNAME</span><span class="en">ACM returns a CNAME</span></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> <span class="pt">Você cria o CNAME no DNS</span><span class="en">You create the CNAME in DNS</span></span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> Issued</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> <span class="pt">Listener HTTPS do ALB</span><span class="en">ALB HTTPS listener</span></span>
   </div>
 
   <h3><span class="pt">Validação por DNS</span><span class="en">DNS validation</span></h3>
@@ -1255,8 +1309,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <p class="muted"><span class="pt">Se você usa registros CAA no domínio, é preciso autorizar a AWS a emitir; veja a página "Configure a CAA record" do ACM, referenciada na documentação do Route 53.</span><span class="en">If you use CAA records on the domain, you must authorize AWS to issue; see ACM's "Configure a CAA record" page, referenced in the Route 53 docs.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">HTTPS em ALB (e outros serviços integrados) com renovação automática; domínios cujo DNS você controla (Route 53 facilita).</span><span class="en">HTTPS on an ALB (and other integrated services) with automatic renewal; domains whose DNS you control (Route 53 makes it easy).</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Validação por e-mail se o DNS é seu; apagar o CNAME "que sobrou" (quebra a renovação); depender de renovação automática em certificado importado.</span><span class="en">Email validation if you own the DNS; deleting the "leftover" CNAME (breaks renewal); counting on automatic renewal for an imported certificate.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">HTTPS em ALB (e outros serviços integrados) com renovação automática; domínios cujo DNS você controla (Route 53 facilita).</span><span class="en">HTTPS on an ALB (and other integrated services) with automatic renewal; domains whose DNS you control (Route 53 makes it easy).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Validação por e-mail se o DNS é seu; apagar o CNAME "que sobrou" (quebra a renovação); depender de renovação automática em certificado importado.</span><span class="en">Email validation if you own the DNS; deleting the "leftover" CNAME (breaks renewal); counting on automatic renewal for an imported certificate.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1282,10 +1336,10 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <h3>Session Manager</h3>
   <p><span class="pt">Ferramenta totalmente gerenciada para acessar instâncias EC2 (e servidores on-premises/VMs) por um shell interativo no navegador ou pela AWS CLI, <b>sem abrir portas de entrada, sem bastion host e sem gerenciar chaves SSH</b>.</span><span class="en">A fully managed tool to reach EC2 instances (and on-premises servers/VMs) through an interactive shell in the browser or the AWS CLI, <b>with no inbound ports, no bastion hosts and no SSH keys to manage</b>.</span></p>
   <div class="flow">
-    <span class="node">🙋 <span class="pt">Você (IAM / SSO)</span><span class="en">You (IAM / SSO)</span></span><span class="arrow">TLS 1.2 →</span>
-    <span class="node">🛰️ Session Manager</span><span class="arrow">→</span>
-    <span class="node">🤖 SSM Agent</span><span class="arrow">→</span>
-    <span class="node">🖥️ <span class="pt">Instância (subnet privada)</span><span class="en">Instance (private subnet)</span></span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> <span class="pt">Você (IAM / SSO)</span><span class="en">You (IAM / SSO)</span></span><span class="arrow">TLS 1.2 →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-terminal"/></svg> Session Manager</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-chip"/></svg> SSM Agent</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> <span class="pt">Instância (subnet privada)</span><span class="en">Instance (private subnet)</span></span>
   </div>
   <ul>
     <li><span class="pt"><b>Controle por IAM:</b> as políticas definem quem pode abrir sessões e em quais nós; dá para conceder acesso temporário (ex.: plantão).</span><span class="en"><b>IAM control:</b> policies define who can open sessions and on which nodes; you can grant temporary access (e.g. on-call).</span></li>
@@ -1332,8 +1386,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </table></div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt"><b>Session Manager:</b> acesso a instâncias privadas, sem porta 22. <b>Parameter Store:</b> configuração por ambiente (/app/prod/...) lida pela aplicação.</span><span class="en"><b>Session Manager:</b> access to private instances without port 22. <b>Parameter Store:</b> per-environment config (/app/prod/...) read by the application.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Parameter Store para segredos que precisam de rotação (use Secrets Manager); alterar parâmetros críticos sem validação; esperar log do conteúdo de sessões SSH/port forwarding.</span><span class="en">Parameter Store for secrets that need rotation (use Secrets Manager); changing critical parameters without validation; expecting content logs for SSH/port-forwarding sessions.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt"><b>Session Manager:</b> acesso a instâncias privadas, sem porta 22. <b>Parameter Store:</b> configuração por ambiente (/app/prod/...) lida pela aplicação.</span><span class="en"><b>Session Manager:</b> access to private instances without port 22. <b>Parameter Store:</b> per-environment config (/app/prod/...) read by the application.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Parameter Store para segredos que precisam de rotação (use Secrets Manager); alterar parâmetros críticos sem validação; esperar log do conteúdo de sessões SSH/port forwarding.</span><span class="en">Parameter Store for secrets that need rotation (use Secrets Manager); changing critical parameters without validation; expecting content logs for SSH/port-forwarding sessions.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1359,9 +1413,9 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </header>
 
   <div class="flow">
-    <span class="node">🏃 <span class="pt">Task / função (role IAM)</span><span class="en">Task / function (IAM role)</span></span><span class="arrow">GetSecretValue →</span>
-    <span class="node">🗝️ Secrets Manager</span><span class="arrow">🔄&nbsp;<span class="pt">rotação (Lambda)</span><span class="en">rotation (Lambda)</span> →</span>
-    <span class="node">🗄️ RDS</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> <span class="pt">Task / função (role IAM)</span><span class="en">Task / function (IAM role)</span></span><span class="arrow">GetSecretValue →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> Secrets Manager</span><span class="arrow"><svg class="icon" aria-hidden="true"><use href="#i-refresh"/></svg>&nbsp;<span class="pt">rotação (Lambda)</span><span class="en">rotation (Lambda)</span> →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> RDS</span>
   </div>
 
   <ul>
@@ -1383,8 +1437,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Credenciais de banco, chaves de API e tokens que devem ser rotacionados, auditados ou compartilhados entre contas.</span><span class="en">Database credentials, API keys and tokens that must be rotated, audited or shared across accounts.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Configuração comum (endpoints, nomes): use <a href="#ssm">Parameter Store</a>, que no tier standard não tem custo adicional; credenciais AWS (use roles).</span><span class="en">Plain configuration (endpoints, names): use <a href="#ssm">Parameter Store</a>, which has no extra charge in the standard tier; AWS credentials (use roles).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Credenciais de banco, chaves de API e tokens que devem ser rotacionados, auditados ou compartilhados entre contas.</span><span class="en">Database credentials, API keys and tokens that must be rotated, audited or shared across accounts.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Configuração comum (endpoints, nomes): use <a href="#ssm">Parameter Store</a>, que no tier standard não tem custo adicional; credenciais AWS (use roles).</span><span class="en">Plain configuration (endpoints, names): use <a href="#ssm">Parameter Store</a>, which has no extra charge in the standard tier; AWS credentials (use roles).</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1413,18 +1467,18 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <div class="vpc">
     <div class="label"><span class="pt">Arquitetura típica</span><span class="en">Typical architecture</span></div>
     <div class="flow">
-      <span class="node">⚖️ ALB<br><small><span class="pt">subnet pública</span><span class="en">public subnet</span></small></span><span class="arrow">→</span>
-      <span class="node">🖥️ <span class="pt">App</span><span class="en">App</span><br><small><span class="pt">subnet privada</span><span class="en">private subnet</span></small></span><span class="arrow">→</span>
-      <span class="node">🗄️ DB primary<br><small>AZ A · <span class="pt">privada</span><span class="en">private</span></small></span><span class="arrow">⇄ sync</span>
-      <span class="node">🗄️ DB standby<br><small>AZ B · <span class="pt">privada</span><span class="en">private</span></small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB<br><small><span class="pt">subnet pública</span><span class="en">public subnet</span></small></span><span class="arrow">→</span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> <span class="pt">App</span><span class="en">App</span><br><small><span class="pt">subnet privada</span><span class="en">private subnet</span></small></span><span class="arrow">→</span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> DB primary<br><small>AZ A · <span class="pt">privada</span><span class="en">private</span></small></span><span class="arrow">⇄ sync</span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> DB standby<br><small>AZ B · <span class="pt">privada</span><span class="en">private</span></small></span>
     </div>
   </div>
 
   <h3><span class="pt">Conceitos</span><span class="en">Concepts</span></h3>
   <div class="grid">
-    <div class="card"><h4>🧱 DB instance</h4><span class="pt">Ambiente de banco isolado na nuvem; pode conter um ou mais bancos criados por você. A <b>classe</b> define CPU e memória: há classes de uso geral (db.m), otimizadas para memória (db.r, db.x, db.z), para computação (db.c) e <b>burstable</b> (db.t).</span><span class="en">An isolated database environment in the cloud; it can hold one or more databases you create. The <b>class</b> defines CPU and memory: general purpose (db.m), memory optimized (db.r, db.x, db.z), compute optimized (db.c) and <b>burstable</b> (db.t).</span></div>
-    <div class="card"><h4>💾 Storage</h4><span class="pt">Volumes EBS. Tipos: General Purpose SSD (indicado para dev/teste), Provisioned IOPS SSD (para cargas intensivas em I/O, indicado para produção) e Magnetic (obsoleto). O storage autoscaling aumenta o espaço sozinho (veja abaixo).</span><span class="en">EBS volumes. Types: General Purpose SSD (suited to dev/test), Provisioned IOPS SSD (for I/O-intensive workloads, suited to production) and Magnetic (deprecated). Storage autoscaling grows the space on its own (see below).</span></div>
-    <div class="card"><h4>🕸️ VPC</h4><span class="pt">O banco roda em uma VPC. Você cria um <b>DB subnet group</b> com subnets em pelo menos <b>duas</b> zonas de disponibilidade da Region (mesmo em Single-AZ, para poder virar Multi-AZ depois). Reserve IPs livres nas subnets: o RDS usa para failover e manutenção.</span><span class="en">The database runs in a VPC. You create a <b>DB subnet group</b> with subnets in at least <b>two</b> Availability Zones of the Region (even for Single-AZ, so it can become Multi-AZ later). Leave free IPs in the subnets: RDS uses them for failover and maintenance.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg> DB instance</h4><span class="pt">Ambiente de banco isolado na nuvem; pode conter um ou mais bancos criados por você. A <b>classe</b> define CPU e memória: há classes de uso geral (db.m), otimizadas para memória (db.r, db.x, db.z), para computação (db.c) e <b>burstable</b> (db.t).</span><span class="en">An isolated database environment in the cloud; it can hold one or more databases you create. The <b>class</b> defines CPU and memory: general purpose (db.m), memory optimized (db.r, db.x, db.z), compute optimized (db.c) and <b>burstable</b> (db.t).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-database"/></svg> Storage</h4><span class="pt">Volumes EBS. Tipos: General Purpose SSD (indicado para dev/teste), Provisioned IOPS SSD (para cargas intensivas em I/O, indicado para produção) e Magnetic (obsoleto). O storage autoscaling aumenta o espaço sozinho (veja abaixo).</span><span class="en">EBS volumes. Types: General Purpose SSD (suited to dev/test), Provisioned IOPS SSD (for I/O-intensive workloads, suited to production) and Magnetic (deprecated). Storage autoscaling grows the space on its own (see below).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-network"/></svg> VPC</h4><span class="pt">O banco roda em uma VPC. Você cria um <b>DB subnet group</b> com subnets em pelo menos <b>duas</b> zonas de disponibilidade da Region (mesmo em Single-AZ, para poder virar Multi-AZ depois). Reserve IPs livres nas subnets: o RDS usa para failover e manutenção.</span><span class="en">The database runs in a VPC. You create a <b>DB subnet group</b> with subnets in at least <b>two</b> Availability Zones of the Region (even for Single-AZ, so it can become Multi-AZ later). Leave free IPs in the subnets: RDS uses them for failover and maintenance.</span></div>
   </div>
 
   <h3><span class="pt">Acesso e segurança</span><span class="en">Access and security</span></h3>
@@ -1466,8 +1520,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </table></div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Bancos relacionais de aplicações, com backup, patch e failover gerenciados. Multi-AZ e deletion protection em produção.</span><span class="en">Application relational databases with managed backups, patching and failover. Multi-AZ and deletion protection in production.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Acesso público sem necessidade; usar o master na aplicação; achar que Multi-AZ substitui backup; depender de read replica como alta disponibilidade.</span><span class="en">Public access without need; using the master in the application; assuming Multi-AZ replaces backups; relying on a read replica as high availability.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Bancos relacionais de aplicações, com backup, patch e failover gerenciados. Multi-AZ e deletion protection em produção.</span><span class="en">Application relational databases with managed backups, patching and failover. Multi-AZ and deletion protection in production.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Acesso público sem necessidade; usar o master na aplicação; achar que Multi-AZ substitui backup; depender de read replica como alta disponibilidade.</span><span class="en">Public access without need; using the master in the application; assuming Multi-AZ replaces backups; relying on a read replica as high availability.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1498,15 +1552,15 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </header>
 
   <div class="grid">
-    <div class="card"><h4>🪣 Bucket</h4><span class="pt">Contêiner de objetos, criado em uma Region. Nome e Region não mudam depois. O nome de um bucket de uso geral é único no namespace global (ou no namespace regional da sua conta).</span><span class="en">A container for objects, created in a Region. Name and Region cannot change afterwards. A general purpose bucket's name is unique in the global namespace (or in your account's regional namespace).</span></div>
-    <div class="card"><h4>📄 Object &amp; key</h4><span class="pt">Objeto = dados + metadados. A <b>key</b> é o identificador dentro do bucket. Bucket + key (+ versão) identificam o objeto. Com <b>versioning</b>, você preserva e restaura cada versão.</span><span class="en">Object = data + metadata. The <b>key</b> is the identifier inside the bucket. Bucket + key (+ version) identify the object. With <b>versioning</b> you preserve and restore every version.</span></div>
-    <div class="card"><h4>🔐 <span class="pt">Privado por padrão</span><span class="en">Private by default</span></h4><span class="pt">Buckets e objetos são privados até você conceder acesso (políticas de bucket, IAM, access points). O <b>Block Public Access</b> vem ativado; mantenha-o, salvo necessidade específica.</span><span class="en">Buckets and objects are private until you grant access (bucket policies, IAM, access points). <b>Block Public Access</b> comes on; keep it on unless you have a specific need.</span></div>
-    <div class="card"><h4>✅ <span class="pt">Consistência forte</span><span class="en">Strong consistency</span></h4><span class="pt">Leitura-após-escrita forte para PUT e DELETE em todas as Regions: após um PUT bem-sucedido, o GET/LIST seguinte já vê o dado novo. Para gravações simultâneas na mesma key, vale a última (last-writer-wins).</span><span class="en">Strong read-after-write consistency for PUT and DELETE in all Regions: after a successful PUT, the next GET/LIST already sees the new data. For concurrent writes to the same key, the last writer wins.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg> Bucket</h4><span class="pt">Contêiner de objetos, criado em uma Region. Nome e Region não mudam depois. O nome de um bucket de uso geral é único no namespace global (ou no namespace regional da sua conta).</span><span class="en">A container for objects, created in a Region. Name and Region cannot change afterwards. A general purpose bucket's name is unique in the global namespace (or in your account's regional namespace).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Object &amp; key</h4><span class="pt">Objeto = dados + metadados. A <b>key</b> é o identificador dentro do bucket. Bucket + key (+ versão) identificam o objeto. Com <b>versioning</b>, você preserva e restaura cada versão.</span><span class="en">Object = data + metadata. The <b>key</b> is the identifier inside the bucket. Bucket + key (+ version) identify the object. With <b>versioning</b> you preserve and restore every version.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <span class="pt">Privado por padrão</span><span class="en">Private by default</span></h4><span class="pt">Buckets e objetos são privados até você conceder acesso (políticas de bucket, IAM, access points). O <b>Block Public Access</b> vem ativado; mantenha-o, salvo necessidade específica.</span><span class="en">Buckets and objects are private until you grant access (bucket policies, IAM, access points). <b>Block Public Access</b> comes on; keep it on unless you have a specific need.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Consistência forte</span><span class="en">Strong consistency</span></h4><span class="pt">Leitura-após-escrita forte para PUT e DELETE em todas as Regions: após um PUT bem-sucedido, o GET/LIST seguinte já vê o dado novo. Para gravações simultâneas na mesma key, vale a última (last-writer-wins).</span><span class="en">Strong read-after-write consistency for PUT and DELETE in all Regions: after a successful PUT, the next GET/LIST already sees the new data. For concurrent writes to the same key, the last writer wins.</span></div>
   </div>
 
   <h3>Presigned URL</h3>
   <p><span class="pt">Link temporário que dá acesso a <b>um objeto</b> por tempo limitado, sem mexer na bucket policy. Usa as credenciais de quem gerou a URL; para funcionar, essa identidade precisa ter a permissão da operação (ex.: <code>s3:GetObject</code>). Serve para download (GET) e upload (PUT) direto no S3, sem passar pelo seu servidor. Se já existir um objeto com a mesma key, o upload o <b>substitui</b>.</span><span class="en">A temporary link granting access to <b>one object</b> for a limited time, without touching the bucket policy. It uses the credentials of whoever generated the URL; for it to work, that identity needs the operation's permission (e.g. <code>s3:GetObject</code>). It serves direct download (GET) and upload (PUT) to S3, bypassing your server. If an object with the same key already exists, the upload <b>replaces</b> it.</span></p>
-  <div class="flow"><span class="node">🌐 <span class="pt">Navegador</span><span class="en">Browser</span></span><span class="arrow">①→</span><span class="node">🖥️ <span class="pt">Seu servidor</span><span class="en">Your server</span></span><span class="arrow">② URL assinada ←</span><span class="node">🌐</span><span class="arrow">③ PUT/GET →</span><span class="node">🪣 S3</span></div>
+  <div class="flow"><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <span class="pt">Navegador</span><span class="en">Browser</span></span><span class="arrow">①→</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> <span class="pt">Seu servidor</span><span class="en">Your server</span></span><span class="arrow">② URL assinada ←</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg></span><span class="arrow">③ PUT/GET →</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-bucket"/></svg> S3</span></div>
   <ul>
     <li><span class="pt"><b>Validade:</b> pelo console, de 1 minuto a 12 horas; pela AWS CLI/SDKs, até 7 dias (credenciais de usuário IAM com Signature V4).</span><span class="en"><b>Lifetime:</b> from the console, 1 minute to 12 hours; from the AWS CLI/SDKs, up to 7 days (IAM user credentials with Signature V4).</span></li>
     <li><span class="pt"><b>Pegadinha:</b> se a URL foi gerada com credenciais temporárias (role, STS, perfil da EC2/ECS), ela expira junto com a credencial, mesmo que você tenha pedido prazo maior. O S3 confere a validade no momento da requisição: um download já iniciado continua, mas retomar depois do prazo falha.</span><span class="en"><b>Gotcha:</b> if the URL was generated with temporary credentials (role, STS, EC2/ECS profile) it expires together with the credential, even if you asked for a longer period. S3 checks validity at request time: a download already running continues, but resuming after expiry fails.</span></li>
@@ -1536,15 +1590,15 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
   <h3>Lifecycle rules</h3>
   <p><span class="pt">Um conjunto de regras no bucket que faz o S3 agir sobre grupos de objetos. Dois tipos de ação: <b>transition</b> (mover para uma classe mais barata) e <b>expiration</b> (apagar quando expirar). As regras valem para objetos existentes e futuros; uma bucket policy <b>não</b> consegue impedir a ação do lifecycle.</span><span class="en">A set of rules on the bucket that makes S3 act on groups of objects. Two kinds of action: <b>transition</b> (move to a cheaper class) and <b>expiration</b> (delete when it expires). Rules apply to existing and future objects; a bucket policy <b>cannot</b> prevent the lifecycle action.</span></p>
-  <div class="flow"><span class="node">Standard</span><span class="arrow">30d →</span><span class="node">Standard-IA</span><span class="arrow">90d →</span><span class="node">Glacier Flexible</span><span class="arrow">365d →</span><span class="node">🗑️ <span class="pt">Expira</span><span class="en">Expires</span></span></div>
+  <div class="flow"><span class="node">Standard</span><span class="arrow">30d →</span><span class="node">Standard-IA</span><span class="arrow">90d →</span><span class="node">Glacier Flexible</span><span class="arrow">365d →</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-trash"/></svg> <span class="pt">Expira</span><span class="en">Expires</span></span></div>
   <p class="muted"><span class="pt">Prazos de exemplo. Respeite as durações mínimas das classes (30/90/180 dias): apagar ou mover cedo gera cobrança proporcional.</span><span class="en">Example timings. Respect the classes' minimum durations (30/90/180 days): deleting or moving early incurs a pro-rated charge.</span></p>
 
   <h3>Static website hosting</h3>
   <p><span class="pt">O S3 pode hospedar um site <b>estático</b>: páginas com conteúdo estático, possivelmente com scripts no navegador (SPA, HTML puro). É preciso configurar um <i>index document</i> e permissões de acesso. A AWS recomenda usar o <b>AWS Amplify Hosting</b> para servir o conteúdo do S3 com CDN (CloudFront) e URL HTTPS. Se o bucket usa criptografia SSE-KMS, é obrigatório servir via CloudFront com <b>origin access control (OAC)</b>, pois SSE-KMS não suporta usuários anônimos.</span><span class="en">S3 can host a <b>static</b> website: pages with static content, possibly with client-side scripts (SPA, plain HTML). You must configure an <i>index document</i> and access permissions. AWS recommends using <b>AWS Amplify Hosting</b> to serve S3 content through a CDN (CloudFront) with an HTTPS URL. If the bucket uses SSE-KMS encryption, you must serve through CloudFront with <b>origin access control (OAC)</b>, because SSE-KMS does not support anonymous users.</span></p>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Arquivos, uploads de usuários (com presigned URL), backups, logs, sites estáticos, dados que seguem o ciclo hot→cold com lifecycle.</span><span class="en">Files, user uploads (with presigned URLs), backups, logs, static sites, data following a hot→cold cycle with lifecycle.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Desligar o Block Public Access sem necessidade; presigned URL longa com credencial temporária; mover objetos pequenos para classes com tamanho mínimo; bloquear o lifecycle esperando que a bucket policy resolva.</span><span class="en">Turning Block Public Access off without need; long presigned URLs with temporary credentials; moving tiny objects to classes with a minimum size; expecting a bucket policy to block lifecycle.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Arquivos, uploads de usuários (com presigned URL), backups, logs, sites estáticos, dados que seguem o ciclo hot→cold com lifecycle.</span><span class="en">Files, user uploads (with presigned URLs), backups, logs, static sites, data following a hot→cold cycle with lifecycle.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Desligar o Block Public Access sem necessidade; presigned URL longa com credencial temporária; mover objetos pequenos para classes com tamanho mínimo; bloquear o lifecycle esperando que a bucket policy resolva.</span><span class="en">Turning Block Public Access off without need; long presigned URLs with temporary credentials; moving tiny objects to classes with a minimum size; expecting a bucket policy to block lifecycle.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1593,11 +1647,11 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
     <span class="pt"><b>Cloudflare "Proxied":</b> nas anotações do curso, o tráfego passa pelos servidores da Cloudflare antes de chegar ao seu servidor (proteção DDoS, WAF, cache, IP final escondido). É um serviço de terceiros, não coberto pela documentação da AWS, e não foi verificado. Consulte a documentação da Cloudflare.</span>
     <span class="en"><b>Cloudflare "Proxied":</b> in the course notes, traffic goes through Cloudflare's servers before reaching yours (DDoS protection, WAF, caching, final IP hidden). It is a third-party service, not covered by AWS docs, and was not verified. See Cloudflare's documentation.</span>
   </div>
-  <div class="flow"><span class="node">🌐 <span class="pt">Usuário</span><span class="en">User</span></span><span class="arrow">→</span><span class="node">☁️ Cloudflare</span><span class="arrow">→</span><span class="node">🖥️ <span class="pt">Seu servidor</span><span class="en">Your server</span></span></div>
+  <div class="flow"><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <span class="pt">Usuário</span><span class="en">User</span></span><span class="arrow">→</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-cloud"/></svg> Cloudflare</span><span class="arrow">→</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> <span class="pt">Seu servidor</span><span class="en">Your server</span></span></div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">CNAME para subdomínios que apontam a outro nome; Alias para o apex e para recursos AWS; TXT/MX para verificação e e-mail.</span><span class="en">CNAME for subdomains pointing to another name; Alias for the apex and AWS resources; TXT/MX for verification and email.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">CNAME no apex; CNAME com outros registros no mesmo nome; MX apontando para um CNAME; SPF como tipo de registro.</span><span class="en">A CNAME at the apex; a CNAME together with other records on the same name; an MX pointing to a CNAME; SPF as a record type.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">CNAME para subdomínios que apontam a outro nome; Alias para o apex e para recursos AWS; TXT/MX para verificação e e-mail.</span><span class="en">CNAME for subdomains pointing to another name; Alias for the apex and AWS resources; TXT/MX for verification and email.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">CNAME no apex; CNAME com outros registros no mesmo nome; MX apontando para um CNAME; SPF como tipo de registro.</span><span class="en">A CNAME at the apex; a CNAME together with other records on the same name; an MX pointing to a CNAME; SPF as a record type.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1624,13 +1678,13 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <h3>Hosted Zones</h3>
   <p><span class="pt">Uma hosted zone é um <b>contêiner de registros</b> que dizem como rotear o tráfego de um domínio e seus subdomínios. Ela tem o mesmo nome do domínio. O preço por zona e por consulta está na <a href="https://aws.amazon.com/route53/pricing/" rel="noopener">página de preços do Route 53</a> (o valor fixo da anotação antiga foi removido).</span><span class="en">A hosted zone is a <b>container of records</b> telling how to route traffic for a domain and its subdomains. It has the same name as the domain. Per-zone and per-query pricing is on the <a href="https://aws.amazon.com/route53/pricing/" rel="noopener">Route 53 pricing page</a> (the old note's fixed value was removed).</span></p>
   <div class="grid">
-    <div class="card"><h4>🌍 <span class="pt">Pública</span><span class="en">Public</span></h4><span class="pt">Registros que dizem como rotear o tráfego na <b>internet</b> (site, API, e-mail).</span><span class="en">Records saying how to route traffic on the <b>internet</b> (website, API, email).</span></div>
-    <div class="card"><h4>🔒 <span class="pt">Privada</span><span class="en">Private</span></h4><span class="pt">Registros que dizem como rotear o tráfego dentro de uma <b>VPC</b>, por exemplo <code>db.interno.exemplo</code> resolvendo só para quem está na rede.</span><span class="en">Records saying how to route traffic inside a <b>VPC</b>, for example <code>db.internal.example</code> resolving only for those on the network.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> <span class="pt">Pública</span><span class="en">Public</span></h4><span class="pt">Registros que dizem como rotear o tráfego na <b>internet</b> (site, API, e-mail).</span><span class="en">Records saying how to route traffic on the <b>internet</b> (website, API, email).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg> <span class="pt">Privada</span><span class="en">Private</span></h4><span class="pt">Registros que dizem como rotear o tráfego dentro de uma <b>VPC</b>, por exemplo <code>db.interno.exemplo</code> resolvendo só para quem está na rede.</span><span class="en">Records saying how to route traffic inside a <b>VPC</b>, for example <code>db.internal.example</code> resolving only for those on the network.</span></div>
   </div>
 
   <h3>NS &amp; SOA</h3>
   <p><span class="pt">Ao criar uma zona pública, o Route 53 cria os registros <b>NS</b> (quatro name servers) e <b>SOA</b>. Para que a internet use essa zona, vá ao registrador do domínio (onde ele foi registrado) e configure os quatro name servers do NS padrão da zona. Para delegar um subdomínio a outra zona, crie um NS na zona do domínio raiz.</span><span class="en">When you create a public zone, Route 53 creates the <b>NS</b> records (four name servers) and <b>SOA</b>. For the internet to use that zone, go to the domain's registrar (where it was registered) and set the four name servers from the zone's default NS record. To delegate a subdomain to another zone, create an NS record in the root domain's zone.</span></p>
-  <div class="flow"><span class="node">🛒 <span class="pt">Registrador</span><span class="en">Registrar</span></span><span class="arrow">NS →</span><span class="node">📖 Route 53 HZ</span><span class="arrow">A/AAAA Alias →</span><span class="node">⚖️ ALB</span></div>
+  <div class="flow"><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-cart"/></svg> <span class="pt">Registrador</span><span class="en">Registrar</span></span><span class="arrow">NS →</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Route 53 HZ</span><span class="arrow">A/AAAA Alias →</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB</span></div>
 
   <h3><span class="pt">Apontar o domínio para o ALB</span><span class="en">Pointing the domain at the ALB</span></h3>
   <p><span class="pt">Crie um registro <b>Alias</b> do tipo A (e AAAA, se o ALB tiver IPv6) para o ALB. Quando o IP do load balancer muda, o Route 53 passa a responder com o novo sem você fazer nada. Para um alias a um recurso AWS você não define o TTL (vale o padrão do recurso) e não paga a consulta. O Alias funciona também no apex (<code>exemplo.com.br</code>), onde o CNAME não é permitido.</span><span class="en">Create an <b>Alias</b> record of type A (and AAAA, if the ALB has IPv6) for the ALB. When the load balancer's IP changes, Route 53 starts answering with the new one without you doing anything. For an alias to an AWS resource you do not set the TTL (the resource's default applies) and queries are not charged. Alias also works at the apex (<code>example.com</code>), where CNAME is not allowed.</span></p>
@@ -1646,8 +1700,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </div>
 
   <div class="grid">
-    <div class="card"><h4>✅ <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Domínios que apontam para recursos AWS (Alias); nomes internos por VPC (zona privada); controle do DNS junto da infraestrutura.</span><span class="en">Domains pointing to AWS resources (Alias); VPC-internal names (private zone); keeping DNS next to the infrastructure.</span></div>
-    <div class="card"><h4>⚠️ <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Ter zonas duplicadas para o mesmo domínio sem saber qual está nos NS do registrador; CNAME no apex; esquecer de atualizar os NS no registrador.</span><span class="en">Having duplicate zones for the same domain without knowing which one the registrar's NS points to; a CNAME at the apex; forgetting to update the NS at the registrar.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Domínios que apontam para recursos AWS (Alias); nomes internos por VPC (zona privada); controle do DNS junto da infraestrutura.</span><span class="en">Domains pointing to AWS resources (Alias); VPC-internal names (private zone); keeping DNS next to the infrastructure.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Ter zonas duplicadas para o mesmo domínio sem saber qual está nos NS do registrador; CNAME no apex; esquecer de atualizar os NS no registrador.</span><span class="en">Having duplicate zones for the same domain without knowing which one the registrar's NS points to; a CNAME at the apex; forgetting to update the NS at the registrar.</span></div>
   </div>
 
   <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
@@ -1677,10 +1731,10 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
       <nav class="footer-column" aria-labelledby="footer-company-heading">
         <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
-        <a href="../#about" data-i18n="nav.about">About</a>
-        <a href="../#practice" data-i18n="nav.practice">Practice</a>
-        <a href="../#principles" data-i18n="nav.principles">Principles</a>
-        <a href="./" data-i18n="nav.aws">AWS Notes</a>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#practice" data-i18n="nav.practice">Practice</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
       </nav>
 
       <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
@@ -1691,8 +1745,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
       <nav class="footer-column" aria-labelledby="footer-index-heading">
         <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
-        <a href="../sitemap.xml">Sitemap</a>
-        <a href="../llms.txt">llms.txt</a>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
       </nav>
 
       <div class="footer-column requires-js">
@@ -1705,8 +1759,8 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
     <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
   </footer>
 
-  <script src="../i18n.js"></script>
-  <script type="module" src="../main.js"></script>
+  <script src="../../i18n.js"></script>
+  <script type="module" src="../../main.js"></script>
   <script type="module" src="aws.js"></script>
 </body>
 </html>

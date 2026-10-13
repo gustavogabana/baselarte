@@ -12,7 +12,8 @@ boot.js            runs in <head>: theme by local time, initial language, shared
 styles.css         design tokens, layout, light/dark themes
 i18n.js            English / Brazilian Portuguese strings and switcher
 main.js            theme updates, local time, copyright year, Motion animations
-aws/               AWS Notes page: index.html, aws.css, aws.js
+notas/             Notes index (index.html, notas.css)
+notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
 favicon.svg/.ico   icons
@@ -37,9 +38,13 @@ Motion is kept quiet. Text fades up on load and as each section scrolls into vie
 
 ## AWS Notes
 
-`aws/` is a second page (served at `/aws/`), an interactive AWS study guide: topic sections, a sticky section list, diagrams and small simulators (load balancer, security groups, CIDR, Organizations, SSH handshake). It reuses `boot.js`, `i18n.js`, `main.js` and `styles.css`, so it follows the same theme, language switch and header/footer. `aws/aws.css` only adds what the guide needs, on top of the same tokens; `aws/aws.js` holds its interactions.
+`notas/` is the notes index (served at `/notas/`) and `notas/aws/` is its first entry, an interactive AWS study guide (`/notas/aws/`). The guide has topic sections, a sticky section list, diagrams and small simulators (load balancer, security groups, CIDR, Organizations, SSH handshake). It reuses `boot.js`, `i18n.js`, `main.js` and `styles.css`, so it follows the same theme, language switch and header/footer. `notas/aws/aws.css` only adds what the guide needs, on top of the same tokens; `notas/aws/aws.js` holds its interactions.
 
 The guide's body text carries both languages in the HTML (`<span class="pt">` / `<span class="en">`) and CSS hides the inactive one by `<html lang>`. The page chrome (hero, meta, nav) uses the usual `data-i18n` keys (`aws.*`).
+
+Every inner page has back buttons under the header (`.page-nav`): one to the previous screen and one to Home. Links between pages point to explicit `index.html` files, so they also work when the folder is opened without a web server.
+
+Icons are a small custom set drawn on the logo's 32×32 grid (stroke only, `currentColor`), defined as an inline SVG sprite in `notas/aws/index.html` and used with `<svg class="icon"><use href="#i-name"/></svg>`. No emoji.
 
 ## Theme
 

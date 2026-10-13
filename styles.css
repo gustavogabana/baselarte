@@ -202,6 +202,64 @@ ul {
 }
 
 /* ==========================================================================
+   Icons and page navigation (back buttons)
+   ========================================================================== */
+
+.icon-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.icon {
+  width: 1.15em;
+  height: 1.15em;
+  flex: none;
+  vertical-align: -0.2em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-nav {
+  max-width: var(--wide);
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 0 var(--gutter);
+}
+
+.pill-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.pill-link:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+.pill-link .icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: baseline;
+}
+
+/* ==========================================================================
    Hero (centered)
    ========================================================================== */
 

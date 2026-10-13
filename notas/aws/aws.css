@@ -45,6 +45,23 @@ html[lang="pt-BR"] .en {
   color: var(--ink);
 }
 
+.aws-guide .icon {
+  margin-right: 0.3em;
+}
+
+.aws-guide .node .icon,
+.aws-guide h4 .icon {
+  color: var(--muted);
+}
+
+.aws-guide button.node[aria-pressed="true"] .icon {
+  color: inherit;
+}
+
+.aws-guide .result .icon {
+  color: inherit;
+}
+
 .hero-kicker {
   color: var(--muted);
   margin-bottom: 24px;

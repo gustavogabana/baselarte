@@ -8,6 +8,9 @@
     </image:image>
   </url>
   <url>
-    <loc>https://baselarte.com/aws/</loc>
+    <loc>https://baselarte.com/notas/</loc>
+  </url>
+  <url>
+    <loc>https://baselarte.com/notas/aws/</loc>
   </url>
 </urlset>

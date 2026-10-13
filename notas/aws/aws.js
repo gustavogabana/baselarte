@@ -31,6 +31,10 @@ function bilingual(portuguese, english) {
   return `<span class="pt">${portuguese}</span><span class="en">${english}</span>`;
 }
 
+function icon(name) {
+  return `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
+}
+
 function centerOf(element, container) {
   const containerBox = container.getBoundingClientRect();
   const elementBox = element.getBoundingClientRect();
@@ -326,12 +330,12 @@ findAll("[data-sg]").forEach((simulator) => {
     output.className = `result sg-out ${isAllowed ? "ok" : "no"}`;
     output.innerHTML = isAllowed
       ? bilingual(
-        "✅ Permitido. Como o SG é stateful, a resposta volta sozinha, sem regra outbound.",
-        "✅ Allowed. SGs are stateful, so the reply goes back on its own, no outbound rule needed."
+        `${icon("check")} Permitido. Como o SG é stateful, a resposta volta sozinha, sem regra outbound.`,
+        `${icon("check")} Allowed. SGs are stateful, so the reply goes back on its own, no outbound rule needed.`
       )
       : bilingual(
-        "⛔ Bloqueado. Nenhuma regra inbound libera essa origem nessa porta (tudo é negado por padrão).",
-        "⛔ Blocked. No inbound rule allows this source on this port (everything is denied by default)."
+        `${icon("ban")} Bloqueado. Nenhuma regra inbound libera essa origem nessa porta (tudo é negado por padrão).`,
+        `${icon("ban")} Blocked. No inbound rule allows this source on this port (everything is denied by default).`
       );
     animateIfEnabled(output, { opacity: [0, 1], x: [-10, 0] }, { duration: 0.3 });
   }
