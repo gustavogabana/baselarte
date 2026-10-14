@@ -95,7 +95,7 @@ html[lang="pt-BR"] .en {
 }
 
 .aws-guide .tag {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -299,7 +299,7 @@ html[lang="pt-BR"] .en {
 .aws-guide th {
   background: var(--aws-surface);
   color: var(--muted);
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.06em;
@@ -327,7 +327,7 @@ html[lang="pt-BR"] .en {
   border-radius: 999px;
   background: var(--paper);
   color: var(--muted);
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 11px;
   transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
 }
@@ -395,7 +395,7 @@ html[lang="pt-BR"] .en {
 
 .aws-guide .vpc > .label,
 .aws-guide .az > .label {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -453,7 +453,7 @@ html[lang="pt-BR"] .en {
   background: var(--aws-surface);
   border-bottom: 1px solid var(--line);
   color: var(--muted);
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -684,7 +684,7 @@ html[lang="pt-BR"] .en {
 
 .aws-guide details.fc summary::before {
   content: "+ ";
-  font-family: var(--mono);
+  font-family: var(--label);
   color: var(--muted);
 }
 
@@ -699,7 +699,7 @@ html[lang="pt-BR"] .en {
 
 .aws-guide .fc-title {
   margin-top: 32px;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -733,4 +733,29 @@ html[lang="pt-BR"] .en {
   .aws-guide * {
     transition: none !important;
   }
+}
+
+/* Studio theme: filled square buttons, like the rest of the site. */
+[data-site-theme="studio"] .aws-guide .btn {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+[data-site-theme="studio"] .aws-guide .btn:hover {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+[data-site-theme="studio"] .aws-guide .btn.primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+
+[data-site-theme="studio"] .aws-guide :is(h2, h3, h4) {
+  font-weight: 900;
 }

@@ -69,7 +69,7 @@ html[lang="pt-BR"] .en {
 }
 
 .ds-table th {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   font-weight: 400;
   letter-spacing: 0.06em;
