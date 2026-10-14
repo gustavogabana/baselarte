@@ -2,7 +2,7 @@
 
 > Baselarte (Baselarte Ltda.) is a software engineering and creative technology company. It builds systems, interfaces and infrastructure that are simple on the surface and rigorous underneath.
 
-The public website is a landing page plus a notes section (an AWS study guide, the site's design system and a GitHub-to-AWS OIDC CI/CD guide), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
+The public website is a landing page plus a notes section (an AWS study guide, the site's design system a GitHub-to-AWS OIDC CI/CD guide and Cloudflare/R2/SSL notes), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
 
 ## Practice
 
@@ -29,4 +29,5 @@ The site quotes an IBM internal training presentation (1979): "A computer can ne
 - [AWS Notes](https://baselarte.com/notas/aws/): interactive AWS study guide (IAM, Organizations, VPC, ECS, RDS, S3, Route 53 and more) based on the official documentation, in English and Brazilian Portuguese.
 - [Design system notes](https://baselarte.com/notas/design-system/): how the site is designed (colour, type, layout, icons, motion, theme, language).
 - [GitHub to AWS with OIDC](https://baselarte.com/notas/github-aws-oidc/): CI/CD notes on deploying from GitHub Actions to AWS (ECR/ECS) with OIDC, for develop and production, based on the official docs.
+- [Cloudflare notes](https://baselarte.com/notas/cloudflare/): buying and configuring a domain, R2 with presigned URLs (private/public buckets, CDN), SSL certificates and HTTPS to an AWS ALB, based on the official docs.
 - [Sitemap](https://baselarte.com/sitemap.xml)
