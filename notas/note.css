@@ -85,3 +85,11 @@
 [data-site-theme="studio"] .ds-guide :is(h2, h3) {
   font-weight: 900;
 }
+
+/* Preview box of the theme background pattern (empty in the default theme). */
+.theme-pattern-demo {
+  height: 160px;
+  margin-top: 24px;
+  border: 1px solid var(--line);
+  background-image: var(--pattern-image);
+}

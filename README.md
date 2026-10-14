@@ -17,6 +17,7 @@ notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
 notas/design-system/  design system note (index.html, design-system.css)
 notas/note.css          styles shared by the note pages (steps, callouts, sources)
 notas/cloudflare/      Cloudflare note: domain, R2 presigned URLs, SSL, ALB (index.html)
+notas/site-theme/      Site theme note: the theme button and the studio theme (index.html)
 notas/github-aws-oidc/  GitHub Actions → AWS OIDC CI/CD note (index.html)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
@@ -57,6 +58,15 @@ Icons are a small custom set drawn on the logo's 32×32 grid (stroke only, `curr
 ## Theme
 
 The theme follows the visitor's local clock. It's dark from 18:00 to 06:00 and light the rest of the day. `boot.js` sets it in `<head>` before the first paint, and the day/night hours are defined there and nowhere else. `main.js` checks the time every 15 seconds and cross-fades when it changes. The browser's theme colour is read from the CSS `--paper` variable, so the colours live only in `styles.css`.
+
+## Site themes
+
+A button in the header (the hatched square) switches the look of the whole site between two design themes, `default` and `studio`. It sets `<html data-site-theme="…">` (saved in `localStorage` as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
+
+- `boot.js` reads the saved theme and applies it before the first paint; `main.js` builds the button and flips the attribute. The button's label is translated through `themeToggle.*` in `i18n.js`.
+- Everything about `studio` lives in the last section of `styles.css` (plus a few lines in `notas/aws/aws.css` and `notas/note.css`). It is derived from the look of estudio41.com.br: white paper, `#171617` ink, Lato 900 uppercase headings, Open Sans 300 text, square corners, filled square buttons, a dark footer and a fine triangular line pattern (an SVG tile in `--pattern-image`) behind the hero, the quote and the status block. Its fonts are requested only when the theme is used.
+- Components that need a theme-specific font use `--heading` and `--label` instead of naming a font. Code keeps `--mono` in every theme.
+- See the "Site theme" note (`notas/site-theme/`) for the rules to add a theme.
 
 ## Language
 
