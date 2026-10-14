@@ -61,8 +61,9 @@ The theme follows the visitor's local clock. It's dark from 18:00 to 06:00 and l
 
 ## Site themes
 
-A button in the header (the hatched square) switches the look of the whole site between two design themes, `default` and `studio`. It sets `<html data-site-theme="…">` (saved in `localStorage` as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
+A button in the header (the hatched square) switches the look of the whole site between two design themes, `default` and `studio`. It sets `<html data-site-theme="…">` (saved as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
 
+- **Saved in three places** (`readPreference` / `storePreference` in `boot.js`, also used for the language): `localStorage`, a cookie (works if `localStorage` is blocked) and `window.name` (follows the tab, which keeps the choice when the site is opened from disk and each file gets its own storage). A page restored from the back/forward cache, or open in another tab, follows the saved theme.
 - `boot.js` reads the saved theme and applies it before the first paint; `main.js` builds the button and flips the attribute. The button's label is translated through `themeToggle.*` in `i18n.js`.
 - Everything about `studio` lives in the last section of `styles.css` (plus a few lines in `notas/aws/aws.css` and `notas/note.css`). It is derived from the look of estudio41.com.br: white paper, `#171617` ink, Lato 900 uppercase headings, Open Sans 300 text, square corners, filled square buttons, a dark footer and a fine triangular line pattern (an SVG tile in `--pattern-image`) behind the hero, the quote and the status block. Its fonts are requested only when the theme is used.
 - Components that need a theme-specific font use `--heading` and `--label` instead of naming a font. Code keeps `--mono` in every theme.
@@ -115,6 +116,7 @@ The mark is a processor: a square die with a smaller core inside it and three pi
   - variables like `localTimeElement`, `dayPeriodKey`, `LOCAL_TIME_REFRESH_MS`;
   - classes like `.site-header`, `.reading-column`, `.pull-quote`;
   - data attributes like `data-current-year`, `data-animate-reveal`.
+- **The side navigation follows the content.** Its links are listed in the same order as the sections (or notes) on the page.
 - **Works without JavaScript.** The English text is in the HTML, and controls that need JS (language switch, local time) carry `.requires-js` and are hidden when JS is off.
 
 ## Run locally

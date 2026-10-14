@@ -15,7 +15,7 @@
 
   const documentRoot = document.documentElement;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const { themeForDate, revealWithoutMotion, markMotionStarted, SITE_THEMES, applySiteTheme, storeSiteTheme } = window.siteBoot;
+  const { themeForDate, revealWithoutMotion, markMotionStarted, SITE_THEMES, applySiteTheme, readStoredSiteTheme, storeSiteTheme, SITE_THEME_STORAGE_KEY } = window.siteBoot;
 
   const localTimeElement = document.querySelector("[data-local-time]");
   const dayPeriodElement = document.querySelector("[data-day-period]");
@@ -67,6 +67,21 @@
     });
 
     renderThemeToggle();
+
+    // Keep this page in step with the saved theme: when it is restored from the back/forward
+    // cache, or when the theme is changed from another tab.
+    function followSavedSiteTheme() {
+      applySiteTheme(readStoredSiteTheme());
+      renderThemeToggle();
+      syncBrowserThemeColor();
+    }
+
+    window.addEventListener("pageshow", (pageShowEvent) => {
+      if (pageShowEvent.persisted) followSavedSiteTheme();
+    });
+    window.addEventListener("storage", (storageEvent) => {
+      if (storageEvent.key === SITE_THEME_STORAGE_KEY) followSavedSiteTheme();
+    });
   }
 
   /* --------------------------------------------------------------------------

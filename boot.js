@@ -8,6 +8,7 @@
   const SUPPORTED_LANGUAGES = ["en", "pt-BR"];
   const DEFAULT_LANGUAGE = "en";
   const LANGUAGE_STORAGE_KEY = "baselarte:language";
+  const PREFERENCE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
   const SITE_THEMES = ["default", "studio"];
   const DEFAULT_SITE_THEME = "default";
   const SITE_THEME_STORAGE_KEY = "baselarte:site-theme";
@@ -25,43 +26,68 @@
     return isNight ? "dark" : "light";
   }
 
-  function readStoredLanguage() {
+  /* Preferences (language, site theme) are kept in three places, so they survive wherever the
+     browser allows at least one of them:
+       1. localStorage: the normal home, shared by every page of the site;
+       2. a cookie: still works when localStorage is blocked (http/https only);
+       3. window.name: follows the tab from page to page, which covers a site opened from disk
+          (file://), where browsers may give each file its own storage. */
+
+  function readCookie(name) {
+    const prefix = `${encodeURIComponent(name)}=`;
+    const entry = document.cookie.split("; ").find((cookie) => cookie.startsWith(prefix));
+    return entry ? decodeURIComponent(entry.slice(prefix.length)) : null;
+  }
+
+  function readWindowNameStore() {
+    if (!window.name) return {};
     try {
-      return localStorage.getItem(LANGUAGE_STORAGE_KEY);
-    } catch (storageError) {
-      // Private browsing or blocked site data: fall back to the browser language.
-      console.warn("Saved language preference is unavailable.", storageError);
+      const parsed = JSON.parse(window.name);
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : null;
+    } catch (parseError) {
+      // The tab's name belongs to something else; leave it alone.
       return null;
     }
   }
 
-  function storeLanguage(language) {
+  function readPreference(name) {
     try {
-      localStorage.setItem(LANGUAGE_STORAGE_KEY, language);
+      const storedValue = localStorage.getItem(name);
+      if (storedValue !== null) return storedValue;
     } catch (storageError) {
-      // The switch still works for this visit; it just won't be remembered.
-      console.warn("Language preference could not be saved.", storageError);
+      console.warn(`Saved preference "${name}" is unavailable in localStorage.`, storageError);
     }
+    const cookieValue = readCookie(name);
+    if (cookieValue !== null) return cookieValue;
+    return readWindowNameStore()?.[name] ?? null;
+  }
+
+  function storePreference(name, value) {
+    try {
+      localStorage.setItem(name, value);
+    } catch (storageError) {
+      console.warn(`Preference "${name}" could not be saved in localStorage.`, storageError);
+    }
+    document.cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}; path=/; max-age=${PREFERENCE_COOKIE_MAX_AGE_SECONDS}; SameSite=Lax`;
+    const windowNameStore = readWindowNameStore();
+    if (windowNameStore) window.name = JSON.stringify({ ...windowNameStore, [name]: value });
+  }
+
+  function readStoredLanguage() {
+    return readPreference(LANGUAGE_STORAGE_KEY);
+  }
+
+  function storeLanguage(language) {
+    storePreference(LANGUAGE_STORAGE_KEY, language);
   }
 
   function readStoredSiteTheme() {
-    try {
-      const storedTheme = localStorage.getItem(SITE_THEME_STORAGE_KEY);
-      return SITE_THEMES.includes(storedTheme) ? storedTheme : DEFAULT_SITE_THEME;
-    } catch (storageError) {
-      // Private browsing or blocked site data: use the default theme.
-      console.warn("Saved site theme is unavailable.", storageError);
-      return DEFAULT_SITE_THEME;
-    }
+    const storedTheme = readPreference(SITE_THEME_STORAGE_KEY);
+    return SITE_THEMES.includes(storedTheme) ? storedTheme : DEFAULT_SITE_THEME;
   }
 
   function storeSiteTheme(siteTheme) {
-    try {
-      localStorage.setItem(SITE_THEME_STORAGE_KEY, siteTheme);
-    } catch (storageError) {
-      // The theme still changes for this visit; it just won't be remembered.
-      console.warn("Site theme could not be saved.", storageError);
-    }
+    storePreference(SITE_THEME_STORAGE_KEY, siteTheme);
   }
 
   function loadStudioFonts() {
@@ -106,7 +132,9 @@
     SITE_THEMES,
     DEFAULT_SITE_THEME,
     applySiteTheme,
+    readStoredSiteTheme,
     storeSiteTheme,
+    SITE_THEME_STORAGE_KEY,
     revealWithoutMotion,
     markMotionStarted() {
       clearTimeout(motionFallbackTimer);
