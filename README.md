@@ -73,20 +73,22 @@ The English text in `index.html` is the version search engines index, so keep it
 
 ## Logo
 
-The mark is a pair of angle brackets resting on a base line:
+The mark is a processor: a square die with a smaller core inside it and three pins on each side.
 
 ```svg
 <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M13 7 4 14l9 7M19 7l9 7-9 7M4 26h24"/>
+  <rect x="8" y="8" width="16" height="16" rx="2"/>
+  <rect x="13" y="13" width="6" height="6"/>
+  <path d="M12 3v5M16 3v5M20 3v5M12 24v5M16 24v5M20 24v5M3 12h5M3 16h5M3 20h5M24 12h5M24 16h5M24 20h5"/>
 </svg>
 ```
 
-- **Meaning:** the brackets are code, the line under them is the foundation. It says what the company does (software engineering) and what it starts from (the base, in *baselarte*).
-- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The brackets span x = 4 to 28 and y = 7 to 21. The base line sits at y = 26, from x = 4 to 28. Stroke only, no fill, round caps and joins.
+- **Meaning:** the processor is where software actually runs, the layer under everything the company builds. Precise, small, and made of straight lines.
+- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The die is 16×16 with a 2-unit corner radius, the core is 6×6 and centred, and the 12 pins are 5 units long, spaced 4 units apart. Stroke only, no fill, round caps and joins.
 - **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#141413` ink and `#f3f1ec` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
 - **Wordmark:** "baselarte", in lowercase Geist Medium with slightly tight letter spacing (−0.02em), set beside the mark.
 - **Files:**
-  - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (heavier stroke so it reads at 16px).
+  - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (slightly heavier stroke so it reads at 16px).
   - `favicon.ico`, `assets/icon-192.png`, `assets/icon-512.png`, `assets/apple-touch-icon.png`: the same mark rendered as PNGs for browsers, home screens and the manifest (full-bleed, so the OS can round or mask them).
   - `assets/og-image.jpg`: the 1200×630 social share image. It's a photo and doesn't contain the logo.
 
