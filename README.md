@@ -92,7 +92,6 @@ The mark is a processor: a square die with a smaller core inside it and three pi
 - **Files:**
   - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (slightly heavier stroke so it reads at 16px).
   - `favicon.ico`, `assets/icon-192.png`, `assets/icon-512.png`, `assets/apple-touch-icon.png`: the same mark rendered as PNGs for browsers, home screens and the manifest (full-bleed, so the OS can round or mask them).
-  - `assets/og-image.jpg`: the 1200×630 social share image. It's a photo and doesn't contain the logo.
 
 ## Conventions
 
