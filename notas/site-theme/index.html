@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="st.metaTitle">Site Theme Notes | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:st.metaDescription" content="How the theme button works and how the “studio” theme was derived from a reference site, with a triangular line pattern.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#f3f1ec">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/site-theme/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/site-theme/">
+  <meta property="og:title" data-i18n-attributes="content:st.metaTitle" content="Site Theme Notes | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:st.metaDescription" content="How the theme button works and how the “studio” theme was derived from a reference site, with a triangular line pattern.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:st.metaTitle" content="Site Theme Notes | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:st.metaDescription" content="How the theme button works and how the “studio” theme was derived from a reference site, with a triangular line pattern.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../design-system/design-system.css">
+  <link rel="stylesheet" href="../note.css">
+
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../index.html" aria-label="Baselarte">
+      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="8" width="16" height="16" rx="2"/><rect x="13" y="13" width="6" height="6"/><path d="M12 3v5M16 3v5M20 3v5M12 24v5M16 24v5M20 24v5M3 12h5M3 16h5M3 20h5M24 12h5M24 16h5M24 20h5"/></svg>
+      <span>baselarte</span>
+    </a>
+    <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+      <a href="../../index.html#about" data-i18n="nav.about">About</a>
+      <a href="../../index.html#practice" data-i18n="nav.practice">Practice</a>
+      <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+      <a href="../index.html" aria-current="true" data-i18n="nav.notes">Notes</a>
+      <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+        <span data-i18n="languageToggle.label">PT</span>
+      </button>
+    </nav>
+  </header>
+
+  <nav class="page-nav" data-i18n-attributes="aria-label:back.label" aria-label="Page navigation">
+    <a class="pill-link" href="../index.html"><span aria-hidden="true">←</span> <span data-i18n="back.notes">Notes</span></a>
+    <a class="pill-link" href="../../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></svg> <span data-i18n="back.home">Home</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="st.kicker">Site theme</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="st.heroTitle">One site, <em>two looks.</em></h1>
+      <p class="hero-lede" data-i18n="st.heroLede">The theme button changes how the site looks, never what it says.</p>
+    </section>
+
+    <div class="page-layout">
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+            <li><a href="#how"><span class="pt">Como funciona</span><span class="en">How it works</span></a></li>
+            <li><a href="#studio"><span class="pt">O tema Estúdio</span><span class="en">The Studio theme</span></a></li>
+            <li><a href="#pattern"><span class="pt">O fundo triangular</span><span class="en">The triangular background</span></a></li>
+            <li><a href="#rules"><span class="pt">Regras para criar um tema</span><span class="en">Rules for creating a theme</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+        <section class="content-section" aria-labelledby="how">
+          <h2 id="how"><span class="pt">Como funciona</span><span class="en">How it works</span></h2>
+<p><span class="pt">O botão de tema (o quadrado com hachura, ao lado do idioma) troca o <em>visual</em> do site inteiro. O conteúdo, o idioma e a troca automática entre claro e escuro pelo relógio não mudam. A escolha fica salva no navegador.</span><span class="en">The theme button (the hatched square, next to the language button) changes the <em>look</em> of the whole site. The content, the language and the automatic light/dark switch by the clock do not change. The choice is saved in the browser.</span></p><pre><code>&lt;html lang=&quot;pt-BR&quot; data-theme=&quot;dark&quot; data-site-theme=&quot;studio&quot;&gt;</code></pre><ul class="ds-list"><li><span class="pt"><code>data-theme</code> é o claro/escuro por horário (<code>boot.js</code>).</span><span class="en"><code>data-theme</code> is the light/dark by time of day (<code>boot.js</code>).</span></li><li><span class="pt"><code>data-site-theme</code> é o tema de design: <code>default</code> ou <code>studio</code>. Cada tema tem as duas variações, clara e escura.</span><span class="en"><code>data-site-theme</code> is the design theme: <code>default</code> or <code>studio</code>. Each theme has both variations, light and dark.</span></li><li><span class="pt"><code>boot.js</code> lê a escolha salva e aplica o atributo antes da primeira pintura, então não há piscada. <code>main.js</code> cria o botão e troca o atributo.</span><span class="en"><code>boot.js</code> reads the saved choice and sets the attribute before first paint, so nothing flashes. <code>main.js</code> creates the button and flips the attribute.</span></li></ul><p><span class="pt">O rótulo do botão diz para qual tema ele vai e é traduzido por <code>i18n.js</code>, como o resto da página.</span><span class="en">The button’s label names the theme it will switch to and is translated by <code>i18n.js</code>, like the rest of the page.</span></p>
+        </section>
+        <section class="content-section" aria-labelledby="studio">
+          <h2 id="studio"><span class="pt">O tema Estúdio</span><span class="en">The Studio theme</span></h2>
+<p><span class="pt">Foi derivado do visual do site <a href="https://www.estudio41.com.br/">estudio41.com.br</a>: lemos as fontes, cores e o fundo de suas páginas e montamos um sistema próprio a partir disso. Nenhuma imagem ou arquivo do site de referência foi copiado.</span><span class="en">It was derived from the look of <a href="https://www.estudio41.com.br/">estudio41.com.br</a>: we read the fonts, colours and background of its pages and built our own system from that. No image or file from the reference site was copied.</span></p><div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Aspecto</span><span class="en">Aspect</span></th><th><span class="pt">Padrão</span><span class="en">Default</span></th><th><span class="pt">Estúdio</span><span class="en">Studio</span></th></tr></thead><tbody><tr><td><span class="pt">Papel / tinta</span><span class="en">Paper / ink</span></td><td>#f3f1ec / #141413</td><td>#ffffff / #171617</td></tr><tr><td><span class="pt">Texto secundário</span><span class="en">Muted text</span></td><td>#6c6a65</td><td>#555659</td></tr><tr><td><span class="pt">Títulos</span><span class="en">Headings</span></td><td>Geist</td><td>Lato 900, <span class="pt">maiúsculas</span><span class="en">uppercase</span></td></tr><tr><td><span class="pt">Texto</span><span class="en">Body</span></td><td>Geist 400</td><td>Open Sans 300</td></tr><tr><td><span class="pt">Ênfase (<code>em</code>)</span><span class="en">Emphasis (<code>em</code>)</span></td><td><span class="pt">Serifa itálica</span><span class="en">Italic serif</span></td><td><span class="pt">Lato em negrito</span><span class="en">Lato bold</span></td></tr><tr><td><span class="pt">Cantos</span><span class="en">Corners</span></td><td><span class="pt">Arredondados nos botões</span><span class="en">Rounded on buttons</span></td><td><span class="pt">Quadrados em tudo</span><span class="en">Square everywhere</span></td></tr><tr><td><span class="pt">Botões</span><span class="en">Buttons</span></td><td><span class="pt">Contorno fino</span><span class="en">Thin outline</span></td><td><span class="pt">Preenchidos, maiúsculas</span><span class="en">Filled, uppercase</span></td></tr><tr><td><span class="pt">Rodapé</span><span class="en">Footer</span></td><td><span class="pt">Igual à página</span><span class="en">Same as the page</span></td><td><span class="pt">Faixa escura</span><span class="en">Dark band</span></td></tr><tr><td><span class="pt">Fundo</span><span class="en">Background</span></td><td><span class="pt">Liso</span><span class="en">Plain</span></td><td><span class="pt">Padrão triangular</span><span class="en">Triangular pattern</span></td></tr></tbody></table></div><p><span class="pt">A variação escura do Estúdio usa papel <code>#111012</code> e tinta <code>#f4f4f5</code>, com o rodapé ainda mais escuro.</span><span class="en">Studio’s dark variation uses paper <code>#111012</code> and ink <code>#f4f4f5</code>, with an even darker footer.</span></p>
+        </section>
+        <section class="content-section" aria-labelledby="pattern">
+          <h2 id="pattern"><span class="pt">O fundo triangular</span><span class="en">The triangular background</span></h2>
+<p><span class="pt">Algumas seções do site de referência têm um fundo de linhas finas que formam triângulos. Aqui ele é um SVG desenhado à mão, de 84×57 px, repetido como imagem de fundo: duas verticais, duas diagonais cruzadas e duas diagonais que saem do topo do meio. Fica só no hero, na citação e no bloco de status, e as linhas têm 10% de opacidade.</span><span class="en">Some sections of the reference site have a background of fine lines that form triangles. Here it is a hand-drawn SVG, 84×57 px, repeated as a background image: two verticals, two crossing diagonals and two diagonals that fall from the top middle. It only appears on the hero, the quote and the status block, and the lines are at 10% opacity.</span></p><pre><code>&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;84&quot; height=&quot;57&quot; viewBox=&quot;0 0 84 57&quot;
+     fill=&quot;none&quot; stroke=&quot;#171617&quot; stroke-opacity=&quot;.1&quot;&gt;
+  &lt;path d=&quot;M0 0V57M42 0V57M0 0L84 57M0 57L84 0M42 0L84 57M42 0L0 57&quot;/&gt;
+&lt;/svg&gt;</code></pre><p><span class="pt">A cor da linha vem do tema (escura no claro, branca no escuro), por isso o padrão fica em duas versões, guardadas na variável <code>--pattern-image</code>. No tema padrão ela vale <code>none</code>. Para vê-lo aqui, troque o tema.</span><span class="en">The line colour comes from the theme (dark on light, white on dark), so the pattern exists in two versions, kept in the <code>--pattern-image</code> variable. In the default theme it is <code>none</code>. To see it here, switch the theme.</span></p><div class="theme-pattern-demo" role="img" aria-label="Pattern preview"></div>
+        </section>
+        <section class="content-section" aria-labelledby="rules">
+          <h2 id="rules"><span class="pt">Regras para criar um tema</span><span class="en">Rules for creating a theme</span></h2>
+<ol class="ds-steps"><li><span class="pt">Defina o tema só com variáveis e regras sob <code>[data-site-theme="nome"]</code>, para as duas variações (<code>[data-theme="light"]</code> e <code>[data-theme="dark"]</code>).</span><span class="en">Define the theme only with variables and rules under <code>[data-site-theme="name"]</code>, for both variations (<code>[data-theme="light"]</code> and <code>[data-theme="dark"]</code>).</span></li><li><span class="pt">Cores e fontes por variável (<code>--paper</code>, <code>--ink</code>, <code>--muted</code>, <code>--line</code>, <code>--sans</code>, <code>--heading</code>, <code>--label</code>); nunca no HTML.</span><span class="en">Colours and fonts through variables (<code>--paper</code>, <code>--ink</code>, <code>--muted</code>, <code>--line</code>, <code>--sans</code>, <code>--heading</code>, <code>--label</code>); never in the HTML.</span></li><li><span class="pt">Nunca mude texto nem estrutura: um tema só muda o visual.</span><span class="en">Never change text or structure: a theme only changes the look.</span></li><li><span class="pt">Carregue as fontes do tema só quando ele for usado (veja <code>loadStudioFonts()</code> em <code>boot.js</code>), para que o tema padrão não pague por elas.</span><span class="en">Load the theme’s fonts only when it is used (see <code>loadStudioFonts()</code> in <code>boot.js</code>), so the default theme does not pay for them.</span></li><li><span class="pt">Adicione o nome em <code>SITE_THEMES</code> (<code>boot.js</code>) e as chaves <code>themeToggle.*</code> em <code>i18n.js</code>, nos dois idiomas.</span><span class="en">Add the name to <code>SITE_THEMES</code> (<code>boot.js</code>) and the <code>themeToggle.*</code> keys in <code>i18n.js</code>, in both languages.</span></li></ol>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="8" width="16" height="16" rx="2"/><rect x="13" y="13" width="6" height="6"/><path d="M12 3v5M16 3v5M20 3v5M12 24v5M16 24v5M20 24v5M3 12h5M3 16h5M3 20h5M24 12h5M24 16h5M24 20h5"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#practice" data-i18n="nav.practice">Practice</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>

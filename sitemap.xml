@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://baselarte.com/</loc>
-    <image:image>
-      <image:loc>https://baselarte.com/assets/og-image.jpg</image:loc>
-    </image:image>
   </url>
   <url>
     <loc>https://baselarte.com/notas/</loc>
@@ -21,5 +17,8 @@
   </url>
   <url>
     <loc>https://baselarte.com/notas/cloudflare/</loc>
+  </url>
+  <url>
+    <loc>https://baselarte.com/notas/site-theme/</loc>
   </url>
 </urlset>

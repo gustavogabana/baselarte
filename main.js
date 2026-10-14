@@ -8,13 +8,14 @@
   const LOCAL_TIME_REFRESH_MS = 15_000;
   // A section is "current" while it crosses this band of the viewport.
   const SCROLL_SPY_ROOT_MARGIN = "-20% 0px -70% 0px";
+  const THEME_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="22" height="22" rx="2"/><path d="M5 27 27 5M5 16 16 5M16 27 27 16"/></svg>';
   const ARROW_UP_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27V6M7 14l9-9 9 9"/></svg>';
   // Slightly longer than the 1.2s colour transition in styles.css (html.theme-transition).
   const THEME_TRANSITION_MS = 1300;
 
   const documentRoot = document.documentElement;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const { themeForDate, revealWithoutMotion, markMotionStarted } = window.siteBoot;
+  const { themeForDate, revealWithoutMotion, markMotionStarted, SITE_THEMES, applySiteTheme, readStoredSiteTheme, storeSiteTheme, SITE_THEME_STORAGE_KEY } = window.siteBoot;
 
   const localTimeElement = document.querySelector("[data-local-time]");
   const dayPeriodElement = document.querySelector("[data-day-period]");
@@ -27,6 +28,61 @@
   document.querySelectorAll("[data-current-year]").forEach((yearElement) => {
     yearElement.textContent = String(new Date().getFullYear());
   });
+
+  /* --------------------------------------------------------------------------
+     Theme button: switches between the site themes (the look only; the content, the
+     language and the day/night colours are untouched). The choice is remembered.
+     -------------------------------------------------------------------------- */
+
+  const siteNavElement = document.querySelector(".site-nav");
+
+  if (siteNavElement) {
+    const themeToggle = document.createElement("button");
+    themeToggle.type = "button";
+    themeToggle.className = "theme-toggle";
+    themeToggle.innerHTML = THEME_ICON_MARKUP;
+    siteNavElement.insertBefore(themeToggle, siteNavElement.querySelector(".language-toggle"));
+
+    function nextSiteTheme() {
+      return SITE_THEMES[(SITE_THEMES.indexOf(documentRoot.dataset.siteTheme) + 1) % SITE_THEMES.length];
+    }
+
+    // The label names the theme the button will switch to; i18n.js keeps it translated.
+    function renderThemeToggle() {
+      const labelKey = `themeToggle.${nextSiteTheme()}`;
+      themeToggle.dataset.i18nAttributes = `aria-label:${labelKey};title:${labelKey}`;
+      themeToggle.setAttribute("aria-label", window.i18n.translate(labelKey));
+      themeToggle.title = window.i18n.translate(labelKey);
+      themeToggle.setAttribute("aria-pressed", String(documentRoot.dataset.siteTheme !== SITE_THEMES[0]));
+    }
+
+    themeToggle.addEventListener("click", () => {
+      const siteTheme = nextSiteTheme();
+      documentRoot.classList.add("theme-transition");
+      applySiteTheme(siteTheme);
+      storeSiteTheme(siteTheme);
+      renderThemeToggle();
+      syncBrowserThemeColor();
+      setTimeout(() => documentRoot.classList.remove("theme-transition"), THEME_TRANSITION_MS);
+    });
+
+    renderThemeToggle();
+
+    // Keep this page in step with the saved theme: when it is restored from the back/forward
+    // cache, or when the theme is changed from another tab.
+    function followSavedSiteTheme() {
+      applySiteTheme(readStoredSiteTheme());
+      renderThemeToggle();
+      syncBrowserThemeColor();
+    }
+
+    window.addEventListener("pageshow", (pageShowEvent) => {
+      if (pageShowEvent.persisted) followSavedSiteTheme();
+    });
+    window.addEventListener("storage", (storageEvent) => {
+      if (storageEvent.key === SITE_THEME_STORAGE_KEY) followSavedSiteTheme();
+    });
+  }
 
   /* --------------------------------------------------------------------------
      Side navigation: small-screen toggle and highlight of the current section.

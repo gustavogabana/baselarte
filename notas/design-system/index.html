@@ -22,18 +22,13 @@
   <meta property="og:url" content="https://baselarte.com/notas/design-system/">
   <meta property="og:title" data-i18n-attributes="content:ds.metaTitle" content="Design System Notes | Baselarte">
   <meta property="og:description" data-i18n-attributes="content:ds.metaDescription" content="How the Baselarte site is designed: colour, type, layout, icons, motion, theme and language.">
-  <meta property="og:image" content="https://baselarte.com/assets/og-image.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
   <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
   <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
 
   <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:card" content="summary">
   <meta name="twitter:title" data-i18n-attributes="content:ds.metaTitle" content="Design System Notes | Baselarte">
   <meta name="twitter:description" data-i18n-attributes="content:ds.metaDescription" content="How the Baselarte site is designed: colour, type, layout, icons, motion, theme and language.">
-  <meta name="twitter:image" content="https://baselarte.com/assets/og-image.jpg">
 
   <!-- Icons & manifest -->
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
@@ -284,6 +279,7 @@
         <section class="content-section" aria-labelledby="theme">
           <h2 id="theme"><span class="pt">Tema e hora local</span><span class="en">Theme and local time</span></h2>
           <p><span class="pt">O tema é definido em <code>&lt;head&gt;</code> por <code>boot.js</code>, antes da primeira pintura, para não haver flash. Depois, <code>main.js</code> confere o relógio a cada 15 segundos e faz uma transição de 1,2s quando cruza 6h ou 18h. O rodapé mostra a hora local e o período do dia.</span><span class="en">The theme is set in <code>&lt;head&gt;</code> by <code>boot.js</code>, before first paint, so there is no flash. Then <code>main.js</code> checks the clock every 15 seconds and cross-fades over 1.2s when it crosses 06:00 or 18:00. The footer shows the local time and day period.</span></p>
+          <p><span class="pt">Além do claro/escuro por horário, o botão no cabeçalho troca o <em>tema de design</em> (padrão ou Estúdio). Veja a nota “Tema do site”.</span><span class="en">Besides the light/dark by time of day, the header button switches the <em>design theme</em> (default or Studio). See the “Site theme” note.</span></p>
           <p><span class="pt">Os scripts são clássicos, não módulos, então o site também funciona aberto direto do disco (<code>file://</code>).</span><span class="en">Scripts are classic, not modules, so the site also works when opened straight from disk (<code>file://</code>).</span></p>
         </section>
 

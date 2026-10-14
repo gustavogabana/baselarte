@@ -13,6 +13,11 @@
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --mono: "Geist Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
+  --label: var(--mono);
+  --heading: var(--sans);
+  --pattern-image: none;
+  --footer-paper: var(--paper);
+
   --gutter: clamp(20px, 4vw, 48px);
   --column: 40rem;
   --wide: 72rem;
@@ -106,7 +111,7 @@ ul {
 }
 
 .monospace-label {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
@@ -190,7 +195,7 @@ ul {
 }
 
 .language-toggle {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   padding: 5px 9px;
@@ -240,7 +245,7 @@ ul {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -300,7 +305,7 @@ ul {
 }
 
 .side-nav h2 {
-  font-family: var(--mono);
+  font-family: var(--label);
   font-size: 12px;
   font-weight: 400;
   line-height: 1.4;
@@ -378,6 +383,32 @@ ul {
 .back-to-top .icon {
   width: 18px;
   height: 18px;
+  margin: 0;
+  vertical-align: baseline;
+}
+
+/* ==========================================================================
+   Theme toggle (added to the header by main.js)
+   ========================================================================== */
+
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease), color 0.3s var(--ease);
+}
+
+.theme-toggle:hover {
+  border-color: var(--ink);
+}
+
+.theme-toggle .icon {
+  width: 16px;
+  height: 16px;
   margin: 0;
   vertical-align: baseline;
 }
@@ -649,4 +680,181 @@ html:not(.js-enabled) .requires-js {
 /* The layout already draws the rule above the first section. */
 .page-layout .content-section:first-child {
   border-top: 0;
+}
+
+/* ==========================================================================
+   Site theme: "studio"
+   An alternative design system, selected with <html data-site-theme="studio"> by the
+   theme button (boot.js / main.js). It is derived from the visual language of
+   estudio41.com.br: white paper, near-black ink, Lato Black uppercase headings, Open Sans
+   Light text, square corners, filled square buttons, a dark footer and a fine
+   triangular line pattern behind some sections. Only the look changes; the content,
+   the language and the automatic day/night switch work exactly as in the default theme.
+   ========================================================================== */
+
+[data-site-theme="studio"] {
+  --sans: "Open Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --heading: "Lato", "Helvetica Neue", Arial, sans-serif;
+  --label: var(--heading);
+  --serif: var(--sans);
+}
+
+[data-site-theme="studio"][data-theme="light"] {
+  --paper: #ffffff;
+  --ink: #171617;
+  --muted: #555659;
+  --line: rgba(23, 22, 23, 0.14);
+  --pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='57' viewBox='0 0 84 57' fill='none' stroke='%23171617' stroke-opacity='0.1' stroke-width='1'%3E%3Cpath d='M0 0V57M42 0V57M0 0L84 57M0 57L84 0M42 0L84 57M42 0L0 57'/%3E%3C/svg%3E");
+  --footer-paper: #171617;
+}
+
+[data-site-theme="studio"][data-theme="dark"] {
+  --paper: #111012;
+  --ink: #f4f4f5;
+  --muted: #a9a9ad;
+  --line: rgba(244, 244, 245, 0.16);
+  --pattern-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='84' height='57' viewBox='0 0 84 57' fill='none' stroke='%23ffffff' stroke-opacity='0.1' stroke-width='1'%3E%3Cpath d='M0 0V57M42 0V57M0 0L84 57M0 57L84 0M42 0L84 57M42 0L0 57'/%3E%3C/svg%3E");
+  --footer-paper: #050505;
+}
+
+[data-site-theme="studio"] body {
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+/* Square corners everywhere (round dots in diagrams stay round). */
+[data-site-theme="studio"] :where(*, *::before, *::after):not(.dot):not(.pkt) {
+  border-radius: 0 !important;
+}
+
+[data-site-theme="studio"] em {
+  font-family: var(--heading);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 1em;
+}
+
+[data-site-theme="studio"] :is(h1, h2, h3, h4),
+[data-site-theme="studio"] .note-title {
+  font-family: var(--heading);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+[data-site-theme="studio"] :is(.side-nav, .footer-column) h2 {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+[data-site-theme="studio"] .monospace-label {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+[data-site-theme="studio"] .site-wordmark {
+  font-family: var(--heading);
+  font-size: 14px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+[data-site-theme="studio"] .site-nav {
+  font-family: var(--heading);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink);
+}
+
+[data-site-theme="studio"] .site-nav a:not(:hover) {
+  color: var(--muted);
+}
+
+/* Hero: full-width band with the triangular pattern behind the centred text. */
+[data-site-theme="studio"] .hero {
+  max-width: none;
+  padding-inline: max(var(--gutter), calc((100% - 52rem) / 2));
+  background-image: var(--pattern-image);
+  border-bottom: 1px solid var(--line);
+}
+
+[data-site-theme="studio"] .hero-title {
+  font-size: clamp(30px, 4.4vw, 54px);
+  line-height: 1.12;
+  letter-spacing: 0.01em;
+}
+
+[data-site-theme="studio"] .hero-lede {
+  font-weight: 300;
+}
+
+[data-site-theme="studio"] .content-section h2 {
+  font-size: clamp(20px, 2.2vw, 26px);
+}
+
+[data-site-theme="studio"] .pull-quote,
+[data-site-theme="studio"] .status-section {
+  background-image: var(--pattern-image);
+}
+
+[data-site-theme="studio"] .status-section {
+  padding-inline: clamp(16px, 4vw, 40px);
+  padding-bottom: clamp(32px, 5vw, 56px);
+}
+
+[data-site-theme="studio"] .pull-quote {
+  padding-inline: clamp(16px, 4vw, 40px);
+}
+
+[data-site-theme="studio"] .pull-quote blockquote p {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 300;
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+/* Buttons: filled, square, uppercase. */
+[data-site-theme="studio"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top) {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+
+[data-site-theme="studio"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top):hover {
+  background: var(--paper);
+  color: var(--ink);
+  border-color: var(--ink);
+}
+
+[data-site-theme="studio"] :is(.pill-link, .language-toggle, .side-nav-toggle) {
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+/* Footer: dark band with light text, as on the reference site. */
+[data-site-theme="studio"] .site-footer {
+  --paper: var(--footer-paper);
+  --ink: #ffffff;
+  --muted: #b8b8bb;
+  --line: rgba(255, 255, 255, 0.18);
+  background: var(--footer-paper);
+  color: var(--ink);
+  border-top: 0;
+}
+
+[data-site-theme="studio"] .site-footer .motto {
+  font-family: var(--heading);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+[data-site-theme="studio"] .site-footer .motto em {
+  font-weight: 700;
 }
