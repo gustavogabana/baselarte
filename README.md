@@ -73,23 +73,22 @@ The English text in `index.html` is the version search engines index, so keep it
 
 ## Logo
 
-The mark is a circle resting on a horizon line:
+The mark is a pair of angle brackets resting on a base line:
 
 ```svg
-<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4">
-  <circle cx="16" cy="16" r="8.5"/>
-  <path d="M4.5 19h23"/>
+<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M13 7 4 14l9 7M19 7l9 7-9 7M4 26h24"/>
 </svg>
 ```
 
-- **Meaning:** the circle reads as either a sun or a moon sitting just above the horizon. That's the moment between day and night, the same switch the site's theme makes at 06:00 and 18:00. It also echoes the mountain horizon in the original hero photo, which is now the social share image.
-- **Construction:** it's drawn on a 32×32 grid. The circle is centered with radius 8.5. The horizon sits at y = 19, a little below center, so the circle appears to rest on it, and extends from x = 4.5 to 27.5. Stroke only, no fill.
+- **Meaning:** the brackets are code, the line under them is the foundation. It says what the company does (software engineering) and what it starts from (the base, in *baselarte*).
+- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The brackets span x = 4 to 28 and y = 7 to 21. The base line sits at y = 26, from x = 4 to 28. Stroke only, no fill, round caps and joins.
 - **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#141413` ink and `#f3f1ec` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
 - **Wordmark:** "baselarte", in lowercase Geist Medium with slightly tight letter spacing (−0.02em), set beside the mark.
 - **Files:**
-  - `favicon.svg`: the mark knocked out of a rounded square, adapting to the browser's colour scheme.
-  - `favicon.ico`, `assets/icon-192.png`, `assets/icon-512.png`, `assets/apple-touch-icon.png`: the same mark rendered as PNGs for browsers, home screens and the manifest.
-  - `assets/og-image.jpg`: the 1200×630 social share image.
+  - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (heavier stroke so it reads at 16px).
+  - `favicon.ico`, `assets/icon-192.png`, `assets/icon-512.png`, `assets/apple-touch-icon.png`: the same mark rendered as PNGs for browsers, home screens and the manifest (full-bleed, so the OS can round or mask them).
+  - `assets/og-image.jpg`: the 1200×630 social share image. It's a photo and doesn't contain the logo.
 
 ## Conventions
 
