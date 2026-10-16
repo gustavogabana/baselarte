@@ -37,33 +37,73 @@
   const siteNavElement = document.querySelector(".site-nav");
 
   if (siteNavElement) {
+    // A button that opens a small menu (on hover, keyboard focus or tap) listing every theme.
+    const themeMenu = document.createElement("div");
+    themeMenu.className = "theme-menu";
     const themeToggle = document.createElement("button");
     themeToggle.type = "button";
     themeToggle.className = "theme-toggle";
     themeToggle.innerHTML = THEME_ICON_MARKUP;
-    siteNavElement.insertBefore(themeToggle, siteNavElement.querySelector(".language-toggle"));
+    themeToggle.setAttribute("aria-haspopup", "true");
+    themeToggle.setAttribute("aria-expanded", "false");
+    themeToggle.dataset.i18nAttributes = "aria-label:themeToggle.label;title:themeToggle.label";
+    const themeList = document.createElement("ul");
+    themeList.className = "theme-menu-list";
+    const themeOptions = SITE_THEMES.map((siteTheme) => {
+      const item = document.createElement("li");
+      const option = document.createElement("button");
+      option.type = "button";
+      option.dataset.siteThemeOption = siteTheme;
+      option.dataset.i18n = `themeName.${siteTheme}`;
+      option.textContent = window.i18n.translate(`themeName.${siteTheme}`);
+      item.append(option);
+      themeList.append(item);
+      return option;
+    });
+    themeMenu.append(themeToggle, themeList);
+    siteNavElement.insertBefore(themeMenu, siteNavElement.querySelector(".language-toggle"));
 
-    function nextSiteTheme() {
-      return SITE_THEMES[(SITE_THEMES.indexOf(documentRoot.dataset.siteTheme) + 1) % SITE_THEMES.length];
+    function setThemeMenuOpen(isOpen) {
+      themeMenu.classList.toggle("is-open", isOpen);
+      themeToggle.setAttribute("aria-expanded", String(isOpen));
     }
 
-    // The label names the theme the button will switch to; i18n.js keeps it translated.
+    // Marks the current theme in the list and keeps the button label translated.
     function renderThemeToggle() {
-      const labelKey = `themeToggle.${nextSiteTheme()}`;
-      themeToggle.dataset.i18nAttributes = `aria-label:${labelKey};title:${labelKey}`;
-      themeToggle.setAttribute("aria-label", window.i18n.translate(labelKey));
-      themeToggle.title = window.i18n.translate(labelKey);
-      themeToggle.setAttribute("aria-pressed", String(documentRoot.dataset.siteTheme !== SITE_THEMES[0]));
+      themeToggle.setAttribute("aria-label", window.i18n.translate("themeToggle.label"));
+      themeToggle.title = window.i18n.translate("themeToggle.label");
+      themeList.setAttribute("aria-label", window.i18n.translate("themeToggle.label"));
+      themeOptions.forEach((option) => {
+        const isCurrent = option.dataset.siteThemeOption === documentRoot.dataset.siteTheme;
+        option.setAttribute("aria-pressed", String(isCurrent));
+      });
     }
 
-    themeToggle.addEventListener("click", () => {
-      const siteTheme = nextSiteTheme();
-      documentRoot.classList.add("theme-transition");
-      applySiteTheme(siteTheme);
-      storeSiteTheme(siteTheme);
+    function chooseSiteTheme(siteTheme) {
+      if (siteTheme !== documentRoot.dataset.siteTheme) {
+        documentRoot.classList.add("theme-transition");
+        applySiteTheme(siteTheme);
+        storeSiteTheme(siteTheme);
+        syncBrowserThemeColor();
+        setTimeout(() => documentRoot.classList.remove("theme-transition"), THEME_TRANSITION_MS);
+      }
       renderThemeToggle();
-      syncBrowserThemeColor();
-      setTimeout(() => documentRoot.classList.remove("theme-transition"), THEME_TRANSITION_MS);
+      setThemeMenuOpen(false);
+    }
+
+    themeToggle.addEventListener("click", () => setThemeMenuOpen(!themeMenu.classList.contains("is-open")));
+    themeOptions.forEach((option) => {
+      option.addEventListener("click", () => chooseSiteTheme(option.dataset.siteThemeOption));
+    });
+    // Close with Escape (returning focus to the button) or when clicking elsewhere.
+    themeMenu.addEventListener("keydown", (keyEvent) => {
+      if (keyEvent.key === "Escape") {
+        setThemeMenuOpen(false);
+        themeToggle.focus();
+      }
+    });
+    document.addEventListener("click", (clickEvent) => {
+      if (!themeMenu.contains(clickEvent.target)) setThemeMenuOpen(false);
     });
 
     renderThemeToggle();

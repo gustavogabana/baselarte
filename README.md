@@ -17,7 +17,10 @@ notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
 notas/design-system/  design system note (index.html, design-system.css)
 notas/note.css          styles shared by the note pages (steps, callouts, sources)
 notas/cloudflare/      Cloudflare note: domain, R2 presigned URLs, SSL, ALB (index.html)
-notas/site-theme/      Site theme note: the theme button and the studio theme (index.html)
+notas/site-theme/      Site theme note: the theme button and the studio and wiki themes (index.html)
+notas/software-engineering-at-google/  Book note on Software Engineering at Google (index.html)
+notas/ai-engineering/  Book note on AI Engineering (index.html)
+notas/full-stack-engineering/  Case study note on a real front end and back end (index.html)
 notas/github-aws-oidc/  GitHub Actions → AWS OIDC CI/CD note (index.html)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
@@ -35,7 +38,7 @@ CNAME              custom domain for GitHub Pages
 The page is a single centered reading column, inspired by the calm, text-first style of [Thinking Machines](https://thinkingmachines.ai):
 
 - a centered headline and intro;
-- short sections (About, Practice, Principles, Status) separated by thin rules;
+- short sections (About, Principles, Status) separated by thin rules;
 - a quote from a 1979 IBM training presentation: *"A computer can never be held accountable, therefore a computer must never make a management decision."*;
 - a footer with columns for Company, Language, Index and Local time.
 
@@ -61,10 +64,13 @@ The theme follows the visitor's local clock. It's dark from 18:00 to 06:00 and l
 
 ## Site themes
 
-A button in the header (the hatched square) switches the look of the whole site between two design themes, `default` and `studio`. It sets `<html data-site-theme="…">` (saved as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
+A button in the header (the hatched square) switches the look of the whole site between four design themes, `default`, `studio`, `wiki` and `google` (hovering the button, or focusing or tapping it, opens a list to pick from). It sets `<html data-site-theme="…">` (saved as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
 
 - **Saved in three places** (`readPreference` / `storePreference` in `boot.js`, also used for the language): `localStorage`, a cookie (works if `localStorage` is blocked) and `window.name` (follows the tab, which keeps the choice when the site is opened from disk and each file gets its own storage). A page restored from the back/forward cache, or open in another tab, follows the saved theme.
-- `boot.js` reads the saved theme and applies it before the first paint; `main.js` builds the button and flips the attribute. The button's label is translated through `themeToggle.*` in `i18n.js`.
+- `boot.js` reads the saved theme and applies it before the first paint; `main.js` builds the button and its theme list and flips the attribute. The names are translated through `themeName.*` and `themeToggle.label` in `i18n.js`.
+- The `wiki` theme is derived from Wikipedia's Vector 2022 skin: light grey page, white bordered content panel, serif headings with a rule, blue links, 2px corners, grey buttons. Its fonts load only when it is chosen (`SITE_THEME_FONTS` in `boot.js`).
+- The `google` theme is derived from public Google pages (home, Images, Books, About): white page, Google Sans/Roboto, Material 3 colours (`#0b57d0` primary, `#e9eef6` tonal), pill buttons, rounded tonal cards and a four-colour bar. Roboto loads only when it is chosen.
+- Each theme has its own favicon (`favicon.svg`, `favicon-studio.svg`, `favicon-wiki.svg`, `favicon-google.svg`); `syncFavicon()` in `boot.js` swaps it when the theme changes.
 - Everything about `studio` lives in the last section of `styles.css` (plus a few lines in `notas/aws/aws.css` and `notas/note.css`). It is derived from the look of estudio41.com.br: white paper, `#171617` ink, Lato 900 uppercase headings, Open Sans 300 text, square corners, filled square buttons, a dark footer and a fine triangular line pattern (an SVG tile in `--pattern-image`) behind the hero, the quote and the status block. Its fonts are requested only when the theme is used.
 - Components that need a theme-specific font use `--heading` and `--label` instead of naming a font. Code keeps `--mono` in every theme.
 - See the "Site theme" note (`notas/site-theme/`) for the rules to add a theme.
@@ -86,19 +92,15 @@ The English text in `index.html` is the version search engines index, so keep it
 
 ## Logo
 
-The mark is a processor: a square die with a smaller core inside it and three pins on each side.
-
-```svg
+The mark is a processor chip, drawn as simply as possible: a rounded square package, a smaller square die inside it and two pins on each side.
 <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-  <rect x="8" y="8" width="16" height="16" rx="2"/>
-  <rect x="13" y="13" width="6" height="6"/>
-  <path d="M12 3v5M16 3v5M20 3v5M12 24v5M16 24v5M20 24v5M3 12h5M3 16h5M3 20h5M24 12h5M24 16h5M24 20h5"/>
+  <rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/>
 </svg>
 ```
 
 - **Meaning:** the processor is where software actually runs, the layer under everything the company builds. Precise, small, and made of straight lines.
-- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The die is 16×16 with a 2-unit corner radius, the core is 6×6 and centred, and the 12 pins are 5 units long, spaced 4 units apart. Stroke only, no fill, round caps and joins.
-- **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#141413` ink and `#f3f1ec` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
+- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The package is 18×18 with a 3.5-unit corner radius, the die is 8×8 and centred, and the 8 pins are short strokes. Stroke only, no fill, round caps and joins.
+- **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#131313` ink and `#fafafa` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
 - **Wordmark:** "baselarte", in lowercase Geist Medium with slightly tight letter spacing (−0.02em), set beside the mark.
 - **Files:**
   - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (slightly heavier stroke so it reads at 16px).
