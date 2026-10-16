@@ -1171,3 +1171,243 @@ html:not(.js-enabled) .requires-js {
 [data-site-theme="wiki"] .theme-menu-list {
   border-color: var(--border);
 }
+
+/* ==========================================================================
+   Site theme: "google"
+   An alternative design system, selected with <html data-site-theme="google"> by the theme
+   menu (boot.js / main.js). It is derived from the public pages of Google (the home page,
+   Images, Books and About Google): a white, airy page, Google Sans / Roboto type in sentence
+   case, pill-shaped buttons, tonal blue surfaces, rounded cards and the four brand colours
+   used sparingly as an accent. The colours come from the pages' own style sheets
+   (Material 3 tokens: #0b57d0 primary, #1f1f1f text, #e9eef6 tonal surface, #131314 in dark).
+   Only the look changes; the content, the language and the day/night switch are untouched.
+   ========================================================================== */
+
+[data-site-theme="google"] {
+  --sans: "Google Sans Text", "Google Sans", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --heading: "Google Sans", "Google Sans Text", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --label: var(--heading);
+  --serif: var(--heading);
+  --gblue: #4285f4;
+  --gred: #ea4335;
+  --gyellow: #fbbc05;
+  --ggreen: #34a853;
+  --brand-bar: linear-gradient(90deg, var(--gblue) 0 25%, var(--gred) 25% 50%, var(--gyellow) 50% 75%, var(--ggreen) 75% 100%);
+}
+
+[data-site-theme="google"][data-theme="light"] {
+  --paper: #ffffff;
+  --ink: #1f1f1f;
+  --muted: #444746;
+  --line: #c4c7c5;
+  --primary: #0b57d0;
+  --on-primary: #ffffff;
+  --tonal: #e9eef6;
+  --tonal-strong: #c2e7ff;
+  --footer-paper: #f3f5f6;
+}
+
+[data-site-theme="google"][data-theme="dark"] {
+  --paper: #131314;
+  --ink: #e3e3e3;
+  --muted: #c4c7c5;
+  --line: #444746;
+  --primary: #a8c7fa;
+  --on-primary: #062e6f;
+  --tonal: #282a2c;
+  --tonal-strong: #004a77;
+  --footer-paper: #1e1f20;
+}
+
+[data-site-theme="google"] body {
+  line-height: 1.6;
+}
+
+[data-site-theme="google"] em {
+  font-family: inherit;
+  font-style: normal;
+  font-weight: 500;
+}
+
+[data-site-theme="google"] .hero-title em {
+  color: var(--primary);
+}
+
+[data-site-theme="google"] :is(h1, h2, h3, h4, .note-title) {
+  font-family: var(--heading);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+[data-site-theme="google"] .monospace-label {
+  font-family: var(--sans);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+[data-site-theme="google"] .site-wordmark {
+  font-family: var(--heading);
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+[data-site-theme="google"] .site-nav a:hover,
+[data-site-theme="google"] .site-nav a[aria-current="true"] {
+  color: var(--primary);
+}
+
+/* Hero: large light type with the four-colour bar as the only decoration. */
+[data-site-theme="google"] .hero-title {
+  font-size: clamp(34px, 5vw, 60px);
+  line-height: 1.12;
+}
+
+[data-site-theme="google"] .hero::after {
+  content: "";
+  display: block;
+  width: 88px;
+  height: 4px;
+  margin: 32px auto 0;
+  border-radius: 4px;
+  background: var(--brand-bar);
+}
+
+[data-site-theme="google"] .content-section h2 {
+  font-size: clamp(22px, 2.4vw, 28px);
+}
+
+[data-site-theme="google"] .ds-guide h3 {
+  font-weight: 500;
+}
+
+/* Links are the primary blue; underline on hover. */
+[data-site-theme="google"] :is(.reading-column, .content-section) a:not(.pill-link):not(.note-link) {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+[data-site-theme="google"] :is(.reading-column, .content-section) a:not(.pill-link):not(.note-link):hover {
+  text-decoration: underline;
+}
+
+[data-site-theme="google"] .side-nav li a.active {
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* Buttons: pills. The theme button is the filled primary one; the rest are tonal. */
+[data-site-theme="google"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top) {
+  border-radius: 100px;
+  border: 1px solid transparent;
+  background: var(--tonal);
+  color: var(--ink);
+  font-family: var(--heading);
+  font-weight: 500;
+}
+
+[data-site-theme="google"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top):hover {
+  background: var(--tonal-strong);
+  border-color: transparent;
+  color: var(--ink);
+}
+
+[data-site-theme="google"] .theme-toggle {
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+[data-site-theme="google"] .theme-toggle:hover {
+  background: var(--primary);
+  opacity: 0.9;
+  color: var(--on-primary);
+}
+
+/* Cards and boxes: rounded, tonal, no heavy borders. */
+[data-site-theme="google"] .pull-quote {
+  padding: 24px 28px;
+  background: var(--tonal);
+  border-radius: 28px;
+}
+
+[data-site-theme="google"] .pull-quote blockquote p {
+  font-family: var(--heading);
+  font-size: clamp(20px, 2.4vw, 26px);
+  line-height: 1.45;
+}
+
+[data-site-theme="google"] .callout {
+  padding: 14px 20px;
+  background: var(--tonal);
+  border: 0;
+  border-radius: 16px;
+  color: var(--ink);
+}
+
+[data-site-theme="google"] .callout.warn {
+  background: color-mix(in srgb, var(--gred) 12%, var(--paper));
+}
+
+[data-site-theme="google"] .callout.good {
+  background: color-mix(in srgb, var(--ggreen) 14%, var(--paper));
+}
+
+[data-site-theme="google"] .callout.personal {
+  background: color-mix(in srgb, var(--gyellow) 16%, var(--paper));
+}
+
+[data-site-theme="google"] .ds-guide pre {
+  background: var(--tonal);
+  border: 0;
+  border-radius: 16px;
+}
+
+[data-site-theme="google"] .ds-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+[data-site-theme="google"] .ds-table th {
+  background: var(--tonal);
+  color: var(--ink);
+}
+
+[data-site-theme="google"] .note-link:hover {
+  background: var(--tonal);
+  border-radius: 16px;
+}
+
+[data-site-theme="google"] .theme-menu-list {
+  padding: 8px;
+  background: var(--paper);
+  border-color: var(--line);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.16);
+}
+
+[data-site-theme="google"] .theme-menu-list button {
+  border-radius: 100px;
+  font-family: var(--heading);
+}
+
+/* Footer: pale tonal band with the colour bar on top. */
+[data-site-theme="google"] .site-footer {
+  background: var(--footer-paper);
+  border-top: 0;
+  position: relative;
+}
+
+[data-site-theme="google"] .site-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: var(--brand-bar);
+}
+
+[data-site-theme="google"] .site-footer .motto {
+  font-family: var(--heading);
+}
