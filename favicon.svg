@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
-    rect.bg { fill: #141413 }
-    .m { fill: none; stroke: #f3f1ec; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round }
+    rect.bg { fill: #131313 }
+    .m { fill: none; stroke: #fafafa; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round }
     @media (prefers-color-scheme: dark) { rect.bg { fill: #ebe9e3 } .m { stroke: #0d0d0c } }
   </style>
   <rect class="bg" width="32" height="32" rx="7"/>

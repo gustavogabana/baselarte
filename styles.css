@@ -4,10 +4,10 @@
    ========================================================================== */
 
 :root {
-  --paper: #f3f1ec;
-  --ink: #141413;
-  --muted: #6c6a65;
-  --line: rgba(20, 20, 19, 0.12);
+  --paper: #fafafa;
+  --ink: #131313;
+  --muted: #6b6b6b;
+  --line: rgba(19, 19, 19, 0.12);
 
   --serif: "Instrument Serif", "Iowan Old Style", "Palatino Linotype", Georgia, serif;
   --sans: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;

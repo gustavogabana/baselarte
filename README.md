@@ -96,7 +96,7 @@ The mark is a processor seen from underneath, modelled on a desktop CPU (LGA pac
 
 - **Meaning:** the processor is where software actually runs, the layer under everything the company builds. The notches are uneven on purpose: they are the key that makes the package fit one way only.
 - **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The package is 18×24 with a 2.5-unit corner radius, the centre block is 8×10 with two bars inside, and the pads are round dots (zero-length strokes with round caps). Stroke only, no fill, round caps and joins.
-- **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#141413` ink and `#f3f1ec` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
+- **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#131313` ink and `#fafafa` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
 - **Wordmark:** "baselarte", in lowercase Geist Medium with slightly tight letter spacing (−0.02em), set beside the mark.
 - **Files:**
   - `favicon.svg`: the mark on a rounded square, adapting to the browser's colour scheme (slightly heavier stroke so it reads at 16px).
