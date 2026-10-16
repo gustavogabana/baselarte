@@ -17,7 +17,7 @@ notas/aws/         AWS Notes page (index.html, aws.css, aws.js)
 notas/design-system/  design system note (index.html, design-system.css)
 notas/note.css          styles shared by the note pages (steps, callouts, sources)
 notas/cloudflare/      Cloudflare note: domain, R2 presigned URLs, SSL, ALB (index.html)
-notas/site-theme/      Site theme note: the theme button and the studio theme (index.html)
+notas/site-theme/      Site theme note: the theme button and the studio and wiki themes (index.html)
 notas/software-engineering-at-google/  Book note on Software Engineering at Google (index.html)
 notas/ai-engineering/  Book note on AI Engineering (index.html)
 notas/full-stack-engineering/  Case study note on a real front end and back end (index.html)
@@ -64,10 +64,11 @@ The theme follows the visitor's local clock. It's dark from 18:00 to 06:00 and l
 
 ## Site themes
 
-A button in the header (the hatched square) switches the look of the whole site between two design themes, `default` and `studio`. It sets `<html data-site-theme="…">` (saved as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
+A button in the header (the hatched square) switches the look of the whole site between three design themes, `default`, `studio` and `wiki` (each click moves to the next). It sets `<html data-site-theme="…">` (saved as `baselarte:site-theme`) and never touches the content, the language or the day/night colours, which keep working in both themes.
 
 - **Saved in three places** (`readPreference` / `storePreference` in `boot.js`, also used for the language): `localStorage`, a cookie (works if `localStorage` is blocked) and `window.name` (follows the tab, which keeps the choice when the site is opened from disk and each file gets its own storage). A page restored from the back/forward cache, or open in another tab, follows the saved theme.
 - `boot.js` reads the saved theme and applies it before the first paint; `main.js` builds the button and flips the attribute. The button's label is translated through `themeToggle.*` in `i18n.js`.
+- The `wiki` theme is derived from Wikipedia's Vector 2022 skin: light grey page, white bordered content panel, serif headings with a rule, blue links, 2px corners, grey buttons. Its fonts load only when it is chosen (`SITE_THEME_FONTS` in `boot.js`).
 - Everything about `studio` lives in the last section of `styles.css` (plus a few lines in `notas/aws/aws.css` and `notas/note.css`). It is derived from the look of estudio41.com.br: white paper, `#171617` ink, Lato 900 uppercase headings, Open Sans 300 text, square corners, filled square buttons, a dark footer and a fine triangular line pattern (an SVG tile in `--pattern-image`) behind the hero, the quote and the status block. Its fonts are requested only when the theme is used.
 - Components that need a theme-specific font use `--heading` and `--label` instead of naming a font. Code keeps `--mono` in every theme.
 - See the "Site theme" note (`notas/site-theme/`) for the rules to add a theme.
