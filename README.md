@@ -35,7 +35,7 @@ CNAME              custom domain for GitHub Pages
 The page is a single centered reading column, inspired by the calm, text-first style of [Thinking Machines](https://thinkingmachines.ai):
 
 - a centered headline and intro;
-- short sections (About, Practice, Principles, Status) separated by thin rules;
+- short sections (About, Principles, Status) separated by thin rules;
 - a quote from a 1979 IBM training presentation: *"A computer can never be held accountable, therefore a computer must never make a management decision."*;
 - a footer with columns for Company, Language, Index and Local time.
 

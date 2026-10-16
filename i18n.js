@@ -19,7 +19,6 @@
       "skipLink": "Skip to content",
       "nav.label": "Main",
       "nav.about": "About",
-      "nav.practice": "Practice",
       "nav.principles": "Principles",
       "nav.notes": "Notes",
       "themeToggle.studio": "Switch to the Studio theme",
@@ -41,13 +40,6 @@
 
       "about.title": "Simplicity is a discipline",
       "about.body": "Most software fails slowly, under the weight of what it never needed. We start from fundamentals, build only what is necessary, and then make it excellent. Clarity over abstraction. Fundamentals over fashion.",
-
-      "practice.title": "What we work on",
-      "practice.intro": "Four areas, in no particular hurry.",
-      "practice.engineering": "<em>Engineering.</em> Software that is correct first, fast second and clever only when it must be. Clear boundaries, honest abstractions, code meant to be read.",
-      "practice.infrastructure": "<em>Infrastructure.</em> Cloud, storage and delivery treated as craft: observable, reproducible and cheap to keep alive.",
-      "practice.interfaces": "<em>Interfaces.</em> Calm, legible, fast. Fewer screens, better words, motion with a purpose.",
-      "practice.creative": "<em>Creative technology.</em> Experiments, tools and small instruments that make an idea tangible before it becomes a product.",
 
       "principles.title": "Accountability stays human",
       "principles.quote": "A computer can never be held accountable, therefore a computer must never make a management decision.",
@@ -121,7 +113,6 @@
       "skipLink": "Pular para o conteúdo",
       "nav.label": "Principal",
       "nav.about": "Sobre",
-      "nav.practice": "Prática",
       "nav.principles": "Princípios",
       "nav.notes": "Notas",
       "themeToggle.studio": "Mudar para o tema Estúdio",
@@ -143,13 +134,6 @@
 
       "about.title": "Simplicidade é disciplina",
       "about.body": "A maior parte dos softwares falha devagar, sob o peso do que nunca precisou ter. Partimos dos fundamentos, construímos apenas o necessário e, então, o tornamos excelente. Clareza acima da abstração. Fundamentos acima da moda.",
-
-      "practice.title": "No que trabalhamos",
-      "practice.intro": "Quatro frentes, sem pressa alguma.",
-      "practice.engineering": "<em>Engenharia.</em> Software correto primeiro, rápido depois e engenhoso só quando necessário. Limites claros, abstrações honestas, código feito para ser lido.",
-      "practice.infrastructure": "<em>Infraestrutura.</em> Nuvem, armazenamento e entrega tratados como ofício: observáveis, reproduzíveis e baratos de manter.",
-      "practice.interfaces": "<em>Interfaces.</em> Calmas, legíveis, rápidas. Menos telas, palavras melhores, movimento com propósito.",
-      "practice.creative": "<em>Tecnologia criativa.</em> Experimentos, ferramentas e pequenos instrumentos que tornam uma ideia tangível antes de ela virar produto.",
 
       "principles.title": "A responsabilidade continua humana",
       "principles.quote": "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão.",
