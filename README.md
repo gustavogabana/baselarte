@@ -19,6 +19,7 @@ notas/note.css          styles shared by the note pages (steps, callouts, source
 notas/cloudflare/      Cloudflare note: domain, R2 presigned URLs, SSL, ALB (index.html)
 notas/site-theme/      Site theme note: the theme button and the studio theme (index.html)
 notas/software-engineering-at-google/  Book note on Software Engineering at Google (index.html)
+notas/ai-engineering/  Book note on AI Engineering (index.html)
 notas/github-aws-oidc/  GitHub Actions → AWS OIDC CI/CD note (index.html)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
