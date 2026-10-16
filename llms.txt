@@ -24,4 +24,5 @@ The site quotes an IBM internal training presentation (1979): "A computer can ne
 - [GitHub to AWS with OIDC](https://baselarte.com/notas/github-aws-oidc/): CI/CD notes on deploying from GitHub Actions to AWS (ECR/ECS) with OIDC, for develop and production, based on the official docs.
 - [Cloudflare notes](https://baselarte.com/notas/cloudflare/): buying and configuring a domain, R2 with presigned URLs (private/public buckets, CDN), SSL certificates and HTTPS to an AWS ALB, based on the official docs.
 - [Site theme notes](https://baselarte.com/notas/site-theme/): how the theme button and the "studio" theme work (tokens, fonts, triangular background pattern).
+- [Software Engineering at Google notes](https://baselarte.com/notas/software-engineering-at-google/): book notes on time, scale and trade-offs, Hyrum's Law, testing, code review and continuous delivery.
 - [Sitemap](https://baselarte.com/sitemap.xml)
