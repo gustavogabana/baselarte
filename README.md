@@ -20,6 +20,7 @@ notas/cloudflare/      Cloudflare note: domain, R2 presigned URLs, SSL, ALB (ind
 notas/site-theme/      Site theme note: the theme button and the studio theme (index.html)
 notas/software-engineering-at-google/  Book note on Software Engineering at Google (index.html)
 notas/ai-engineering/  Book note on AI Engineering (index.html)
+notas/full-stack-engineering/  Case study note on a real front end and back end (index.html)
 notas/github-aws-oidc/  GitHub Actions → AWS OIDC CI/CD note (index.html)
 404.html           GitHub Pages not-found page
 assets/            OG image and PNG icons
