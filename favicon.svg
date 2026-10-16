@@ -1,9 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
   <style>
     rect.bg { fill: #131313 }
-    .m { fill: none; stroke: #fafafa; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round }
+    .m { fill: none; stroke: #fafafa; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round }
     @media (prefers-color-scheme: dark) { rect.bg { fill: #ebe9e3 } .m { stroke: #0d0d0c } }
   </style>
   <rect class="bg" width="32" height="32" rx="7"/>
-  <g class="m" transform="translate(16 16) scale(0.9) translate(-16 -16)"><path d="M9.5 4H10a1 1 0 0 0 2 0h5.6a1 1 0 0 0 2 0H22.5A2.5 2.5 0 0 1 25 6.5v19a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 7 25.5v-19A2.5 2.5 0 0 1 9.5 4z"/><rect x="12" y="11" width="8" height="10" rx="1"/><path d="M14 14v4M18 14v4M11 7.5h.01M14.5 7.5h.01M18 7.5h.01M21.5 7.5h.01M11 24.5h.01M14.5 24.5h.01M18 24.5h.01M21.5 24.5h.01M9.5 11h.01M9.5 14h.01M9.5 17h.01M9.5 20h.01M22.5 11h.01M22.5 14h.01M22.5 17h.01M22.5 20h.01"/></g>
+  <g class="m" transform="translate(16 16) scale(0.86) translate(-16 -16)"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></g>
 </svg>

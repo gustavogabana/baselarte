@@ -89,16 +89,14 @@ The English text in `index.html` is the version search engines index, so keep it
 
 ## Logo
 
-The mark is a processor seen from underneath, modelled on a desktop CPU (LGA package): a tall rounded package with two off-centre notches on the top edge, a centred block of components, and the grid of contact pads around it.
-
-```svg
+The mark is a processor chip, drawn as simply as possible: a rounded square package, a smaller square die inside it and two pins on each side.
 <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-  <path d="M9.5 4H10a1 1 0 0 0 2 0h5.6a1 1 0 0 0 2 0H22.5A2.5 2.5 0 0 1 25 6.5v19a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 7 25.5v-19A2.5 2.5 0 0 1 9.5 4z"/><rect x="12" y="11" width="8" height="10" rx="1"/><path d="M14 14v4M18 14v4M11 7.5h.01M14.5 7.5h.01M18 7.5h.01M21.5 7.5h.01M11 24.5h.01M14.5 24.5h.01M18 24.5h.01M21.5 24.5h.01M9.5 11h.01M9.5 14h.01M9.5 17h.01M9.5 20h.01M22.5 11h.01M22.5 14h.01M22.5 17h.01M22.5 20h.01"/>
+  <rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/>
 </svg>
 ```
 
-- **Meaning:** the processor is where software actually runs, the layer under everything the company builds. The notches are uneven on purpose: they are the key that makes the package fit one way only.
-- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The package is 18×24 with a 2.5-unit corner radius, the centre block is 8×10 with two bars inside, and the pads are round dots (zero-length strokes with round caps). Stroke only, no fill, round caps and joins.
+- **Meaning:** the processor is where software actually runs, the layer under everything the company builds. Precise, small, and made of straight lines.
+- **Construction:** drawn on a 32×32 grid, the same one as the site's icon set. The package is 18×18 with a 3.5-unit corner radius, the die is 8×8 and centred, and the 8 pins are short strokes. Stroke only, no fill, round caps and joins.
 - **Colour:** it always uses the current text colour (`currentColor`), so it's ink on paper by day and paper on ink by night. The palette is `#131313` ink and `#fafafa` paper (light theme), and `#ebe9e3` on `#0d0d0c` (dark theme).
 - **Wordmark:** "baselarte", in lowercase Geist Medium with slightly tight letter spacing (−0.02em), set beside the mark.
 - **Files:**
