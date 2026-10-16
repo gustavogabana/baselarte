@@ -842,3 +842,260 @@ html:not(.js-enabled) .requires-js {
 [data-site-theme="studio"] .site-footer .motto em {
   font-weight: 700;
 }
+
+/* ==========================================================================
+   Site theme: "wiki"
+   An alternative design system, selected with <html data-site-theme="wiki"> by the theme
+   button (boot.js / main.js). It is derived from the Vector 2022 skin of Wikipedia
+   (colours, type and layout read from its published style sheet): a light grey page with
+   a white, thin-bordered content panel, near-black text, serif headings with a rule under
+   them, blue links, 2px corners and grey "neutral" buttons. Only the look changes; the
+   content, the language and the automatic day/night switch work as in the other themes.
+   ========================================================================== */
+
+[data-site-theme="wiki"] {
+  --serif: "Linux Libertine", "Georgia", "Times", "Source Serif 4", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Lato, Helvetica, Arial, sans-serif;
+  --heading: var(--sans);
+  --label: var(--sans);
+}
+
+[data-site-theme="wiki"][data-theme="light"] {
+  --paper: #ffffff;
+  --page: #f8f9fa;
+  --ink: #202122;
+  --emphasis: #101418;
+  --muted: #54595d;
+  --line: #c8ccd1;
+  --border: #a2a9b1;
+  --neutral: #eaecf0;
+  --link: #3366cc;
+  --visited: #6a60b0;
+  --accent-soft: #e8eeff;
+  --footer-paper: #f8f9fa;
+}
+
+[data-site-theme="wiki"][data-theme="dark"] {
+  --paper: #101418;
+  --page: #202122;
+  --ink: #eaecf0;
+  --emphasis: #f8f9fa;
+  --muted: #a2a9b1;
+  --line: #54595d;
+  --border: #72777d;
+  --neutral: #27292d;
+  --link: #88a3e8;
+  --visited: #a799e0;
+  --accent-soft: #1b223d;
+  --footer-paper: #202122;
+}
+
+[data-site-theme="wiki"] body {
+  background: var(--page);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* 2px corners everywhere (round dots in diagrams stay round). */
+[data-site-theme="wiki"] :where(*, *::before, *::after):not(.dot):not(.pkt) {
+  border-radius: 2px !important;
+}
+
+[data-site-theme="wiki"] em {
+  font-family: inherit;
+  font-style: italic;
+}
+
+[data-site-theme="wiki"] :is(h1, h2, h3, h4, .note-title) {
+  color: var(--emphasis);
+}
+
+/* Serif titles with a thin rule underneath, as in an article. */
+[data-site-theme="wiki"] :is(.hero-title, .content-section h2) {
+  font-family: var(--serif);
+  font-weight: 400;
+  letter-spacing: 0;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.17em;
+}
+
+[data-site-theme="wiki"] .hero-title {
+  font-size: clamp(28px, 3.6vw, 40px);
+  line-height: 1.25;
+}
+
+[data-site-theme="wiki"] .content-section h2 {
+  font-size: clamp(22px, 2.4vw, 27px);
+}
+
+[data-site-theme="wiki"] .hero-title em {
+  font-style: normal;
+}
+
+[data-site-theme="wiki"] :is(.ds-guide h3, .content-section h3) {
+  font-family: var(--sans);
+  font-weight: 700;
+}
+
+[data-site-theme="wiki"] .monospace-label {
+  letter-spacing: 0.04em;
+}
+
+/* Header and footer sit on the grey page. */
+[data-site-theme="wiki"] .site-wordmark {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+[data-site-theme="wiki"] .site-nav a {
+  color: var(--link);
+}
+
+[data-site-theme="wiki"] .site-nav a[aria-current="true"],
+[data-site-theme="wiki"] .site-nav a:hover {
+  color: var(--ink);
+}
+
+/* The content panel: white, one thin border. */
+[data-site-theme="wiki"] main {
+  max-width: var(--wide);
+  margin: 0 auto 32px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+}
+
+[data-site-theme="wiki"] .hero {
+  max-width: none;
+  text-align: left;
+  padding-inline: clamp(20px, 4vw, 48px);
+  padding-block: clamp(32px, 5vw, 56px) 24px;
+  min-height: 0;
+}
+
+[data-site-theme="wiki"] .hero :is(.hero-title, .hero-lede) {
+  margin-inline: 0;
+  max-width: 46rem;
+}
+
+[data-site-theme="wiki"] .page-layout {
+  padding-inline: clamp(20px, 4vw, 48px);
+}
+
+/* Links are blue, underlined on hover; visited ones are purple. */
+[data-site-theme="wiki"] :is(.reading-column, .content-section) a:not(.pill-link):not(.note-link) {
+  color: var(--link);
+}
+
+[data-site-theme="wiki"] :is(.reading-column, .content-section) a:not(.pill-link):not(.note-link):visited {
+  color: var(--visited);
+}
+
+[data-site-theme="wiki"] :is(.reading-column, .content-section) a:not(.pill-link):not(.note-link):hover {
+  text-decoration: underline;
+}
+
+[data-site-theme="wiki"] .side-nav li a {
+  color: var(--link);
+}
+
+[data-site-theme="wiki"] .side-nav li a.active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Quotes: a quiet box, like a quotation in an article. */
+[data-site-theme="wiki"] .pull-quote {
+  padding: 16px 24px;
+  background: var(--page);
+  border-left: 4px solid var(--border);
+}
+
+[data-site-theme="wiki"] .pull-quote blockquote p {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(19px, 2.2vw, 23px);
+  line-height: 1.5;
+}
+
+/* Buttons: neutral grey, thin border, as in Wikipedia's component library. */
+[data-site-theme="wiki"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top) {
+  background: var(--page);
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+[data-site-theme="wiki"] :is(.pill-link, .language-toggle, .side-nav-toggle, .theme-toggle, .back-to-top):hover {
+  background: var(--paper);
+  color: var(--link);
+  border-color: var(--link);
+}
+
+/* Note boxes look like a Wikipedia message box: pale panel with a coloured edge. */
+[data-site-theme="wiki"] .callout {
+  padding: 10px 14px;
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-left: 10px solid var(--link);
+  color: var(--ink);
+}
+
+[data-site-theme="wiki"] .callout.warn {
+  border-left-color: #bf3c2c;
+}
+
+[data-site-theme="wiki"] .callout.good {
+  border-left-color: #14866d;
+}
+
+[data-site-theme="wiki"] .callout.personal {
+  border-left-style: solid;
+  border-left-color: var(--border);
+}
+
+/* Tables: the "wikitable" look. */
+[data-site-theme="wiki"] .ds-table {
+  border: 1px solid var(--border);
+}
+
+[data-site-theme="wiki"] .ds-table :is(th, td) {
+  border: 1px solid var(--border);
+  padding: 6px 10px;
+}
+
+[data-site-theme="wiki"] .ds-table th {
+  background: var(--neutral);
+  color: var(--ink);
+}
+
+[data-site-theme="wiki"] .ds-table td {
+  background: var(--page);
+}
+
+[data-site-theme="wiki"] .ds-guide pre,
+[data-site-theme="wiki"] .ds-guide code {
+  background: var(--page);
+}
+
+[data-site-theme="wiki"] .ds-guide pre {
+  border: 1px solid var(--line);
+}
+
+/* Footer: pale grey with a rule on top, like Wikipedia's. */
+[data-site-theme="wiki"] .site-footer {
+  background: var(--footer-paper);
+  border-top: 1px solid var(--border);
+}
+
+[data-site-theme="wiki"] .site-footer .motto {
+  font-family: var(--serif);
+}
+
+[data-site-theme="wiki"] .status-section {
+  text-align: left;
+}
+
+[data-site-theme="wiki"] .hero .hero-title {
+  max-width: none;
+}

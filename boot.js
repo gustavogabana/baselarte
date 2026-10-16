@@ -9,12 +9,14 @@
   const DEFAULT_LANGUAGE = "en";
   const LANGUAGE_STORAGE_KEY = "baselarte:language";
   const PREFERENCE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
-  const SITE_THEMES = ["default", "studio"];
+  const SITE_THEMES = ["default", "studio", "wiki"];
   const DEFAULT_SITE_THEME = "default";
   const SITE_THEME_STORAGE_KEY = "baselarte:site-theme";
-  // Fonts of the "studio" theme; only requested when that theme is used.
-  const STUDIO_FONTS_URL = "https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Open+Sans:wght@300;400;600&display=swap";
-  const STUDIO_FONTS_LINK_ID = "studio-fonts";
+  // Web fonts of the themes that need them; only requested when that theme is used.
+  const SITE_THEME_FONTS = {
+    studio: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Open+Sans:wght@300;400;600&display=swap",
+    wiki: "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&display=swap",
+  };
   // If the animation library has not started by then, reveal the page without it.
   const MOTION_LOAD_TIMEOUT_MS = 2500;
 
@@ -90,19 +92,21 @@
     storePreference(SITE_THEME_STORAGE_KEY, siteTheme);
   }
 
-  function loadStudioFonts() {
-    if (document.getElementById(STUDIO_FONTS_LINK_ID)) return;
+  function loadSiteThemeFonts(siteTheme) {
+    const fontsUrl = SITE_THEME_FONTS[siteTheme];
+    const fontsLinkId = `${siteTheme}-fonts`;
+    if (!fontsUrl || document.getElementById(fontsLinkId)) return;
     const fontsLink = document.createElement("link");
-    fontsLink.id = STUDIO_FONTS_LINK_ID;
+    fontsLink.id = fontsLinkId;
     fontsLink.rel = "stylesheet";
-    fontsLink.href = STUDIO_FONTS_URL;
+    fontsLink.href = fontsUrl;
     document.head.append(fontsLink);
   }
 
   // Applies a site theme (the look; not to be confused with the day/night colours).
   function applySiteTheme(siteTheme) {
     documentRoot.dataset.siteTheme = siteTheme;
-    if (siteTheme === "studio") loadStudioFonts();
+    loadSiteThemeFonts(siteTheme);
   }
 
   function detectInitialLanguage() {
