@@ -143,12 +143,13 @@
   <div class="page-layout">
 <aside class="side-nav" id="side-nav">
   <nav aria-label="Sections">
+    <h2><span class="pt">Contas</span><span class="en">Accounts</span></h2>
+    <ul><li><a href="#organizations"><span class="pt">Organizations (dev e prod)</span><span class="en">Organizations (dev and prod)</span></a></li></ul>
     <h2><span class="pt">Visão geral</span><span class="en">Overview</span></h2>
     <ul><li><a href="#mapa"><span class="pt">Mapa da arquitetura</span><span class="en">Architecture map</span></a></li></ul>
     <h2><span class="pt">Fundamentos</span><span class="en">Foundations</span></h2>
     <ul>
       <li><a href="#iam">IAM</a></li>
-      <li><a href="#organizations">Organizations</a></li>
       <li><a href="#identity-center">IAM Identity Center</a></li>
       <li><a href="#oidc">OIDC &amp; GitHub Actions</a></li>
       <li><a href="#cli">AWS CLI</a></li>
@@ -190,6 +191,181 @@
 
 
 
+<!-- ============ ORGANIZATIONS ============ -->
+<section class="topic" id="organizations">
+  <header>
+    <span class="tag"><span class="pt">Fundamentos · 01</span><span class="en">Foundations · 01</span></span>
+    <h2>AWS Organizations</h2>
+    <p class="lead"><span class="pt">Gerencie e governe várias contas AWS de forma central: criar contas, agrupá-las em OUs, aplicar políticas e ter uma fatura única.</span><span class="en">Centrally manage and govern many AWS accounts: create accounts, group them into OUs, apply policies and get a single bill.</span></p>
+  </header>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</h4><span class="pt">Conta que administra a organização. <b>SCPs não afetam</b> usuários e roles dela, só as contas-membro.</span><span class="en">The account that administers the organization. <b>SCPs do not affect</b> its users and roles, only member accounts.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> Member accounts</h4><span class="pt">As demais contas. Cada conta AWS é um limite natural de permissão, segurança, custo e carga de trabalho.</span><span class="en">All other accounts. Each AWS account is a natural boundary for permissions, security, cost and workloads.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU</h4><span class="pt">Organizational Unit: grupo de contas (por exemplo, as que atendem a uma aplicação ou a um ambiente). Políticas anexadas a uma OU valem para as contas dentro dela.</span><span class="en">Organizational Unit: a group of accounts (for example those serving one application or environment). Policies attached to an OU apply to the accounts inside it.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> SCP</h4><span class="pt">Service Control Policy: define o <b>máximo de permissões</b> disponível para IAM users e roles das contas. Não concede nada.</span><span class="en">Service Control Policy: defines the <b>maximum permissions</b> available to IAM users and roles in the accounts. It grants nothing.</span></div>
+  </div>
+
+  <p><span class="pt">Exemplo de desenho (uma sugestão didática, não um padrão obrigatório da AWS): uma conta para cada ambiente, agrupadas em OUs.</span><span class="en">Example layout (a teaching suggestion, not a mandatory AWS standard): one account per environment, grouped in OUs.</span></p>
+  <div class="vpc">
+    <div class="label"><span class="pt">Organização</span><span class="en">Organization</span></div>
+    <div class="flow">
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management</span><span class="arrow">→</span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod<br><small>prod · &lt;ID_CONTA_PROD&gt;</small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod<br><small>dev · &lt;ID_CONTA_DEV&gt;</small></span>
+      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared<br><small><span class="pt">tooling: ECR, CI/CD</span><span class="en">tooling: ECR, CI/CD</span> · &lt;ID_CONTA_TOOLING&gt;</small></span>
+    </div>
+  </div>
+  <p><span class="pt">A conta de <b>tooling/compartilhada</b> é opcional e costuma guardar o que várias contas usam, como o repositório de imagens no <a href="#ecr">ECR</a> (acesso entre contas via repository policy). Para começar, duas contas (dev e prod) já bastam.</span><span class="en">The <b>tooling/shared</b> account is optional and usually holds what several accounts use, such as the image repository in <a href="#ecr">ECR</a> (cross-account access through a repository policy). To start, two accounts (dev and prod) are enough.</span></p>
+
+  <h3><span class="pt">Passo a passo: criar a organização com contas dev e prod</span><span class="en">Step by step: create the organization with dev and prod accounts</span></h3>
+  <p><span class="pt">A ideia em uma frase: você já tem uma conta AWS; ela vira a <b>management account</b> e, a partir dela, você <b>cria</b> as contas dev e prod. Nenhuma conta nova é feita “do zero” no site da AWS: todas nascem dentro da organização.</span><span class="en">The idea in one sentence: you already have an AWS account; it becomes the <b>management account</b> and, from it, you <b>create</b> the dev and prod accounts. No new account is made “from scratch” on the AWS site: they are all born inside the organization.</span></p>
+
+  <h4><span class="pt">Passo 0 · Prepare a conta que será a management</span><span class="en">Step 0 · Prepare the account that will be the management account</span></h4>
+  <ul>
+    <li><span class="pt">Use a conta mais antiga e “limpa” que você tem, de preferência sem recursos de aplicação: <b>a management account não deve rodar cargas de trabalho</b>, pois SCPs não a limitam.</span><span class="en">Use the oldest, “cleanest” account you have, ideally with no application resources: <b>the management account should not run workloads</b>, since SCPs do not limit it.</span></li>
+    <li><span class="pt">Proteja o root user com MFA e um e-mail que você controla. Esse e-mail é o dono de toda a organização.</span><span class="en">Protect the root user with MFA and an email you control. That email owns the whole organization.</span></li>
+  </ul>
+
+  <h4><span class="pt">Passo 1 · Criar a organização</span><span class="en">Step 1 · Create the organization</span></h4>
+  <ul>
+    <li><span class="pt">No console, entre como root ou como um admin da management account e abra <b>AWS Organizations → Create an organization</b>.</span><span class="en">In the console, sign in as root or as an admin of the management account and open <b>AWS Organizations → Create an organization</b>.</span></li>
+    <li><span class="pt">Isso cria a <b>Root</b> (a raiz da árvore) e deixa a conta atual como management. O modo padrão é <b>all features</b>, o que habilita SCPs; deixe assim.</span><span class="en">This creates the <b>Root</b> (the top of the tree) and leaves the current account as the management account. The default mode is <b>all features</b>, which enables SCPs; keep it.</span></li>
+    <li><span class="pt">Confirme o e-mail de verificação que a AWS envia. Sem isso, a criação de novas contas pode ser bloqueada.</span><span class="en">Confirm the verification email AWS sends. Without it, creating new accounts may be blocked.</span></li>
+  </ul>
+
+  <h4><span class="pt">Passo 2 · Criar as OUs</span><span class="en">Step 2 · Create the OUs</span></h4>
+  <ul>
+    <li><span class="pt">Em <b>AWS accounts</b>, marque a Root e use <b>Actions → Create new</b> (organizational unit). Crie <code>Prod</code> e <code>Non-prod</code>. Uma OU é só uma pasta: ela existe para você aplicar a mesma política a várias contas de uma vez.</span><span class="en">Under <b>AWS accounts</b>, select the Root and use <b>Actions → Create new</b> (organizational unit). Create <code>Prod</code> and <code>Non-prod</code>. An OU is just a folder: it exists so you can apply the same policy to several accounts at once.</span></li>
+  </ul>
+
+  <h4><span class="pt">Passo 3 · Criar as contas dev e prod</span><span class="en">Step 3 · Create the dev and prod accounts</span></h4>
+  <ul>
+    <li><span class="pt">Em <b>AWS accounts → Add an AWS account → Create an AWS account</b>, informe o nome (<code>dev</code>), um <b>e-mail único</b> e o nome da role de acesso. Repita para <code>prod</code>.</span><span class="en">Under <b>AWS accounts → Add an AWS account → Create an AWS account</b>, enter the name (<code>dev</code>), a <b>unique email</b> and the access role name. Repeat for <code>prod</code>.</span></li>
+    <li><span class="pt">Cada conta precisa de um e-mail diferente, que nunca tenha sido usado em outra conta AWS. Um endereço com alias, como <code>nome+dev@dominio.com</code>, costuma ser aceito e cai na mesma caixa de entrada.</span><span class="en">Each account needs a different email that has never been used for another AWS account. An alias address such as <code>name+dev@domain.com</code> is usually accepted and lands in the same inbox.</span></li>
+    <li><span class="pt">A role de acesso criada dentro da conta nova tem como padrão o nome <code>OrganizationAccountAccessRole</code>. Ela confia na management account e dá acesso de administrador a quem a assumir.</span><span class="en">The access role created inside the new account is named <code>OrganizationAccountAccessRole</code> by default. It trusts the management account and gives administrator access to whoever assumes it.</span></li>
+    <li><span class="pt">A conta nova não tem senha de root definida. Para usar o root dela (raramente), use “Forgot password” com o e-mail da conta e ative MFA; no dia a dia você não precisa dele.</span><span class="en">The new account has no root password set. To use its root (rarely), use “Forgot password” with the account email and enable MFA; day to day you do not need it.</span></li>
+    <li><span class="pt">Mova cada conta para a OU certa: marque <code>dev</code> → <b>Actions → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. Contas novas nascem na Root.</span><span class="en">Move each account to the right OU: select <code>dev</code> → <b>Actions → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. New accounts are born in the Root.</span></li>
+  </ul>
+
+  <h4><span class="pt">Passo 4 · Entrar nas contas</span><span class="en">Step 4 · Get into the accounts</span></h4>
+  <ul>
+    <li><span class="pt"><b>Rápido, para testar:</b> na management, use <b>Switch role</b> no console com o ID da conta e a role <code>OrganizationAccountAccessRole</code>.</span><span class="en"><b>Quick, for testing:</b> from the management account, use <b>Switch role</b> in the console with the account ID and the <code>OrganizationAccountAccessRole</code> role.</span></li>
+    <li><span class="pt"><b>Recomendado para o dia a dia:</b> configure o <a href="#identity-center">IAM Identity Center</a> e atribua <i>permission sets</i> por conta (por exemplo, admin em dev e somente leitura em prod). Assim ninguém precisa de usuário IAM em cada conta.</span><span class="en"><b>Recommended for daily use:</b> set up <a href="#identity-center">IAM Identity Center</a> and assign <i>permission sets</i> per account (for example, admin in dev and read-only in prod). That way nobody needs an IAM user in every account.</span></li>
+  </ul>
+
+  <h4><span class="pt">Passo 5 · Aplicar guardrails (opcional, mas vale a pena)</span><span class="en">Step 5 · Apply guardrails (optional, but worth it)</span></h4>
+  <ul>
+    <li><span class="pt">Teste uma SCP primeiro na OU <code>Non-prod</code> (veja o exemplo mais abaixo) e só depois leve para <code>Prod</code>. Nunca comece pela Root.</span><span class="en">Try an SCP first on the <code>Non-prod</code> OU (see the example below) and only then take it to <code>Prod</code>. Never start at the Root.</span></li>
+  </ul>
+
+  <h4><span class="pt">O mesmo pelo terminal</span><span class="en">The same from the terminal</span></h4>
+  <p><span class="pt">Com a CLI autenticada na management account (os IDs abaixo são ilustrativos):</span><span class="en">With the CLI authenticated to the management account (the IDs below are illustrative):</span></p>
+<pre><code># 1 · create the organization (all features)
+aws organizations create-organization --feature-set ALL
+
+# 2 · find the Root ID and create the OUs
+aws organizations list-roots --query 'Roots[0].Id' --output text      # r-abcd
+aws organizations create-organizational-unit --parent-id r-abcd --name Prod
+aws organizations create-organizational-unit --parent-id r-abcd --name Non-prod
+
+# 3 · create the dev account (asynchronous: follow the status)
+aws organizations create-account \
+  --account-name dev --email nome+dev@dominio.com \
+  --role-name OrganizationAccountAccessRole
+aws organizations describe-create-account-status --create-account-request-id car-xxxxxxxx
+
+# 4 · move the account to its OU (the account ID comes from the status above)
+aws organizations move-account --account-id 111111111111 \
+  --source-parent-id r-abcd --destination-parent-id ou-abcd-11111111</code></pre>
+
+  <div class="callout good"><strong><span class="pt">Como fica o resto da AWS</span><span class="en">What the rest of AWS looks like</span></strong>
+    <p><span class="pt">Cada conta é um ambiente completo e isolado: a conta <code>dev</code> tem sua própria <a href="#vpc">VPC</a>, seu RDS e seus serviços; a <code>prod</code> tem os dela. Nada é compartilhado, a não ser que você libere (por exemplo, a imagem Docker no <a href="#ecr">ECR</a> de uma conta de tooling). O mesmo código sobe nas duas contas; só muda para onde a pipeline aponta, via <a href="#oidc">OIDC</a>, com uma role por conta.</span><span class="en">Each account is a full, isolated environment: the <code>dev</code> account has its own <a href="#vpc">VPC</a>, RDS and services; <code>prod</code> has its own. Nothing is shared unless you allow it (for example, the Docker image in the <a href="#ecr">ECR</a> of a tooling account). The same code ships to both accounts; only where the pipeline points changes, through <a href="#oidc">OIDC</a>, with one role per account.</span></p>
+  </div>
+
+  <h3><span class="pt">Por que separar contas por ambiente</span><span class="en">Why separate accounts by environment</span></h3>
+  <p><span class="pt">A AWS recomenda usar várias contas para separar cargas de trabalho, em vez de uma só. Por padrão não existe acesso entre contas: se produção e não-produção ficam em contas distintas, elas permanecem isoladas até você liberar explicitamente. O número de contas não altera a cobrança, que é baseada no uso dos recursos.</span><span class="en">AWS recommends using several accounts to separate workloads rather than a single one. By default there is no access between accounts: if production and non-production live in different accounts, they stay isolated until you explicitly allow access. The number of accounts does not change billing, which is based on resource usage.</span></p>
+
+  <h3><span class="pt">Simulador de herança de SCP</span><span class="en">SCP inheritance simulator</span></h3>
+  <div class="widget" data-org>
+    <div class="wtitle"><span class="pt">Clique em um nó da árvore</span><span class="en">Click a node of the tree</span></div>
+    <ul class="tree root">
+      <li><button class="node" id="o-root" data-scp="full deny-leave" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg> Root</button>
+        <ul class="tree">
+          <li><button class="node" id="o-mgmt" data-parent="o-root" data-exempt="1"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</button></li>
+          <li><button class="node" id="o-prod" data-parent="o-root" data-scp="regions"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod</button>
+            <ul class="tree">
+              <li><button class="node" id="o-app" data-parent="o-prod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> prod</button></li>
+            </ul></li>
+          <li><button class="node" id="o-nonprod" data-parent="o-root" data-scp="costly"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod</button>
+            <ul class="tree">
+              <li><button class="node" id="o-stg" data-parent="o-nonprod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> dev</button></li>
+            </ul></li>
+          <li><button class="node" id="o-shared" data-parent="o-root"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared</button>
+            <ul class="tree">
+              <li><button class="node" id="o-tool" data-parent="o-shared"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> tooling</button></li>
+            </ul></li>
+        </ul></li>
+    </ul>
+    <div class="chips" aria-label="Effective SCPs">
+      <span class="chip" data-id="full">FullAWSAccess</span>
+      <span class="chip" data-id="deny-leave"><span class="pt">Negar sair da organização</span><span class="en">Deny leaving the organization</span></span>
+      <span class="chip" data-id="regions"><span class="pt">Só regiões aprovadas</span><span class="en">Approved regions only</span></span>
+      <span class="chip" data-id="costly"><span class="pt">Negar instâncias caras</span><span class="en">Deny expensive instances</span></span>
+    </div>
+    <p class="org-note" hidden><span class="pt"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs <b>não</b> afetam a management account.</span><span class="en"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs do <b>not</b> affect the management account.</span></p>
+    <p class="muted"><span class="pt">As SCPs destacadas são as efetivas: cada conta só tem o que é permitido por todos os níveis acima dela. Os nomes das SCPs aqui são ilustrativos.</span><span class="en">Highlighted SCPs are the effective ones: an account only has what every level above it allows. The SCP names here are illustrative.</span></p>
+  </div>
+
+  <h3><span class="pt">Exemplo de SCP</span><span class="en">SCP example</span></h3>
+  <p><span class="pt">Exemplo didático que nega ações fora de duas regiões, com exceção de serviços globais. Adapte e teste em uma OU de teste antes de usar. A AWS publica exemplos oficiais de SCP na página de exemplos de SCP.</span><span class="en">Teaching example denying actions outside two regions, except for global services. Adapt it and test it in a test OU first. AWS publishes official SCP examples in its SCP examples page.</span></p>
+<pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Deny",
+      "NotAction": ["iam:*", "organizations:*", "route53:*", "support:*"],
+      "Resource": "*",
+      "Condition": {
+        "StringNotEquals": { "aws:RequestedRegion": ["us-east-1", "sa-east-1"] }
+      }
+    }
+  ]
+}</code></pre>
+
+  <div class="callout warn"><strong><span class="pt">Limites e pegadinhas (segundo a documentação)</span><span class="en">Limits and gotchas (per the docs)</span></strong>
+    <ul>
+      <li><span class="pt">SCPs só existem em organizações com <b>all features</b> habilitado; no modo apenas de cobrança consolidada elas não estão disponíveis.</span><span class="en">SCPs exist only in organizations with <b>all features</b> enabled; they are not available with consolidated billing only.</span></li>
+      <li><span class="pt">SCP nunca concede permissão. A permissão efetiva é a interseção entre SCP/RCP e as políticas de identidade e de recurso.</span><span class="en">An SCP never grants permission. Effective permission is the intersection of SCP/RCP and identity/resource policies.</span></li>
+      <li><span class="pt">SCPs afetam também o root user das contas-membro, mas <b>não</b> afetam service-linked roles nem usuários de fora da organização.</span><span class="en">SCPs also affect member-account root users, but they do <b>not</b> affect service-linked roles or principals outside the organization.</span></li>
+      <li><span class="pt">Não remova a <code>FullAWSAccess</code> sem substituí-la: todas as ações das contas-membro falhariam.</span><span class="en">Do not remove <code>FullAWSAccess</code> without replacing it: all member-account actions would fail.</span></li>
+      <li><span class="pt">A AWS recomenda não anexar SCPs na raiz sem testar: use uma OU e mova as contas aos poucos.</span><span class="en">AWS recommends not attaching SCPs to the root without testing: use an OU and move accounts a few at a time.</span></li>
+      <li><span class="pt">Todos os caracteres da SCP contam para o tamanho máximo (veja as cotas).</span><span class="en">Every character counts toward an SCP's maximum size (see the quotas).</span></li>
+    </ul>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Mais de um ambiente ou time; necessidade de guardrails (regiões, serviços); fatura única; compartilhamento central de recursos.</span><span class="en">More than one environment or team; need for guardrails (regions, services); a single bill; central resource sharing.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Aplicar SCP direto na raiz sem teste; esperar que SCP libere permissões; rodar cargas de trabalho na management account (ela não é limitada por SCP).</span><span class="en">Applying an SCP straight to the root without testing; expecting an SCP to grant permissions; running workloads in the management account (it is not limited by SCPs).</span></div>
+  </div>
+
+  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
+  <details class="fc"><summary><span class="pt">Uma SCP que permite <code>s3:*</code> já dá acesso ao S3 aos usuários?</span><span class="en">Does an SCP that allows <code>s3:*</code> already give users S3 access?</span></summary><div class="ans"><span class="pt">Não. SCP só define o teto. É preciso uma política IAM (ou de recurso) que conceda a permissão.</span><span class="en">No. An SCP only sets the ceiling. An IAM (or resource) policy must still grant the permission.</span></div></details>
+  <details class="fc"><summary><span class="pt">Qual conta não é afetada por SCPs?</span><span class="en">Which account is not affected by SCPs?</span></summary><div class="ans"><span class="pt">A management account.</span><span class="en">The management account.</span></div></details>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html" rel="noopener">What is AWS Organizations?</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_tutorials_basic.html" rel="noopener">Tutorial: Creating and configuring an organization</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create-cross.html" rel="noopener">Creating a member account in your organization</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" rel="noopener">Service control policies (SCPs)</a></li>
+      <li><a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html" rel="noopener">Organizing Your AWS Environment Using Multiple Accounts</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" rel="noopener">IAM: Policy evaluation logic</a></li>
+    </ul>
+    <p><span class="pt"><b>Removido por falta de fonte oficial:</b> a anotação sobre descontos por volume e compartilhamento de Savings Plans/Reservas na fatura consolidada. Consulte a documentação de billing antes de afirmar isso.</span><span class="en"><b>Removed for lack of an official source:</b> the note on volume discounts and Savings Plans/Reservations sharing under consolidated billing. Check the billing docs before claiming it.</span></p>
+  </div>
+</section>
+
 <!-- ============ MAPA ============ -->
 <section class="topic" id="mapa">
   <header>
@@ -229,7 +405,7 @@
 <!-- ============ IAM ============ -->
 <section class="topic" id="iam">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 01</span><span class="en">Foundations · 01</span></span>
+    <span class="tag"><span class="pt">Fundamentos · 02</span><span class="en">Foundations · 02</span></span>
     <h2>IAM</h2>
     <p class="lead"><span class="pt">Identity and Access Management: o serviço que controla quem se autentica (login) e quem está autorizado (permissões) a usar os recursos da AWS.</span><span class="en">Identity and Access Management: the service that controls who is authenticated (signed in) and who is authorized (has permissions) to use AWS resources.</span></p>
   </header>
@@ -317,113 +493,6 @@
       <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" rel="noopener">Policy evaluation logic</a></li>
       <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-policy-examples.html" rel="noopener">ECR: repository policy examples (ações de push)</a></li>
     </ul>
-  </div>
-</section>
-
-<!-- ============ ORGANIZATIONS ============ -->
-<section class="topic" id="organizations">
-  <header>
-    <span class="tag"><span class="pt">Fundamentos · 02</span><span class="en">Foundations · 02</span></span>
-    <h2>AWS Organizations</h2>
-    <p class="lead"><span class="pt">Gerencie e governe várias contas AWS de forma central: criar contas, agrupá-las em OUs, aplicar políticas e ter uma fatura única.</span><span class="en">Centrally manage and govern many AWS accounts: create accounts, group them into OUs, apply policies and get a single bill.</span></p>
-  </header>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</h4><span class="pt">Conta que administra a organização. <b>SCPs não afetam</b> usuários e roles dela, só as contas-membro.</span><span class="en">The account that administers the organization. <b>SCPs do not affect</b> its users and roles, only member accounts.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> Member accounts</h4><span class="pt">As demais contas. Cada conta AWS é um limite natural de permissão, segurança, custo e carga de trabalho.</span><span class="en">All other accounts. Each AWS account is a natural boundary for permissions, security, cost and workloads.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU</h4><span class="pt">Organizational Unit: grupo de contas (por exemplo, as que atendem a uma aplicação ou a um ambiente). Políticas anexadas a uma OU valem para as contas dentro dela.</span><span class="en">Organizational Unit: a group of accounts (for example those serving one application or environment). Policies attached to an OU apply to the accounts inside it.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-shield"/></svg> SCP</h4><span class="pt">Service Control Policy: define o <b>máximo de permissões</b> disponível para IAM users e roles das contas. Não concede nada.</span><span class="en">Service Control Policy: defines the <b>maximum permissions</b> available to IAM users and roles in the accounts. It grants nothing.</span></div>
-  </div>
-
-  <h3><span class="pt">Por que separar contas por ambiente</span><span class="en">Why separate accounts by environment</span></h3>
-  <p><span class="pt">A AWS recomenda usar várias contas para separar cargas de trabalho, em vez de uma só. Por padrão não existe acesso entre contas: se produção e não-produção ficam em contas distintas, elas permanecem isoladas até você liberar explicitamente. O número de contas não altera a cobrança, que é baseada no uso dos recursos.</span><span class="en">AWS recommends using several accounts to separate workloads rather than a single one. By default there is no access between accounts: if production and non-production live in different accounts, they stay isolated until you explicitly allow access. The number of accounts does not change billing, which is based on resource usage.</span></p>
-  <p><span class="pt">Exemplo de desenho (uma sugestão didática, não um padrão obrigatório da AWS):</span><span class="en">Example layout (a teaching suggestion, not a mandatory AWS standard):</span></p>
-  <div class="vpc">
-    <div class="label"><span class="pt">Organização</span><span class="en">Organization</span></div>
-    <div class="flow">
-      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management</span><span class="arrow">→</span>
-      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod<br><small>&lt;ID_CONTA_PROD&gt;</small></span>
-      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod<br><small>&lt;ID_CONTA_STAGING&gt;</small></span>
-      <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared<br><small><span class="pt">tooling: ECR, CI/CD</span><span class="en">tooling: ECR, CI/CD</span> · &lt;ID_CONTA_TOOLING&gt;</small></span>
-    </div>
-  </div>
-  <p><span class="pt">A conta de <b>tooling/compartilhada</b> costuma guardar o que várias contas usam, como o repositório de imagens no <a href="#ecr">ECR</a> (acesso entre contas via repository policy).</span><span class="en">The <b>tooling/shared</b> account usually holds what several accounts use, such as the image repository in <a href="#ecr">ECR</a> (cross-account access through a repository policy).</span></p>
-
-  <h3><span class="pt">Simulador de herança de SCP</span><span class="en">SCP inheritance simulator</span></h3>
-  <div class="widget" data-org>
-    <div class="wtitle"><span class="pt">Clique em um nó da árvore</span><span class="en">Click a node of the tree</span></div>
-    <ul class="tree root">
-      <li><button class="node" id="o-root" data-scp="full deny-leave" aria-pressed="true"><svg class="icon" aria-hidden="true"><use href="#i-tree"/></svg> Root</button>
-        <ul class="tree">
-          <li><button class="node" id="o-mgmt" data-parent="o-root" data-exempt="1"><svg class="icon" aria-hidden="true"><use href="#i-institution"/></svg> Management account</button></li>
-          <li><button class="node" id="o-prod" data-parent="o-root" data-scp="regions"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Prod</button>
-            <ul class="tree">
-              <li><button class="node" id="o-app" data-parent="o-prod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> prod</button></li>
-            </ul></li>
-          <li><button class="node" id="o-nonprod" data-parent="o-root" data-scp="costly"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Non-prod</button>
-            <ul class="tree">
-              <li><button class="node" id="o-stg" data-parent="o-nonprod"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> staging</button></li>
-            </ul></li>
-          <li><button class="node" id="o-shared" data-parent="o-root"><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> OU Shared</button>
-            <ul class="tree">
-              <li><button class="node" id="o-tool" data-parent="o-shared"><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> tooling</button></li>
-            </ul></li>
-        </ul></li>
-    </ul>
-    <div class="chips" aria-label="Effective SCPs">
-      <span class="chip" data-id="full">FullAWSAccess</span>
-      <span class="chip" data-id="deny-leave"><span class="pt">Negar sair da organização</span><span class="en">Deny leaving the organization</span></span>
-      <span class="chip" data-id="regions"><span class="pt">Só regiões aprovadas</span><span class="en">Approved regions only</span></span>
-      <span class="chip" data-id="costly"><span class="pt">Negar instâncias caras</span><span class="en">Deny expensive instances</span></span>
-    </div>
-    <p class="org-note" hidden><span class="pt"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs <b>não</b> afetam a management account.</span><span class="en"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> SCPs do <b>not</b> affect the management account.</span></p>
-    <p class="muted"><span class="pt">As SCPs destacadas são as efetivas: cada conta só tem o que é permitido por todos os níveis acima dela. Os nomes das SCPs aqui são ilustrativos.</span><span class="en">Highlighted SCPs are the effective ones: an account only has what every level above it allows. The SCP names here are illustrative.</span></p>
-  </div>
-
-  <h3><span class="pt">Exemplo de SCP</span><span class="en">SCP example</span></h3>
-  <p><span class="pt">Exemplo didático que nega ações fora de duas regiões, com exceção de serviços globais. Adapte e teste em uma OU de teste antes de usar. A AWS publica exemplos oficiais de SCP na página de exemplos de SCP.</span><span class="en">Teaching example denying actions outside two regions, except for global services. Adapt it and test it in a test OU first. AWS publishes official SCP examples in its SCP examples page.</span></p>
-<pre><code>{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Deny",
-      "NotAction": ["iam:*", "organizations:*", "route53:*", "support:*"],
-      "Resource": "*",
-      "Condition": {
-        "StringNotEquals": { "aws:RequestedRegion": ["us-east-1", "sa-east-1"] }
-      }
-    }
-  ]
-}</code></pre>
-
-  <div class="callout warn"><strong><span class="pt">Limites e pegadinhas (segundo a documentação)</span><span class="en">Limits and gotchas (per the docs)</span></strong>
-    <ul>
-      <li><span class="pt">SCPs só existem em organizações com <b>all features</b> habilitado; no modo apenas de cobrança consolidada elas não estão disponíveis.</span><span class="en">SCPs exist only in organizations with <b>all features</b> enabled; they are not available with consolidated billing only.</span></li>
-      <li><span class="pt">SCP nunca concede permissão. A permissão efetiva é a interseção entre SCP/RCP e as políticas de identidade e de recurso.</span><span class="en">An SCP never grants permission. Effective permission is the intersection of SCP/RCP and identity/resource policies.</span></li>
-      <li><span class="pt">SCPs afetam também o root user das contas-membro, mas <b>não</b> afetam service-linked roles nem usuários de fora da organização.</span><span class="en">SCPs also affect member-account root users, but they do <b>not</b> affect service-linked roles or principals outside the organization.</span></li>
-      <li><span class="pt">Não remova a <code>FullAWSAccess</code> sem substituí-la: todas as ações das contas-membro falhariam.</span><span class="en">Do not remove <code>FullAWSAccess</code> without replacing it: all member-account actions would fail.</span></li>
-      <li><span class="pt">A AWS recomenda não anexar SCPs na raiz sem testar: use uma OU e mova as contas aos poucos.</span><span class="en">AWS recommends not attaching SCPs to the root without testing: use an OU and move accounts a few at a time.</span></li>
-      <li><span class="pt">Todos os caracteres da SCP contam para o tamanho máximo (veja as cotas).</span><span class="en">Every character counts toward an SCP's maximum size (see the quotas).</span></li>
-    </ul>
-  </div>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Mais de um ambiente ou time; necessidade de guardrails (regiões, serviços); fatura única; compartilhamento central de recursos.</span><span class="en">More than one environment or team; need for guardrails (regions, services); a single bill; central resource sharing.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Aplicar SCP direto na raiz sem teste; esperar que SCP libere permissões; rodar cargas de trabalho na management account (ela não é limitada por SCP).</span><span class="en">Applying an SCP straight to the root without testing; expecting an SCP to grant permissions; running workloads in the management account (it is not limited by SCPs).</span></div>
-  </div>
-
-  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
-  <details class="fc"><summary><span class="pt">Uma SCP que permite <code>s3:*</code> já dá acesso ao S3 aos usuários?</span><span class="en">Does an SCP that allows <code>s3:*</code> already give users S3 access?</span></summary><div class="ans"><span class="pt">Não. SCP só define o teto. É preciso uma política IAM (ou de recurso) que conceda a permissão.</span><span class="en">No. An SCP only sets the ceiling. An IAM (or resource) policy must still grant the permission.</span></div></details>
-  <details class="fc"><summary><span class="pt">Qual conta não é afetada por SCPs?</span><span class="en">Which account is not affected by SCPs?</span></summary><div class="ans"><span class="pt">A management account.</span><span class="en">The management account.</span></div></details>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html" rel="noopener">What is AWS Organizations?</a></li>
-      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" rel="noopener">Service control policies (SCPs)</a></li>
-      <li><a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html" rel="noopener">Organizing Your AWS Environment Using Multiple Accounts</a></li>
-      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" rel="noopener">IAM: Policy evaluation logic</a></li>
-    </ul>
-    <p><span class="pt"><b>Removido por falta de fonte oficial:</b> a anotação sobre descontos por volume e compartilhamento de Savings Plans/Reservas na fatura consolidada. Consulte a documentação de billing antes de afirmar isso.</span><span class="en"><b>Removed for lack of an official source:</b> the note on volume discounts and Savings Plans/Reservations sharing under consolidated billing. Check the billing docs before claiming it.</span></p>
   </div>
 </section>
 
