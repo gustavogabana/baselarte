@@ -9,12 +9,11 @@
   const DEFAULT_LANGUAGE = "en";
   const LANGUAGE_STORAGE_KEY = "baselarte:language";
   const PREFERENCE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
-  const SITE_THEMES = ["default", "studio", "wiki", "google"];
+  const SITE_THEMES = ["default", "wiki", "google"];
   const DEFAULT_SITE_THEME = "default";
   const SITE_THEME_STORAGE_KEY = "baselarte:site-theme";
   // Web fonts of the themes that need them; only requested when that theme is used.
   const SITE_THEME_FONTS = {
-    studio: "https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&family=Open+Sans:wght@300;400;600&display=swap",
     wiki: "https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@400;600&display=swap",
     google: "https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap",
   };
@@ -93,7 +92,7 @@
     storePreference(SITE_THEME_STORAGE_KEY, siteTheme);
   }
 
-  // Each theme has its own favicon (favicon.svg, favicon-studio.svg, ...). The link keeps the
+  // Each theme has its own favicon (favicon.svg, favicon-wiki.svg, ...). The link keeps the
   // folder prefix of the page, so only the file name changes.
   function syncFavicon(siteTheme) {
     const iconLink = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
