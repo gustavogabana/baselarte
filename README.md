@@ -4,7 +4,7 @@ Site of **Baselarte Ltda.**, a software engineering and creative technology comp
 
 ```
  index.html ─┐                        ┌─▶ day / night      18:00 → 06:00
- notas/*    ─┼─▶ boot.js ─▶ styles ───┼─▶ site theme       default · studio · wiki · google
+ notas/*    ─┼─▶ boot.js ─▶ styles ───┼─▶ site theme       default · wiki · google
  i18n.js    ─┘      │                 └─▶ language         EN · PT-BR
                     ▼
         localStorage · cookie · window.name
@@ -31,7 +31,7 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 ## Behaviour
 
 - **Day/night:** dark from 18:00 to 06:00 by the visitor's clock. Hours are defined only in `boot.js`.
-- **Site themes:** `default`, `studio`, `wiki` and `google`, chosen with the header button. See `notas/site-theme/`.
+- **Site themes:** `default`, `wiki` and `google`, chosen with the header button.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the PT / EN button. All copy lives in `i18n.js`; add each `data-i18n` key to both tables and keep the English in `index.html` in sync.
 - **Preferences** are saved in `localStorage`, a cookie and `window.name`.
 - Works without JavaScript (English text is in the HTML) and from `file://`.

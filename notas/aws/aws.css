@@ -734,28 +734,3 @@ html[lang="pt-BR"] .en {
     transition: none !important;
   }
 }
-
-/* Studio theme: filled square buttons, like the rest of the site. */
-[data-site-theme="studio"] .aws-guide .btn {
-  background: var(--ink);
-  border-color: var(--ink);
-  color: var(--paper);
-  font-weight: 700;
-  letter-spacing: 1.4px;
-  text-transform: uppercase;
-}
-
-[data-site-theme="studio"] .aws-guide .btn:hover {
-  background: var(--paper);
-  color: var(--ink);
-}
-
-[data-site-theme="studio"] .aws-guide .btn.primary {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-
-[data-site-theme="studio"] .aws-guide :is(h2, h3, h4) {
-  font-weight: 900;
-}
