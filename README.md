@@ -2,6 +2,16 @@
 
 Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (AWS, Cloudflare, books, design system). Live at [baselarte.com](https://baselarte.com).
 
+```
+ index.html ─┐                        ┌─▶ day / night      18:00 → 06:00
+ notas/*    ─┼─▶ boot.js ─▶ styles ───┼─▶ site theme       default · studio · wiki · google
+ i18n.js    ─┘      │                 └─▶ language         EN · PT-BR
+                    ▼
+        localStorage · cookie · window.name
+
+ git push ─▶ main ─▶ GitHub Pages ─▶ baselarte.com            ● live
+```
+
 Static site: plain HTML, CSS and JavaScript. No build step, no `node_modules`. The only runtime dependency is [Motion](https://motion.dev), loaded from jsDelivr.
 
 ## Structure
