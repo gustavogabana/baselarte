@@ -1,0 +1,968 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="tf.metaTitle">Terraform 80/20, general and AWS | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:tf.metaDescription" content="The 20% of Terraform that covers 80% of the work: workflow, HCL, state, modules, CI, and a complete AWS walkthrough with remote state on S3, VPC, EC2, IAM and S3.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/terraform/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/terraform/">
+  <meta property="og:title" data-i18n-attributes="content:tf.metaTitle" content="Terraform 80/20, general and AWS | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:tf.metaDescription" content="The 20% of Terraform that covers 80% of the work: workflow, HCL, state, modules, CI, and a complete AWS walkthrough with remote state on S3, VPC, EC2, IAM and S3.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:tf.metaTitle" content="Terraform 80/20, general and AWS | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:tf.metaDescription" content="The 20% of Terraform that covers 80% of the work: workflow, HCL, state, modules, CI, and a complete AWS walkthrough with remote state on S3, VPC, EC2, IAM and S3.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <span class="theme-indicator requires-js" data-i18n-attributes="title:themeIndicator.label" title="Theme follows your local time: night from 18:00 to 06:00"><svg class="icon ti-sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg><svg class="icon ti-moon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg><span data-day-period></span></span>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html" aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html">AWS</a></li><li><a href="../terraform/index.html" aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../terraform/index.html" aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2><span class="pt">Parte 1 · Geral</span><span class="en">Part 1 · General</span></h2>
+<ul><li><a href="#why"><span class="pt">O que é e o 20% que importa</span><span class="en">What it is and the 20% that matters</span></a></li><li><a href="#start"><span class="pt">Instalar e rodar o primeiro projeto</span><span class="en">Install and run your first project</span></a></li><li><a href="#hcl"><span class="pt">A linguagem HCL</span><span class="en">The HCL language</span></a></li><li><a href="#flow"><span class="pt">O fluxo e os comandos</span><span class="en">The workflow and commands</span></a></li><li><a href="#state"><span class="pt">Estado, backend e drift</span><span class="en">State, backend and drift</span></a></li><li><a href="#vars"><span class="pt">Variáveis, locals e outputs</span><span class="en">Variables, locals and outputs</span></a></li><li><a href="#scale"><span class="pt">Dependências, repetição e lifecycle</span><span class="en">Dependencies, repetition and lifecycle</span></a></li><li><a href="#modules"><span class="pt">Módulos e ambientes</span><span class="en">Modules and environments</span></a></li><li><a href="#team"><span class="pt">Times, CI e boas práticas</span><span class="en">Teams, CI and best practices</span></a></li></ul>
+    <h2><span class="pt">Parte 2 · AWS</span><span class="en">Part 2 · AWS</span></h2>
+<ul><li><a href="#aws-auth"><span class="pt">AWS: provider e credenciais</span><span class="en">AWS: provider and credentials</span></a></li><li><a href="#aws-state"><span class="pt">AWS: estado remoto no S3</span><span class="en">AWS: remote state on S3</span></a></li><li><a href="#aws-stack"><span class="pt">AWS: VPC, EC2 e S3 passo a passo</span><span class="en">AWS: VPC, EC2 and S3 step by step</span></a></li><li><a href="#aws-ops"><span class="pt">AWS: padrões, erros e roteiro</span><span class="en">AWS: patterns, errors and roadmap</span></a></li><li><a href="#cheat"><span class="pt">Cola e perguntas de revisão</span><span class="en">Cheat sheet and review questions</span></a></li></ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="tf.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="tf.heroTitle">Terraform, <em>the 80/20.</em></h1>
+  <p class="hero-lede" data-i18n="tf.heroLede">The part of Terraform you will use every day, explained step by step and then applied to AWS: remote state, VPC, EC2, IAM and S3.</p>
+</section>
+<section class="content-section" aria-labelledby="why">
+<h2 id="why"><span class="pt">O que é e o 20% que importa</span><span class="en">What it is and the 20% that matters</span></h2>
+
+<p><span class="pt">Terraform é uma ferramenta de <em>infraestrutura como código</em> (IaC): em vez de clicar no console da nuvem, você <em>descreve</em> em arquivos de texto o que quer que exista (redes, servidores, buckets, permissões) e o Terraform descobre o que precisa criar, alterar ou apagar para a realidade ficar igual à descrição. A linguagem é a HCL, e o trabalho é feito por <em>providers</em> (plugins) que falam com a API de cada serviço: AWS, Azure, Google Cloud, Cloudflare, GitHub, Kubernetes e milhares de outros.</span><span class="en">Terraform is an <em>infrastructure as code</em> (IaC) tool: instead of clicking in the cloud console, you <em>describe</em> in text files what should exist (networks, servers, buckets, permissions) and Terraform works out what to create, change or delete so reality matches the description. The language is HCL, and the work is done by <em>providers</em> (plugins) that talk to each service’s API: AWS, Azure, Google Cloud, Cloudflare, GitHub, Kubernetes and thousands more.</span></p>
+<p><span class="pt">A ideia central é ser <em>declarativo</em>: você diz o <em>destino</em> (“quero 2 subnets e 1 bucket”), não os passos. É como a planta de uma casa: o Terraform compara a planta com a obra e só executa a diferença. Rodar de novo sem mudar nada não faz nada (<em>idempotência</em>).</span><span class="en">The core idea is being <em>declarative</em>: you state the <em>destination</em> (“I want 2 subnets and 1 bucket”), not the steps. It is like a house blueprint: Terraform compares the blueprint with the building and only carries out the difference. Running it again with no changes does nothing (<em>idempotence</em>).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 236" role="img" aria-label="Ciclo do Terraform / Terraform cycle" style="min-width:560px">
+<rect x="10" y="60" width="110" height="56" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="85.0" class="pt " text-anchor="middle">Código</text><text x="65.0" y="85.0" class="en " text-anchor="middle">Code</text>
+<text x="65.0" y="101.0" class="mut mono" text-anchor="middle">*.tf</text>
+<rect x="170" y="20" width="100" height="44" rx="4" class="ln"/>
+<text x="220.0" y="46.0" class="mono" text-anchor="middle">init</text>
+<rect x="170" y="80" width="100" height="44" rx="4" class="ln brandfill"/>
+<text x="220.0" y="106.0" class="mono" text-anchor="middle">plan</text>
+<rect x="170" y="140" width="100" height="44" rx="4" class="ln"/>
+<text x="220.0" y="166.0" class="mono" text-anchor="middle">apply</text>
+<rect x="320" y="60" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="395.0" y="85.0" class="pt " text-anchor="middle">Estado</text><text x="395.0" y="85.0" class="en " text-anchor="middle">State</text>
+<text x="395.0" y="101.0" class="mut mono" text-anchor="middle">terraform.tfstate</text>
+<rect x="520" y="60" width="110" height="56" rx="4" class="ln fillsoft"/>
+<text x="575.0" y="85.0" class="pt " text-anchor="middle">Nuvem</text><text x="575.0" y="85.0" class="en " text-anchor="middle">Cloud</text>
+<text x="575.0" y="101.0" class="pt mut mono" text-anchor="middle">API do provider</text><text x="575.0" y="101.0" class="en mut mono" text-anchor="middle">provider API</text>
+<path d="M120 76L170 42" class="ln"/><path d="M166.0 48.9L170 42L162.1 43.2" class="ln"/>
+<path d="M220 64L220 80" class="ln"/><path d="M216.5 72.8L220 80L223.5 72.8" class="ln"/>
+<path d="M220 124L220 140" class="ln"/><path d="M216.5 132.8L220 140L223.5 132.8" class="ln"/>
+<path d="M270 102L320 92" class="ln"/><path d="M313.6 96.8L320 92L312.3 90.0" class="ln"/>
+<path d="M270 162L575 116" class="ln"/><path d="M568.4 120.5L575 116L567.4 113.6" class="ln"/>
+<path d="M470 88L520 88" class="ln"/><path d="M512.8 91.5L520 88L512.8 84.5" class="ln"/>
+<path d="M520 98L470 98" class="ln"/><path d="M477.2 94.5L470 98L477.2 101.5" class="ln"/>
+<text x="575" y="150" class="pt mut" text-anchor="middle">apply cria/altera</text><text x="575" y="150" class="en mut" text-anchor="middle">apply creates/edits</text>
+<text x="10" y="204" class="pt mut">init baixa providers e módulos · plan mostra a diferença sem alterar nada.</text><text x="10" y="204" class="en mut">init downloads providers and modules · plan shows the difference without changing anything.</text>
+<text x="10" y="224" class="pt mut">apply executa as ações e grava o novo estado.</text><text x="10" y="224" class="en mut">apply carries out the actions and records the new state.</text>
+</svg></div><figcaption><span class="pt">O ciclo do Terraform. O <code>plan</code> é o seu ponto de segurança: leia-o antes de aplicar.</span><span class="en">The Terraform cycle. <code>plan</code> is your safety checkpoint: read it before applying.</span></figcaption></figure>
+<h3><span class="pt">Terraform, OpenTofu, CloudFormation e Pulumi</span><span class="en">Terraform, OpenTofu, CloudFormation and Pulumi</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Linguagem</span><span class="en">Language</span></th><th><span class="pt">Alcance</span><span class="en">Scope</span></th><th><span class="pt">Quando escolher</span><span class="en">When to choose</span></th></tr></thead><tbody><tr><td><strong>Terraform</strong> (HashiCorp)</td><td>HCL</td><td><span class="pt">qualquer nuvem e serviço com provider</span><span class="en">any cloud and service with a provider</span></td><td><span class="pt">padrão de mercado, enorme ecossistema; licença BSL desde 2023</span><span class="en">market standard, huge ecosystem; BSL license since 2023</span></td></tr><tr><td><strong>OpenTofu</strong></td><td>HCL</td><td><span class="pt">igual ao Terraform (fork da Linux Foundation, licença MPL)</span><span class="en">same as Terraform (Linux Foundation fork, MPL license)</span></td><td><span class="pt">você precisa de licença aberta; os comandos são quase iguais (<code>tofu</code>)</span><span class="en">you need an open license; commands are nearly identical (<code>tofu</code>)</span></td></tr><tr><td><strong>CloudFormation</strong></td><td>YAML/JSON</td><td><span class="pt">só AWS</span><span class="en">AWS only</span></td><td><span class="pt">tudo na AWS e você quer o estado gerenciado pela própria AWS</span><span class="en">all-in on AWS and you want AWS-managed state</span></td></tr><tr><td><strong>Pulumi</strong></td><td>TypeScript, Python, Go…</td><td><span class="pt">multi-nuvem</span><span class="en">multi-cloud</span></td><td><span class="pt">o time prefere linguagem de programação geral a uma DSL</span><span class="en">the team prefers a general-purpose language to a DSL</span></td></tr></tbody></table></div>
+<p><span class="pt">Tudo que você aprende aqui vale para o OpenTofu também; só troque <code>terraform</code> por <code>tofu</code> no terminal.</span><span class="en">Everything you learn here also applies to OpenTofu; just swap <code>terraform</code> for <code>tofu</code> in the terminal.</span></p>
+<h3><span class="pt">O 20% que rende 80%</span><span class="en">The 20% that pays 80%</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">#</span><span class="en">#</span></th><th><span class="pt">Conceito</span><span class="en">Concept</span></th><th><span class="pt">Por que importa</span><span class="en">Why it matters</span></th></tr></thead><tbody><tr><td>1</td><td><span class="pt">Ciclo <code>init → plan → apply</code></span><span class="en">The <code>init → plan → apply</code> cycle</span></td><td><span class="pt">é 90% do uso diário</span><span class="en">it is 90% of daily use</span></td></tr><tr><td>2</td><td><span class="pt">Blocos <code>resource</code> e <code>data</code></span><span class="en"><code>resource</code> and <code>data</code> blocks</span></td><td><span class="pt">criar vs. apenas ler o que já existe</span><span class="en">create vs. just reading what already exists</span></td></tr><tr><td>3</td><td><span class="pt">Referências entre recursos</span><span class="en">References between resources</span></td><td><span class="pt">geram o grafo de dependências automaticamente</span><span class="en">build the dependency graph automatically</span></td></tr><tr><td>4</td><td><span class="pt"><code>variable</code>, <code>locals</code>, <code>output</code></span><span class="en"><code>variable</code>, <code>locals</code>, <code>output</code></span></td><td><span class="pt">entrada, valores internos e saída do módulo</span><span class="en">input, internal values and module output</span></td></tr><tr><td>5</td><td><span class="pt">Estado (state) e backend remoto</span><span class="en">State and remote backend</span></td><td><span class="pt">é a “memória” do Terraform; perder o estado é o maior risco</span><span class="en">it is Terraform’s “memory”; losing state is the biggest risk</span></td></tr><tr><td>6</td><td><span class="pt"><code>count</code>, <code>for_each</code> e expressões <code>for</code></span><span class="en"><code>count</code>, <code>for_each</code> and <code>for</code> expressions</span></td><td><span class="pt">evitam copiar e colar blocos</span><span class="en">avoid copy-pasting blocks</span></td></tr><tr><td>7</td><td><span class="pt">Módulos</span><span class="en">Modules</span></td><td><span class="pt">reuso e organização</span><span class="en">reuse and organisation</span></td></tr><tr><td>8</td><td><span class="pt"><code>lifecycle</code> e <code>moved</code>/<code>import</code></span><span class="en"><code>lifecycle</code> and <code>moved</code>/<code>import</code></span></td><td><span class="pt">refatorar e adotar recursos existentes sem destruir nada</span><span class="en">refactor and adopt existing resources without destroying anything</span></td></tr><tr><td>9</td><td><span class="pt">Trava de versões e <code>.terraform.lock.hcl</code></span><span class="en">Version pinning and <code>.terraform.lock.hcl</code></span></td><td><span class="pt">builds reprodutíveis</span><span class="en">reproducible builds</span></td></tr><tr><td>10</td><td><span class="pt">CI com <code>fmt</code>, <code>validate</code>, <code>plan</code></span><span class="en">CI with <code>fmt</code>, <code>validate</code>, <code>plan</code></span></td><td><span class="pt">ninguém aplica da máquina pessoal em produção</span><span class="en">nobody applies from a personal machine in production</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="start">
+<h2 id="start"><span class="pt">Instalar e rodar o primeiro projeto</span><span class="en">Install and run your first project</span></h2>
+
+<p><span class="pt">Vamos rodar o ciclo completo sem nuvem nenhuma, usando o provider <code>local</code>, que só cria arquivos. Assim você vê o que o Terraform faz antes de gastar um centavo.</span><span class="en">Let us run the full cycle with no cloud at all, using the <code>local</code> provider, which only creates files. That way you see what Terraform does before spending a cent.</span></p>
+<h3><span class="pt">Instalar</span><span class="en">Install</span></h3>
+<pre><code><span class="tok-c"># Linux (Debian/Ubuntu): repositório oficial da HashiCorp</span>
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo <span class="tok-s">"deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main"</span> | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update &amp;&amp; sudo apt install terraform
+
+<span class="tok-c"># macOS</span>
+brew tap hashicorp/tap &amp;&amp; brew install hashicorp/tap/terraform
+
+terraform version
+terraform -install-autocomplete    <span class="tok-c"># completa comandos com Tab (reabra o terminal)</span></code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Para trocar de versão por projeto, use um gerenciador como <code>tfenv</code> ou <code>mise</code>. As instruções oficiais mais recentes estão na página de instalação da HashiCorp.</span><span class="en">To switch versions per project, use a manager such as <code>tfenv</code> or <code>mise</code>. The latest official instructions are on HashiCorp’s install page.</span></div>
+<h3><span class="pt">Primeiro projeto</span><span class="en">First project</span></h3>
+<pre><code><span class="tok-c"># main.tf</span>
+<span class="tok-k">terraform</span> {
+  <span class="tok-a">required_version</span> = <span class="tok-s">"&gt;= 1.10"</span>
+  <span class="tok-k">required_providers</span> {
+    <span class="tok-a">local</span> = {
+      <span class="tok-a">source</span>  = <span class="tok-s">"hashicorp/local"</span>
+      <span class="tok-a">version</span> = <span class="tok-s">"~&gt; 2.5"</span>
+    }
+  }
+}
+
+<span class="tok-k">variable</span> <span class="tok-s">"name"</span> {
+  <span class="tok-a">type</span>    = string
+  <span class="tok-a">default</span> = <span class="tok-s">"world"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"local_file"</span> <span class="tok-s">"greeting"</span> {
+  <span class="tok-a">filename</span> = <span class="tok-s">"${path.module}/hello.txt"</span>
+  <span class="tok-a">content</span>  = <span class="tok-s">"Hello, ${var.name}!\n"</span>
+}
+
+<span class="tok-k">output</span> <span class="tok-s">"file_path"</span> {
+  <span class="tok-a">value</span> = local_file.greeting.filename
+}</code></pre>
+<pre><code>terraform init       <span class="tok-c"># baixa o provider e cria .terraform/ e .terraform.lock.hcl</span>
+terraform fmt        <span class="tok-c"># formata o código no padrão oficial</span>
+terraform validate   <span class="tok-c"># confere sintaxe e referências</span>
+terraform plan       <span class="tok-c"># mostra o que vai acontecer</span>
+terraform apply      <span class="tok-c"># pede "yes" e executa</span>
+cat hello.txt        <span class="tok-c"># Hello, world!</span>
+terraform apply -var name=Ana   <span class="tok-c"># muda uma variável e aplica de novo</span>
+terraform destroy    <span class="tok-c"># apaga tudo o que ele criou</span></code></pre>
+<p><span class="pt">O <code>plan</code> usa quatro símbolos. Aprenda a ler:</span><span class="en">The <code>plan</code> uses four symbols. Learn to read them:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Símbolo</span><span class="en">Symbol</span></th><th><span class="pt">Significa</span><span class="en">Means</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th></tr></thead><tbody><tr><td><code>+</code></td><td><span class="pt">será criado</span><span class="en">will be created</span></td><td><span class="pt"><code>+ resource "local_file" "greeting"</code></span><span class="en"><code>+ resource "local_file" "greeting"</code></span></td></tr><tr><td><code>~</code></td><td><span class="pt">será alterado no lugar</span><span class="en">will be updated in place</span></td><td><span class="pt">mudar uma tag</span><span class="en">changing a tag</span></td></tr><tr><td><code>-/+</code></td><td><span class="pt">será <em>destruído e recriado</em> (atenção!)</span><span class="en">will be <em>destroyed and recreated</em> (careful!)</span></td><td><span class="pt">mudar o conteúdo de um <code>local_file</code>; mudar a AMI de uma EC2</span><span class="en">changing a <code>local_file</code> content; changing an EC2 AMI</span></td></tr><tr><td><code>-</code></td><td><span class="pt">será destruído</span><span class="en">will be destroyed</span></td><td><span class="pt">removeu o bloco do código</span><span class="en">you removed the block from the code</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Procure <code>-/+</code> e <code>-</code> no plan antes de confirmar. Em recurso com dados (banco, disco, bucket), “recriar” significa <em>perder os dados</em>. O resumo no fim (<code>Plan: 1 to add, 0 to change, 1 to destroy</code>) é a primeira coisa a ler.</span><span class="en">Look for <code>-/+</code> and <code>-</code> in the plan before confirming. On resources that hold data (database, disk, bucket), “recreate” means <em>losing the data</em>. The summary at the end (<code>Plan: 1 to add, 0 to change, 1 to destroy</code>) is the first thing to read.</span></div>
+<h3><span class="pt">O que fica na pasta</span><span class="en">What ends up in the folder</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo/pasta</span><span class="en">File/folder</span></th><th><span class="pt">É o quê</span><span class="en">What it is</span></th><th><span class="pt">Git?</span><span class="en">Git?</span></th></tr></thead><tbody><tr><td><code>*.tf</code></td><td><span class="pt">seu código</span><span class="en">your code</span></td><td><span class="pt">sim</span><span class="en">yes</span></td></tr><tr><td><code>.terraform.lock.hcl</code></td><td><span class="pt">versões exatas dos providers (hashes)</span><span class="en">exact provider versions (hashes)</span></td><td><span class="pt"><strong>sim</strong></span><span class="en"><strong>yes</strong></span></td></tr><tr><td><code>.terraform/</code></td><td><span class="pt">providers e módulos baixados</span><span class="en">downloaded providers and modules</span></td><td><span class="pt">não</span><span class="en">no</span></td></tr><tr><td><code>terraform.tfstate</code></td><td><span class="pt">o estado local (pode ter segredos)</span><span class="en">the local state (may hold secrets)</span></td><td><span class="pt"><strong>nunca</strong></span><span class="en"><strong>never</strong></span></td></tr><tr><td><code>*.tfvars</code></td><td><span class="pt">valores das variáveis (podem ter segredos)</span><span class="en">variable values (may hold secrets)</span></td><td><span class="pt">só os sem segredo</span><span class="en">only secret-free ones</span></td></tr></tbody></table></div>
+<pre><code><span class="tok-c"># .gitignore para Terraform</span>
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+*.tfplan
+override.tf
+override.tf.json
+<span class="tok-c"># valores com segredos: use um nome próprio e ignore-o aqui</span>
+*.auto.tfvars</code></pre>
+</section>
+<section class="content-section" aria-labelledby="hcl">
+<h2 id="hcl"><span class="pt">A linguagem HCL</span><span class="en">The HCL language</span></h2>
+
+<p><span class="pt">HCL (HashiCorp Configuration Language) tem só duas peças: <em>blocos</em> e <em>argumentos</em>. Um bloco tem um tipo, zero ou mais rótulos e um corpo entre chaves; o corpo tem argumentos (<code>nome = valor</code>) e outros blocos.</span><span class="en">HCL (HashiCorp Configuration Language) has only two pieces: <em>blocks</em> and <em>arguments</em>. A block has a type, zero or more labels and a body in braces; the body holds arguments (<code>name = value</code>) and other blocks.</span></p>
+<pre><code><span class="tok-k">resource</span> <span class="tok-s">"aws_s3_bucket"</span> <span class="tok-s">"logs"</span> {   <span class="tok-c"># tipo do bloco, tipo do recurso, nome local</span>
+  <span class="tok-a">bucket</span> = <span class="tok-s">"acme-logs-prod"</span>         <span class="tok-c"># argumento</span>
+  <span class="tok-a">tags</span> = {                          <span class="tok-c"># argumento cujo valor é um mapa</span>
+    <span class="tok-a">Team</span> = <span class="tok-s">"platform"</span>
+  }
+  <span class="tok-k">lifecycle</span> {                       <span class="tok-c"># bloco aninhado</span>
+    <span class="tok-a">prevent_destroy</span> = true
+  }
+}</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Bloco</span><span class="en">Block</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th><th><span class="pt">Exemplo de uso</span><span class="en">Usage example</span></th></tr></thead><tbody><tr><td><code>terraform</code></td><td><span class="pt">versão do Terraform, providers e backend</span><span class="en">Terraform version, providers and backend</span></td><td><code>required_version</code></td></tr><tr><td><code>provider</code></td><td><span class="pt">configura um provider (região, credenciais)</span><span class="en">configures a provider (region, credentials)</span></td><td><code>provider "aws" { region = … }</code></td></tr><tr><td><code>resource</code></td><td><span class="pt">algo que o Terraform cria e gerencia</span><span class="en">something Terraform creates and manages</span></td><td><code>aws_instance.web</code></td></tr><tr><td><code>data</code></td><td><span class="pt">lê algo que já existe, sem gerenciar</span><span class="en">reads something that already exists, without managing it</span></td><td><code>data.aws_caller_identity.current</code></td></tr><tr><td><code>variable</code></td><td><span class="pt">entrada configurável</span><span class="en">configurable input</span></td><td><code>var.region</code></td></tr><tr><td><code>locals</code></td><td><span class="pt">valores calculados reutilizáveis</span><span class="en">reusable computed values</span></td><td><code>local.tags</code></td></tr><tr><td><code>output</code></td><td><span class="pt">valor exposto no fim ou para outro módulo</span><span class="en">value exposed at the end or to another module</span></td><td><code>terraform output ip</code></td></tr><tr><td><code>module</code></td><td><span class="pt">usa um conjunto de código empacotado</span><span class="en">uses a packaged set of code</span></td><td><code>module.vpc.vpc_id</code></td></tr><tr><td><code>moved</code> · <code>import</code> · <code>removed</code></td><td><span class="pt">refatorar e adotar/soltar recursos</span><span class="en">refactor and adopt/release resources</span></td><td><span class="pt">veja “Estado”</span><span class="en">see “State”</span></td></tr><tr><td><code>check</code></td><td><span class="pt">verificações que avisam sem bloquear</span><span class="en">checks that warn without blocking</span></td><td><span class="pt">“o site responde 200?”</span><span class="en">“does the site answer 200?”</span></td></tr></tbody></table></div>
+<h3><span class="pt">Tipos, referências e expressões</span><span class="en">Types, references and expressions</span></h3>
+<pre><code><span class="tok-k">variable</span> <span class="tok-s">"region"</span>   { type = string }                     <span class="tok-c"># "sa-east-1"</span>
+<span class="tok-k">variable</span> <span class="tok-s">"count_n"</span>  { type = number }                     <span class="tok-c"># 3</span>
+<span class="tok-k">variable</span> <span class="tok-s">"enabled"</span>  { type = bool }                       <span class="tok-c"># true</span>
+<span class="tok-k">variable</span> <span class="tok-s">"azs"</span>      { type = list(string) }               <span class="tok-c"># ["a", "b"] (ordenada)</span>
+<span class="tok-k">variable</span> <span class="tok-s">"cidrs"</span>    { type = set(string) }                <span class="tok-c"># sem ordem e sem repetição</span>
+<span class="tok-k">variable</span> <span class="tok-s">"tags"</span>     { type = map(string) }                <span class="tok-c"># { Team = "x" }</span>
+<span class="tok-k">variable</span> <span class="tok-s">"disk"</span>     {
+  <span class="tok-a">type</span> = object({ size = number, encrypted = bool })      <span class="tok-c"># estrutura fixa</span>
+}
+
+<span class="tok-k">locals</span> {
+  <span class="tok-a">env</span>      = <span class="tok-s">"dev"</span>
+  <span class="tok-a">name</span>     = <span class="tok-s">"${var.project}-${local.env}"</span>                 <span class="tok-c"># interpolação</span>
+  <span class="tok-a">size</span>     = var.enabled ? <span class="tok-n">100</span> : <span class="tok-n">20</span>                        <span class="tok-c"># condicional</span>
+  <span class="tok-a">upper</span>    = [for s in var.azs : upper(s)]                 <span class="tok-c"># lista -&gt; lista</span>
+  <span class="tok-a">by_az</span>    = { for s in var.azs : s =&gt; <span class="tok-s">"${var.region}${s}"</span> }   <span class="tok-c"># lista -&gt; mapa</span>
+  <span class="tok-a">ids</span>      = aws_instance.web[*].id                        <span class="tok-c"># splat: todos os ids</span>
+  <span class="tok-a">merged</span>   = merge(var.tags, { Env = local.env })          <span class="tok-c"># junta mapas</span>
+  <span class="tok-a">safe</span>     = try(var.disk.size, <span class="tok-n">20</span>)                        <span class="tok-c"># valor padrão se falhar</span>
+}</code></pre>
+<p><span class="pt">Referências seguem o padrão <code>tipo.nome.atributo</code>: <code>aws_vpc.main.id</code>, <code>var.region</code>, <code>local.tags</code>, <code>module.vpc.public_subnets</code>, <code>data.aws_region.current.name</code>. Funções úteis para decorar: <code>merge</code>, <code>lookup</code>, <code>join</code>, <code>format</code>, <code>toset</code>, <code>try</code>, <code>coalesce</code>, <code>cidrsubnet</code>, <code>jsonencode</code>, <code>file</code>. Teste qualquer expressão no <code>terraform console</code>.</span><span class="en">References follow the <code>type.name.attribute</code> pattern: <code>aws_vpc.main.id</code>, <code>var.region</code>, <code>local.tags</code>, <code>module.vpc.public_subnets</code>, <code>data.aws_region.current.name</code>. Useful functions to memorise: <code>merge</code>, <code>lookup</code>, <code>join</code>, <code>format</code>, <code>toset</code>, <code>try</code>, <code>coalesce</code>, <code>cidrsubnet</code>, <code>jsonencode</code>, <code>file</code>. Test any expression in <code>terraform console</code>.</span></p>
+<pre><code>terraform console
+&gt; cidrsubnet(<span class="tok-s">"10.0.0.0/16"</span>, 8, 1)
+<span class="tok-s">"10.0.1.0/24"</span>
+&gt; upper(<span class="tok-s">"abc"</span>)
+<span class="tok-s">"ABC"</span></code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">A ordem dos blocos no arquivo <em>não importa</em>. O Terraform lê todos os <code>*.tf</code> da pasta como um só e monta o grafo pelas referências. Por convenção: <code>main.tf</code>, <code>variables.tf</code>, <code>outputs.tf</code>, <code>versions.tf</code> (ou <code>providers.tf</code>).</span><span class="en">The order of blocks in a file does <em>not</em> matter. Terraform reads every <code>*.tf</code> in the folder as one and builds the graph from references. By convention: <code>main.tf</code>, <code>variables.tf</code>, <code>outputs.tf</code>, <code>versions.tf</code> (or <code>providers.tf</code>).</span></div>
+</section>
+<section class="content-section" aria-labelledby="flow">
+<h2 id="flow"><span class="pt">O fluxo e os comandos</span><span class="en">The workflow and commands</span></h2>
+
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody><tr><td><code>terraform init</code></td><td><span class="pt">baixa providers/módulos e prepara o backend (rode após clonar ou mudar versões)</span><span class="en">downloads providers/modules and sets up the backend (run after cloning or changing versions)</span></td></tr><tr><td><code>terraform fmt -recursive</code></td><td><span class="pt">formata todos os <code>.tf</code></span><span class="en">formats every <code>.tf</code></span></td></tr><tr><td><code>terraform validate</code></td><td><span class="pt">confere sintaxe e coerência, sem tocar na nuvem</span><span class="en">checks syntax and consistency, without touching the cloud</span></td></tr><tr><td><code>terraform plan -out=tfplan</code></td><td><span class="pt">calcula a diferença e salva o plano</span><span class="en">computes the difference and saves the plan</span></td></tr><tr><td><code>terraform apply tfplan</code></td><td><span class="pt">aplica <em>exatamente</em> o plano salvo (sem perguntar)</span><span class="en">applies <em>exactly</em> the saved plan (no prompt)</span></td></tr><tr><td><code>terraform apply</code></td><td><span class="pt">planeja e pergunta <code>yes</code></span><span class="en">plans and asks for <code>yes</code></span></td></tr><tr><td><code>terraform destroy</code></td><td><span class="pt">destrói tudo que o estado conhece (equivale a <code>apply -destroy</code>)</span><span class="en">destroys everything the state knows (same as <code>apply -destroy</code>)</span></td></tr><tr><td><code>terraform output [-raw] nome</code></td><td><span class="pt">mostra saídas; <code>-raw</code> serve em scripts</span><span class="en">shows outputs; <code>-raw</code> suits scripts</span></td></tr><tr><td><code>terraform show</code> · <code>terraform graph</code></td><td><span class="pt">estado/plano legível · grafo em DOT</span><span class="en">readable state/plan · graph in DOT</span></td></tr><tr><td><code>terraform plan -refresh-only</code></td><td><span class="pt">só detecta <em>drift</em> (mudanças feitas fora do Terraform)</span><span class="en">only detects <em>drift</em> (changes made outside Terraform)</span></td></tr><tr><td><code>terraform plan -replace=ADDR</code></td><td><span class="pt">força recriar um recurso (substitui o antigo <code>taint</code>)</span><span class="en">forces recreating one resource (replaces the old <code>taint</code>)</span></td></tr><tr><td><code>terraform plan -target=ADDR</code></td><td><span class="pt">limita a um recurso; <em>exceção</em>, não rotina</span><span class="en">limits to one resource; an <em>exception</em>, not routine</span></td></tr></tbody></table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 228" role="img" aria-label="Código, estado e nuvem / Code, state and cloud" style="min-width:560px">
+<rect x="10" y="20" width="170" height="60" rx="4" class="ln fillsoft"/>
+<text x="95.0" y="47.0" class="pt " text-anchor="middle">Código (desejado)</text><text x="95.0" y="47.0" class="en " text-anchor="middle">Code (desired)</text>
+<text x="95.0" y="63.0" class="mut mono" text-anchor="middle">*.tf</text>
+<rect x="235" y="20" width="170" height="60" rx="4" class="ln fillsoft"/>
+<text x="320.0" y="47.0" class="pt " text-anchor="middle">Estado (conhecido)</text><text x="320.0" y="47.0" class="en " text-anchor="middle">State (known)</text>
+<text x="320.0" y="63.0" class="mut mono" text-anchor="middle">tfstate</text>
+<rect x="460" y="20" width="170" height="60" rx="4" class="ln fillsoft"/>
+<text x="545.0" y="47.0" class="pt " text-anchor="middle">Nuvem (real)</text><text x="545.0" y="47.0" class="en " text-anchor="middle">Cloud (actual)</text>
+<text x="545.0" y="63.0" class="pt mut mono" text-anchor="middle">o que existe de fato</text><text x="545.0" y="63.0" class="en mut mono" text-anchor="middle">what actually exists</text>
+<rect x="180" y="130" width="280" height="50" rx="4" class="brandfill"/>
+<text x="320.0" y="159.0" class="pt " text-anchor="middle">terraform plan = diferença</text><text x="320.0" y="159.0" class="en " text-anchor="middle">terraform plan = difference</text>
+<path d="M95 80L250 130" class="ln"/><path d="M242.1 131.1L250 130L244.2 124.5" class="ln"/>
+<path d="M320 80L320 130" class="ln"/><path d="M316.5 122.8L320 130L323.5 122.8" class="ln"/>
+<path d="M545 80L400 130" class="ln"/><path d="M405.7 124.4L400 130L407.9 130.9" class="ln"/>
+<text x="10" y="214" class="pt mut">O plan atualiza o que sabe da nuvem (refresh), compara com o código e lista as ações necessárias.</text><text x="10" y="214" class="en mut">The plan refreshes what it knows of the cloud, compares it with the code and lists the needed actions.</text>
+</svg></div><figcaption><span class="pt">Três versões da verdade: o que você quer (código), o que o Terraform lembra (estado) e o que existe (nuvem). O <code>plan</code> concilia as três.</span><span class="en">Three versions of the truth: what you want (code), what Terraform remembers (state) and what exists (cloud). <code>plan</code> reconciles the three.</span></figcaption></figure>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Boa prática: em equipe, rode <code>plan -out</code> no CI, deixe alguém revisar e aplique <em>aquele mesmo plano salvo</em>. Assim o que foi revisado é exatamente o que roda, mesmo que a nuvem mude nesse meio-tempo.</span><span class="en">Good practice: in a team, run <code>plan -out</code> in CI, have someone review it and apply <em>that very saved plan</em>. That way what was reviewed is exactly what runs, even if the cloud changes in between.</span></div>
+</section>
+<section class="content-section" aria-labelledby="state">
+<h2 id="state"><span class="pt">Estado, backend e drift</span><span class="en">State, backend and drift</span></h2>
+
+<p><span class="pt">O <em>estado</em> é um arquivo JSON que mapeia cada bloco do código ao objeto real (por exemplo, <code>aws_s3_bucket.logs</code> ↔ o bucket <code>acme-logs-prod</code>) e guarda os atributos conhecidos. Sem ele o Terraform não sabe o que já criou. Três regras de ouro:</span><span class="en">The <em>state</em> is a JSON file mapping each code block to the real object (for example, <code>aws_s3_bucket.logs</code> ↔ the bucket <code>acme-logs-prod</code>) and storing the known attributes. Without it Terraform does not know what it already created. Three golden rules:</span></p>
+<ol class="ds-steps"><li><span class="pt"><em>Nunca edite à mão</em> nem coloque no Git: ele pode conter senhas e chaves em texto puro.</span><span class="en"><em>Never edit it by hand</em> and never commit it: it may hold passwords and keys in plain text.</span></li><li><span class="pt">Em equipe, use <em>backend remoto com trava</em> (S3, GCS, Azure Blob, HCP Terraform) para ninguém aplicar ao mesmo tempo.</span><span class="en">In a team, use a <em>remote backend with locking</em> (S3, GCS, Azure Blob, HCP Terraform) so nobody applies at the same time.</span></li><li><span class="pt">Mude o estado só pelos comandos e blocos oficiais (<code>terraform state</code>, <code>moved</code>, <code>import</code>, <code>removed</code>).</span><span class="en">Change state only through the official commands and blocks (<code>terraform state</code>, <code>moved</code>, <code>import</code>, <code>removed</code>).</span></li></ol>
+<pre><code>terraform state list                       <span class="tok-c"># tudo que o estado conhece</span>
+terraform state show aws_s3_bucket.logs    <span class="tok-c"># os atributos de um recurso</span>
+terraform state mv A B                     <span class="tok-c"># renomeia no estado (prefira o bloco moved)</span>
+terraform state rm aws_s3_bucket.logs      <span class="tok-c"># "esquece" sem apagar na nuvem (prefira removed)</span>
+terraform force-unlock LOCK_ID             <span class="tok-c"># só se um apply morreu e deixou a trava</span></code></pre>
+<h3><span class="pt">Refatorar e adotar sem destruir</span><span class="en">Refactor and adopt without destroying</span></h3>
+<pre><code><span class="tok-c"># 1) Renomeou um recurso no código? Diga ao Terraform que é o MESMO objeto:</span>
+<span class="tok-k">moved</span> {
+  <span class="tok-a">from</span> = aws_s3_bucket.logs
+  <span class="tok-a">to</span>   = aws_s3_bucket.access_logs
+}
+
+<span class="tok-c"># 2) Já existe na nuvem e foi criado no console? Adote no estado (Terraform &gt;= 1.5):</span>
+<span class="tok-k">import</span> {
+  <span class="tok-a">to</span> = aws_s3_bucket.legacy
+  <span class="tok-a">id</span> = <span class="tok-s">"bucket-criado-no-console"</span>
+}
+<span class="tok-c"># terraform plan -generate-config-out=generated.tf  escreve o código por você</span>
+
+<span class="tok-c"># 3) Quer parar de gerenciar sem apagar o objeto? (Terraform &gt;= 1.7)</span>
+<span class="tok-k">removed</span> {
+  <span class="tok-a">from</span> = aws_s3_bucket.legacy
+  <span class="tok-k">lifecycle</span> {
+    <span class="tok-a">destroy</span> = false
+  }
+}</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Renomear um recurso no código <em>sem</em> um bloco <code>moved</code> faz o Terraform planejar “destruir o antigo e criar o novo”. É o acidente mais comum de refatoração. Sempre leia o plan depois de renomear.</span><span class="en">Renaming a resource in code <em>without</em> a <code>moved</code> block makes Terraform plan “destroy the old, create the new”. It is the most common refactoring accident. Always read the plan after renaming.</span></div>
+<h3><span class="pt">Drift</span><span class="en">Drift</span></h3>
+<p><span class="pt"><em>Drift</em> é quando alguém muda a nuvem pelo console e o código fica desatualizado. O <code>plan</code> normal já mostra a diferença (o Terraform tenta desfazer a mudança manual). Use <code>plan -refresh-only</code> para só atualizar o estado com o que existe, ou aplique o código para corrigir a nuvem. Em times, o remédio é simples: permissões de escrita no console só para emergências.</span><span class="en"><em>Drift</em> is when someone changes the cloud in the console and the code gets out of date. A normal <code>plan</code> already shows the difference (Terraform tries to undo the manual change). Use <code>plan -refresh-only</code> to merely update state with what exists, or apply the code to fix the cloud. For teams the cure is simple: console write access only for emergencies.</span></p>
+</section>
+<section class="content-section" aria-labelledby="vars">
+<h2 id="vars"><span class="pt">Variáveis, locals e outputs</span><span class="en">Variables, locals and outputs</span></h2>
+
+<p><span class="pt">Três blocos separam o <em>que muda</em> do <em>como é feito</em>: <code>variable</code> (entrada de fora), <code>locals</code> (valor calculado dentro) e <code>output</code> (saída). Todo módulo, inclusive o diretório raiz, é uma função: entra variável, sai output.</span><span class="en">Three blocks separate <em>what changes</em> from <em>how it is done</em>: <code>variable</code> (input from outside), <code>locals</code> (computed value inside) and <code>output</code> (result). Every module, including the root directory, is a function: variables go in, outputs come out.</span></p>
+<pre><code><span class="tok-k">variable</span> <span class="tok-s">"environment"</span> {
+  <span class="tok-a">description</span> = <span class="tok-s">"Nome do ambiente"</span>
+  <span class="tok-a">type</span>        = string
+  <span class="tok-a">default</span>     = <span class="tok-s">"dev"</span>
+
+  validation {
+    <span class="tok-a">condition</span>     = contains([<span class="tok-s">"dev"</span>, <span class="tok-s">"staging"</span>, <span class="tok-s">"prod"</span>], var.environment)
+    <span class="tok-a">error_message</span> = <span class="tok-s">"environment deve ser dev, staging ou prod."</span>
+  }
+}
+
+<span class="tok-k">variable</span> <span class="tok-s">"db_password"</span> {
+  <span class="tok-a">type</span>      = string
+  <span class="tok-a">sensitive</span> = true          <span class="tok-c"># some da saída do plan/apply (mas continua no state!)</span>
+}
+
+<span class="tok-k">locals</span> {
+  <span class="tok-a">name_prefix</span> = <span class="tok-s">"${var.project}-${var.environment}"</span>
+  <span class="tok-a">tags</span> = {
+    <span class="tok-a">Project</span>     = var.project
+    <span class="tok-a">Environment</span> = var.environment
+  }
+}
+
+<span class="tok-k">output</span> <span class="tok-s">"name_prefix"</span> {
+  <span class="tok-a">description</span> = <span class="tok-s">"Prefixo usado nos recursos"</span>
+  <span class="tok-a">value</span>       = local.name_prefix
+}</code></pre>
+<p><span class="pt">Os valores chegam por vários caminhos. Em caso de conflito vence o <em>de baixo</em> da lista (o último):</span><span class="en">Values arrive through several paths. On conflict the one <em>lower</em> in the list (the last) wins:</span></p>
+<ol class="ds-steps"><li><span class="pt">o <code>default</code> da variável</span><span class="en">the variable’s <code>default</code></span></li><li><span class="pt">variáveis de ambiente <code>TF_VAR_nome</code></span><span class="en">environment variables <code>TF_VAR_name</code></span></li><li><span class="pt"><code>terraform.tfvars</code> e <code>terraform.tfvars.json</code></span><span class="en"><code>terraform.tfvars</code> and <code>terraform.tfvars.json</code></span></li><li><span class="pt"><code>*.auto.tfvars</code> (em ordem alfabética)</span><span class="en"><code>*.auto.tfvars</code> (in alphabetical order)</span></li><li><span class="pt"><code>-var-file=…</code> e <code>-var nome=valor</code> na linha de comando, na ordem em que aparecem</span><span class="en"><code>-var-file=…</code> and <code>-var name=value</code> on the command line, in the order given</span></li></ol>
+<pre><code>terraform plan -var-file=prod.tfvars
+export TF_VAR_db_password=<span class="tok-s">"$(aws secretsmanager get-secret-value --secret-id app/db --query SecretString --output text)"</span></code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><code>sensitive = true</code> só esconde o valor na tela. Ele <em>continua em texto puro no state</em>. Por isso: backend remoto cifrado e com acesso restrito, e preferir não ter o segredo no Terraform. Exemplos: o RDS pode gerar e guardar a senha no Secrets Manager (<code>manage_master_user_password = true</code>); versões recentes do Terraform também têm valores <em>efêmeros</em> e atributos <em>write-only</em> que não vão para o state (veja a documentação da sua versão).</span><span class="en"><code>sensitive = true</code> only hides the value on screen. It <em>stays in plain text in the state</em>. Hence: an encrypted, access-restricted remote backend, and preferably not having the secret in Terraform at all. For example, RDS can generate and store the password in Secrets Manager (<code>manage_master_user_password = true</code>); recent Terraform versions also have <em>ephemeral</em> values and <em>write-only</em> attributes that never reach the state (see your version’s documentation).</span></div>
+</section>
+<section class="content-section" aria-labelledby="scale">
+<h2 id="scale"><span class="pt">Dependências, repetição e lifecycle</span><span class="en">Dependencies, repetition and lifecycle</span></h2>
+
+<h3><span class="pt">Dependências e o grafo</span><span class="en">Dependencies and the graph</span></h3>
+<p><span class="pt">Cada vez que um recurso <em>referencia</em> outro (<code>vpc_id = aws_vpc.main.id</code>) o Terraform cria uma aresta no grafo: o referenciado nasce primeiro e morre por último. O que não depende entre si roda <em>em paralelo</em> (padrão: 10 ao mesmo tempo). Você quase nunca precisa de <code>depends_on</code>; ele serve só para dependências que o Terraform não enxerga (por exemplo, uma política IAM que precisa existir antes de uma aplicação funcionar).</span><span class="en">Each time a resource <em>references</em> another (<code>vpc_id = aws_vpc.main.id</code>) Terraform adds an edge to the graph: the referenced one is born first and dies last. Things that do not depend on each other run <em>in parallel</em> (default: 10 at a time). You almost never need <code>depends_on</code>; it is only for dependencies Terraform cannot see (for example, an IAM policy that must exist before an application works).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 276" role="img" aria-label="Grafo de dependências / Dependency graph" style="min-width:560px">
+<rect x="10" y="20" width="170" height="44" rx="4" class="ln fillsoft"/>
+<text x="95.0" y="46" class="mono" text-anchor="middle">aws_vpc.main</text>
+<rect x="10" y="140" width="170" height="44" rx="4" class="ln fillsoft"/>
+<text x="95.0" y="166" class="mono" text-anchor="middle">aws_iam_role.web</text>
+<rect x="230" y="20" width="215" height="44" rx="4" class="ln fillsoft"/>
+<text x="337.5" y="46" class="mono" text-anchor="middle">aws_subnet.public</text>
+<rect x="230" y="80" width="215" height="44" rx="4" class="ln fillsoft"/>
+<text x="337.5" y="106" class="mono" text-anchor="middle">aws_security_group.web</text>
+<rect x="230" y="140" width="215" height="44" rx="4" class="ln fillsoft"/>
+<text x="337.5" y="166" class="mono" text-anchor="middle">aws_iam_instance_profile.web</text>
+<rect x="230" y="200" width="215" height="44" rx="4" class="ln fillsoft"/>
+<text x="337.5" y="226" class="mono" text-anchor="middle">data.aws_ssm_parameter.ami</text>
+<rect x="490" y="100" width="140" height="56" rx="4" class="brandfill"/>
+<text x="560" y="124" class="mono brandtext" text-anchor="middle">aws_instance.web</text>
+<text x="560" y="142" class="pt mut" text-anchor="middle">criada por último</text><text x="560" y="142" class="en mut" text-anchor="middle">created last</text>
+<path d="M180 42L230 42" class="ln"/><path d="M222.8 45.5L230 42L222.8 38.5" class="ln"/>
+<path d="M180 52L230 102" class="ln"/><path d="M222.4 99.4L230 102L227.4 94.4" class="ln"/>
+<path d="M180 162L230 162" class="ln"/><path d="M222.8 165.5L230 162L222.8 158.5" class="ln"/>
+<path d="M445 42L490 112" class="ln"/><path d="M483.2 107.8L490 112L489.0 104.1" class="ln"/>
+<path d="M445 102L490 124" class="ln"/><path d="M482.0 124.0L490 124L485.1 117.7" class="ln"/>
+<path d="M445 162L490 140" class="ln"/><path d="M485.1 146.3L490 140L482.0 140.0" class="ln"/>
+<path d="M445 222L490 150" class="ln"/><path d="M489.1 158.0L490 150L483.2 154.3" class="ln"/>
+<text x="10" y="262" class="pt mut">Setas = “precisa de”. As três ramas à esquerda são independentes e rodam ao mesmo tempo.</text><text x="10" y="262" class="en mut">Arrows = “needed by”. The branches on the left are independent and run at the same time.</text>
+</svg></div><figcaption><span class="pt">Grafo de dependências da pilha EC2 da seção AWS. Veja o seu com <code>terraform graph | dot -Tsvg &gt; graph.svg</code> (precisa do Graphviz).</span><span class="en">Dependency graph of the EC2 stack in the AWS section. See yours with <code>terraform graph | dot -Tsvg &gt; graph.svg</code> (needs Graphviz).</span></figcaption></figure>
+<h3><span class="pt">count, for_each e dynamic</span><span class="en">count, for_each and dynamic</span></h3>
+<pre><code><span class="tok-c"># for_each: um recurso por item, com CHAVE estável</span>
+<span class="tok-k">variable</span> <span class="tok-s">"buckets"</span> {
+  <span class="tok-a">type</span>    = set(string)
+  <span class="tok-a">default</span> = [<span class="tok-s">"logs"</span>, <span class="tok-s">"assets"</span>]
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_s3_bucket"</span> <span class="tok-s">"this"</span> {
+  <span class="tok-a">for_each</span> = var.buckets
+  <span class="tok-a">bucket</span>   = <span class="tok-s">"${var.project}-${each.key}"</span>     <span class="tok-c"># each.key / each.value</span>
+}
+<span class="tok-c"># endereços: aws_s3_bucket.this["logs"], aws_s3_bucket.this["assets"]</span>
+
+<span class="tok-c"># count: ligar/desligar (0 ou 1) ou N cópias idênticas</span>
+<span class="tok-k">resource</span> <span class="tok-s">"aws_eip"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">count</span>    = var.enable_eip ? <span class="tok-n">1</span> : <span class="tok-n">0</span>
+  <span class="tok-a">instance</span> = aws_instance.web.id
+}
+
+<span class="tok-c"># dynamic: repete um BLOCO ANINHADO</span>
+<span class="tok-k">resource</span> <span class="tok-s">"aws_security_group"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">name</span>   = <span class="tok-s">"web"</span>
+  <span class="tok-a">vpc_id</span> = var.vpc_id
+
+  <span class="tok-k">dynamic</span> <span class="tok-s">"ingress"</span> {
+    <span class="tok-a">for_each</span> = var.allowed_ports
+    <span class="tok-k">content</span> {
+      <span class="tok-a">from_port</span>   = ingress.value
+      <span class="tok-a">to_port</span>     = ingress.value
+      <span class="tok-a">protocol</span>    = <span class="tok-s">"tcp"</span>
+      <span class="tok-a">cidr_blocks</span> = [<span class="tok-s">"0.0.0.0/0"</span>]
+    }
+  }
+}</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Use</span><span class="en">Use</span></th><th><span class="pt">Quando</span><span class="en">When</span></th><th><span class="pt">Cuidado</span><span class="en">Careful</span></th></tr></thead><tbody><tr><td><code>count</code></td><td><span class="pt">liga/desliga (<code>0</code> ou <code>1</code>) ou cópias idênticas</span><span class="en">on/off (<code>0</code> or <code>1</code>) or identical copies</span></td><td><span class="pt">tirar um item do <em>meio</em> da lista muda os índices e recria os seguintes</span><span class="en">removing an item from the <em>middle</em> of the list shifts indexes and recreates the following ones</span></td></tr><tr><td><code>for_each</code></td><td><span class="pt">itens com identidade (nome, chave)</span><span class="en">items with an identity (name, key)</span></td><td><span class="pt">as chaves precisam ser conhecidas no <code>plan</code> (não podem vir de algo ainda não criado)</span><span class="en">keys must be known at plan time (cannot come from something not created yet)</span></td></tr><tr><td><code>dynamic</code></td><td><span class="pt">blocos aninhados repetidos</span><span class="en">repeated nested blocks</span></td><td><span class="pt">não abuse: blocos fixos são mais legíveis</span><span class="en">do not overuse: fixed blocks are more readable</span></td></tr></tbody></table></div>
+<h3><span class="pt">lifecycle: regras para casos delicados</span><span class="en">lifecycle: rules for delicate cases</span></h3>
+<pre><code><span class="tok-k">resource</span> <span class="tok-s">"aws_instance"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-c"># ...</span>
+  <span class="tok-k">lifecycle</span> {
+    <span class="tok-a">create_before_destroy</span> = true         <span class="tok-c"># sobe o novo antes de derrubar o velho</span>
+    <span class="tok-a">prevent_destroy</span>       = true         <span class="tok-c"># erro se um plan tentar destruir (proteção de dados)</span>
+    <span class="tok-a">ignore_changes</span>        = [ami, tags[<span class="tok-s">"LastDeploy"</span>]]   <span class="tok-c"># ignora mudanças feitas por fora</span>
+    <span class="tok-a">replace_triggered_by</span>  = [aws_launch_template.web.latest_version]
+
+    precondition {
+      <span class="tok-a">condition</span>     = var.instance_type != <span class="tok-s">"t2.nano"</span>
+      <span class="tok-a">error_message</span> = <span class="tok-s">"Tipo de instância pequeno demais."</span>
+    }
+  }
+}</code></pre>
+</section>
+<section class="content-section" aria-labelledby="modules">
+<h2 id="modules"><span class="pt">Módulos e ambientes</span><span class="en">Modules and environments</span></h2>
+
+<p><span class="pt">Um <em>módulo</em> é uma pasta com arquivos <code>.tf</code> usada por outro código via bloco <code>module</code>. O diretório onde você roda <code>terraform apply</code> é o <em>módulo raiz</em>; os que ele chama são <em>módulos filhos</em>. Variáveis são as entradas e outputs, as saídas. Módulos vêm de uma pasta local, do Terraform Registry, do Git ou de um bucket.</span><span class="en">A <em>module</em> is a folder of <code>.tf</code> files used by other code through a <code>module</code> block. The directory where you run <code>terraform apply</code> is the <em>root module</em>; the ones it calls are <em>child modules</em>. Variables are the inputs and outputs the results. Modules come from a local folder, the Terraform Registry, Git or a bucket.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 262" role="img" aria-label="Módulo raiz e módulos filhos / Root and child modules" style="min-width:560px">
+<rect x="10" y="30" width="210" height="190" rx="4" class="ln fillsoft"/>
+<text x="115" y="52" class="pt " text-anchor="middle">Módulo raiz</text><text x="115" y="52" class="en " text-anchor="middle">Root module</text>
+<text x="115" y="70" class="mono mut" text-anchor="middle">envs/dev/main.tf</text>
+<text x="26" y="110" class="mono">module "network" {…}</text>
+<text x="26" y="140" class="mono">module "web" {…}</text>
+<text x="26" y="170" class="mono">module "data" {…}</text>
+<rect x="420" y="30" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="52" class="mono brandtext" text-anchor="middle">modules/network</text>
+<text x="525" y="70" class="pt mut" text-anchor="middle">rede: VPC, subnets</text><text x="525" y="70" class="en mut" text-anchor="middle">network: VPC, subnets</text>
+<path d="M220 106L420 46" class="ln"/><path d="M414.1 51.4L420 46L412.1 44.7" class="ln"/>
+<path d="M420 70L220 112" class="ln dash"/><path d="M226.3 107.1L220 112L227.8 113.9" class="ln"/>
+<rect x="420" y="96" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="118" class="mono brandtext" text-anchor="middle">modules/web</text>
+<text x="525" y="136" class="pt mut" text-anchor="middle">servidores e SG</text><text x="525" y="136" class="en mut" text-anchor="middle">servers and SG</text>
+<path d="M220 136L420 112" class="ln"/><path d="M413.3 116.3L420 112L412.4 109.4" class="ln"/>
+<path d="M420 136L220 142" class="ln dash"/><path d="M227.1 138.3L220 142L227.3 145.3" class="ln"/>
+<rect x="420" y="162" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="184" class="mono brandtext" text-anchor="middle">modules/data</text>
+<text x="525" y="202" class="pt mut" text-anchor="middle">banco e bucket</text><text x="525" y="202" class="en mut" text-anchor="middle">database and bucket</text>
+<path d="M220 166L420 178" class="ln"/><path d="M412.6 181.0L420 178L413.0 174.1" class="ln"/>
+<path d="M420 202L220 172" class="ln dash"/><path d="M227.6 169.6L220 172L226.6 176.5" class="ln"/>
+<text x="320" y="76" class="pt mut" text-anchor="middle">variáveis →</text><text x="320" y="76" class="en mut" text-anchor="middle">variables →</text>
+<text x="320" y="246" class="pt mut" text-anchor="middle">← outputs (ex.: module.network.public_subnets)</text><text x="320" y="246" class="en mut" text-anchor="middle">← outputs (e.g. module.network.public_subnets)</text>
+</svg></div><figcaption><span class="pt">O módulo raiz alimenta os filhos com variáveis e consome os outputs deles.</span><span class="en">The root module feeds the children with variables and consumes their outputs.</span></figcaption></figure>
+<pre><code>infra/
+├── modules/
+│   └── web/                 <span class="tok-c"># módulo reutilizável</span>
+│       ├── main.tf          <span class="tok-c"># recursos</span>
+│       ├── variables.tf     <span class="tok-c"># entradas</span>
+│       ├── outputs.tf       <span class="tok-c"># saídas</span>
+│       └── README.md        <span class="tok-c"># gerado com terraform-docs</span>
+└── envs/
+    ├── dev/
+    │   ├── main.tf          <span class="tok-c"># module "web" { source = "../../modules/web" ... }</span>
+    │   ├── backend.tf       <span class="tok-c"># state em outro "key" do bucket</span>
+    │   └── dev.tfvars
+    └── prod/
+        └── ...</code></pre>
+<pre><code><span class="tok-k">module</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">source</span>        = <span class="tok-s">"../../modules/web"</span>        <span class="tok-c"># pasta local</span>
+  <span class="tok-a">name</span>          = <span class="tok-s">"loja"</span>
+  <span class="tok-a">instance_type</span> = <span class="tok-s">"t3.micro"</span>
+  <span class="tok-a">subnet_id</span>     = <span class="tok-k">module</span>.network.public_subnets[<span class="tok-n">0</span>]
+}
+
+<span class="tok-k">module</span> <span class="tok-s">"vpc"</span> {
+  <span class="tok-a">source</span>  = <span class="tok-s">"terraform-aws-modules/vpc/aws"</span>  <span class="tok-c"># Terraform Registry</span>
+  <span class="tok-a">version</span> = <span class="tok-s">"~&gt; 6.0"</span>                         <span class="tok-c"># SEMPRE fixe a versão</span>
+  <span class="tok-c"># ...</span>
+}</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Regra de módulo</span><span class="en">Module rule</span></th><th><span class="pt">Por quê</span><span class="en">Why</span></th></tr></thead><tbody><tr><td><span class="pt">Faça pequeno e com uma responsabilidade</span><span class="en">Keep it small, single-purpose</span></td><td><span class="pt">módulos “faz-tudo” viram impossíveis de reusar e testar</span><span class="en">“do-everything” modules become impossible to reuse and test</span></td></tr><tr><td><span class="pt">Não configure <code>provider</code> dentro do módulo</span><span class="en">Do not configure <code>provider</code> inside the module</span></td><td><span class="pt">o módulo herda do chamador; use <code>providers = { aws = aws.east }</code> para trocar</span><span class="en">the module inherits from the caller; use <code>providers = { aws = aws.east }</code> to switch</span></td></tr><tr><td><span class="pt">Exponha só os outputs necessários</span><span class="en">Expose only the needed outputs</span></td><td><span class="pt">o que sai vira contrato; mudar depois quebra quem usa</span><span class="en">what goes out becomes a contract; changing it later breaks users</span></td></tr><tr><td><span class="pt">Fixe versões de módulos de registry/Git</span><span class="en">Pin versions of registry/Git modules</span></td><td><span class="pt">um <code>init -upgrade</code> não pode mudar a sua infra de surpresa</span><span class="en">an <code>init -upgrade</code> must not change your infra by surprise</span></td></tr><tr><td><span class="pt">Prefira composição a módulos aninhados fundo</span><span class="en">Prefer composition over deeply nested modules</span></td><td><span class="pt">é mais fácil de ler: o raiz “cola” os módulos</span><span class="en">easier to read: the root “glues” the modules</span></td></tr></tbody></table></div>
+<h3><span class="pt">Ambientes: pastas ou workspaces?</span><span class="en">Environments: folders or workspaces?</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt"></span><span class="en"></span></th><th><span class="pt">Pastas/estados separados</span><span class="en">Separate folders/states</span></th><th><span class="pt">Workspaces</span><span class="en">Workspaces</span></th></tr></thead><tbody><tr><td><span class="pt">Como</span><span class="en">How</span></td><td><span class="pt"><code>envs/dev</code>, <code>envs/prod</code>, cada um com seu <code>backend</code></span><span class="en"><code>envs/dev</code>, <code>envs/prod</code>, each with its own <code>backend</code></span></td><td><span class="pt"><code>terraform workspace new prod</code>: mesmo código e mesmo backend, estado por workspace</span><span class="en"><code>terraform workspace new prod</code>: same code and backend, one state per workspace</span></td></tr><tr><td><span class="pt">Isolamento</span><span class="en">Isolation</span></td><td><span class="pt">alto: contas AWS, permissões e estados diferentes</span><span class="en">high: different AWS accounts, permissions and states</span></td><td><span class="pt">baixo: um engano de <code>workspace select</code> aplica na produção</span><span class="en">low: one wrong <code>workspace select</code> applies to production</span></td></tr><tr><td><span class="pt">Bom para</span><span class="en">Good for</span></td><td><span class="pt">dev/staging/prod de verdade</span><span class="en">real dev/staging/prod</span></td><td><span class="pt">cópias efêmeras e idênticas (testes, preview por PR)</span><span class="en">ephemeral, identical copies (tests, per-PR previews)</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="team">
+<h2 id="team"><span class="pt">Times, CI e boas práticas</span><span class="en">Teams, CI and best practices</span></h2>
+
+<p><span class="pt">Em produção ninguém roda <code>apply</code> do notebook. O fluxo de equipe é: <em>Pull Request</em> → verificações automáticas + <code>plan</code> como comentário → revisão → merge → <code>apply</code> automático (ou aprovado) <em>do mesmo plano</em>.</span><span class="en">In production nobody runs <code>apply</code> from a laptop. The team flow is: <em>Pull Request</em> → automatic checks + <code>plan</code> as a comment → review → merge → automatic (or approved) <code>apply</code> <em>of the same plan</em>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 146" role="img" aria-label="Pipeline de CI do Terraform / Terraform CI pipeline" style="min-width:560px">
+<rect x="10" y="30" width="78" height="64" rx="4" class="ln fillsoft"/>
+<text x="49" y="58" class="pt " text-anchor="middle">PR aberto</text><text x="49" y="58" class="en " text-anchor="middle">PR opened</text>
+<rect x="100" y="30" width="78" height="64" rx="4" class="ln fillsoft"/>
+<text x="139" y="58" class="pt " text-anchor="middle">validar</text><text x="139" y="58" class="en " text-anchor="middle">validate</text>
+<text x="139" y="76" class="mut" text-anchor="middle">tflint</text>
+<path d="M88 62L100 62" class="ln"/><path d="M92.8 65.5L100 62L92.8 58.5" class="ln"/>
+<rect x="190" y="30" width="78" height="64" rx="4" class="ln fillsoft"/>
+<text x="229" y="58" class="pt " text-anchor="middle">segurança</text><text x="229" y="58" class="en " text-anchor="middle">security</text>
+<text x="229" y="76" class="mut" text-anchor="middle">trivy</text>
+<path d="M178 62L190 62" class="ln"/><path d="M182.8 65.5L190 62L182.8 58.5" class="ln"/>
+<rect x="280" y="30" width="78" height="64" rx="4" class="brandfill"/>
+<text x="319" y="58" class="" text-anchor="middle">plan</text>
+<text x="319" y="76" class="pt mut" text-anchor="middle">no PR</text><text x="319" y="76" class="en mut" text-anchor="middle">on the PR</text>
+<path d="M268 62L280 62" class="ln"/><path d="M272.8 65.5L280 62L272.8 58.5" class="ln"/>
+<rect x="370" y="30" width="78" height="64" rx="4" class="ln fillsoft"/>
+<text x="409" y="58" class="pt " text-anchor="middle">revisão</text><text x="409" y="58" class="en " text-anchor="middle">review</text>
+<text x="409" y="76" class="pt mut" text-anchor="middle">humana</text><text x="409" y="76" class="en mut" text-anchor="middle">human</text>
+<path d="M358 62L370 62" class="ln"/><path d="M362.8 65.5L370 62L362.8 58.5" class="ln"/>
+<rect x="460" y="30" width="78" height="64" rx="4" class="ln fillsoft"/>
+<text x="499" y="58" class="" text-anchor="middle">merge</text>
+<text x="499" y="76" class="mut" text-anchor="middle">main</text>
+<path d="M448 62L460 62" class="ln"/><path d="M452.8 65.5L460 62L452.8 58.5" class="ln"/>
+<rect x="550" y="30" width="78" height="64" rx="4" class="brandfill"/>
+<text x="589" y="58" class="" text-anchor="middle">apply</text>
+<text x="589" y="76" class="mut" text-anchor="middle">o mesmo</text>
+<path d="M538 62L550 62" class="ln"/><path d="M542.8 65.5L550 62L542.8 58.5" class="ln"/>
+<text x="10" y="130" class="pt mut">A autenticação com a nuvem usa OIDC (sem chaves fixas): veja a nota “GitHub para AWS com OIDC”.</text><text x="10" y="130" class="en mut">Cloud authentication uses OIDC (no long-lived keys): see the “GitHub to AWS with OIDC” note.</text>
+</svg></div><figcaption><span class="pt">O pipeline típico. Todo passo antes do merge é barato e reversível; o <code>apply</code> é o único que muda o mundo.</span><span class="en">The typical pipeline. Every step before merge is cheap and reversible; <code>apply</code> is the only one that changes the world.</span></figcaption></figure>
+<pre><code><span class="tok-c"># .github/workflows/terraform.yml (trecho; confira as versões atuais das actions)</span>
+name: terraform
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  id-token: write       <span class="tok-c"># OIDC</span>
+  contents: read
+  pull-requests: write  <span class="tok-c"># comentar o plan</span>
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::123456789012:role/terraform-plan
+          aws-region: sa-east-1
+      - run: terraform fmt -check -recursive
+      - run: terraform init -input=false
+      - run: terraform validate
+      - run: terraform plan -input=false -out=tfplan</code></pre>
+<h3><span class="pt">Ferramentas que valem a pena</span><span class="en">Tools worth having</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Faz</span><span class="en">Does</span></th></tr></thead><tbody><tr><td><code>terraform fmt</code> · <code>validate</code></td><td><span class="pt">formato e sintaxe (vêm no binário)</span><span class="en">format and syntax (built into the binary)</span></td></tr><tr><td><code>tflint</code></td><td><span class="pt">linter: tipos de instância inválidos, argumentos obsoletos, regras do provider AWS</span><span class="en">linter: invalid instance types, deprecated arguments, AWS provider rules</span></td></tr><tr><td><code>trivy config .</code> · <code>checkov</code></td><td><span class="pt">segurança: bucket público, SG aberto, disco sem criptografia (o antigo tfsec foi incorporado ao Trivy)</span><span class="en">security: public bucket, open SG, unencrypted disk (the old tfsec was merged into Trivy)</span></td></tr><tr><td><code>terraform-docs</code></td><td><span class="pt">gera o README de variáveis/outputs do módulo</span><span class="en">generates the module’s variables/outputs README</span></td></tr><tr><td><code>infracost</code></td><td><span class="pt">estima o custo mensal da mudança no PR</span><span class="en">estimates the monthly cost of the PR change</span></td></tr><tr><td><code>pre-commit</code> (<code>pre-commit-terraform</code>)</td><td><span class="pt">roda tudo isso antes do commit</span><span class="en">runs all of the above before commit</span></td></tr><tr><td><code>terraform test</code></td><td><span class="pt">testes nativos em <code>.tftest.hcl</code> (Terraform ≥ 1.6)</span><span class="en">native tests in <code>.tftest.hcl</code> (Terraform ≥ 1.6)</span></td></tr><tr><td>Atlantis · HCP Terraform · Terragrunt</td><td><span class="pt">automação de PR · plataforma gerenciada · camada para reduzir repetição entre pastas</span><span class="en">PR automation · managed platform · layer to reduce repetition between folders</span></td></tr></tbody></table></div>
+<pre><code><span class="tok-c"># tests/bucket.tftest.hcl</span>
+<span class="tok-k">run</span> <span class="tok-s">"bucket_is_private"</span> {
+  <span class="tok-a">command</span> = plan
+
+  <span class="tok-k">assert</span> {
+    <span class="tok-a">condition</span>     = aws_s3_bucket_public_access_block.assets.block_public_acls == true
+    <span class="tok-a">error_message</span> = <span class="tok-s">"O bucket precisa bloquear ACLs públicas."</span>
+  }
+}</code></pre>
+<h3><span class="pt">Hábitos que evitam 90% dos incidentes</span><span class="en">Habits that prevent 90% of incidents</span></h3>
+<ol class="ds-steps"><li><span class="pt">Versões fixas: <code>required_version</code>, <code>version = "~> X.Y"</code> nos providers e módulos, e <code>.terraform.lock.hcl</code> no Git. Atualize de propósito (<code>init -upgrade</code> + revisar), de preferência com Renovate/Dependabot.</span><span class="en">Pinned versions: <code>required_version</code>, <code>version = "~> X.Y"</code> on providers and modules, and <code>.terraform.lock.hcl</code> in Git. Upgrade on purpose (<code>init -upgrade</code> + review), ideally with Renovate/Dependabot.</span></li><li><span class="pt">Um estado por ambiente e por “raio de impacto”: um estado gigante deixa o <code>plan</code> lento e o risco enorme.</span><span class="en">One state per environment and per “blast radius”: one giant state makes <code>plan</code> slow and the risk huge.</span></li><li><span class="pt">Nomes e tags padronizados (<code>default_tags</code> no provider AWS).</span><span class="en">Standard names and tags (<code>default_tags</code> on the AWS provider).</span></li><li><span class="pt"><code>prevent_destroy</code> em bancos e buckets de dados; backups e versionamento ligados.</span><span class="en"><code>prevent_destroy</code> on databases and data buckets; backups and versioning on.</span></li><li><span class="pt">Nunca <code>-target</code> como rotina e nunca <code>apply</code> sem ler o plan.</span><span class="en">Never <code>-target</code> as routine and never <code>apply</code> without reading the plan.</span></li><li><span class="pt">O papel que o Terraform assume deve ter só as permissões necessárias (e papéis separados para <code>plan</code> e <code>apply</code>).</span><span class="en">The role Terraform assumes should have only the needed permissions (and separate roles for <code>plan</code> and <code>apply</code>).</span></li><li><span class="pt">Tudo na nuvem pelo código; o console é para ler. Drift se detecta com <code>plan</code> agendado.</span><span class="en">Everything in the cloud through code; the console is for reading. Detect drift with a scheduled <code>plan</code>.</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="aws-auth">
+<h2 id="aws-auth"><span class="pt">AWS: provider e credenciais</span><span class="en">AWS: provider and credentials</span></h2>
+
+<p><span class="pt">A partir daqui o foco é a AWS. O provider <code>hashicorp/aws</code> usa as mesmas credenciais da AWS CLI e dos SDKs. A regra é simples: <em>nunca escreva chaves no código</em>. Para pessoas, use o IAM Identity Center (SSO); para pipelines, OIDC; para servidores na AWS, papéis de instância.</span><span class="en">From here on the focus is AWS. The <code>hashicorp/aws</code> provider uses the same credentials as the AWS CLI and SDKs. The rule is simple: <em>never write keys in code</em>. For people, use IAM Identity Center (SSO); for pipelines, OIDC; for servers on AWS, instance roles.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quem executa</span><span class="en">Who runs it</span></th><th><span class="pt">Como autenticar</span><span class="en">How to authenticate</span></th><th><span class="pt">Detalhe</span><span class="en">Detail</span></th></tr></thead><tbody><tr><td><span class="pt">Você, no notebook</span><span class="en">You, on a laptop</span></td><td><span class="pt"><code>aws sso login --profile dev</code> + <code>export AWS_PROFILE=dev</code></span><span class="en"><code>aws sso login --profile dev</code> + <code>export AWS_PROFILE=dev</code></span></td><td><span class="pt">credenciais temporárias; nada fica no disco além do cache do SSO</span><span class="en">temporary credentials; nothing on disk except the SSO cache</span></td></tr><tr><td><span class="pt">GitHub Actions / CI</span><span class="en">GitHub Actions / CI</span></td><td><span class="pt">OIDC: <code>aws-actions/configure-aws-credentials</code> assume um papel</span><span class="en">OIDC: <code>aws-actions/configure-aws-credentials</code> assumes a role</span></td><td><span class="pt">veja a nota “GitHub para AWS com OIDC”</span><span class="en">see the “GitHub to AWS with OIDC” note</span></td></tr><tr><td><span class="pt">Outra conta AWS</span><span class="en">Another AWS account</span></td><td><span class="pt">bloco <code>assume_role { role_arn = … }</code> no provider</span><span class="en"><code>assume_role { role_arn = … }</code> block on the provider</span></td><td><span class="pt">um papel por conta/ambiente (veja a nota AWS, Organizations)</span><span class="en">one role per account/environment (see the AWS note, Organizations)</span></td></tr><tr><td><span class="pt">Chaves de acesso fixas</span><span class="en">Long-lived access keys</span></td><td><span class="pt">evite</span><span class="en">avoid</span></td><td><span class="pt">se existirem, vão só em variáveis de ambiente do CI, e devem ser trocadas</span><span class="en">if they exist, only in CI environment variables, and must be rotated</span></td></tr></tbody></table></div>
+<pre><code><span class="tok-c"># versions.tf</span>
+<span class="tok-k">terraform</span> {
+  <span class="tok-a">required_version</span> = <span class="tok-s">"&gt;= 1.10"</span>
+  <span class="tok-k">required_providers</span> {
+    <span class="tok-a">aws</span> = {
+      <span class="tok-a">source</span>  = <span class="tok-s">"hashicorp/aws"</span>
+      <span class="tok-a">version</span> = <span class="tok-s">"~&gt; 6.0"</span>          <span class="tok-c"># confira a versão maior atual no Registry</span>
+    }
+  }
+}
+
+<span class="tok-c"># providers.tf</span>
+<span class="tok-k">provider</span> <span class="tok-s">"aws"</span> {
+  <span class="tok-a">region</span>              = var.region
+  <span class="tok-a">allowed_account_ids</span> = [var.account_id]     <span class="tok-c"># TRAVA: recusa rodar na conta errada</span>
+
+  <span class="tok-k">default_tags</span> {
+    <span class="tok-a">tags</span> = {
+      <span class="tok-a">Project</span>     = var.project
+      <span class="tok-a">Environment</span> = var.environment
+      <span class="tok-a">ManagedBy</span>   = <span class="tok-s">"terraform"</span>
+    }
+  }
+}
+
+<span class="tok-c"># um segundo provider para outra região (ex.: certificados do CloudFront só em us-east-1)</span>
+<span class="tok-k">provider</span> <span class="tok-s">"aws"</span> {
+  <span class="tok-a">alias</span>  = <span class="tok-s">"virginia"</span>
+  <span class="tok-a">region</span> = <span class="tok-s">"us-east-1"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_acm_certificate"</span> <span class="tok-s">"site"</span> {
+  <span class="tok-a">provider</span>          = aws.virginia
+  <span class="tok-a">domain_name</span>       = <span class="tok-s">"exemplo.com"</span>
+  <span class="tok-a">validation_method</span> = <span class="tok-s">"DNS"</span>
+}</code></pre>
+<pre><code>aws sts get-caller-identity     <span class="tok-c"># SEMPRE confirme conta e papel antes de um apply</span></code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O erro mais caro de iniciantes é aplicar na conta errada (produção em vez de dev). <code>allowed_account_ids</code> no provider e o hábito de rodar <code>aws sts get-caller-identity</code> antes do <code>apply</code> evitam isso.</span><span class="en">The costliest beginner mistake is applying to the wrong account (production instead of dev). <code>allowed_account_ids</code> on the provider and the habit of running <code>aws sts get-caller-identity</code> before <code>apply</code> prevent it.</span></div>
+</section>
+<section class="content-section" aria-labelledby="aws-state">
+<h2 id="aws-state"><span class="pt">AWS: estado remoto no S3</span><span class="en">AWS: remote state on S3</span></h2>
+
+<p><span class="pt">O estado em equipe vai para um <em>bucket S3</em>. Desde o Terraform 1.10 o backend S3 tem <em>trava nativa</em> (<code>use_lockfile = true</code>): ele grava um arquivo <code>.tflock</code> ao lado do estado, sem precisar de DynamoDB (o bloqueio por DynamoDB ainda existe, mas está obsoleto). Existe um ovo-e-galinha: o bucket precisa existir <em>antes</em> do Terraform que o usa. A solução mais simples é criá-lo uma vez à mão (ou com um pequeno projeto de “bootstrap” de estado local).</span><span class="en">In a team, state goes into an <em>S3 bucket</em>. Since Terraform 1.10 the S3 backend has <em>native locking</em> (<code>use_lockfile = true</code>): it writes a <code>.tflock</code> file next to the state, with no DynamoDB needed (DynamoDB locking still exists but is deprecated). There is a chicken-and-egg problem: the bucket must exist <em>before</em> the Terraform that uses it. The simplest fix is to create it once by hand (or with a tiny local-state “bootstrap” project).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 226" role="img" aria-label="Estado remoto no S3 / Remote state in S3" style="min-width:560px">
+<rect x="10" y="20" width="120" height="50" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="49.0" class="pt " text-anchor="middle">Você (SSO)</text><text x="70.0" y="49.0" class="en " text-anchor="middle">You (SSO)</text>
+<rect x="10" y="90" width="120" height="50" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="119.0" class="" text-anchor="middle">CI (OIDC)</text>
+<rect x="190" y="50" width="130" height="70" rx="4" class="brandfill"/>
+<text x="255.0" y="89.0" class="mono" text-anchor="middle">terraform</text>
+<rect x="400" y="10" width="230" height="150" rx="4" class="ln"/>
+<text x="515" y="32" class="pt " text-anchor="middle">Bucket S3 do estado</text><text x="515" y="32" class="en " text-anchor="middle">State S3 bucket</text>
+<text x="414" y="60" class="mono">loja/dev/terraform.tfstate</text>
+<text x="414" y="82" class="pt mono mut">… .tfstate.tflock (trava)</text><text x="414" y="82" class="en mono mut">… .tfstate.tflock (lock)</text>
+<text x="414" y="112" class="pt ">✓ versionamento (recuperar)</text><text x="414" y="112" class="en ">✓ versioning (recover)</text>
+<text x="414" y="132" class="pt ">✓ criptografia  ✓ sem acesso público</text><text x="414" y="132" class="en ">✓ encryption  ✓ no public access</text>
+<path d="M130 45L190 70" class="ln"/><path d="M182.0 70.4L190 70L184.7 64.0" class="ln"/>
+<path d="M130 115L190 100" class="ln"/><path d="M183.9 105.1L190 100L182.2 98.4" class="ln"/>
+<path d="M320 85L400 85" class="ln"/><path d="M392.8 88.5L400 85L392.8 81.5" class="ln"/>
+<text x="360" y="76" class="pt mut" text-anchor="middle">estado</text><text x="360" y="76" class="en mut" text-anchor="middle">state</text>
+<rect x="190" y="150" width="130" height="40" rx="4" class="ln fillsoft"/>
+<text x="255.0" y="174.0" class="pt " text-anchor="middle">API da AWS</text><text x="255.0" y="174.0" class="en " text-anchor="middle">AWS API</text>
+<path d="M255 120L255 150" class="ln"/><path d="M251.5 142.8L255 150L258.5 142.8" class="ln"/>
+<text x="10" y="210" class="pt mut">Quem aplica primeiro cria o .tflock; quem tentar ao mesmo tempo recebe “Error acquiring the state lock”.</text><text x="10" y="210" class="en mut">Whoever applies first creates the .tflock; anyone trying at the same time gets “Error acquiring the state lock”.</text>
+</svg></div><figcaption><span class="pt">Estado remoto no S3: um arquivo por projeto/ambiente (<code>key</code>), versionado e travado.</span><span class="en">Remote state in S3: one file per project/environment (<code>key</code>), versioned and locked.</span></figcaption></figure>
+<pre><code><span class="tok-c"># Bootstrap (uma vez por conta). Troque nome e região; S3 exige nome GLOBALMENTE único.</span>
+BUCKET=acme-tfstate-123456789012
+REGION=sa-east-1
+
+aws s3api create-bucket --bucket $BUCKET --region $REGION \
+  --create-bucket-configuration LocationConstraint=$REGION   <span class="tok-c"># (em us-east-1 omita esta linha)</span>
+aws s3api put-bucket-versioning --bucket $BUCKET \
+  --versioning-configuration Status=Enabled
+aws s3api put-public-access-block --bucket $BUCKET \
+  --public-access-block-configuration BlockPublicAcls=true,IgnorePublicAcls=true,BlockPublicPolicy=true,RestrictPublicBuckets=true</code></pre>
+<pre><code><span class="tok-c"># backend.tf  (o bloco backend NÃO aceita variáveis)</span>
+<span class="tok-k">terraform</span> {
+  <span class="tok-k">backend</span> <span class="tok-s">"s3"</span> {
+    <span class="tok-a">bucket</span>       = <span class="tok-s">"acme-tfstate-123456789012"</span>
+    <span class="tok-a">key</span>          = <span class="tok-s">"loja/dev/terraform.tfstate"</span>   <span class="tok-c"># um "key" por projeto e ambiente</span>
+    <span class="tok-a">region</span>       = <span class="tok-s">"sa-east-1"</span>
+    <span class="tok-a">encrypt</span>      = true
+    <span class="tok-a">use_lockfile</span> = true                           <span class="tok-c"># trava nativa (Terraform &gt;= 1.10)</span>
+  }
+}</code></pre>
+<pre><code>terraform init                    <span class="tok-c"># detecta o backend novo e oferece migrar o estado local</span>
+terraform init -migrate-state     <span class="tok-c"># (ou explicitamente)</span>
+terraform init -backend-config=<span class="tok-s">"key=loja/prod/terraform.tfstate"</span>   <span class="tok-c"># muda o key sem editar o código</span></code></pre>
+<p><span class="pt">Permissões mínimas do papel que roda o Terraform sobre o estado:</span><span class="en">Minimum permissions for the role that runs Terraform over the state:</span></p>
+<pre><code>{
+  <span class="tok-s">"Version"</span>: <span class="tok-s">"2012-10-17"</span>,
+  <span class="tok-s">"Statement"</span>: [
+    { <span class="tok-s">"Effect"</span>: <span class="tok-s">"Allow"</span>, <span class="tok-s">"Action"</span>: <span class="tok-s">"s3:ListBucket"</span>,
+      <span class="tok-s">"Resource"</span>: <span class="tok-s">"arn:aws:s3:::acme-tfstate-123456789012"</span> },
+    { <span class="tok-s">"Effect"</span>: <span class="tok-s">"Allow"</span>, <span class="tok-s">"Action"</span>: [<span class="tok-s">"s3:GetObject"</span>, <span class="tok-s">"s3:PutObject"</span>, <span class="tok-s">"s3:DeleteObject"</span>],
+      <span class="tok-s">"Resource"</span>: <span class="tok-s">"arn:aws:s3:::acme-tfstate-123456789012/loja/*"</span> }
+  ]
+}</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Se o estado for apagado ou corrompido, o versionamento do bucket permite voltar a uma versão anterior. Guarde o bucket de estado em uma conta de infraestrutura/“shared” e restrinja o acesso: ele contém segredos.</span><span class="en">If the state is deleted or corrupted, bucket versioning lets you go back to an earlier version. Keep the state bucket in an infrastructure/“shared” account and restrict access: it contains secrets.</span></div>
+</section>
+<section class="content-section" aria-labelledby="aws-stack">
+<h2 id="aws-stack"><span class="pt">AWS: VPC, EC2 e S3 passo a passo</span><span class="en">AWS: VPC, EC2 and S3 step by step</span></h2>
+
+<p><span class="pt">Vamos montar uma pilha pequena e realista: uma <em>VPC</em> com subnets públicas, um servidor <em>EC2</em> com nginx acessível por HTTP, <em>sem SSH</em> (acesso pelo Session Manager do SSM, com papel IAM) e um <em>bucket S3</em> privado. É o mesmo esqueleto de muitos ambientes reais, em ponto pequeno.</span><span class="en">Let us build a small, realistic stack: a <em>VPC</em> with public subnets, an <em>EC2</em> server running nginx reachable over HTTP, <em>no SSH</em> (access through SSM Session Manager, with an IAM role) and a private <em>S3 bucket</em>. It is the skeleton of many real environments, in miniature.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 336" role="img" aria-label="Arquitetura da pilha AWS / AWS stack architecture" style="min-width:560px">
+<rect x="10" y="50" width="620" height="270" rx="4" class="ln dash"/>
+<text x="140" y="70" class="pt mut">Conta AWS · sa-east-1</text><text x="140" y="70" class="en mut">AWS account · sa-east-1</text>
+<rect x="20" y="6" width="90" height="30" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="25.0" class="" text-anchor="middle">Internet</text>
+<rect x="20" y="120" width="90" height="36" rx="4" class="ln"/>
+<text x="65.0" y="142.0" class="" text-anchor="middle">Internet GW</text>
+<path d="M65 36L65 120" class="ln"/><path d="M61.5 112.8L65 120L68.5 112.8" class="ln"/>
+<rect x="130" y="85" width="290" height="220" rx="4" class="ln"/>
+<text x="142" y="104" class="mono">VPC 10.0.0.0/16</text>
+<rect x="145" y="115" width="130" height="175" rx="4" class="ln fillsoft"/>
+<text x="155" y="132" class="pt mut">subnet pública a</text><text x="155" y="132" class="en mut">public subnet a</text>
+<rect x="155" y="150" width="110" height="125" rx="4" class="ln dash"/>
+<text x="163" y="166" class="mut">Security Group</text>
+<rect x="165" y="180" width="90" height="48" rx="4" class="brandfill"/>
+<text x="210.0" y="208.0" class="brandtext" text-anchor="middle">EC2 nginx</text>
+<text x="210" y="250" class="pt mut" text-anchor="middle">:80 de entrada</text><text x="210" y="250" class="en mut" text-anchor="middle">:80 inbound</text>
+<rect x="290" y="115" width="120" height="175" rx="4" class="ln fillsoft"/>
+<text x="300" y="132" class="pt mut">subnet pública b</text><text x="300" y="132" class="en mut">public subnet b</text>
+<text x="350" y="160" class="pt mut" text-anchor="middle">(reserva)</text><text x="350" y="160" class="en mut" text-anchor="middle">(spare)</text>
+<path d="M110 138L145 138" class="ln"/><path d="M137.8 141.5L145 138L137.8 134.5" class="ln"/>
+<rect x="470" y="60" width="150" height="36" rx="4" class="ln fillsoft"/>
+<text x="545.0" y="82.0" class="" text-anchor="middle">S3: tfstate</text>
+<rect x="470" y="112" width="150" height="36" rx="4" class="ln fillsoft"/>
+<text x="545.0" y="134.0" class="pt " text-anchor="middle">S3: assets (privado)</text><text x="545.0" y="134.0" class="en " text-anchor="middle">S3: assets (private)</text>
+<rect x="470" y="170" width="150" height="44" rx="4" class="ln"/>
+<text x="545.0" y="189.0" class="" text-anchor="middle">IAM role + profile</text>
+<text x="545.0" y="205.0" class="pt mut mono" text-anchor="middle">acesso via SSM</text><text x="545.0" y="205.0" class="en mut mono" text-anchor="middle">access via SSM</text>
+<rect x="470" y="232" width="150" height="36" rx="4" class="ln fillsoft"/>
+<text x="545.0" y="254.0" class="" text-anchor="middle">SSM Session Manager</text>
+<path d="M255 200L470 192" class="ln dash"/><path d="M462.9 195.7L470 192L462.7 188.8" class="ln"/>
+<path d="M545 214L545 232" class="ln"/><path d="M541.5 224.8L545 232L548.5 224.8" class="ln"/>
+</svg></div><figcaption><span class="pt">A pilha construída nesta seção. O Terraform (do seu notebook ou do CI) cria tudo; o estado vive no bucket <code>tfstate</code>.</span><span class="en">The stack built in this section. Terraform (from your laptop or CI) creates everything; the state lives in the <code>tfstate</code> bucket.</span></figcaption></figure>
+<h3><span class="pt">Variáveis e rede</span><span class="en">Variables and network</span></h3>
+<pre><code><span class="tok-c"># variables.tf</span>
+<span class="tok-k">variable</span> <span class="tok-s">"project"</span> {
+  <span class="tok-a">type</span>    = string
+  <span class="tok-a">default</span> = <span class="tok-s">"loja"</span>
+}
+
+<span class="tok-k">variable</span> <span class="tok-s">"environment"</span> {
+  <span class="tok-a">type</span>    = string
+  <span class="tok-a">default</span> = <span class="tok-s">"dev"</span>
+}
+
+<span class="tok-k">variable</span> <span class="tok-s">"region"</span> {
+  <span class="tok-a">type</span>    = string
+  <span class="tok-a">default</span> = <span class="tok-s">"sa-east-1"</span>
+}
+
+<span class="tok-k">variable</span> <span class="tok-s">"account_id"</span> {
+  <span class="tok-a">type</span>        = string
+  <span class="tok-a">description</span> = <span class="tok-s">"ID da conta onde é permitido aplicar"</span>
+}
+
+<span class="tok-c"># network.tf</span>
+<span class="tok-k">data</span> <span class="tok-s">"aws_availability_zones"</span> <span class="tok-s">"available"</span> {
+  <span class="tok-a">state</span> = <span class="tok-s">"available"</span>
+}
+
+<span class="tok-k">data</span> <span class="tok-s">"aws_caller_identity"</span> <span class="tok-s">"current"</span> {}
+
+<span class="tok-k">module</span> <span class="tok-s">"vpc"</span> {
+  <span class="tok-a">source</span>  = <span class="tok-s">"terraform-aws-modules/vpc/aws"</span>
+  <span class="tok-a">version</span> = <span class="tok-s">"~&gt; 6.0"</span>
+
+  <span class="tok-a">name</span> = <span class="tok-s">"${var.project}-${var.environment}"</span>
+  <span class="tok-a">cidr</span> = <span class="tok-s">"10.0.0.0/16"</span>
+
+  <span class="tok-a">azs</span>            = slice(<span class="tok-k">data</span>.aws_availability_zones.available.names, <span class="tok-n">0</span>, <span class="tok-n">2</span>)
+  <span class="tok-a">public_subnets</span> = [<span class="tok-s">"10.0.1.0/24"</span>, <span class="tok-s">"10.0.2.0/24"</span>]
+
+  <span class="tok-a">enable_nat_gateway</span> = false   <span class="tok-c"># NAT Gateway cobra por hora; só ligue se houver subnets privadas</span>
+}</code></pre>
+<h3><span class="pt">Segurança, papel e servidor</span><span class="en">Security, role and server</span></h3>
+<pre><code><span class="tok-c"># security.tf</span>
+<span class="tok-k">resource</span> <span class="tok-s">"aws_security_group"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">name_prefix</span> = <span class="tok-s">"${var.project}-web-"</span>
+  <span class="tok-a">description</span> = <span class="tok-s">"HTTP de entrada, tudo de saida"</span>
+  <span class="tok-a">vpc_id</span>      = <span class="tok-k">module</span>.vpc.vpc_id
+
+  <span class="tok-k">lifecycle</span> {
+    <span class="tok-a">create_before_destroy</span> = true
+  }
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_vpc_security_group_ingress_rule"</span> <span class="tok-s">"http"</span> {
+  <span class="tok-a">security_group_id</span> = aws_security_group.web.id
+  <span class="tok-a">cidr_ipv4</span>         = <span class="tok-s">"0.0.0.0/0"</span>
+  <span class="tok-a">from_port</span>         = <span class="tok-n">80</span>
+  <span class="tok-a">to_port</span>           = <span class="tok-n">80</span>
+  <span class="tok-a">ip_protocol</span>       = <span class="tok-s">"tcp"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_vpc_security_group_egress_rule"</span> <span class="tok-s">"all"</span> {
+  <span class="tok-a">security_group_id</span> = aws_security_group.web.id
+  <span class="tok-a">cidr_ipv4</span>         = <span class="tok-s">"0.0.0.0/0"</span>
+  <span class="tok-a">ip_protocol</span>       = <span class="tok-s">"-1"</span>
+}
+
+<span class="tok-c"># iam.tf  (acesso por SSM: sem chave SSH e sem porta 22)</span>
+<span class="tok-k">data</span> <span class="tok-s">"aws_iam_policy_document"</span> <span class="tok-s">"ec2_assume"</span> {
+  <span class="tok-k">statement</span> {
+    <span class="tok-a">actions</span> = [<span class="tok-s">"sts:AssumeRole"</span>]
+    <span class="tok-k">principals</span> {
+      <span class="tok-a">type</span>        = <span class="tok-s">"Service"</span>
+      <span class="tok-a">identifiers</span> = [<span class="tok-s">"ec2.amazonaws.com"</span>]
+    }
+  }
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_iam_role"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">name</span>               = <span class="tok-s">"${var.project}-${var.environment}-web"</span>
+  <span class="tok-a">assume_role_policy</span> = <span class="tok-k">data</span>.aws_iam_policy_document.ec2_assume.json
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_iam_role_policy_attachment"</span> <span class="tok-s">"ssm"</span> {
+  <span class="tok-a">role</span>       = aws_iam_role.web.name
+  <span class="tok-a">policy_arn</span> = <span class="tok-s">"arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_iam_instance_profile"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">name</span> = <span class="tok-s">"${var.project}-${var.environment}-web"</span>
+  <span class="tok-a">role</span> = aws_iam_role.web.name
+}
+
+<span class="tok-c"># compute.tf</span>
+<span class="tok-k">data</span> <span class="tok-s">"aws_ssm_parameter"</span> <span class="tok-s">"al2023"</span> {
+  <span class="tok-a">name</span> = <span class="tok-s">"/aws/service/ami-amazon-linux-latest/al2023-ami-kernel-default-x86_64"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_instance"</span> <span class="tok-s">"web"</span> {
+  <span class="tok-a">ami</span>                         = <span class="tok-k">data</span>.aws_ssm_parameter.al2023.value
+  <span class="tok-a">instance_type</span>               = <span class="tok-s">"t3.micro"</span>
+  <span class="tok-a">subnet_id</span>                   = <span class="tok-k">module</span>.vpc.public_subnets[<span class="tok-n">0</span>]
+  <span class="tok-a">vpc_security_group_ids</span>      = [aws_security_group.web.id]
+  <span class="tok-a">iam_instance_profile</span>        = aws_iam_instance_profile.web.name
+  <span class="tok-a">associate_public_ip_address</span> = true
+
+  <span class="tok-a">user_data</span> = <span class="tok-k">&lt;&lt;-EOT</span>
+    <span class="tok-c">#!/bin/bash</span>
+    dnf install -y nginx
+    systemctl enable --now nginx
+  EOT
+
+  metadata_options {
+    <span class="tok-a">http_tokens</span> = <span class="tok-s">"required"</span>        <span class="tok-c"># IMDSv2 obrigatório</span>
+  }
+
+  root_block_device {
+    <span class="tok-a">encrypted</span> = true
+  }
+
+  <span class="tok-a">tags</span> = {
+    <span class="tok-a">Name</span> = <span class="tok-s">"${var.project}-${var.environment}-web"</span>
+  }
+
+  <span class="tok-k">lifecycle</span> {
+    <span class="tok-a">ignore_changes</span> = [ami]          <span class="tok-c"># a AMI "latest" muda com o tempo: não recriar o servidor por isso</span>
+  }
+}</code></pre>
+<h3><span class="pt">Bucket privado e saídas</span><span class="en">Private bucket and outputs</span></h3>
+<pre><code><span class="tok-c"># storage.tf</span>
+<span class="tok-k">resource</span> <span class="tok-s">"aws_s3_bucket"</span> <span class="tok-s">"assets"</span> {
+  <span class="tok-a">bucket</span> = <span class="tok-s">"${var.project}-${var.environment}-assets-${data.aws_caller_identity.current.account_id}"</span>
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_s3_bucket_public_access_block"</span> <span class="tok-s">"assets"</span> {
+  <span class="tok-a">bucket</span>                  = aws_s3_bucket.assets.id
+  <span class="tok-a">block_public_acls</span>       = true
+  <span class="tok-a">block_public_policy</span>     = true
+  <span class="tok-a">ignore_public_acls</span>      = true
+  <span class="tok-a">restrict_public_buckets</span> = true
+}
+
+<span class="tok-k">resource</span> <span class="tok-s">"aws_s3_bucket_versioning"</span> <span class="tok-s">"assets"</span> {
+  <span class="tok-a">bucket</span> = aws_s3_bucket.assets.id
+  versioning_configuration {
+    <span class="tok-a">status</span> = <span class="tok-s">"Enabled"</span>
+  }
+}
+
+<span class="tok-c"># outputs.tf</span>
+<span class="tok-k">output</span> <span class="tok-s">"web_instance_id"</span> {
+  <span class="tok-a">value</span> = aws_instance.web.id
+}
+
+<span class="tok-k">output</span> <span class="tok-s">"web_public_ip"</span> {
+  <span class="tok-a">value</span> = aws_instance.web.public_ip
+}
+
+<span class="tok-k">output</span> <span class="tok-s">"assets_bucket"</span> {
+  <span class="tok-a">value</span> = aws_s3_bucket.assets.bucket
+}</code></pre>
+<pre><code>export AWS_PROFILE=dev
+aws sts get-caller-identity                     <span class="tok-c"># conta certa?</span>
+terraform init
+terraform plan -var account_id=123456789012 -out=tfplan
+terraform apply tfplan
+
+curl http://$(terraform output -raw web_public_ip)           <span class="tok-c"># página do nginx</span>
+aws ssm start-session --target $(terraform output -raw web_instance_id)   <span class="tok-c"># shell sem SSH</span>
+
+terraform destroy -var account_id=123456789012  <span class="tok-c"># ao terminar o estudo, para não gerar custo</span></code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Custo: uma <code>t3.micro</code> custa centavos por hora, mas <em>endereço IPv4 público</em> e <em>NAT Gateway</em> também cobram por hora, e volumes/IPs esquecidos continuam cobrando. Faça <code>destroy</code> ao terminar, use uma conta de estudo e configure um alerta de orçamento (AWS Budgets). Para o bucket, <code>destroy</code> falha se ele tiver objetos (<code>BucketNotEmpty</code>); em ambientes de teste use <code>force_destroy = true</code>.</span><span class="en">Cost: a <code>t3.micro</code> costs cents per hour, but a <em>public IPv4 address</em> and a <em>NAT Gateway</em> also bill by the hour, and forgotten volumes/IPs keep billing. Run <code>destroy</code> when finished, use a study account and set a budget alert (AWS Budgets). For the bucket, <code>destroy</code> fails if it has objects (<code>BucketNotEmpty</code>); in test environments use <code>force_destroy = true</code>.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Para aprender, o papel do Terraform pode ser administrador <em>numa conta de estudo isolada</em>. Em ambientes reais, use um papel com as permissões estritamente necessárias (e um papel só de leitura para o <code>plan</code> dos Pull Requests).</span><span class="en">For learning, Terraform’s role can be admin <em>in an isolated study account</em>. In real environments, use a role with strictly the needed permissions (and a read-only role for pull-request <code>plan</code>s).</span></div>
+</section>
+<section class="content-section" aria-labelledby="aws-ops">
+<h2 id="aws-ops"><span class="pt">AWS: padrões, erros e roteiro</span><span class="en">AWS: patterns, errors and roadmap</span></h2>
+
+<h3><span class="pt">Padrões que se repetem em toda pilha AWS</span><span class="en">Patterns that repeat in every AWS stack</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Padrão</span><span class="en">Pattern</span></th><th><span class="pt">Como no Terraform</span><span class="en">How in Terraform</span></th></tr></thead><tbody><tr><td><span class="pt">Saber “onde estou”</span><span class="en">Know “where I am”</span></td><td><code>data.aws_caller_identity.current.account_id</code>, <code>data.aws_region.current</code></td></tr><tr><td><span class="pt">Políticas IAM sem JSON na mão</span><span class="en">IAM policies without hand-written JSON</span></td><td><span class="pt"><code>data "aws_iam_policy_document"</code> (valida e interpola)</span><span class="en"><code>data "aws_iam_policy_document"</code> (validates and interpolates)</span></td></tr><tr><td><span class="pt">Tags em tudo</span><span class="en">Tags on everything</span></td><td><span class="pt"><code>default_tags</code> no provider + <code>tags</code> só onde for específico</span><span class="en"><code>default_tags</code> on the provider + <code>tags</code> only where specific</span></td></tr><tr><td><span class="pt">Usar o que outro time criou</span><span class="en">Use what another team created</span></td><td><span class="pt"><code>data "aws_vpc"</code>, <code>data "aws_subnets"</code>, ou ler outputs de outro estado com <code>terraform_remote_state</code></span><span class="en"><code>data "aws_vpc"</code>, <code>data "aws_subnets"</code>, or read another state’s outputs with <code>terraform_remote_state</code></span></td></tr><tr><td><span class="pt">Segredos</span><span class="en">Secrets</span></td><td><span class="pt">Secrets Manager/SSM Parameter Store; o recurso lê em tempo de execução, o código não guarda o valor</span><span class="en">Secrets Manager/SSM Parameter Store; the resource reads at run time, the code does not hold the value</span></td></tr><tr><td><span class="pt">Várias contas</span><span class="en">Several accounts</span></td><td><span class="pt">um provider por conta (<code>alias</code> + <code>assume_role</code>) ou uma pasta/estado por conta</span><span class="en">one provider per account (<code>alias</code> + <code>assume_role</code>) or one folder/state per account</span></td></tr><tr><td><span class="pt">Mais de uma região</span><span class="en">More than one region</span></td><td><span class="pt"><code>provider "aws" { alias = "x" region = "…" }</code> e <code>provider = aws.x</code> no recurso</span><span class="en"><code>provider "aws" { alias = "x" region = "…" }</code> and <code>provider = aws.x</code> on the resource</span></td></tr></tbody></table></div>
+<h3><span class="pt">Erros comuns e o que fazer</span><span class="en">Common errors and what to do</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Mensagem</span><span class="en">Message</span></th><th><span class="pt">Causa provável</span><span class="en">Likely cause</span></th><th><span class="pt">Solução</span><span class="en">Fix</span></th></tr></thead><tbody><tr><td><code>Error acquiring the state lock</code></td><td><span class="pt">outro apply rodando, ou um que morreu</span><span class="en">another apply running, or one that died</span></td><td><span class="pt">espere; se for um lock órfão, <code>terraform force-unlock ID</code></span><span class="en">wait; for an orphan lock, <code>terraform force-unlock ID</code></span></td></tr><tr><td><code>AccessDenied</code> / <code>UnauthorizedOperation</code></td><td><span class="pt">o papel não tem a permissão</span><span class="en">the role lacks the permission</span></td><td><span class="pt">leia a ação na mensagem (<code>ec2:RunInstances</code>…), confira <code>sts get-caller-identity</code></span><span class="en">read the action in the message (<code>ec2:RunInstances</code>…), check <code>sts get-caller-identity</code></span></td></tr><tr><td><code>BucketAlreadyExists</code></td><td><span class="pt">nome de bucket é global</span><span class="en">bucket names are global</span></td><td><span class="pt">inclua o ID da conta ou um sufixo aleatório</span><span class="en">include the account ID or a random suffix</span></td></tr><tr><td><code>EntityAlreadyExists</code> / “already exists”</td><td><span class="pt">o objeto existe mas não está no estado</span><span class="en">the object exists but is not in the state</span></td><td><span class="pt"><code>import</code> (bloco) e rode o plan de novo</span><span class="en"><code>import</code> (block) and re-run the plan</span></td></tr><tr><td><code>Invalid IAM Instance Profile</code></td><td><span class="pt">o IAM é eventualmente consistente</span><span class="en">IAM is eventually consistent</span></td><td><span class="pt">rode o <code>apply</code> de novo; mantenha as referências (não use nomes fixos como texto)</span><span class="en">re-run <code>apply</code>; keep references (do not hard-code names as text)</span></td></tr><tr><td><code>BucketNotEmpty</code> / <code>DependencyViolation</code></td><td><span class="pt">destroy de algo ainda em uso</span><span class="en">destroying something still in use</span></td><td><span class="pt">esvazie o bucket (ou <code>force_destroy</code> em teste); apague antes o que usa a VPC/SG</span><span class="en">empty the bucket (or <code>force_destroy</code> in test); delete first whatever uses the VPC/SG</span></td></tr><tr><td><code>Invalid for_each argument … known only after apply</code></td><td><span class="pt">as chaves dependem de algo ainda não criado</span><span class="en">keys depend on something not yet created</span></td><td><span class="pt">use chaves estáticas (nomes que você escreve) e valores dinâmicos</span><span class="en">use static keys (names you write) and dynamic values</span></td></tr><tr><td><code>Cycle:</code></td><td><span class="pt">dois recursos se referenciam</span><span class="en">two resources reference each other</span></td><td><span class="pt">quebre o ciclo (ex.: regra de SG separada, como <code>aws_vpc_security_group_*_rule</code>)</span><span class="en">break the cycle (e.g. separate SG rule, such as <code>aws_vpc_security_group_*_rule</code>)</span></td></tr></tbody></table></div>
+<h3><span class="pt">Ordem sugerida para aprender AWS com Terraform</span><span class="en">Suggested order for learning AWS with Terraform</span></h3>
+<ol class="ds-steps"><li><span class="pt">Conta de estudo, SSO e <code>aws sts get-caller-identity</code>.</span><span class="en">Study account, SSO and <code>aws sts get-caller-identity</code>.</span></li><li><span class="pt">Um bucket S3 privado (o “hello world” da AWS), com <code>plan</code>/<code>apply</code>/<code>destroy</code>.</span><span class="en">A private S3 bucket (AWS’s “hello world”), with <code>plan</code>/<code>apply</code>/<code>destroy</code>.</span></li><li><span class="pt">Backend remoto no S3 e migração do estado local.</span><span class="en">Remote backend on S3 and migrating local state.</span></li><li><span class="pt">A pilha VPC + EC2 + IAM desta nota.</span><span class="en">The VPC + EC2 + IAM stack from this note.</span></li><li><span class="pt">Extrair para um módulo e criar <code>envs/dev</code> e <code>envs/prod</code> (contas diferentes).</span><span class="en">Extract into a module and create <code>envs/dev</code> and <code>envs/prod</code> (different accounts).</span></li><li><span class="pt">Pipeline com OIDC: <code>plan</code> no PR, <code>apply</code> no merge.</span><span class="en">Pipeline with OIDC: <code>plan</code> on PRs, <code>apply</code> on merge.</span></li><li><span class="pt">Serviços de dados e contêineres: RDS (<code>manage_master_user_password</code>), ECS/Fargate, ALB, Route 53, ACM.</span><span class="en">Data and container services: RDS (<code>manage_master_user_password</code>), ECS/Fargate, ALB, Route 53, ACM.</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="cheat">
+<h2 id="cheat"><span class="pt">Cola e perguntas de revisão</span><span class="en">Cheat sheet and review questions</span></h2>
+
+<h3><span class="pt">Cola (cheat sheet)</span><span class="en">Cheat sheet</span></h3>
+<pre><code><span class="tok-c"># bloco              # forma mínima</span>
+<span class="tok-k">terraform</span> { required_version = <span class="tok-s">"&gt;= 1.10"</span> }
+<span class="tok-k">provider</span> <span class="tok-s">"aws"</span>       { region = <span class="tok-s">"sa-east-1"</span> }
+<span class="tok-k">resource</span> <span class="tok-s">"T"</span> <span class="tok-s">"N"</span>     { arg = valor }              <span class="tok-c"># criar: T.N.attr</span>
+<span class="tok-k">data</span> <span class="tok-s">"T"</span> <span class="tok-s">"N"</span>         { arg = valor }              <span class="tok-c"># ler:   data.T.N.attr</span>
+<span class="tok-k">variable</span> <span class="tok-s">"v"</span>         { type = string }            <span class="tok-c"># var.v</span>
+<span class="tok-k">locals</span>               { x = <span class="tok-s">"${var.v}-x"</span> }         <span class="tok-c"># local.x</span>
+<span class="tok-k">output</span> <span class="tok-s">"o"</span>           { value = T.N.attr }
+<span class="tok-k">module</span> <span class="tok-s">"m"</span>           { source = <span class="tok-s">"./m"</span> }           <span class="tok-c"># module.m.out</span></code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th></tr></thead><tbody><tr><td><span class="pt">começar/atualizar providers</span><span class="en">start/update providers</span></td><td><code>terraform init</code> · <code>init -upgrade</code></td></tr><tr><td><span class="pt">ver o que muda e aplicar</span><span class="en">see what changes and apply</span></td><td><code>plan -out=tfplan</code> → <code>apply tfplan</code></td></tr><tr><td><span class="pt">listar/ver o que está no estado</span><span class="en">list/see what is in the state</span></td><td><code>state list</code> · <code>state show ADDR</code></td></tr><tr><td><span class="pt">recriar um recurso</span><span class="en">recreate one resource</span></td><td><code>apply -replace=ADDR</code></td></tr><tr><td><span class="pt">detectar drift</span><span class="en">detect drift</span></td><td><code>plan -refresh-only</code></td></tr><tr><td><span class="pt">testar uma expressão</span><span class="en">test an expression</span></td><td><code>terraform console</code></td></tr><tr><td><span class="pt">migrar o estado para o backend novo</span><span class="en">move state to the new backend</span></td><td><code>init -migrate-state</code></td></tr><tr><td><span class="pt">apagar tudo</span><span class="en">delete everything</span></td><td><code>destroy</code> (com cuidado)</td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão (estilo Terraform Associate)</span><span class="en">Review questions (Terraform Associate style)</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">Qual a diferença entre <code>resource</code> e <code>data</code>?</span><span class="en">Difference between <code>resource</code> and <code>data</code>?</span></td><td><span class="pt"><code>resource</code> cria e gerencia; <code>data</code> só lê algo existente.</span><span class="en"><code>resource</code> creates and manages; <code>data</code> only reads something existing.</span></td></tr><tr><td><span class="pt">O que o <code>terraform init</code> faz?</span><span class="en">What does <code>terraform init</code> do?</span></td><td><span class="pt">Baixa providers e módulos, prepara o backend e cria o lock file.</span><span class="en">Downloads providers and modules, sets up the backend and creates the lock file.</span></td></tr><tr><td><span class="pt">Por que o <code>plan</code> mostra <code>-/+</code>?</span><span class="en">Why does the <code>plan</code> show <code>-/+</code>?</span></td><td><span class="pt">O recurso será destruído e recriado porque o argumento alterado não pode ser mudado no lugar.</span><span class="en">The resource will be destroyed and recreated because the changed argument cannot be updated in place.</span></td></tr><tr><td><span class="pt">O que é o state e por que não vai para o Git?</span><span class="en">What is state and why is it not committed?</span></td><td><span class="pt">É o mapa código↔realidade; pode ter segredos em texto puro. Use backend remoto, cifrado e com trava.</span><span class="en">It is the code↔reality map; it may hold plain-text secrets. Use a remote, encrypted, locked backend.</span></td></tr><tr><td><span class="pt">Como o Terraform decide a ordem de criação?</span><span class="en">How does Terraform decide creation order?</span></td><td><span class="pt">Pelo grafo de dependências formado pelas referências; <code>depends_on</code> só para o que não é visível.</span><span class="en">By the dependency graph formed by references; <code>depends_on</code> only for what is not visible.</span></td></tr><tr><td><span class="pt"><code>count</code> ou <code>for_each</code> para uma lista de nomes?</span><span class="en"><code>count</code> or <code>for_each</code> for a list of names?</span></td><td><span class="pt"><code>for_each</code>: tem chave estável; com <code>count</code>, remover um item do meio recria os seguintes.</span><span class="en"><code>for_each</code>: it has a stable key; with <code>count</code>, removing a middle item recreates the following ones.</span></td></tr><tr><td><span class="pt">Como renomear um recurso sem destruí-lo?</span><span class="en">How to rename a resource without destroying it?</span></td><td><span class="pt">Bloco <code>moved { from = … to = … }</code> (ou <code>terraform state mv</code>).</span><span class="en"><code>moved { from = … to = … }</code> block (or <code>terraform state mv</code>).</span></td></tr><tr><td><span class="pt">Como trazer para o Terraform algo criado no console?</span><span class="en">How to bring something created in the console into Terraform?</span></td><td><span class="pt">Bloco <code>import</code> (ou <code>terraform import</code>) e escrever o código correspondente.</span><span class="en"><code>import</code> block (or <code>terraform import</code>) and write the matching code.</span></td></tr><tr><td><span class="pt">O que protege contra dois <code>apply</code> simultâneos?</span><span class="en">What protects against two simultaneous <code>apply</code>s?</span></td><td><span class="pt">A trava do backend (no S3: <code>use_lockfile = true</code>).</span><span class="en">The backend lock (on S3: <code>use_lockfile = true</code>).</span></td></tr><tr><td><span class="pt"><code>sensitive = true</code> protege o segredo no state?</span><span class="en">Does <code>sensitive = true</code> protect the secret in state?</span></td><td><span class="pt">Não; só o oculta na saída. O state continua com o valor.</span><span class="en">No; it only hides it in output. The state still holds the value.</span></td></tr><tr><td><span class="pt">Para que serve o <code>.terraform.lock.hcl</code>?</span><span class="en">What is <code>.terraform.lock.hcl</code> for?</span></td><td><span class="pt">Fixa as versões exatas dos providers (com hashes) para todos usarem as mesmas; vai para o Git.</span><span class="en">Pins exact provider versions (with hashes) so everyone uses the same; commit it.</span></td></tr><tr><td><span class="pt">Como usar duas regiões AWS no mesmo código?</span><span class="en">How to use two AWS regions in the same code?</span></td><td><span class="pt">Dois blocos <code>provider "aws"</code>, um com <code>alias</code>, e <code>provider = aws.alias</code> no recurso.</span><span class="en">Two <code>provider "aws"</code> blocks, one with <code>alias</code>, and <code>provider = aws.alias</code> on the resource.</span></td></tr><tr><td><span class="pt">Workspaces ou pastas para dev/prod?</span><span class="en">Workspaces or folders for dev/prod?</span></td><td><span class="pt">Pastas/estados (e contas) separados: isolamento forte. Workspaces são para cópias efêmeras.</span><span class="en">Separate folders/states (and accounts): strong isolation. Workspaces are for ephemeral copies.</span></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://developer.hashicorp.com/terraform/docs" rel="noopener">HashiCorp. Terraform documentation (language, CLI, backends, tests).</a></li><li><a href="https://registry.terraform.io/providers/hashicorp/aws/latest/docs" rel="noopener">Terraform Registry. AWS provider documentation.</a></li><li><a href="https://developer.hashicorp.com/terraform/language/backend/s3" rel="noopener">HashiCorp. S3 backend (including use_lockfile).</a></li><li><a href="https://www.oreilly.com/library/view/terraform-up-and/9781098116736/" rel="noopener">Yevgeniy Brikman. Terraform: Up and Running, 3rd edition. O’Reilly, 2022.</a></li><li><a href="https://www.terraform-best-practices.com/" rel="noopener">Anton Babenko. Terraform Best Practices.</a></li><li><a href="https://docs.aws.amazon.com/prescriptive-guidance/latest/terraform-aws-provider-best-practices/introduction.html" rel="noopener">AWS Prescriptive Guidance. Best practices for using the Terraform AWS Provider.</a></li><li><a href="https://opentofu.org/docs/" rel="noopener">OpenTofu documentation.</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>

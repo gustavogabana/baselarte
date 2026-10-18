@@ -10,7 +10,7 @@
   <meta name="author" content="Baselarte Ltda.">
   <meta name="application-name" content="Baselarte">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#fafafa">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- Sets theme (by local time) and language before first paint. -->
   <script src="../../boot.js"></script>
@@ -37,12 +37,7 @@
   <link rel="manifest" href="../../site.webmanifest">
 
   <!-- Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
   <link rel="stylesheet" href="../../styles.css">
-  <link rel="stylesheet" href="../design-system/design-system.css">
-  <link rel="stylesheet" href="../note.css">
 
 </head>
 <body>
@@ -53,33 +48,70 @@
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="site-header">
-    <a class="site-wordmark" href="../../index.html" aria-label="Baselarte">
-      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
-      <span>baselarte</span>
-    </a>
-    <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
-      <a href="../../index.html#about" data-i18n="nav.about">About</a>
-      <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
-      <a href="../index.html" aria-current="true" data-i18n="nav.notes">Notes</a>
-      <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
-        <span data-i18n="languageToggle.label">PT</span>
-      </button>
-    </nav>
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <span class="theme-indicator requires-js" data-i18n-attributes="title:themeIndicator.label" title="Theme follows your local time: night from 18:00 to 06:00"><svg class="icon ti-sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg><svg class="icon ti-moon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg><span data-day-period></span></span>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html">AWS</a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html" aria-current="page"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
   </header>
 
-  <nav class="page-nav" data-i18n-attributes="aria-label:back.label" aria-label="Page navigation">
-    <a class="pill-link" href="../index.html"><span aria-hidden="true">←</span> <span data-i18n="back.notes">Notes</span></a>
-    <a class="pill-link" href="../../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></svg> <span data-i18n="back.home">Home</span></a>
-  </nav>
 
   <main id="main">
-    <section class="hero" aria-labelledby="hero-title">
-      <p class="monospace-label hero-kicker" data-i18n="fs.kicker">Case study</p>
-      <h1 id="hero-title" class="hero-title" data-i18n="fs.heroTitle">Anatomy of a <em>full-stack platform.</em></h1>
-      <p class="hero-lede" data-i18n="fs.heroLede">What stands out in the engineering of a real front end and back end: API-first, layered caching, defense in depth and tests that check performance.</p>
-    </section>
 
     <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html" aria-current="page"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
       <aside class="side-nav" id="side-nav">
         <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
           <h2 data-i18n="sideNav.onThisPage">On this page</h2>
@@ -99,6 +131,12 @@
         </nav>
       </aside>
       <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></li></ol></nav>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="fs.kicker">Case study</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="fs.heroTitle">Anatomy of a <em>full-stack platform.</em></h1>
+      <p class="hero-lede" data-i18n="fs.heroLede">What stands out in the engineering of a real front end and back end: API-first, layered caching, defense in depth and tests that check performance.</p>
+    </section>
 <section class="content-section" aria-labelledby="shape">
 <h2 id="shape"><span class="pt">A forma do sistema</span><span class="en">The shape of the system</span></h2>
 <p><span class="pt">Esta nota analisa um projeto real dividido em <em>front end</em> e <em>back end</em>, sem citar o nome. O produto é uma plataforma de listagem: perfis com fotos e vídeos, planos pagos que definem a posição na lista, verificação de identidade, moderação, suporte e painel do dono do perfil. O que interessa aqui não é o produto, e sim as decisões de engenharia.</span><span class="en">This note analyzes a real project split into a <em>front end</em> and a <em>back end</em>, without naming it. The product is a listing platform: profiles with photos and videos, paid plans that set the position in the list, moderation and an owner panel. What matters here is not the product, but the engineering decisions.</span></p><div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Escolhas</span><span class="en">Choices</span></th></tr></thead><tbody><tr><td><span class="pt">Back end</span><span class="en">Back end</span></td><td>Java 25 (virtual threads), Spring Boot 4.1, Spring Security 7, Hibernate 7, PostgreSQL 18, Maven</td></tr><tr><td><span class="pt">Front end</span><span class="en">Front end</span></td><td>Next.js 16 (App Router, ISR, saída standalone), React 19, TypeScript 6 estrito, Tailwind 4, Zustand, zod</td></tr><tr><td><span class="pt">Storage</span><span class="en">Storage</span></td><td><span class="pt">Cloudflare R2 pela API S3, em dois buckets (público e privado)</span><span class="en">Cloudflare R2 through the S3 API, in two buckets (public and private)</span></td></tr><tr><td><span class="pt">Qualidade</span><span class="en">Quality</span></td><td>JUnit + Testcontainers, Vitest, Playwright + axe, Lighthouse CI, GitHub Actions</td></tr></tbody></table></div><figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 262" role="img" aria-label="Navegador, front end, API, banco e storage / Browser, front end, API, database and storage" style="min-width:560px"><rect x="0" y="70" width="96" height="50" rx="8" class="ln"/><text x="48.0" y="99.0" class="pt" text-anchor="middle">Navegador</text><text x="48.0" y="99.0" class="en" text-anchor="middle">Browser</text><path d="M96 85H140" class="ln"/><path d="M134 80L140 85L134 90" class="ln"/><rect x="140" y="40" width="150" height="110" rx="8" class="ln fillsoft"/><text x="215.0" y="93.0" class="" text-anchor="middle">Front end</text><text x="215.0" y="110.0" class="pt mut" text-anchor="middle">Next.js: SSR, ISR e BFF</text><text x="215.0" y="110.0" class="en mut" text-anchor="middle">Next.js: SSR, ISR and BFF</text><path d="M290 95H340" class="ln"/><path d="M334 90L340 95L334 100" class="ln"/><rect x="340" y="40" width="150" height="110" rx="8" class="ln fillsoft"/><text x="415.0" y="93.0" class="" text-anchor="middle">API</text><text x="415.0" y="110.0" class="mut" text-anchor="middle">Spring Boot, REST</text><path d="M490 95H530" class="ln"/><path d="M524 90L530 95L524 100" class="ln"/><rect x="530" y="70" width="110" height="50" rx="8" class="ln"/><text x="585.0" y="99.0" class="" text-anchor="middle">PostgreSQL</text><path d="M48 120V190H415V150" class="ln dash"/><text x="232" y="184" class="pt mut" text-anchor="middle">navegador chama a API direto (dados públicos e do usuário)</text><text x="232" y="184" class="en mut" text-anchor="middle">the browser calls the API directly (public and user data)</text><rect x="530" y="170" width="110" height="50" rx="8" class="ln dash"/><text x="585.0" y="199.0" class="" text-anchor="middle">Storage + CDN</text><path d="M48 120V245H585V220" class="ln dash"/><text x="300" y="238" class="pt mut" text-anchor="middle">upload e download de arquivos direto no storage, por URL pré-assinada</text><text x="300" y="238" class="en mut" text-anchor="middle">file upload and download straight to storage, via presigned URL</text></svg></div><figcaption><span class="pt">Duas aplicações separadas. O arquivo pesado nunca passa pela API.</span><span class="en">Two separate applications. Heavy files never go through the API.</span></figcaption></figure><p><span class="pt">Duas decisões de forma já dizem muito: o back end é um <em>monólito</em> (um único serviço, simples de operar e de testar), e as duas aplicações vivem em repositórios e contêineres separados, ligados por uma rede Docker. Elas precisam estar no mesmo <em>site</em> (por exemplo, <code>app.exemplo.com</code> e <code>api.exemplo.com</code>) para que os cookies funcionem; isso está documentado como requisito de implantação.</span><span class="en">Two decisions about shape already say a lot: the back end is a <em>monolith</em> (a single service, simple to run and test), and the two applications live in separate repositories and containers, joined by a Docker network. They must be on the same <em>site</em> (for example <code>app.example.com</code> and <code>api.example.com</code>) for cookies to work; that is documented as a deployment requirement.</span></p>
@@ -151,7 +189,7 @@
   <footer class="site-footer">
     <div class="site-footer-grid">
       <div class="footer-brand">
-        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
         <p class="motto"><em>Non desistas. Non exieris.</em></p>
       </div>
 

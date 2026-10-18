@@ -1,4 +1,4 @@
-// Baselarte — theme, local time, copyright year and gentle Motion (motion.dev) animations.
+// Baselarte — day/night theme, local time, docs navigation, code copy buttons and gentle Motion (motion.dev) animations.
 // Runs after boot.js and i18n.js.
 // Classic script (not a module) so it also runs when the site is opened from file://.
 
@@ -8,17 +8,18 @@
   const LOCAL_TIME_REFRESH_MS = 15_000;
   // A section is "current" while it crosses this band of the viewport.
   const SCROLL_SPY_ROOT_MARGIN = "-20% 0px -70% 0px";
-  const THEME_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="5" y="5" width="22" height="22" rx="2"/><path d="M5 27 27 5M5 16 16 5M16 27 27 16"/></svg>';
   const ARROW_UP_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 27V6M7 14l9-9 9 9"/></svg>';
+  const COPY_ICON_MARKUP = '<svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><rect x="10" y="10" width="17" height="17" rx="2"/><path d="M22 10V6a1 1 0 0 0-1-1H6a1 1 0 0 0-1 1v15a1 1 0 0 0 1 1h4"/></svg>';
+  const COPY_FEEDBACK_MS = 1800;
   // Slightly longer than the 1.2s colour transition in styles.css (html.theme-transition).
   const THEME_TRANSITION_MS = 1300;
 
   const documentRoot = document.documentElement;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const { themeForDate, revealWithoutMotion, markMotionStarted, SITE_THEMES, applySiteTheme, readStoredSiteTheme, storeSiteTheme, SITE_THEME_STORAGE_KEY } = window.siteBoot;
+  const { themeForDate, revealWithoutMotion, markMotionStarted } = window.siteBoot;
 
   const localTimeElement = document.querySelector("[data-local-time]");
-  const dayPeriodElement = document.querySelector("[data-day-period]");
+  const dayPeriodElements = document.querySelectorAll("[data-day-period]");
   const browserThemeColorMeta = document.querySelector('meta[name="theme-color"]');
 
   /* --------------------------------------------------------------------------
@@ -30,98 +31,57 @@
   });
 
   /* --------------------------------------------------------------------------
-     Theme button: switches between the site themes (the look only; the content, the
-     language and the day/night colours are untouched). The choice is remembered.
+     "All notes" menu in the section bar: closes on Escape or on a click elsewhere.
      -------------------------------------------------------------------------- */
 
-  const siteNavElement = document.querySelector(".site-nav");
-
-  if (siteNavElement) {
-    // A button that opens a small menu (on hover, keyboard focus or tap) listing every theme.
-    const themeMenu = document.createElement("div");
-    themeMenu.className = "theme-menu";
-    const themeToggle = document.createElement("button");
-    themeToggle.type = "button";
-    themeToggle.className = "theme-toggle";
-    themeToggle.innerHTML = THEME_ICON_MARKUP;
-    themeToggle.setAttribute("aria-haspopup", "true");
-    themeToggle.setAttribute("aria-expanded", "false");
-    themeToggle.dataset.i18nAttributes = "aria-label:themeToggle.label;title:themeToggle.label";
-    const themeList = document.createElement("ul");
-    themeList.className = "theme-menu-list";
-    const themeOptions = SITE_THEMES.map((siteTheme) => {
-      const item = document.createElement("li");
-      const option = document.createElement("button");
-      option.type = "button";
-      option.dataset.siteThemeOption = siteTheme;
-      option.dataset.i18n = `themeName.${siteTheme}`;
-      option.textContent = window.i18n.translate(`themeName.${siteTheme}`);
-      item.append(option);
-      themeList.append(item);
-      return option;
+  document.querySelectorAll(".nav-menu").forEach((navMenu) => {
+    document.addEventListener("click", (clickEvent) => {
+      if (!navMenu.contains(clickEvent.target)) navMenu.open = false;
     });
-    themeMenu.append(themeToggle, themeList);
-    siteNavElement.insertBefore(themeMenu, siteNavElement.querySelector(".language-toggle"));
+    navMenu.addEventListener("keydown", (keyEvent) => {
+      if (keyEvent.key !== "Escape") return;
+      navMenu.open = false;
+      navMenu.querySelector("summary").focus();
+    });
+  });
 
-    function setThemeMenuOpen(isOpen) {
-      themeMenu.classList.toggle("is-open", isOpen);
-      themeToggle.setAttribute("aria-expanded", String(isOpen));
-    }
+  /* --------------------------------------------------------------------------
+     Docs sidebar (the list of notes): small-screen toggle and the filter box.
+     -------------------------------------------------------------------------- */
 
-    // Marks the current theme in the list and keeps the button label translated.
-    function renderThemeToggle() {
-      themeToggle.setAttribute("aria-label", window.i18n.translate("themeToggle.label"));
-      themeToggle.title = window.i18n.translate("themeToggle.label");
-      themeList.setAttribute("aria-label", window.i18n.translate("themeToggle.label"));
-      themeOptions.forEach((option) => {
-        const isCurrent = option.dataset.siteThemeOption === documentRoot.dataset.siteTheme;
-        option.setAttribute("aria-pressed", String(isCurrent));
+  const docsSidebarElement = document.querySelector(".docs-sidebar");
+
+  if (docsSidebarElement) {
+    const sidebarToggle = document.createElement("button");
+    sidebarToggle.type = "button";
+    sidebarToggle.className = "side-nav-toggle sidebar-toggle";
+    sidebarToggle.setAttribute("aria-controls", docsSidebarElement.id);
+    sidebarToggle.setAttribute("aria-expanded", "false");
+    sidebarToggle.dataset.i18n = "sidebar.toggle";
+    sidebarToggle.textContent = window.i18n.translate("sidebar.toggle");
+    docsSidebarElement.before(sidebarToggle);
+    sidebarToggle.addEventListener("click", () => {
+      const isOpen = docsSidebarElement.classList.toggle("open");
+      sidebarToggle.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    const filterInput = docsSidebarElement.querySelector("[data-sidebar-filter]");
+    if (filterInput) {
+      const groups = [...docsSidebarElement.querySelectorAll("[data-sidebar-group]")];
+      filterInput.addEventListener("input", () => {
+        const query = filterInput.value.trim().toLowerCase();
+        groups.forEach((group) => {
+          let visibleItems = 0;
+          group.querySelectorAll("li").forEach((item) => {
+            const isMatch = !query || item.textContent.toLowerCase().includes(query);
+            item.hidden = !isMatch;
+            if (isMatch) visibleItems += 1;
+          });
+          group.hidden = visibleItems === 0;
+          group.previousElementSibling.hidden = visibleItems === 0;
+        });
       });
     }
-
-    function chooseSiteTheme(siteTheme) {
-      if (siteTheme !== documentRoot.dataset.siteTheme) {
-        documentRoot.classList.add("theme-transition");
-        applySiteTheme(siteTheme);
-        storeSiteTheme(siteTheme);
-        syncBrowserThemeColor();
-        setTimeout(() => documentRoot.classList.remove("theme-transition"), THEME_TRANSITION_MS);
-      }
-      renderThemeToggle();
-      setThemeMenuOpen(false);
-    }
-
-    themeToggle.addEventListener("click", () => setThemeMenuOpen(!themeMenu.classList.contains("is-open")));
-    themeOptions.forEach((option) => {
-      option.addEventListener("click", () => chooseSiteTheme(option.dataset.siteThemeOption));
-    });
-    // Close with Escape (returning focus to the button) or when clicking elsewhere.
-    themeMenu.addEventListener("keydown", (keyEvent) => {
-      if (keyEvent.key === "Escape") {
-        setThemeMenuOpen(false);
-        themeToggle.focus();
-      }
-    });
-    document.addEventListener("click", (clickEvent) => {
-      if (!themeMenu.contains(clickEvent.target)) setThemeMenuOpen(false);
-    });
-
-    renderThemeToggle();
-
-    // Keep this page in step with the saved theme: when it is restored from the back/forward
-    // cache, or when the theme is changed from another tab.
-    function followSavedSiteTheme() {
-      applySiteTheme(readStoredSiteTheme());
-      renderThemeToggle();
-      syncBrowserThemeColor();
-    }
-
-    window.addEventListener("pageshow", (pageShowEvent) => {
-      if (pageShowEvent.persisted) followSavedSiteTheme();
-    });
-    window.addEventListener("storage", (storageEvent) => {
-      if (storageEvent.key === SITE_THEME_STORAGE_KEY) followSavedSiteTheme();
-    });
   }
 
   /* --------------------------------------------------------------------------
@@ -134,7 +94,7 @@
   if (sideNavElement) {
     const sideNavToggle = document.createElement("button");
     sideNavToggle.type = "button";
-    sideNavToggle.className = "side-nav-toggle monospace-label";
+    sideNavToggle.className = "side-nav-toggle";
     sideNavToggle.setAttribute("aria-controls", sideNavElement.id);
     sideNavToggle.setAttribute("aria-expanded", "false");
     sideNavToggle.dataset.i18n = "sideNav.toggle";
@@ -170,6 +130,39 @@
   }
 
   /* --------------------------------------------------------------------------
+     Code blocks: a "Copy" button on every <pre>.
+     -------------------------------------------------------------------------- */
+
+  async function copyText(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (clipboardError) {
+      console.warn("Copying to the clipboard failed.", clipboardError);
+      return false;
+    }
+  }
+
+  document.querySelectorAll("pre").forEach((codeBlock) => {
+    // The AWS note ships its own copy buttons (aws.js).
+    if (codeBlock.closest(".aws-guide")) return;
+    const copyButton = document.createElement("button");
+    copyButton.type = "button";
+    copyButton.className = "copy-button requires-js";
+    const setLabel = (key) => {
+      copyButton.dataset.i18n = key;
+      copyButton.innerHTML = `${COPY_ICON_MARKUP}<span>${window.i18n.translate(key)}</span>`;
+    };
+    setLabel("copy.label");
+    copyButton.addEventListener("click", async () => {
+      const wasCopied = await copyText(codeBlock.querySelector("code")?.textContent ?? codeBlock.textContent);
+      setLabel(wasCopied ? "copy.done" : "copy.failed");
+      setTimeout(() => setLabel("copy.label"), COPY_FEEDBACK_MS);
+    });
+    codeBlock.append(copyButton);
+  });
+
+  /* --------------------------------------------------------------------------
      Back to top: appears once the hero has scrolled out of view.
      -------------------------------------------------------------------------- */
 
@@ -197,8 +190,8 @@
 
   function syncBrowserThemeColor() {
     // Read from the CSS so the colour is defined in one place only.
-    const paperColor = getComputedStyle(documentRoot).getPropertyValue("--paper").trim();
-    browserThemeColorMeta.content = paperColor;
+    const paperColor = getComputedStyle(documentRoot).getPropertyValue("--page").trim();
+    if (browserThemeColorMeta) browserThemeColorMeta.content = paperColor;
   }
 
   function updateThemeAndLocalTime() {
@@ -213,13 +206,17 @@
 
     syncBrowserThemeColor();
 
-    localTimeElement.textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
-    localTimeElement.dateTime = now.toISOString();
+    if (localTimeElement) {
+      localTimeElement.textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+      localTimeElement.dateTime = now.toISOString();
+    }
 
     // The day/night label is translated, so keep its i18n key in sync with the theme.
     const dayPeriodKey = theme === "dark" ? "dayPeriod.night" : "dayPeriod.day";
-    dayPeriodElement.dataset.i18n = dayPeriodKey;
-    dayPeriodElement.textContent = window.i18n.translate(dayPeriodKey);
+    dayPeriodElements.forEach((dayPeriodElement) => {
+      dayPeriodElement.dataset.i18n = dayPeriodKey;
+      dayPeriodElement.textContent = window.i18n.translate(dayPeriodKey);
+    });
   }
 
   updateThemeAndLocalTime();
@@ -247,7 +244,7 @@
     }, { amount: 0.4 });
 
     // Cross-fade translated text when the language changes (used by i18n.js).
-    const translatedRegions = "main, .side-nav, .side-nav-toggle, .site-nav a, .language-toggle, .footer-column h2, [data-day-period]";
+    const translatedRegions = "main, .docs-sidebar, .side-nav, .side-nav-toggle, .site-header a, .language-toggle, .footer-column h2, [data-day-period]";
     window.languageTransition = {
       fadeOut: () => animate(translatedRegions, { opacity: 0 }, { duration: 0.2 }),
       fadeIn: () => animate(translatedRegions, { opacity: 1 }, { duration: 0.35 }),
