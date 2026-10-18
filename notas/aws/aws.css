@@ -1,7 +1,7 @@
 /* ==========================================================================
    AWS Notes — styles for aws/index.html.
-   Uses the Baselarte tokens from ../styles.css (--paper, --ink, --muted, --line,
-   --serif, --sans, --mono, --gutter, --wide, --ease). The only colours added here
+   Uses the Baselarte tokens from ../../styles.css (--page, --fg-strong, --fg-faint, --border,
+   --sans, --mono, --brand, --action). The only colours added here
    are the green / red used for allowed / blocked states.
    ========================================================================== */
 
@@ -33,15 +33,11 @@ html[lang="pt-BR"] .en {
   top: 0;
   left: 0;
   width: 100%;
-  height: 2px;
-  background: var(--ink);
+  height: 3px;
+  background: var(--brand);
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 100;
-}
-
-.site-nav a[aria-current="page"] {
-  color: var(--ink);
 }
 
 .aws-guide .icon {
@@ -61,20 +57,13 @@ html[lang="pt-BR"] .en {
   color: inherit;
 }
 
-.hero-kicker {
-  color: var(--muted);
-  margin-bottom: 24px;
-}
-
 /* ==========================================================================
    Guide column (the section list and page layout live in ../../styles.css)
    ========================================================================== */
 
+/* Layout (grid cell, width, padding) comes from .reading-column in styles.css. */
 .aws-guide {
-  flex: 1;
   min-width: 0;
-  max-width: calc(var(--column) + 8rem);
-  padding-bottom: clamp(96px, 14vh, 160px);
 }
 
 /* ==========================================================================
@@ -82,11 +71,12 @@ html[lang="pt-BR"] .en {
    ========================================================================== */
 
 .aws-guide .topic {
-  padding-top: clamp(48px, 7vw, 80px);
+  padding-top: 8px;
 }
 
 .aws-guide .topic + .topic {
-  margin-top: clamp(48px, 7vw, 80px);
+  margin-top: 56px;
+  padding-top: 40px;
   border-top: 1px solid var(--line);
 }
 
@@ -103,24 +93,26 @@ html[lang="pt-BR"] .en {
 }
 
 .aws-guide h2 {
-  font-size: clamp(26px, 3vw, 34px);
-  font-weight: 500;
-  line-height: 1.15;
-  letter-spacing: -0.03em;
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
   margin: 8px 0 12px;
+  color: var(--fg-strong);
 }
 
 .aws-guide h3 {
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 1.25rem;
+  font-weight: 600;
   line-height: 1.3;
-  letter-spacing: -0.02em;
-  margin: 40px 0 12px;
+  letter-spacing: -0.01em;
+  margin: 36px 0 12px;
+  color: var(--fg-strong);
 }
 
 .aws-guide h4 {
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 1rem;
+  font-weight: 600;
   margin: 0 0 6px;
 }
 
@@ -150,14 +142,16 @@ html[lang="pt-BR"] .en {
 }
 
 .aws-guide a {
+  color: var(--action);
   text-decoration: underline;
-  text-decoration-color: var(--aws-line-strong);
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
   text-underline-offset: 3px;
   transition: text-decoration-color 0.3s var(--ease);
 }
 
 .aws-guide a:hover {
-  text-decoration-color: var(--ink);
+  color: var(--action-hover);
+  text-decoration-color: currentColor;
 }
 
 .aws-guide small,
@@ -310,12 +304,20 @@ html[lang="pt-BR"] .en {
   position: relative;
   margin: 16px 0;
   padding: 16px;
-  background: var(--aws-surface);
-  border: 1px solid var(--line);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border: 1px solid var(--code-border);
   border-radius: var(--aws-radius);
   overflow-x: auto;
   font-size: var(--aws-code-size);
   line-height: 1.55;
+}
+
+.aws-guide pre code {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
 }
 
 .aws-guide pre .copy {
@@ -323,18 +325,17 @@ html[lang="pt-BR"] .en {
   top: 8px;
   right: 8px;
   padding: 2px 10px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--paper);
-  color: var(--muted);
-  font-family: var(--label);
-  font-size: 11px;
-  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  color: var(--code-faint);
+  font-family: var(--sans);
+  font-size: 12px;
+  transition: color 0.15s;
 }
 
 .aws-guide pre .copy:hover {
-  color: var(--ink);
-  border-color: var(--ink);
+  color: var(--code-fg);
 }
 
 /* ==========================================================================
@@ -733,4 +734,14 @@ html[lang="pt-BR"] .en {
   .aws-guide * {
     transition: none !important;
   }
+}
+
+.aws-guide .breadcrumbs a {
+  color: var(--fg-faint);
+  text-decoration: none;
+}
+
+.aws-guide .breadcrumbs a:hover {
+  color: var(--fg-strong);
+  text-decoration: underline;
 }

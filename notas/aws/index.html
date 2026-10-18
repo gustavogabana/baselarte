@@ -10,7 +10,7 @@
   <meta name="author" content="Baselarte Ltda.">
   <meta name="application-name" content="Baselarte">
   <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" content="#fafafa">
+  <meta name="theme-color" content="#ffffff">
 
   <!-- Sets theme (by local time) and language before first paint. -->
   <script src="../../boot.js"></script>
@@ -37,11 +37,8 @@
   <link rel="manifest" href="../../site.webmanifest">
 
   <!-- Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link rel="modulepreload" href="https://cdn.jsdelivr.net/npm/motion@14.0.0/+esm" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="aws.css">
 
@@ -115,32 +112,69 @@
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="site-header">
-    <a class="site-wordmark" href="../../index.html" aria-label="Baselarte">
-      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
-      <span>baselarte</span>
-    </a>
-    <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
-      <a href="../../index.html#about" data-i18n="nav.about">About</a>
-      <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
-      <a href="../index.html" aria-current="true" data-i18n="nav.notes">Notes</a>
-      <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
-        <span data-i18n="languageToggle.label">PT</span>
-      </button>
-    </nav>
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <span class="theme-indicator requires-js" data-i18n-attributes="title:themeIndicator.label" title="Theme follows your local time: night from 18:00 to 06:00"><svg class="icon ti-sun" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg><svg class="icon ti-moon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg><span data-day-period></span></span>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html" aria-current="page">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html" aria-current="page">AWS</a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
   </header>
 
-  <nav class="page-nav" data-i18n-attributes="aria-label:back.label" aria-label="Page navigation">
-    <a class="pill-link" href="../index.html"><span aria-hidden="true">←</span> <span data-i18n="back.notes">Notes</span></a>
-    <a class="pill-link" href="../../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></svg> <span data-i18n="back.home">Home</span></a>
-  </nav>
 
-  <section class="hero" aria-labelledby="hero-title">
-    <p class="monospace-label hero-kicker" data-i18n="aws.kicker">Based on the official docs</p>
-    <h1 id="hero-title" class="hero-title" data-i18n="aws.heroTitle">Learn <em>AWS</em> visually and interactively.</h1>
-    <p class="hero-lede" data-i18n="aws.heroLede">From accounts and permissions to networking, servers, databases and domains. Click, simulate and test what you learned in every section.</p>
-  </section>
 
   <div class="page-layout">
+<nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html" aria-current="page">AWS</a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
 <aside class="side-nav" id="side-nav">
   <nav aria-label="Sections">
     <h2><span class="pt">Contas</span><span class="en">Accounts</span></h2>
@@ -186,7 +220,13 @@
     </ul>
   </nav>
 </aside>
-    <main id="main" class="aws-guide">
+    <main id="main" class="aws-guide reading-column">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page">AWS</li></ol></nav>
+  <section class="hero" aria-labelledby="hero-title">
+    <p class="monospace-label hero-kicker" data-i18n="aws.kicker">Based on the official docs</p>
+    <h1 id="hero-title" class="hero-title" data-i18n="aws.heroTitle">Learn <em>AWS</em> visually and interactively.</h1>
+    <p class="hero-lede" data-i18n="aws.heroLede">From accounts and permissions to networking, servers, databases and domains. Click, simulate and test what you learned in every section.</p>
+  </section>
 <div class="wrap">
 
 
@@ -1785,7 +1825,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   <footer class="site-footer">
     <div class="site-footer-grid">
       <div class="footer-brand">
-        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect class="tile" width="32" height="32" rx="7"/><path class="bars" d="M12 10.5h8M9 16h14M6 21.5h20"/></svg>
         <p class="motto"><em>Non desistas. Non exieris.</em></p>
       </div>
 
