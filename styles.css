@@ -40,12 +40,15 @@
   --focus-outer: #5990ff;
 
   /* Brand (Terraform purple) */
-  --brand: #7b42bc;
-  --brand-fg: #773cb4;
-  --brand-surface: #f4ecff;
-  --brand-border: #ebdbfc;
-  --brand-gradient-start: #fcfaff;
-  --brand-gradient-stop: #f4ecff;
+  --brand: #5b2d9e;
+  --brand-fg: #5b2d9e;
+  --brand-surface: #f3ecfc;
+  --brand-border: #dccdf3;
+  --brand-gradient-start: #faf7ff;
+  --brand-gradient-stop: #ece0fa;
+  --glass: color-mix(in srgb, var(--page) 72%, transparent);
+  --glass-faint: color-mix(in srgb, var(--page-faint) 66%, transparent);
+  --glass-blur: saturate(160%) blur(14px);
 
   /* Status */
   --success-fg: #00781e;
@@ -132,12 +135,12 @@
   --focus-inner: #389aff;
   --focus-outer: #5990ff;
 
-  --brand: #a067da;
-  --brand-fg: #a067da;
-  --brand-surface: #211131;
-  --brand-border: #633690;
-  --brand-gradient-start: #211131;
-  --brand-gradient-stop: #150f1e;
+  --brand: #8a5bd6;
+  --brand-fg: #b08be6;
+  --brand-surface: #1f1233;
+  --brand-border: #4a2b7c;
+  --brand-gradient-start: #26143f;
+  --brand-gradient-stop: #120c1e;
 
   --success-fg: #00ae4e;
   --success-surface: #042a15;
@@ -183,7 +186,12 @@ html {
 
 body {
   margin: 0;
-  background: var(--page);
+  min-height: 100vh;
+  background:
+    radial-gradient(48rem 26rem at 85% -6rem, color-mix(in srgb, var(--brand) 14%, transparent), transparent 70%),
+    radial-gradient(42rem 24rem at -8% 32rem, color-mix(in srgb, var(--brand) 9%, transparent), transparent 70%),
+    var(--page);
+  background-attachment: fixed;
   color: var(--fg);
   font: 400 1rem/1.65 var(--sans);
   -webkit-font-smoothing: antialiased;
@@ -364,7 +372,7 @@ samp {
 
 .btn-secondary,
 .language-toggle {
-  background: var(--page);
+  background: var(--glass);
   border-color: var(--border-strong);
   color: var(--fg-strong);
 }
@@ -428,22 +436,12 @@ samp {
   stroke-linejoin: round;
 }
 
-/* Brand mark: a purple tile with three stacked bars (see favicon.svg). */
+/* Brand mark: a "b" monogram on a purple gradient tile (see favicon.svg). */
 .logo-mark {
   width: 28px;
   height: 28px;
   flex: none;
-}
-
-.logo-mark .tile {
-  fill: var(--brand);
-}
-
-.logo-mark .bars {
-  fill: none;
-  stroke: #ffffff;
-  stroke-width: 2.6;
-  stroke-linecap: round;
+  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--brand) 35%, transparent));
 }
 
 /* ==========================================================================
@@ -454,7 +452,9 @@ samp {
   position: sticky;
   top: 0;
   z-index: 80;
-  background: var(--page);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
 }
 
 .header-top,
@@ -473,7 +473,7 @@ samp {
 
 .header-sub {
   min-height: var(--header-sub);
-  background: var(--page-faint);
+  background: var(--glass-faint);
 }
 
 .site-wordmark {
@@ -519,27 +519,40 @@ samp {
   margin-left: auto;
 }
 
-/* Shows whether the automatic theme is on its day or night side. */
-.theme-indicator {
+/* Theme switch: automatic (by the clock), light or dark. */
+.theme-switch {
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 3px 8px;
+  padding: 2px;
+  gap: 2px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: var(--glass);
+}
+
+.theme-switch button {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 26px;
+  border-radius: 3px;
   color: var(--fg-faint);
-  font-size: 0.8125rem;
+  transition: background-color 0.15s, color 0.15s;
 }
 
-.theme-indicator .icon {
-  width: 14px;
-  height: 14px;
+.theme-switch button:hover {
+  background: var(--surface-hover);
+  color: var(--fg-strong);
+}
+
+.theme-switch button[aria-pressed="true"] {
+  background: var(--surface-active);
+  color: var(--fg-strong);
+}
+
+.theme-switch .icon {
+  width: 15px;
+  height: 15px;
   vertical-align: baseline;
-}
-
-html[data-theme="dark"] .theme-indicator .ti-sun,
-html:not([data-theme="dark"]) .theme-indicator .ti-moon {
-  display: none;
 }
 
 .section-name {
@@ -617,7 +630,9 @@ html:not([data-theme="dark"]) .theme-indicator .ti-moon {
   z-index: 90;
   min-width: 17rem;
   padding: 6px;
-  background: var(--page);
+  background: color-mix(in srgb, var(--page) 84%, transparent);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-overlay);
@@ -659,6 +674,7 @@ html:not([data-theme="dark"]) .theme-indicator .ti-moon {
 
 .docs-sidebar {
   grid-area: sidebar;
+  background: var(--glass-faint);
   position: sticky;
   top: calc(var(--header-top) + var(--header-sub));
   height: calc(100vh - var(--header-top) - var(--header-sub));
@@ -723,7 +739,7 @@ html:not([data-theme="dark"]) .theme-indicator .ti-moon {
   padding: 0 10px 0 34px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  background: var(--page);
+  background: var(--glass);
   color: var(--fg-strong);
   font: inherit;
   font-size: 0.875rem;
@@ -1179,7 +1195,7 @@ pre:hover .copy-button,
   padding: 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--page-faint);
+  background: var(--glass-faint);
 }
 
 .fig-scroll {
@@ -1267,15 +1283,18 @@ pre:hover .copy-button,
   padding: 16px 20px;
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  background: var(--page);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   box-shadow: var(--shadow-low);
   color: var(--fg);
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
 }
 
 .card:hover,
 .note-link:hover {
-  border-color: var(--border-strong);
+  transform: translateY(-1px);
+  border-color: var(--brand-border);
   box-shadow: var(--shadow-mid);
   color: var(--fg);
   text-decoration: none;
@@ -1370,6 +1389,8 @@ pre:hover .copy-button,
 }
 
 .banner {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
   align-items: center;
@@ -1379,6 +1400,33 @@ pre:hover .copy-button,
   border-radius: 8px;
   background: linear-gradient(135deg, var(--brand-gradient-start), var(--brand-gradient-stop));
   overflow: hidden;
+}
+
+/* Soft translucent orbs behind the banner. */
+.banner::before,
+.banner::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  border-radius: 50%;
+  filter: blur(40px);
+  pointer-events: none;
+}
+
+.banner::before {
+  top: -6rem;
+  right: -4rem;
+  width: 22rem;
+  height: 22rem;
+  background: color-mix(in srgb, var(--brand) 38%, transparent);
+}
+
+.banner::after {
+  bottom: -8rem;
+  left: 30%;
+  width: 20rem;
+  height: 16rem;
+  background: color-mix(in srgb, var(--action) 22%, transparent);
 }
 
 .banner .hero-title {
@@ -1398,8 +1446,12 @@ pre:hover .copy-button,
 }
 
 .banner-art .tile {
-  fill: var(--page);
-  stroke: var(--brand-border);
+  fill: color-mix(in srgb, var(--page) 70%, transparent);
+  stroke: color-mix(in srgb, var(--brand) 30%, transparent);
+}
+
+.banner-art {
+  filter: drop-shadow(0 12px 24px color-mix(in srgb, var(--brand) 25%, transparent));
 }
 
 .banner-art .accent {
@@ -1508,7 +1560,9 @@ pre:hover .copy-button,
   height: 40px;
   border: 1px solid var(--border-strong);
   border-radius: var(--radius);
-  background: var(--page);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
   box-shadow: var(--shadow-mid);
   color: var(--fg-strong);
   opacity: 0;
@@ -1540,7 +1594,7 @@ pre:hover .copy-button,
 
 .site-footer {
   border-top: 1px solid var(--border);
-  background: var(--page-faint);
+  background: var(--glass-faint);
 }
 
 .site-footer-grid {
@@ -1738,10 +1792,6 @@ html:not(.js-enabled) .requires-js {
   }
 
   .site-nav a:not([aria-current]) {
-    display: none;
-  }
-
-  .theme-indicator span {
     display: none;
   }
 

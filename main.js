@@ -16,7 +16,7 @@
 
   const documentRoot = document.documentElement;
   const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const { themeForDate, revealWithoutMotion, markMotionStarted } = window.siteBoot;
+  const { resolveTheme, readThemeMode, storeThemeMode, THEME_MODE_STORAGE_KEY, revealWithoutMotion, markMotionStarted } = window.siteBoot;
 
   const localTimeElement = document.querySelector("[data-local-time]");
   const dayPeriodElements = document.querySelectorAll("[data-day-period]");
@@ -196,7 +196,7 @@
 
   function updateThemeAndLocalTime() {
     const now = new Date();
-    const theme = themeForDate(now);
+    const theme = resolveTheme(readThemeMode(), now);
 
     if (documentRoot.dataset.theme !== theme) {
       documentRoot.classList.add("theme-transition");
@@ -219,6 +219,32 @@
     });
   }
 
+  // Theme switch in the header: automatic (by the clock), light or dark. The choice is remembered.
+  const themeModeButtons = document.querySelectorAll("[data-theme-mode]");
+
+  function renderThemeSwitch() {
+    const currentMode = readThemeMode();
+    themeModeButtons.forEach((modeButton) => {
+      modeButton.setAttribute("aria-pressed", String(modeButton.dataset.themeMode === currentMode));
+    });
+  }
+
+  themeModeButtons.forEach((modeButton) => {
+    modeButton.addEventListener("click", () => {
+      storeThemeMode(modeButton.dataset.themeMode);
+      updateThemeAndLocalTime();
+      renderThemeSwitch();
+    });
+  });
+
+  // Follow a choice made in another tab.
+  window.addEventListener("storage", (storageEvent) => {
+    if (storageEvent.key !== THEME_MODE_STORAGE_KEY) return;
+    updateThemeAndLocalTime();
+    renderThemeSwitch();
+  });
+
+  renderThemeSwitch();
   updateThemeAndLocalTime();
   setInterval(updateThemeAndLocalTime, LOCAL_TIME_REFRESH_MS);
 

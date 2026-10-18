@@ -30,7 +30,7 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 
 ## Behaviour
 
-- **Day/night:** dark from 18:00 to 06:00 by the visitor's clock. Hours are defined only in `boot.js`.
+- **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock; hours are defined only in `boot.js`), or pinned to light or dark with the switch in the header. The choice is remembered.
 - **Design system:** modelled on the HashiCorp Helios / Terraform developer docs: white or near-black page, neutral text, blue actions, purple brand, system fonts, a two-tier header, a docs sidebar, an "On this page" column, cards, buttons, alerts and dark code blocks. All colours are tokens at the top of `styles.css`; the dark theme only redefines the tokens. The logo is an original mark (`favicon.svg`), not HashiCorp's.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the PT / EN button. All copy lives in `i18n.js`; add each `data-i18n` key to both tables and keep the English in `index.html` in sync.
 - **Preferences** are saved in `localStorage`, a cookie and `window.name`.

@@ -8,6 +8,10 @@
   const SUPPORTED_LANGUAGES = ["en", "pt-BR"];
   const DEFAULT_LANGUAGE = "en";
   const LANGUAGE_STORAGE_KEY = "baselarte:language";
+  // The visitor may pin the theme; "auto" follows the clock.
+  const THEME_MODES = ["auto", "light", "dark"];
+  const DEFAULT_THEME_MODE = "auto";
+  const THEME_MODE_STORAGE_KEY = "baselarte:theme";
   const PREFERENCE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
   // If the animation library has not started by then, reveal the page without it.
   const MOTION_LOAD_TIMEOUT_MS = 2500;
@@ -20,7 +24,11 @@
     return isNight ? "dark" : "light";
   }
 
-  /* The language preference is kept in three places, so they survive wherever the
+  function resolveTheme(mode, date) {
+    return mode === "light" || mode === "dark" ? mode : themeForDate(date);
+  }
+
+  /* The language and theme preferences are kept in three places, so they survive wherever the
      browser allows at least one of them:
        1. localStorage: the normal home, shared by every page of the site;
        2. a cookie: still works when localStorage is blocked (http/https only);
@@ -67,6 +75,15 @@
     if (windowNameStore) window.name = JSON.stringify({ ...windowNameStore, [name]: value });
   }
 
+  function readThemeMode() {
+    const storedMode = readPreference(THEME_MODE_STORAGE_KEY);
+    return THEME_MODES.includes(storedMode) ? storedMode : DEFAULT_THEME_MODE;
+  }
+
+  function storeThemeMode(mode) {
+    storePreference(THEME_MODE_STORAGE_KEY, mode);
+  }
+
   function readStoredLanguage() {
     return readPreference(LANGUAGE_STORAGE_KEY);
   }
@@ -87,7 +104,7 @@
     documentRoot.classList.remove("motion-pending");
   }
 
-  documentRoot.dataset.theme = themeForDate(new Date());
+  documentRoot.dataset.theme = resolveTheme(readThemeMode(), new Date());
   documentRoot.lang = detectInitialLanguage();
   documentRoot.classList.add("js-enabled", "motion-pending");
 
@@ -97,6 +114,10 @@
     SUPPORTED_LANGUAGES,
     DEFAULT_LANGUAGE,
     themeForDate,
+    resolveTheme,
+    readThemeMode,
+    storeThemeMode,
+    THEME_MODE_STORAGE_KEY,
     storeLanguage,
     revealWithoutMotion,
     markMotionStarted() {
