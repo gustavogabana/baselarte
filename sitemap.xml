@@ -10,9 +10,6 @@
     <loc>https://baselarte.com/notas/aws/</loc>
   </url>
   <url>
-    <loc>https://baselarte.com/notas/design-system/</loc>
-  </url>
-  <url>
     <loc>https://baselarte.com/notas/github-aws-oidc/</loc>
   </url>
   <url>
@@ -26,6 +23,9 @@
   </url>
   <url>
     <loc>https://baselarte.com/notas/entendendo-algoritmos/</loc>
+  </url>
+  <url>
+    <loc>https://baselarte.com/notas/linux/</loc>
   </url>
   <url>
     <loc>https://baselarte.com/notas/full-stack-engineering/</loc>

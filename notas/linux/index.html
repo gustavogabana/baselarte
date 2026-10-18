@@ -1,0 +1,881 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="lx.metaTitle">How Linux works, visual guide | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:lx.metaDescription" content="A visual, exam-style guide to how Linux works: users and root, files and permissions, the directory tree, commands, processes, networking, SSH, firewalls, terminal tools and clearing history.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#fafafa">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/linux/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/linux/">
+  <meta property="og:title" data-i18n-attributes="content:lx.metaTitle" content="How Linux works, visual guide | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:lx.metaDescription" content="A visual, exam-style guide to how Linux works: users and root, files and permissions, the directory tree, commands, processes, networking, SSH, firewalls, terminal tools and clearing history.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:lx.metaTitle" content="How Linux works, visual guide | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:lx.metaDescription" content="A visual, exam-style guide to how Linux works: users and root, files and permissions, the directory tree, commands, processes, networking, SSH, firewalls, terminal tools and clearing history.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap">
+  <link rel="stylesheet" href="../../styles.css">
+  <link rel="stylesheet" href="../design-system/design-system.css">
+  <link rel="stylesheet" href="../note.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../index.html" aria-label="Baselarte">
+      <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
+      <span>baselarte</span>
+    </a>
+    <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+      <a href="../../index.html#about" data-i18n="nav.about">About</a>
+      <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+      <a href="../index.html" aria-current="true" data-i18n="nav.notes">Notes</a>
+      <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+        <span data-i18n="languageToggle.label">PT</span>
+      </button>
+    </nav>
+  </header>
+
+  <nav class="page-nav" data-i18n-attributes="aria-label:back.label" aria-label="Page navigation">
+    <a class="pill-link" href="../index.html"><span aria-hidden="true">←</span> <span data-i18n="back.notes">Notes</span></a>
+    <a class="pill-link" href="../../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></svg> <span data-i18n="back.home">Home</span></a>
+  </nav>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="lx.kicker">Visual guide</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="lx.heroTitle">Linux, <em>from user to firewall.</em></h1>
+      <p class="hero-lede" data-i18n="lx.heroLede">A visual, exam-style guide: users and root, permissions, processes, the file tree, commands, networking, SSH, firewalls, health tools and cleaning your history.</p>
+    </section>
+
+    <div class="page-layout">
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+            <li><a href="#intro"><span class="pt">O que é o Linux</span><span class="en">What Linux is</span></a></li>
+            <li><a href="#users"><span class="pt">Usuários, grupos e superusuário</span><span class="en">Users, groups and the superuser</span></a></li>
+            <li><a href="#perms"><span class="pt">Arquivos e permissões</span><span class="en">Files and permissions</span></a></li>
+            <li><a href="#fhs"><span class="pt">Estrutura de arquivos</span><span class="en">File structure</span></a></li>
+            <li><a href="#commands"><span class="pt">Comandos do dia a dia</span><span class="en">Everyday commands</span></a></li>
+            <li><a href="#processes"><span class="pt">Processos, pais e filhos</span><span class="en">Processes, parents and children</span></a></li>
+            <li><a href="#network"><span class="pt">Redes: ver, entender e interagir</span><span class="en">Networking: see, understand and interact</span></a></li>
+            <li><a href="#ssh"><span class="pt">SSH: entrar, acompanhar e proteger</span><span class="en">SSH: log in, watch and protect</span></a></li>
+            <li><a href="#firewall"><span class="pt">Firewall: filtrar o que entra</span><span class="en">Firewall: filtering what comes in</span></a></li>
+            <li><a href="#hardening"><span class="pt">Proteger o computador e como saber</span><span class="en">Protecting the computer and how to know</span></a></li>
+            <li><a href="#tools"><span class="pt">Ferramentas visuais: TUI e web</span><span class="en">Visual tools: TUI and web</span></a></li>
+            <li><a href="#history"><span class="pt">Limpar o histórico do terminal</span><span class="en">Clearing the terminal history</span></a></li>
+            <li><a href="#exam"><span class="pt">Questões de prova e revisão</span><span class="en">Exam questions and review</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+<section class="content-section" aria-labelledby="intro">
+<h2 id="intro"><span class="pt">O que é o Linux</span><span class="en">What Linux is</span></h2>
+
+<p><span class="pt">Linux é, em sentido estrito, só o <em>kernel</em> (o núcleo): o programa que fala com o hardware e reparte CPU, memória, disco e rede entre os outros programas. Tudo o que você usa no terminal (shell, <code>ls</code>, <code>grep</code>, <code>ssh</code>) são programas comuns que pedem coisas ao kernel. A combinação kernel + ferramentas + gerenciador de pacotes é uma <em>distribuição</em> (Ubuntu, Debian, Fedora, Arch).</span><span class="en">Strictly speaking, Linux is just the <em>kernel</em>: the program that talks to the hardware and shares CPU, memory, disk and network among the other programs. Everything you use in the terminal (shell, <code>ls</code>, <code>grep</code>, <code>ssh</code>) is an ordinary program that asks the kernel for things. Kernel + tools + package manager is a <em>distribution</em> (Ubuntu, Debian, Fedora, Arch).</span></p>
+<p><span class="pt">Dois princípios explicam quase tudo nesta nota: <em>“tudo é arquivo”</em> (discos, terminais, processos e até a rede aparecem como arquivos ou descritores de arquivo) e <em>“todo programa roda como algum usuário”</em> (as permissões decidem o que ele pode tocar). Aprenda esses dois e o resto vira consequência.</span><span class="en">Two principles explain almost everything in this note: <em>“everything is a file”</em> (disks, terminals, processes and even the network show up as files or file descriptors) and <em>“every program runs as some user”</em> (permissions decide what it may touch). Learn these two and the rest follows.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 336" role="img" aria-label="Camadas do Linux / Linux layers" style="min-width:560px">
+<rect x="150" y="8" width="470" height="44" rx="4" class="ln fillsoft"/>
+<text x="166" y="27" class="pt ">Aplicações</text><text x="166" y="27" class="en ">Applications</text>
+<text x="166" y="43" class="mut mono">firefox · vim · ssh · python · docker</text>
+<rect x="150" y="62" width="470" height="44" rx="4" class="ln fillsoft"/>
+<text x="166" y="81" class="pt ">Shell e utilitários</text><text x="166" y="81" class="en ">Shell and utilities</text>
+<text x="166" y="97" class="mut mono">bash · zsh · ls · cp · grep · systemctl</text>
+<rect x="150" y="116" width="470" height="44" rx="4" class="ln fillsoft"/>
+<text x="166" y="135" class="pt ">Bibliotecas</text><text x="166" y="135" class="en ">Libraries</text>
+<text x="166" y="151" class="mut mono">glibc (libc): traduz funções em chamadas ao kernel</text>
+<text x="20" y="34" class="pt mut">espaço do</text><text x="20" y="34" class="en mut">user</text>
+<text x="20" y="48" class="pt mut">usuário</text><text x="20" y="48" class="en mut">space</text>
+<path d="M138 8V160" class="ln"/>
+<path d="M150 172L620 172" class="ln dash"/>
+<text x="385" y="188" class="pt mut mono" text-anchor="middle">chamadas de sistema (syscalls): open, read, write, fork, socket…</text><text x="385" y="188" class="en mut mono" text-anchor="middle">system calls (syscalls): open, read, write, fork, socket…</text>
+<rect x="150" y="200" width="470" height="74" rx="4" class="ln"/>
+<rect x="160" y="214" width="84" height="46" rx="4" class="ln fillsoft"/>
+<text x="202" y="241" class="pt " text-anchor="middle">Processos</text><text x="202" y="241" class="en " text-anchor="middle">Processes</text>
+<rect x="252" y="214" width="84" height="46" rx="4" class="ln fillsoft"/>
+<text x="294" y="241" class="pt " text-anchor="middle">Memória</text><text x="294" y="241" class="en " text-anchor="middle">Memory</text>
+<rect x="344" y="214" width="84" height="46" rx="4" class="ln fillsoft"/>
+<text x="386" y="241" class="pt " text-anchor="middle">Arquivos</text><text x="386" y="241" class="en " text-anchor="middle">Files</text>
+<rect x="436" y="214" width="84" height="46" rx="4" class="ln fillsoft"/>
+<text x="478" y="241" class="pt " text-anchor="middle">Rede</text><text x="478" y="241" class="en " text-anchor="middle">Network</text>
+<rect x="528" y="214" width="84" height="46" rx="4" class="ln fillsoft"/>
+<text x="570" y="241" class="" text-anchor="middle">Drivers</text>
+<text x="20" y="232" class="mut">kernel</text>
+<path d="M138 196V280" class="ln"/>
+<rect x="150" y="292" width="470" height="34" rx="4" class="ln"/>
+<text x="385" y="313" class="pt " text-anchor="middle">Hardware: CPU · RAM · disco · placa de rede</text><text x="385" y="313" class="en " text-anchor="middle">Hardware: CPU · RAM · disk · network card</text>
+<path d="M385 276L385 292" class="ln"/><path d="M381.5 284.8L385 292L388.5 284.8" class="ln"/>
+</svg></div><figcaption><span class="pt">As camadas do Linux. Programas nunca tocam o hardware: pedem ao kernel por syscalls, e o kernel decide se permite.</span><span class="en">The Linux layers. Programs never touch the hardware: they ask the kernel through syscalls, and the kernel decides whether to allow it.</span></figcaption></figure>
+<h3><span class="pt">Livros e fontes recomendados</span><span class="en">Recommended books and sources</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Fonte</span><span class="en">Source</span></th><th><span class="pt">Use para</span><span class="en">Use it for</span></th></tr></thead><tbody><tr><td><em>The Linux Programming Interface</em>, Michael Kerrisk (No Starch, 2010)</td><td><span class="pt">A referência definitiva: o que cada syscall faz de verdade. Cap. 8–9 usuários e credenciais, 15 atributos de arquivo, 17 ACLs, 24–27 processos, 56–61 sockets.</span><span class="en">The definitive reference: what each syscall really does. Ch. 8–9 users and credentials, 15 file attributes, 17 ACLs, 24–27 processes, 56–61 sockets.</span></td></tr><tr><td><em>How Linux Works</em>, Brian Ward (No Starch, 3ª ed. 2021)</td><td><span class="pt">A melhor ponte entre “usar” e “entender”: boot, kernel, disco, rede, serviços.</span><span class="en">The best bridge between “using” and “understanding”: boot, kernel, disk, network, services.</span></td></tr><tr><td><em>UNIX and Linux System Administration Handbook</em>, Nemeth et al. (5ª ed.)</td><td><span class="pt">Administração do dia a dia: contas, armazenamento, rede, segurança, monitoramento.</span><span class="en">Day-to-day administration: accounts, storage, networking, security, monitoring.</span></td></tr><tr><td><em>Operating Systems: Three Easy Pieces</em> (OSTEP), Arpaci-Dusseau</td><td><span class="pt">Teoria gratuita e muito clara: processos, escalonamento, memória virtual, arquivos.</span><span class="en">Free and very clear theory: processes, scheduling, virtual memory, files.</span></td></tr><tr><td><span class="pt">Páginas <code>man</code> (<code>man7.org</code>) e Filesystem Hierarchy Standard</span><span class="en">The <code>man</code> pages (<code>man7.org</code>) and the Filesystem Hierarchy Standard</span></td><td><span class="pt">Texto oficial: <code>man 7 hier</code>, <code>man 5 passwd</code>, <code>man 7 signal</code>, <code>man 7 capabilities</code>.</span><span class="en">The official text: <code>man 7 hier</code>, <code>man 5 passwd</code>, <code>man 7 signal</code>, <code>man 7 capabilities</code>.</span></td></tr><tr><td><span class="pt">Guias de certificação: Linux Essentials e LPIC-1 (LPI), RHCSA (Red Hat)</span><span class="en">Certification guides: Linux Essentials and LPIC-1 (LPI), RHCSA (Red Hat)</span></td><td><span class="pt">Listas de tópicos de prova; esta nota cobre o núcleo de todos eles.</span><span class="en">Exam topic lists; this note covers the core of all of them.</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Estratégia de estudo: leia a seção, rode os comandos numa máquina virtual ou num contêiner descartável e só então faça as questões de prova no fim. Em Linux, ler sem digitar não fixa nada.</span><span class="en">Study strategy: read the section, run the commands in a throwaway virtual machine or container, and only then do the exam questions at the end. In Linux, reading without typing does not stick.</span></div>
+</section>
+<section class="content-section" aria-labelledby="users">
+<h2 id="users"><span class="pt">Usuários, grupos e superusuário</span><span class="en">Users, groups and the superuser</span></h2>
+
+<p><span class="pt">Para o kernel, um usuário é só um número: o <em>UID</em>. Nomes como “ana” existem para humanos; o kernel compara números. Cada usuário tem também um <em>GID</em> principal e pode pertencer a outros grupos. Os dados ficam em arquivos de texto em <code>/etc</code>.</span><span class="en">To the kernel a user is just a number: the <em>UID</em>. Names like “ana” exist for humans; the kernel compares numbers. Each user also has a primary <em>GID</em> and may belong to other groups. The data lives in plain text files in <code>/etc</code>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 176" role="img" aria-label="Anatomia de uma linha do passwd / Anatomy of a passwd line" style="min-width:560px">
+<text x="20" y="20" class="mut mono">/etc/passwd</text>
+<rect x="20" y="32" width="60" height="38" rx="4" class="ln fillsoft"/>
+<text x="50.0" y="56" class="mono" text-anchor="middle">ana</text>
+<text x="50.0" y="94" class="pt mut" text-anchor="middle">nome</text><text x="50.0" y="94" class="en mut" text-anchor="middle">login</text>
+<rect x="80" y="32" width="50" height="38" rx="4" class="ln fillsoft"/>
+<text x="105.0" y="56" class="mono" text-anchor="middle">x</text>
+<text x="105.0" y="94" class="pt mut" text-anchor="middle">senha</text><text x="105.0" y="94" class="en mut" text-anchor="middle">password</text>
+<rect x="130" y="32" width="60" height="38" rx="4" class="ln fillsoft"/>
+<text x="160.0" y="56" class="mono" text-anchor="middle">1000</text>
+<text x="160.0" y="94" class="mut" text-anchor="middle">UID</text>
+<rect x="190" y="32" width="60" height="38" rx="4" class="ln fillsoft"/>
+<text x="220.0" y="56" class="mono" text-anchor="middle">1000</text>
+<text x="220.0" y="94" class="mut" text-anchor="middle">GID</text>
+<rect x="250" y="32" width="110" height="38" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="56" class="mono" text-anchor="middle">Ana Silva</text>
+<text x="305.0" y="94" class="pt mut" text-anchor="middle">comentário</text><text x="305.0" y="94" class="en mut" text-anchor="middle">comment</text>
+<rect x="360" y="32" width="110" height="38" rx="4" class="ln fillsoft"/>
+<text x="415.0" y="56" class="mono" text-anchor="middle">/home/ana</text>
+<text x="415.0" y="94" class="pt mut" text-anchor="middle">diretório</text><text x="415.0" y="94" class="en mut" text-anchor="middle">home</text>
+<rect x="470" y="32" width="110" height="38" rx="4" class="ln fillsoft"/>
+<text x="525.0" y="56" class="mono" text-anchor="middle">/bin/bash</text>
+<text x="525.0" y="94" class="mut" text-anchor="middle">shell</text>
+<text x="20" y="140" class="pt mut">O “x” diz: o hash da senha está em /etc/shadow, legível só pelo root.</text><text x="20" y="140" class="en mut">The “x” means: the password hash is in /etc/shadow, readable only by root.</text>
+<text x="20" y="162" class="pt mut">Campos separados por “:”. UID 0 = superusuário; 1–999 = contas de sistema; 1000+ = pessoas.</text><text x="20" y="162" class="en mut">Fields separated by “:”. UID 0 = superuser; 1–999 = system accounts; 1000+ = people.</text>
+</svg></div><figcaption><span class="pt">Uma linha de /etc/passwd tem sete campos. É o “cadastro” de cada usuário.</span><span class="en">One line of /etc/passwd has seven fields. It is each user’s “registration”.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo</span><span class="en">File</span></th><th><span class="pt">Guarda</span><span class="en">Holds</span></th><th><span class="pt">Quem lê</span><span class="en">Who can read</span></th></tr></thead><tbody><tr><td><code>/etc/passwd</code></td><td><span class="pt">contas: nome, UID, GID, home, shell</span><span class="en">accounts: name, UID, GID, home, shell</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/shadow</code></td><td><span class="pt">hash da senha, validade, bloqueio</span><span class="en">password hash, expiry, lock</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr><tr><td><code>/etc/group</code></td><td><span class="pt">grupos e seus membros</span><span class="en">groups and their members</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/sudoers</code> e <code>/etc/sudoers.d/</code></td><td><span class="pt">quem pode virar quem (editar só com <code>visudo</code>)</span><span class="en">who may become whom (edit only with <code>visudo</code>)</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr></tbody></table></div>
+<h3><span class="pt">O superusuário (root)</span><span class="en">The superuser (root)</span></h3>
+<p><span class="pt">O superusuário é quem tem <em>UID 0</em>, não quem se chama “root”. Para o kernel, UID 0 ignora as checagens de permissão de arquivos e pode, por exemplo, ler qualquer arquivo, matar qualquer processo e abrir portas abaixo de 1024. No Linux moderno esse poder é dividido em <em>capabilities</em> (ex.: <code>CAP_NET_BIND_SERVICE</code> só para abrir portas baixas), mas o root tradicional tem todas. Por isso a regra de ouro é: <em>use root só no instante em que precisar</em>.</span><span class="en">The superuser is whoever has <em>UID 0</em>, not whoever is named “root”. To the kernel, UID 0 skips file permission checks and can, for example, read any file, kill any process and bind ports below 1024. Modern Linux splits that power into <em>capabilities</em> (e.g. <code>CAP_NET_BIND_SERVICE</code> just for low ports), but the traditional root has them all. Hence the golden rule: <em>use root only at the moment you need it</em>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 164" role="img" aria-label="Fluxo do sudo / sudo flow" style="min-width:560px">
+<rect x="10" y="40" width="120" height="56" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="65.0" class="" text-anchor="middle">ana (UID 1000)</text>
+<text x="70.0" y="81.0" class="pt mut mono" text-anchor="middle">usuário comum</text><text x="70.0" y="81.0" class="en mut mono" text-anchor="middle">regular user</text>
+<rect x="180" y="20" width="150" height="96" rx="4" class="ln"/>
+<text x="255.0" y="72.0" class="mono" text-anchor="middle">sudo apt update</text>
+<text x="255" y="98" class="pt mut" text-anchor="middle">pede ao sudo</text><text x="255" y="98" class="en mut" text-anchor="middle">asks sudo</text>
+<rect x="380" y="20" width="120" height="40" rx="4" class="ln"/>
+<text x="440.0" y="44.0" class="" text-anchor="middle">sudoers?</text>
+<rect x="380" y="76" width="120" height="40" rx="4" class="ln"/>
+<text x="440.0" y="100.0" class="pt " text-anchor="middle">pede senha de ana</text><text x="440.0" y="100.0" class="en " text-anchor="middle">asks ana’s password</text>
+<rect x="530" y="40" width="105" height="56" rx="4" class="ln fillsoft"/>
+<text x="582.5" y="65.0" class="" text-anchor="middle">root (UID 0)</text>
+<text x="582.5" y="81.0" class="pt mut mono" text-anchor="middle">1 comando</text><text x="582.5" y="81.0" class="en mut mono" text-anchor="middle">1 command</text>
+<path d="M130 68L180 68" class="ln"/><path d="M172.8 71.5L180 68L172.8 64.5" class="ln"/>
+<path d="M330 50L380 40" class="ln"/><path d="M373.6 44.8L380 40L372.3 38.0" class="ln"/>
+<path d="M330 90L380 96" class="ln"/><path d="M372.4 98.6L380 96L373.3 91.7" class="ln"/>
+<path d="M500 60L530 60" class="ln"/><path d="M522.8 63.5L530 60L522.8 56.5" class="ln"/>
+<path d="M500 96L530 80" class="ln"/><path d="M525.3 86.5L530 80L522.0 80.3" class="ln"/>
+<text x="20" y="150" class="pt mut">Tudo fica registrado: /var/log/auth.log (Debian/Ubuntu) ou journalctl _COMM=sudo.</text><text x="20" y="150" class="en mut">Everything is logged: /var/log/auth.log (Debian/Ubuntu) or journalctl _COMM=sudo.</text>
+</svg></div><figcaption><span class="pt">O fluxo do sudo: a pessoa continua sendo ela mesma, e só aquele comando roda como root. Isso deixa um rastro de auditoria, ao contrário de um shell root permanente.</span><span class="en">The sudo flow: the person stays themselves, and only that command runs as root. That leaves an audit trail, unlike a permanent root shell.</span></figcaption></figure>
+<pre><code>id                         # uid=1000(ana) gid=1000(ana) groups=1000(ana),27(sudo),1001(dev)
+whoami                     # ana
+groups ana                 # grupos de ana
+getent passwd ana          # a linha de ana (funciona com LDAP também)
+
+sudo useradd -m -s /bin/bash -G sudo ana   # cria usuário + home + shell + grupo extra
+sudo passwd ana                            # define a senha
+sudo usermod -aG dev ana                   # ADICIONA ao grupo dev (sem -a, apaga os outros!)
+sudo groupadd dev                          # cria grupo
+sudo gpasswd -d ana dev                    # tira ana do grupo dev
+sudo passwd -l ana                         # bloqueia a conta (-u desbloqueia)
+sudo userdel -r ana                        # remove usuário e o home
+
+su - ana                   # vira ana (pede a senha DE ANA); o "-" carrega o ambiente dela
+sudo -i                    # shell de root, autenticando com a SUA senha
+sudo -l                    # lista o que você pode rodar com sudo
+sudo visudo                # edita o sudoers com validação de sintaxe</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Pegadinha clássica: <code>usermod -G dev ana</code> (sem <code>-a</code>) <em>substitui</em> todos os grupos suplementares de ana, inclusive o <code>sudo</code>. Use sempre <code>-aG</code>. E quem muda de grupo precisa abrir uma nova sessão (logout/login ou <code>newgrp</code>) para o grupo valer.</span><span class="en">Classic trap: <code>usermod -G dev ana</code> (without <code>-a</code>) <em>replaces</em> all of ana’s supplementary groups, including <code>sudo</code>. Always use <code>-aG</code>. And someone whose groups changed needs a new session (log out/in or <code>newgrp</code>) for it to take effect.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">No Debian/Ubuntu existe também <code>adduser</code>, mais amigável (pergunta nome e senha). <code>useradd</code> é o comando de baixo nível, igual em todas as distribuições. Para a teoria de UID real, efetivo e salvo, veja o cap. 9 do Kerrisk.</span><span class="en">Debian/Ubuntu also have <code>adduser</code>, friendlier (it asks name and password). <code>useradd</code> is the low-level command, the same on every distribution. For the theory of real, effective and saved UIDs, see Kerrisk ch. 9.</span></div>
+</section>
+<section class="content-section" aria-labelledby="perms">
+<h2 id="perms"><span class="pt">Arquivos e permissões</span><span class="en">Files and permissions</span></h2>
+
+<p><span class="pt">Todo arquivo tem um <em>dono</em> (usuário), um <em>grupo</em> e nove bits de permissão: leitura (<code>r</code>), escrita (<code>w</code>) e execução (<code>x</code>) para três públicos: o dono (<code>u</code>), o grupo (<code>g</code>) e todo o resto (<code>o</code>). O kernel escolhe <em>um</em> público, nesta ordem: se você é o dono, vale só a regra do dono; senão, se está no grupo, vale a do grupo; senão, a de outros.</span><span class="en">Every file has an <em>owner</em> (user), a <em>group</em> and nine permission bits: read (<code>r</code>), write (<code>w</code>) and execute (<code>x</code>) for three audiences: the owner (<code>u</code>), the group (<code>g</code>) and everybody else (<code>o</code>). The kernel picks <em>one</em> audience, in this order: if you are the owner, only the owner rule applies; otherwise, if you are in the group, the group rule; otherwise, the others rule.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 178" role="img" aria-label="Anatomia das permissões / Permission anatomy" style="min-width:640px">
+<text x="20" y="40" class="mut mono">ls -l:</text>
+<rect x="130" y="20" width="42" height="34" rx="4" class="ln"/>
+<text x="151" y="43" class="mono" text-anchor="middle">-</text>
+<rect x="176" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="197" y="43" class="mono" text-anchor="middle">r</text>
+<rect x="222" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="243" y="43" class="mono" text-anchor="middle">w</text>
+<rect x="268" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="289" y="43" class="mono" text-anchor="middle">x</text>
+<rect x="314" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="335" y="43" class="mono" text-anchor="middle">r</text>
+<rect x="360" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="381" y="43" class="mono" text-anchor="middle">-</text>
+<rect x="406" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="427" y="43" class="mono" text-anchor="middle">x</text>
+<rect x="452" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="473" y="43" class="mono" text-anchor="middle">r</text>
+<rect x="498" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="519" y="43" class="mono" text-anchor="middle">-</text>
+<rect x="544" y="20" width="42" height="34" rx="4" class="ln fillsoft"/>
+<text x="565" y="43" class="mono" text-anchor="middle">-</text>
+<text x="602" y="43" class="mono">1 ana dev 812 build.sh</text>
+<path d="M130 64L172 64" class="ln"/>
+<text x="151.0" y="82" class="pt " text-anchor="middle">tipo</text><text x="151.0" y="82" class="en " text-anchor="middle">type</text>
+<path d="M176 64L310 64" class="ln"/>
+<text x="243.0" y="82" class="pt " text-anchor="middle">dono (u)</text><text x="243.0" y="82" class="en " text-anchor="middle">owner (u)</text>
+<path d="M314 64L448 64" class="ln"/>
+<text x="381.0" y="82" class="pt " text-anchor="middle">grupo (g)</text><text x="381.0" y="82" class="en " text-anchor="middle">group (g)</text>
+<path d="M452 64L586 64" class="ln"/>
+<text x="519.0" y="82" class="pt " text-anchor="middle">outros (o)</text><text x="519.0" y="82" class="en " text-anchor="middle">others (o)</text>
+<text x="243.0" y="104" class="mono mut" text-anchor="middle">rwx = 4+2+1 = 7</text>
+<text x="381.0" y="104" class="mono mut" text-anchor="middle">r-x = 4+0+1 = 5</text>
+<text x="519.0" y="104" class="mono mut" text-anchor="middle">r-- = 4+0+0 = 4</text>
+<text x="130" y="140" class="pt mono">chmod 754 build.sh   ←  7 (dono)  5 (grupo)  4 (outros)</text><text x="130" y="140" class="en mono">chmod 754 build.sh   ←  7 (owner)  5 (group)  4 (others)</text>
+<text x="130" y="164" class="pt mut">tipo: - arquivo · d diretório · l link simbólico · c/b dispositivo · s socket · p fifo</text><text x="130" y="164" class="en mut">type: - file · d directory · l symlink · c/b device · s socket · p fifo</text>
+</svg></div><figcaption><span class="pt">Lendo <code>-rwxr-xr--</code>: tipo, depois três trios. Em octal, r vale 4, w vale 2 e x vale 1; somam-se por público.</span><span class="en">Reading <code>-rwxr-xr--</code>: type, then three triplets. In octal, r is 4, w is 2 and x is 1; add them per audience.</span></figcaption></figure>
+<h3><span class="pt">O que r, w e x significam em cada tipo</span><span class="en">What r, w and x mean for each type</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Bit</span><span class="en">Bit</span></th><th><span class="pt">Em arquivo</span><span class="en">On a file</span></th><th><span class="pt">Em diretório</span><span class="en">On a directory</span></th></tr></thead><tbody><tr><td><code>r</code></td><td><span class="pt">ler o conteúdo</span><span class="en">read the content</span></td><td><span class="pt">listar os nomes (<code>ls</code>)</span><span class="en">list the names (<code>ls</code>)</span></td></tr><tr><td><code>w</code></td><td><span class="pt">alterar o conteúdo</span><span class="en">change the content</span></td><td><span class="pt">criar, renomear e apagar entradas dentro dele</span><span class="en">create, rename and delete entries inside it</span></td></tr><tr><td><code>x</code></td><td><span class="pt">executar como programa</span><span class="en">run as a program</span></td><td><span class="pt">“atravessar”: entrar com <code>cd</code> e acessar arquivos pelo nome</span><span class="en">“traverse”: <code>cd</code> into it and reach files by name</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Pegadinha: apagar um arquivo depende da permissão <code>w</code> <em>do diretório</em>, não do arquivo. Quem pode escrever no diretório pode apagar arquivos de outros dentro dele, a não ser que o <em>sticky bit</em> (abaixo) esteja ligado.</span><span class="en">Trap: deleting a file depends on the <code>w</code> permission <em>of the directory</em>, not of the file. Whoever can write to the directory can delete other people’s files inside it, unless the <em>sticky bit</em> (below) is on.</span></div>
+<pre><code>ls -l arquivo               # permissões, dono, grupo, tamanho, data
+ls -ld /etc /tmp            # -d: o próprio diretório, não o conteúdo
+stat arquivo                # tudo, inclusive inode e octal
+namei -l /var/www/index.html   # mostra a permissão de CADA pedaço do caminho
+
+chmod u+x script.sh         # simbólico: dono ganha x
+chmod g-w,o-rwx arquivo     # grupo perde w; outros perdem tudo
+chmod 640 arquivo           # octal: rw- r-- ---
+chmod -R 755 pasta/         # recursivo (cuidado: põe x em arquivos também)
+chmod a+r arquivo           # a = all (u+g+o)
+
+sudo chown ana arquivo      # muda dono
+sudo chown ana:dev arquivo  # dono e grupo de uma vez
+sudo chown -R ana: pasta/   # "ana:" = grupo principal de ana
+chgrp dev arquivo           # muda só o grupo (se você pertence a ele)
+
+umask                       # máscara atual (típico 0022)
+umask 027                   # novos arquivos: 640, novos diretórios: 750</code></pre>
+<p><span class="pt">A <em>umask</em> é subtraída das permissões-padrão (666 para arquivos, 777 para diretórios). Com <code>umask 022</code>: arquivos viram 644 e diretórios 755. Com <code>027</code>: 640 e 750, ou seja, “outros” não veem nada.</span><span class="en">The <em>umask</em> is subtracted from the default permissions (666 for files, 777 for directories). With <code>umask 022</code>: files become 644 and directories 755. With <code>027</code>: 640 and 750, meaning “others” see nothing.</span></p>
+<h3><span class="pt">Bits especiais: setuid, setgid e sticky</span><span class="en">Special bits: setuid, setgid and sticky</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Bit</span><span class="en">Bit</span></th><th><span class="pt">Octal</span><span class="en">Octal</span></th><th><span class="pt">Efeito</span><span class="en">Effect</span></th><th><span class="pt">Exemplo real</span><span class="en">Real example</span></th></tr></thead><tbody><tr><td>setuid (<code>s</code> no dono)</td><td>4000</td><td><span class="pt">o programa roda com os privilégios do <em>dono do arquivo</em></span><span class="en">the program runs with the privileges of the <em>file’s owner</em></span></td><td><span class="pt"><code>/usr/bin/passwd</code> (dono root) altera <code>/etc/shadow</code> para um usuário comum</span><span class="en"><code>/usr/bin/passwd</code> (owner root) edits <code>/etc/shadow</code> for a regular user</span></td></tr><tr><td>setgid (<code>s</code> no grupo)</td><td>2000</td><td><span class="pt">em arquivo: roda com o grupo do arquivo. Em <em>diretório</em>: novos arquivos herdam o grupo do diretório</span><span class="en">on a file: runs with the file’s group. On a <em>directory</em>: new files inherit the directory’s group</span></td><td><span class="pt">pasta compartilhada de um time: <code>chmod g+s /srv/projeto</code></span><span class="en">a team’s shared folder: <code>chmod g+s /srv/projeto</code></span></td></tr><tr><td>sticky (<code>t</code> em outros)</td><td>1000</td><td><span class="pt">em diretório: só o dono do arquivo (ou root) apaga ou renomeia</span><span class="en">on a directory: only the file’s owner (or root) can delete or rename</span></td><td><span class="pt"><code>/tmp</code> tem <code>drwxrwxrwt</code></span><span class="en"><code>/tmp</code> is <code>drwxrwxrwt</code></span></td></tr></tbody></table></div>
+<pre><code>chmod 4755 programa         # setuid + rwxr-xr-x
+chmod g+s /srv/projeto      # setgid no diretório
+chmod +t /srv/publico       # sticky
+find / -perm -4000 -type f 2&gt;/dev/null   # AUDITORIA: lista todos os programas setuid</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Segurança: programas setuid de root são alvo preferido de ataque; qualquer bug neles vira escalada de privilégio. Audite a lista com o <code>find</code> acima e desconfie de itens que você não reconhece.</span><span class="en">Security: setuid-root programs are a favourite attack target; any bug in them becomes privilege escalation. Audit the list with the <code>find</code> above and distrust entries you do not recognise.</span></div>
+<h3><span class="pt">ACLs: quando três públicos não bastam</span><span class="en">ACLs: when three audiences are not enough</span></h3>
+<p><span class="pt">Se você precisa dar acesso a <em>uma</em> pessoa específica sem mexer no dono nem no grupo, use ACL (<em>Access Control List</em>; Kerrisk, cap. 17). O <code>ls -l</code> mostra um <code>+</code> no fim das permissões quando existe ACL.</span><span class="en">If you need to give access to <em>one</em> specific person without touching owner or group, use an ACL (<em>Access Control List</em>; Kerrisk, ch. 17). <code>ls -l</code> shows a <code>+</code> after the permissions when an ACL exists.</span></p>
+<pre><code>setfacl -m u:bia:rw relatorio.txt     # dá rw à usuária bia
+setfacl -x u:bia relatorio.txt        # remove a regra
+getfacl relatorio.txt                 # mostra todas</code></pre>
+</section>
+<section class="content-section" aria-labelledby="fhs">
+<h2 id="fhs"><span class="pt">Estrutura de arquivos</span><span class="en">File structure</span></h2>
+
+<p><span class="pt">O Linux tem <em>uma única árvore</em> de diretórios que começa em <code>/</code> (a raiz). Não existe “C:” ou “D:”: um pendrive ou outro disco é <em>montado</em> em algum diretório (por exemplo <code>/mnt/usb</code>) e seu conteúdo aparece ali. O Filesystem Hierarchy Standard (FHS) define o papel de cada diretório, e <code>man 7 hier</code> resume.</span><span class="en">Linux has <em>one single tree</em> of directories that starts at <code>/</code> (the root). There is no “C:” or “D:”: a USB stick or another disk is <em>mounted</em> on some directory (for example <code>/mnt/usb</code>) and its content appears there. The Filesystem Hierarchy Standard (FHS) defines each directory’s role, and <code>man 7 hier</code> summarises it.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 413" role="img" aria-label="Estrutura de diretórios / Directory structure" style="min-width:640px">
+<text x="20" y="24" class="mono">/</text>
+<path d="M30 30L30 381" class="ln"/>
+<path d="M30 44L48 44" class="ln"/>
+<text x="54" y="49" class="mono">/bin  /sbin  /lib</text>
+<text x="220" y="49" class="pt mut">comandos e bibliotecas essenciais (hoje links para /usr/…)</text><text x="220" y="49" class="en mut">essential commands and libraries (today links to /usr/…)</text>
+<path d="M30 69L48 69" class="ln"/>
+<text x="54" y="74" class="mono">/boot</text>
+<text x="220" y="74" class="pt mut">kernel e bootloader (GRUB)</text><text x="220" y="74" class="en mut">kernel and bootloader (GRUB)</text>
+<path d="M30 94L48 94" class="ln"/>
+<text x="54" y="99" class="mono">/dev</text>
+<text x="220" y="99" class="pt mut">dispositivos como arquivos: /dev/sda, /dev/null, /dev/tty</text><text x="220" y="99" class="en mut">devices as files: /dev/sda, /dev/null, /dev/tty</text>
+<path d="M30 119L48 119" class="ln"/>
+<text x="54" y="124" class="mono">/etc</text>
+<text x="220" y="124" class="pt mut">configuração do sistema, em texto</text><text x="220" y="124" class="en mut">system configuration, in text</text>
+<path d="M30 144L48 144" class="ln"/>
+<text x="54" y="149" class="mono">/home</text>
+<text x="220" y="149" class="pt mut">pastas dos usuários (/home/ana)</text><text x="220" y="149" class="en mut">users’ folders (/home/ana)</text>
+<path d="M30 169L48 169" class="ln"/>
+<text x="54" y="174" class="mono">/root</text>
+<text x="220" y="174" class="pt mut">home do superusuário (fora de /home)</text><text x="220" y="174" class="en mut">superuser’s home (outside /home)</text>
+<path d="M30 194L48 194" class="ln"/>
+<text x="54" y="199" class="mono">/media  /mnt</text>
+<text x="220" y="199" class="pt mut">pontos de montagem de mídias e discos</text><text x="220" y="199" class="en mut">mount points for media and disks</text>
+<path d="M30 219L48 219" class="ln"/>
+<text x="54" y="224" class="mono">/opt</text>
+<text x="220" y="224" class="pt mut">software de terceiros em bloco (ex.: /opt/google)</text><text x="220" y="224" class="en mut">self-contained third-party software (e.g. /opt/google)</text>
+<path d="M30 244L48 244" class="ln"/>
+<text x="54" y="249" class="mono">/proc</text>
+<text x="220" y="249" class="pt mut">janela virtual para o kernel e os processos: /proc/PID, /proc/cpuinfo</text><text x="220" y="249" class="en mut">virtual window into the kernel and processes: /proc/PID, /proc/cpuinfo</text>
+<path d="M30 269L48 269" class="ln"/>
+<text x="54" y="274" class="mono">/sys</text>
+<text x="220" y="274" class="pt mut">dispositivos e drivers, também virtual</text><text x="220" y="274" class="en mut">devices and drivers, also virtual</text>
+<path d="M30 294L48 294" class="ln"/>
+<text x="54" y="299" class="mono">/run</text>
+<text x="220" y="299" class="pt mut">estado de execução desde o boot (PIDs, sockets); some ao reiniciar</text><text x="220" y="299" class="en mut">runtime state since boot (PIDs, sockets); gone on reboot</text>
+<path d="M30 319L48 319" class="ln"/>
+<text x="54" y="324" class="mono">/srv</text>
+<text x="220" y="324" class="pt mut">dados servidos pela máquina (sites, FTP)</text><text x="220" y="324" class="en mut">data served by the machine (sites, FTP)</text>
+<path d="M30 344L48 344" class="ln"/>
+<text x="54" y="349" class="mono">/tmp</text>
+<text x="220" y="349" class="pt mut">temporários de todos (sticky bit); limpo no boot ou periodicamente</text><text x="220" y="349" class="en mut">everyone’s temporaries (sticky bit); cleaned at boot or periodically</text>
+<path d="M30 369L48 369" class="ln"/>
+<text x="54" y="374" class="mono">/usr</text>
+<text x="220" y="374" class="pt mut">programas, bibliotecas e docs instalados (bin, lib, share, local)</text><text x="220" y="374" class="en mut">installed programs, libraries and docs (bin, lib, share, local)</text>
+<path d="M30 394L48 394" class="ln"/>
+<text x="54" y="399" class="mono">/var</text>
+<text x="220" y="399" class="pt mut">dados que mudam: logs (/var/log), filas, caches, bancos</text><text x="220" y="399" class="en mut">data that changes: logs (/var/log), queues, caches, databases</text>
+</svg></div><figcaption><span class="pt">O mapa do sistema de arquivos. Memorize os quatro mais cobrados em prova: <code>/etc</code> (configuração), <code>/var</code> (dados variáveis e logs), <code>/home</code> (usuários) e <code>/proc</code> (kernel em tempo real).</span><span class="en">The filesystem map. Memorise the four most asked in exams: <code>/etc</code> (configuration), <code>/var</code> (variable data and logs), <code>/home</code> (users) and <code>/proc</code> (live kernel).</span></figcaption></figure>
+<h3><span class="pt">Montagem, discos e inodes</span><span class="en">Mounting, disks and inodes</span></h3>
+<p><span class="pt">Cada arquivo é, por baixo, um <em>inode</em>: um registro com dono, permissões, tamanhos e ponteiros para os blocos de dados. O <em>nome</em> do arquivo vive no diretório, que é só uma tabela “nome → número do inode”. Por isso um arquivo pode ter vários nomes (<em>hard links</em>) e por isso renomear é instantâneo (Kerrisk, cap. 14 e 18).</span><span class="en">Underneath, each file is an <em>inode</em>: a record with owner, permissions, sizes and pointers to the data blocks. The file’s <em>name</em> lives in the directory, which is just a “name → inode number” table. That is why a file can have several names (<em>hard links</em>) and why renaming is instant (Kerrisk, ch. 14 and 18).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo de link</span><span class="en">Link type</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th></tr></thead><tbody><tr><td><span class="pt">Hard link</span><span class="en">Hard link</span></td><td><span class="pt">outro nome para o <em>mesmo inode</em>; o dado só some quando o último nome some; não cruza partições</span><span class="en">another name for the <em>same inode</em>; the data only goes when the last name goes; cannot cross partitions</span></td><td><code>ln original apelido</code></td></tr><tr><td><span class="pt">Link simbólico</span><span class="en">Symbolic link</span></td><td><span class="pt">um arquivo pequeno que guarda um <em>caminho</em>; quebra se o alvo some; pode cruzar partições</span><span class="en">a small file that stores a <em>path</em>; breaks if the target disappears; can cross partitions</span></td><td><code>ln -s alvo atalho</code></td></tr></tbody></table></div>
+<pre><code>lsblk                       # discos e partições em árvore
+df -h                       # espaço livre por sistema de arquivos
+du -sh * | sort -h          # quem está ocupando espaço aqui
+findmnt                     # o que está montado onde
+sudo mount /dev/sdb1 /mnt/usb
+sudo umount /mnt/usb        # (é umount, sem "n")
+cat /etc/fstab              # o que monta automaticamente no boot
+ls -i arquivo               # número do inode</code></pre>
+</section>
+<section class="content-section" aria-labelledby="commands">
+<h2 id="commands"><span class="pt">Comandos do dia a dia</span><span class="en">Everyday commands</span></h2>
+
+<p><span class="pt">Todo comando segue o mesmo molde: <code>comando [opções] [argumentos]</code>. As opções curtas (<code>-l</code>) podem ser juntadas (<code>-la</code>); as longas usam dois traços (<code>--all</code>). Quando em dúvida, <code>man comando</code>, <code>comando --help</code> ou <code>tldr comando</code> (exemplos curtos).</span><span class="en">Every command follows the same mould: <code>command [options] [arguments]</code>. Short options (<code>-l</code>) can be combined (<code>-la</code>); long ones use two dashes (<code>--all</code>). When in doubt, <code>man command</code>, <code>command --help</code> or <code>tldr command</code> (short examples).</span></p>
+<h3><span class="pt">Navegar e olhar</span><span class="en">Move around and look</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Faz</span><span class="en">Does</span></th></tr></thead><tbody><tr><td><code>pwd</code></td><td><span class="pt">mostra onde você está</span><span class="en">shows where you are</span></td></tr><tr><td><code>ls -lah</code></td><td><span class="pt">lista com detalhes (<code>l</code>), ocultos (<code>a</code>) e tamanhos legíveis (<code>h</code>)</span><span class="en">lists with details (<code>l</code>), hidden files (<code>a</code>) and human sizes (<code>h</code>)</span></td></tr><tr><td><code>cd /etc</code> · <code>cd ..</code> · <code>cd ~</code> · <code>cd -</code></td><td><span class="pt">entra · sobe · vai ao home · volta ao anterior</span><span class="en">enter · up · go home · back to the previous</span></td></tr><tr><td><code>tree -L 2</code></td><td><span class="pt">árvore até 2 níveis (pacote <code>tree</code>)</span><span class="en">tree two levels deep (package <code>tree</code>)</span></td></tr><tr><td><code>cat</code> · <code>less</code> · <code>head -n 20</code> · <code>tail -f</code></td><td><span class="pt">ver tudo · paginar · primeiras linhas · seguir um log ao vivo</span><span class="en">view all · page through · first lines · follow a log live</span></td></tr><tr><td><code>file x</code> · <code>stat x</code> · <code>du -sh x</code></td><td><span class="pt">tipo · detalhes · tamanho</span><span class="en">type · details · size</span></td></tr></tbody></table></div>
+<h3><span class="pt">Criar, copiar, mover e remover</span><span class="en">Create, copy, move and remove</span></h3>
+<pre><code>mkdir projeto                  # cria pasta
+mkdir -p a/b/c                 # cria o caminho inteiro (-p = parents)
+touch notas.txt                # cria arquivo vazio (ou atualiza a data)
+echo "oi" &gt; notas.txt          # cria/sobrescreve com conteúdo
+echo "mais" &gt;&gt; notas.txt       # acrescenta ao fim
+
+cp origem destino              # copia arquivo
+cp -r pasta/ copia/            # copia pasta (-r = recursivo)
+mv antigo novo                 # renomeia OU move (mesmo comando)
+mv *.log /tmp/                 # move vários
+
+rm arquivo                     # remove (NÃO vai para a lixeira!)
+rm -r pasta/                   # remove pasta e conteúdo
+rm -i arquivo                  # pergunta antes
+rmdir pasta_vazia              # só remove se estiver vazia</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Não existe “desfazer” no <code>rm</code>. Nunca rode <code>rm -rf</code> com variável não conferida (<code>rm -rf "$DIR/"</code> com <code>DIR</code> vazio vira <code>rm -rf /</code>). Em dúvida, liste primeiro com <code>ls</code> usando exatamente o mesmo padrão, ou instale <code>trash-cli</code> e use <code>trash arquivo</code>.</span><span class="en">There is no “undo” for <code>rm</code>. Never run <code>rm -rf</code> with an unchecked variable (<code>rm -rf "$DIR/"</code> with an empty <code>DIR</code> becomes <code>rm -rf /</code>). When in doubt, list first with <code>ls</code> using exactly the same pattern, or install <code>trash-cli</code> and use <code>trash file</code>.</span></div>
+<h3><span class="pt">Buscar e processar texto</span><span class="en">Search and process text</span></h3>
+<pre><code>find /var/log -name "*.log" -mtime -1     # logs alterados nas últimas 24 h
+find . -type f -size +100M                # arquivos grandes
+find . -user ana -perm -o+w               # de ana e graváveis por todos
+grep -rn "erro" /var/log/ 2&gt;/dev/null     # procura texto (-r recursivo, -n linha)
+grep -i -E "fail|denied" auth.log         # sem diferenciar maiúsculas, regex
+locate nome                               # busca rápida num índice (updatedb)
+which python3 ; type cd                   # onde está / o que é um comando
+
+sort | uniq -c | sort -rn | head          # o trio clássico: contar e ranquear
+wc -l arquivo                             # conta linhas
+cut -d: -f1 /etc/passwd                   # só o 1º campo (nomes de usuário)
+awk '{print $1}' access.log               # 1ª coluna
+sed -i 's/foo/bar/g' arquivo              # troca texto no arquivo</code></pre>
+<h3><span class="pt">Pipes e redirecionamento</span><span class="en">Pipes and redirection</span></h3>
+<p><span class="pt">O poder do shell está em ligar programas pequenos. O <code>|</code> (pipe) liga a saída de um à entrada do outro. Cada processo nasce com três canais: 0 = entrada padrão (<em>stdin</em>), 1 = saída padrão (<em>stdout</em>), 2 = erros (<em>stderr</em>).</span><span class="en">The shell’s power lies in connecting small programs. The <code>|</code> (pipe) connects one’s output to another’s input. Each process is born with three channels: 0 = standard input (<em>stdin</em>), 1 = standard output (<em>stdout</em>), 2 = errors (<em>stderr</em>).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Operador</span><span class="en">Operator</span></th><th><span class="pt">Significa</span><span class="en">Means</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th></tr></thead><tbody><tr><td><code>&gt;</code></td><td><span class="pt">stdout para arquivo (sobrescreve)</span><span class="en">stdout to file (overwrites)</span></td><td><code>ls &gt; lista.txt</code></td></tr><tr><td><code>&gt;&gt;</code></td><td><span class="pt">stdout para arquivo (acrescenta)</span><span class="en">stdout to file (appends)</span></td><td><code>date &gt;&gt; log.txt</code></td></tr><tr><td><code>2&gt;</code></td><td><span class="pt">só os erros</span><span class="en">errors only</span></td><td><code>find / 2&gt;/dev/null</code></td></tr><tr><td><code>&amp;&gt;</code></td><td><span class="pt">stdout e stderr juntos</span><span class="en">stdout and stderr together</span></td><td><code>make &amp;&gt; build.log</code></td></tr><tr><td><code>&lt;</code></td><td><span class="pt">arquivo como stdin</span><span class="en">file as stdin</span></td><td><code>sort &lt; nomes.txt</code></td></tr><tr><td><code>|</code></td><td><span class="pt">saída de um vira entrada do outro</span><span class="en">one’s output becomes the other’s input</span></td><td><code>ps aux | grep ssh</code></td></tr><tr><td><code>&amp;&amp;</code> · <code>||</code> · <code>;</code></td><td><span class="pt">só se deu certo · só se deu errado · sempre</span><span class="en">only if it worked · only if it failed · always</span></td><td><code>mkdir x &amp;&amp; cd x</code></td></tr><tr><td><code>sudo tee</code></td><td><span class="pt">escrever em arquivo de root a partir de um pipe</span><span class="en">write to a root-owned file from a pipe</span></td><td><code>echo a | sudo tee /etc/x</code></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Pegadinha: <code>sudo echo a &gt; /etc/x</code> falha, porque o <em>redirecionamento é feito pelo seu shell</em>, que não é root; o sudo só vale para o <code>echo</code>. Use <code>echo a | sudo tee /etc/x</code>.</span><span class="en">Trap: <code>sudo echo a &gt; /etc/x</code> fails, because the <em>redirection is done by your shell</em>, which is not root; sudo only applies to <code>echo</code>. Use <code>echo a | sudo tee /etc/x</code>.</span></div>
+<h3><span class="pt">Instalar, atualizar e gerenciar serviços</span><span class="en">Install, update and manage services</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tarefa</span><span class="en">Task</span></th><th><span class="pt">Debian / Ubuntu</span><span class="en">Debian / Ubuntu</span></th><th><span class="pt">Fedora / RHEL</span><span class="en">Fedora / RHEL</span></th><th><span class="pt">Arch</span><span class="en">Arch</span></th></tr></thead><tbody><tr><td><span class="pt">Atualizar índice</span><span class="en">Refresh index</span></td><td><code>apt update</code></td><td><code>dnf check-update</code></td><td><code>pacman -Sy</code></td></tr><tr><td><span class="pt">Atualizar tudo</span><span class="en">Upgrade all</span></td><td><code>apt upgrade</code></td><td><code>dnf upgrade</code></td><td><code>pacman -Syu</code></td></tr><tr><td><span class="pt">Instalar</span><span class="en">Install</span></td><td><code>apt install htop</code></td><td><code>dnf install htop</code></td><td><code>pacman -S htop</code></td></tr><tr><td><span class="pt">Remover</span><span class="en">Remove</span></td><td><code>apt remove htop</code></td><td><code>dnf remove htop</code></td><td><code>pacman -R htop</code></td></tr><tr><td><span class="pt">Buscar</span><span class="en">Search</span></td><td><code>apt search x</code></td><td><code>dnf search x</code></td><td><code>pacman -Ss x</code></td></tr></tbody></table></div>
+<pre><code>systemctl status ssh           # estado de um serviço (o nome pode ser sshd no Fedora)
+sudo systemctl start|stop|restart ssh
+sudo systemctl enable --now ssh    # liga no boot E agora
+systemctl --failed             # o que falhou
+journalctl -u ssh -f           # log do serviço ao vivo
+journalctl -p err -b           # só erros desde o último boot</code></pre>
+</section>
+<section class="content-section" aria-labelledby="processes">
+<h2 id="processes"><span class="pt">Processos, pais e filhos</span><span class="en">Processes, parents and children</span></h2>
+
+<p><span class="pt">Um <em>programa</em> é um arquivo no disco; um <em>processo</em> é esse programa em execução, com seu <em>PID</em> (identificador), seu <em>PPID</em> (PID do pai), um dono (UID), memória própria, diretório atual e descritores de arquivos abertos. Em Linux todo processo tem um pai. A árvore começa no PID 1 (hoje, quase sempre o <code>systemd</code>), que o kernel inicia no boot.</span><span class="en">A <em>program</em> is a file on disk; a <em>process</em> is that program running, with its <em>PID</em> (identifier), its <em>PPID</em> (parent’s PID), an owner (UID), its own memory, a current directory and open file descriptors. In Linux every process has a parent. The tree starts at PID 1 (today almost always <code>systemd</code>), which the kernel launches at boot.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 248" role="img" aria-label="Árvore de processos / Process tree" style="min-width:560px">
+<rect x="10" y="90" width="130" height="50" rx="4" class="ln fillsoft"/>
+<text x="75.0" y="112.0" class="" text-anchor="middle">systemd</text>
+<text x="75.0" y="128.0" class="mut mono" text-anchor="middle">PID 1</text>
+<rect x="190" y="20" width="130" height="50" rx="4" class="ln"/>
+<text x="255.0" y="42.0" class="" text-anchor="middle">sshd</text>
+<text x="255.0" y="58.0" class="mut mono" text-anchor="middle">PID 842 · :22</text>
+<rect x="190" y="160" width="130" height="50" rx="4" class="ln"/>
+<text x="255.0" y="182.0" class="" text-anchor="middle">cron</text>
+<text x="255.0" y="198.0" class="mut mono" text-anchor="middle">PID 901</text>
+<rect x="370" y="20" width="130" height="50" rx="4" class="ln"/>
+<text x="435.0" y="42.0" class="" text-anchor="middle">sshd: ana</text>
+<text x="435.0" y="58.0" class="mut mono" text-anchor="middle">PID 2210</text>
+<rect x="540" y="20" width="90" height="50" rx="4" class="ln"/>
+<text x="585.0" y="42.0" class="" text-anchor="middle">bash</text>
+<text x="585.0" y="58.0" class="mut mono" text-anchor="middle">PID 2215</text>
+<rect x="560" y="100" width="70" height="50" rx="4" class="ln"/>
+<text x="595.0" y="122.0" class="" text-anchor="middle">vim</text>
+<text x="595.0" y="138.0" class="mut mono" text-anchor="middle">PID 2301</text>
+<rect x="560" y="180" width="70" height="50" rx="4" class="ln"/>
+<text x="595.0" y="202.0" class="" text-anchor="middle">ls</text>
+<text x="595.0" y="218.0" class="mut mono" text-anchor="middle">PID 2320</text>
+<path d="M140 105L190 50" class="ln"/><path d="M187.7 57.7L190 50L182.6 53.0" class="ln"/>
+<path d="M140 125L190 185" class="ln"/><path d="M182.7 181.7L190 185L188.1 177.2" class="ln"/>
+<path d="M320 45L370 45" class="ln"/><path d="M362.8 48.5L370 45L362.8 41.5" class="ln"/>
+<path d="M500 45L540 45" class="ln"/><path d="M532.8 48.5L540 45L532.8 41.5" class="ln"/>
+<path d="M545 70L545 205" class="ln"/>
+<path d="M545 125L560 125" class="ln"/><path d="M552.8 128.5L560 125L552.8 121.5" class="ln"/>
+<path d="M545 205L560 205" class="ln"/><path d="M552.8 208.5L560 205L552.8 201.5" class="ln"/>
+<text x="10" y="215" class="pt mut">seta = “criou” (fork)</text><text x="10" y="215" class="en mut">arrow = “created” (fork)</text>
+<text x="10" y="240" class="pt mut">Se o pai morre antes do filho, o filho é “adotado” pelo PID 1 (órfão).</text><text x="10" y="240" class="en mut">If the parent dies before the child, the child is “adopted” by PID 1 (orphan).</text>
+</svg></div><figcaption><span class="pt">Uma sessão SSH vista como árvore: o <code>systemd</code> iniciou o <code>sshd</code>, que criou um processo para ana, que criou o <code>bash</code>, que criou <code>vim</code> e <code>ls</code>. Veja a sua com <code>pstree -p</code>.</span><span class="en">An SSH session seen as a tree: <code>systemd</code> started <code>sshd</code>, which created a process for ana, which created <code>bash</code>, which created <code>vim</code> and <code>ls</code>. See yours with <code>pstree -p</code>.</span></figcaption></figure>
+<h3><span class="pt">Como um processo nasce: fork, exec e wait</span><span class="en">How a process is born: fork, exec and wait</span></h3>
+<p><span class="pt">Linux cria processos em duas etapas (Kerrisk, cap. 24–27). <code>fork()</code> <em>clona</em> o processo atual: nasce um filho idêntico, com PID novo. Em seguida o filho chama <code>exec()</code>, que <em>troca o programa</em> dentro dele (o PID continua). O pai chama <code>wait()</code> para esperar o filho terminar e ler o código de saída. É exatamente isso que o bash faz quando você digita <code>ls</code>.</span><span class="en">Linux creates processes in two steps (Kerrisk, ch. 24–27). <code>fork()</code> <em>clones</em> the current process: an identical child is born with a new PID. Then the child calls <code>exec()</code>, which <em>swaps the program</em> inside it (the PID stays). The parent calls <code>wait()</code> to wait for the child to finish and read its exit code. This is exactly what bash does when you type <code>ls</code>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 254" role="img" aria-label="fork exec wait" style="min-width:560px">
+<rect x="70" y="8" width="160" height="34" rx="4" class="ln fillsoft"/>
+<text x="150.0" y="29.0" class="pt " text-anchor="middle">bash (pai)</text><text x="150.0" y="29.0" class="en " text-anchor="middle">bash (parent)</text>
+<rect x="400" y="8" width="190" height="34" rx="4" class="ln fillsoft"/>
+<text x="495.0" y="29.0" class="pt " text-anchor="middle">filho</text><text x="495.0" y="29.0" class="en " text-anchor="middle">child</text>
+<path d="M150 42L150 230" class="ln"/>
+<path d="M495 100L495 230" class="ln"/>
+<path d="M150 100L495 100" class="ln"/><path d="M487.8 103.5L495 100L487.8 96.5" class="ln"/>
+<text x="322" y="92" class="mono" text-anchor="middle">fork()</text>
+<text x="505" y="94" class="pt mut">PID novo, cópia do pai</text><text x="505" y="94" class="en mut">new PID, copy of parent</text>
+<rect x="440" y="128" width="110" height="28" rx="4" class="ln"/>
+<text x="495" y="147" class="mono" text-anchor="middle">exec("ls")</text>
+<text x="505" y="176" class="pt mut">agora roda o ls</text><text x="505" y="176" class="en mut">now runs ls</text>
+<rect x="170" y="112" width="150" height="74" rx="4" class="ln dash"/>
+<text x="245" y="146" class="mono" text-anchor="middle">wait()</text>
+<text x="245" y="166" class="pt mut" text-anchor="middle">pai dorme esperando</text><text x="245" y="166" class="en mut" text-anchor="middle">parent sleeps, waiting</text>
+<path d="M495 210L150 214" class="ln"/><path d="M157.2 210.4L150 214L157.2 217.4" class="ln"/>
+<text x="322" y="205" class="mono" text-anchor="middle">exit(0) → SIGCHLD</text>
+<text x="322" y="242" class="pt mut" text-anchor="middle">o pai lê o código de saída ($?) e o kernel libera o filho</text><text x="322" y="242" class="en mut" text-anchor="middle">the parent reads the exit code ($?) and the kernel frees the child</text>
+</svg></div><figcaption><span class="pt">A dança fork → exec → exit → wait. Sem o <code>wait()</code> do pai, o filho terminado vira zumbi.</span><span class="en">The fork → exec → exit → wait dance. Without the parent’s <code>wait()</code>, the finished child becomes a zombie.</span></figcaption></figure>
+<pre><code>// fork_exec.c — gcc fork_exec.c -o fork_exec
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;unistd.h&gt;
+
+int main(void) {
+    pid_t pid = fork();                       // clona o processo
+    if (pid == -1) { perror("fork"); exit(1); }
+
+    if (pid == 0) {                           // aqui roda o FILHO
+        execlp("ls", "ls", "-l", (char *)NULL);
+        perror("execlp");                     // só chega aqui se o exec falhar
+        _exit(127);
+    }
+
+    int status;                               // aqui roda o PAI
+    waitpid(pid, &amp;status, 0);                 // espera e "colhe" o filho
+    printf("pai %d: filho %d saiu com %d\n", getpid(), pid, WEXITSTATUS(status));
+    return 0;
+}</code></pre>
+<h3><span class="pt">Estados de um processo</span><span class="en">Process states</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 248" role="img" aria-label="Estados de processo / Process states" style="min-width:560px">
+<rect x="10" y="20" width="100" height="40" rx="4" class="ln"/>
+<text x="60.0" y="44.0" class="pt " text-anchor="middle">novo</text><text x="60.0" y="44.0" class="en " text-anchor="middle">new</text>
+<rect x="160" y="20" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="215.0" y="44.0" class="pt " text-anchor="middle">pronto (R)</text><text x="215.0" y="44.0" class="en " text-anchor="middle">ready (R)</text>
+<rect x="340" y="20" width="130" height="40" rx="4" class="ln fillsoft"/>
+<text x="405.0" y="44.0" class="pt " text-anchor="middle">executando (R)</text><text x="405.0" y="44.0" class="en " text-anchor="middle">running (R)</text>
+<rect x="340" y="120" width="130" height="40" rx="4" class="ln fillsoft"/>
+<text x="405.0" y="144.0" class="pt " text-anchor="middle">dormindo (S/D)</text><text x="405.0" y="144.0" class="en " text-anchor="middle">sleeping (S/D)</text>
+<rect x="520" y="120" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="575.0" y="144.0" class="pt " text-anchor="middle">parado (T)</text><text x="575.0" y="144.0" class="en " text-anchor="middle">stopped (T)</text>
+<rect x="520" y="20" width="110" height="40" rx="4" class="ln"/>
+<text x="575.0" y="44.0" class="pt " text-anchor="middle">zumbi (Z)</text><text x="575.0" y="44.0" class="en " text-anchor="middle">zombie (Z)</text>
+<path d="M110 40L160 40" class="ln"/><path d="M152.8 43.5L160 40L152.8 36.5" class="ln"/>
+<text x="135" y="32" class="mono" text-anchor="middle">fork</text>
+<path d="M270 34L340 34" class="ln"/><path d="M332.8 37.5L340 34L332.8 30.5" class="ln"/>
+<path d="M340 48L270 48" class="ln"/><path d="M277.2 44.5L270 48L277.2 51.5" class="ln"/>
+<text x="305" y="24" class="mut" text-anchor="middle">CPU</text>
+<path d="M420 60L420 120" class="ln"/><path d="M416.5 112.8L420 120L423.5 112.8" class="ln"/>
+<text x="412" y="94" class="pt mut" text-anchor="end">espera I/O</text><text x="412" y="94" class="en mut" text-anchor="end">waits for I/O</text>
+<path d="M350 120L250 60" class="ln"/><path d="M258.0 60.7L250 60L254.4 66.7" class="ln"/>
+<text x="318" y="112" class="pt mut" text-anchor="end">evento chegou</text><text x="318" y="112" class="en mut" text-anchor="end">event arrived</text>
+<path d="M450 60L540 120" class="ln"/><path d="M532.1 118.9L540 120L535.9 113.1" class="ln"/>
+<text x="520" y="96" class="mut">Ctrl+Z</text>
+<path d="M470 40L520 40" class="ln"/><path d="M512.8 43.5L520 40L512.8 36.5" class="ln"/>
+<text x="495" y="32" class="mono" text-anchor="middle">exit</text>
+<text x="10" y="196" class="pt mut">zumbi: já terminou, mas o pai ainda não chamou wait(); só ocupa uma linha na tabela de processos.</text><text x="10" y="196" class="en mut">zombie: already finished, but the parent has not called wait() yet; it only takes a row in the process table.</text>
+<text x="10" y="216" class="pt mut">D = sono ininterruptível (esperando disco/rede); nem kill -9 mata até o I/O voltar.</text><text x="10" y="216" class="en mut">D = uninterruptible sleep (waiting on disk/network); not even kill -9 works until the I/O returns.</text>
+<text x="10" y="236" class="pt mut">SIGCONT (fg/bg) tira do estado parado.</text><text x="10" y="236" class="en mut">SIGCONT (fg/bg) takes it out of the stopped state.</text>
+</svg></div><figcaption><span class="pt">O ciclo de vida. A coluna <code>STAT</code> do <code>ps</code> mostra a letra de cada estado.</span><span class="en">The lifecycle. The <code>STAT</code> column of <code>ps</code> shows each state’s letter.</span></figcaption></figure>
+<h3><span class="pt">Sinais: como falar com um processo</span><span class="en">Signals: how to talk to a process</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Sinal</span><span class="en">Signal</span></th><th><span class="pt">Nº</span><span class="en">No.</span></th><th><span class="pt">Quando</span><span class="en">When</span></th><th><span class="pt">Pode ser tratado?</span><span class="en">Can be handled?</span></th></tr></thead><tbody><tr><td><code>SIGINT</code></td><td>2</td><td><span class="pt"><code>Ctrl+C</code>: “interrompa”</span><span class="en"><code>Ctrl+C</code>: “interrupt”</span></td><td><span class="pt">sim</span><span class="en">yes</span></td></tr><tr><td><code>SIGTERM</code></td><td>15</td><td><span class="pt"><code>kill PID</code> (padrão): “termine com educação”</span><span class="en"><code>kill PID</code> (default): “please terminate”</span></td><td><span class="pt">sim (permite limpar)</span><span class="en">yes (allows cleanup)</span></td></tr><tr><td><code>SIGKILL</code></td><td>9</td><td><span class="pt"><code>kill -9</code>: o kernel mata na hora</span><span class="en"><code>kill -9</code>: the kernel kills at once</span></td><td><span class="pt"><em>não</em></span><span class="en"><em>no</em></span></td></tr><tr><td><code>SIGHUP</code></td><td>1</td><td><span class="pt">terminal fechou; muitos daemons recarregam a configuração</span><span class="en">terminal closed; many daemons reload configuration</span></td><td><span class="pt">sim</span><span class="en">yes</span></td></tr><tr><td><code>SIGSTOP</code> / <code>SIGCONT</code></td><td>19 / 18</td><td><span class="pt">pausar / continuar (<code>Ctrl+Z</code> usa SIGTSTP)</span><span class="en">pause / continue (<code>Ctrl+Z</code> uses SIGTSTP)</span></td><td><span class="pt">STOP não</span><span class="en">STOP no</span></td></tr></tbody></table></div>
+<pre><code>ps aux                          # todos os processos (user, PID, %CPU, %MEM, comando)
+ps -eo pid,ppid,stat,user,cmd   # escolha as colunas: veja o PPID e o STAT
+ps -ef --forest                 # a árvore em texto
+pstree -p                       # a árvore, com PIDs
+pgrep -a ssh                    # PIDs pelo nome
+top        # ou htop / btop: ao vivo (q sai; k mata; M ordena por memória)
+
+echo $$ ; echo $PPID            # PID do seu shell e do pai dele
+bash -c 'echo eu=$$ pai=$PPID'  # um filho: o pai dele é o seu shell
+cat /proc/$$/status | head      # o kernel descreve o processo como arquivo
+
+kill 2301                       # SIGTERM (educado)
+kill -9 2301                    # SIGKILL (último recurso)
+kill -STOP 2301 ; kill -CONT 2301
+pkill -f "python app.py"        # por padrão no comando
+killall firefox                 # por nome
+
+sleep 300 &amp;                     # &amp; = em segundo plano
+jobs ; fg %1 ; bg %1            # lista; traz à frente; manda ao fundo
+nohup ./job.sh &amp;                # sobrevive ao fechar o terminal
+nice -n 10 ./pesado.sh          # prioridade menor (-20 a 19; menor número = mais prioridade)
+renice 5 -p 2301</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Como lidar com um zumbi: ele já está morto, então <code>kill</code> não adianta. Descubra o pai (<code>ps -o ppid= -p PID</code>) e conserte ou reinicie <em>o pai</em>; quando o pai morre, o PID 1 adota e colhe os zumbis. Alguns zumbis passageiros são normais; milhares indicam um bug no pai.</span><span class="en">How to handle a zombie: it is already dead, so <code>kill</code> is useless. Find the parent (<code>ps -o ppid= -p PID</code>) and fix or restart <em>the parent</em>; when the parent dies, PID 1 adopts and reaps the zombies. A few passing zombies are normal; thousands point to a bug in the parent.</span></div>
+<p><span class="pt"><strong>Load average</strong> (<code>uptime</code>, <code>top</code>) mostra a média de processos prontos para rodar ou esperando disco em 1, 5 e 15 minutos. Compare com o número de CPUs (<code>nproc</code>): em 4 CPUs, load 4 é “cheio” e 12 é sobrecarga.</span><span class="en"><strong>Load average</strong> (<code>uptime</code>, <code>top</code>) shows the average number of processes ready to run or waiting for disk over 1, 5 and 15 minutes. Compare it with the number of CPUs (<code>nproc</code>): on 4 CPUs, load 4 is “full” and 12 is overload.</span></p>
+</section>
+<section class="content-section" aria-labelledby="network">
+<h2 id="network"><span class="pt">Redes: ver, entender e interagir</span><span class="en">Networking: see, understand and interact</span></h2>
+
+<p><span class="pt">Para a rede, o Linux usa a pilha TCP/IP no kernel. Quem fala com ela são os <em>sockets</em> (Kerrisk, cap. 56–61): um programa pede ao kernel um socket, liga-o a um IP e uma <em>porta</em> e passa a enviar e receber bytes. Uma conexão é identificada por quatro valores: IP e porta de origem, IP e porta de destino.</span><span class="en">For networking, Linux uses the TCP/IP stack inside the kernel. Programs talk to it through <em>sockets</em> (Kerrisk, ch. 56–61): a program asks the kernel for a socket, binds it to an IP and a <em>port</em>, and sends and receives bytes. A connection is identified by four values: source IP and port, destination IP and port.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 288" role="img" aria-label="Camadas de rede / Network layers" style="min-width:560px">
+<text x="20" y="20" class="pt mut">camada</text><text x="20" y="20" class="en mut">layer</text>
+<text x="160" y="20" class="pt mut">protocolos</text><text x="160" y="20" class="en mut">protocols</text>
+<text x="370" y="20" class="pt mut">ferramentas para ver e interagir</text><text x="370" y="20" class="en mut">tools to inspect and interact</text>
+<rect x="10" y="32" width="130" height="46" rx="4" class="ln fillsoft"/>
+<text x="75" y="60" class="pt " text-anchor="middle">Aplicação</text><text x="75" y="60" class="en " text-anchor="middle">Application</text>
+<rect x="150" y="32" width="200" height="46" rx="4" class="ln"/>
+<text x="160" y="60" class="mono">HTTP · SSH · DNS · SMTP</text>
+<rect x="360" y="32" width="270" height="46" rx="4" class="ln"/>
+<text x="370" y="60" class="mono">curl · ssh · dig · wget</text>
+<rect x="10" y="88" width="130" height="46" rx="4" class="ln fillsoft"/>
+<text x="75" y="116" class="pt " text-anchor="middle">Transporte</text><text x="75" y="116" class="en " text-anchor="middle">Transport</text>
+<rect x="150" y="88" width="200" height="46" rx="4" class="ln"/>
+<text x="160" y="116" class="mono">TCP · UDP · portas</text>
+<rect x="360" y="88" width="270" height="46" rx="4" class="ln"/>
+<text x="370" y="116" class="mono">ss · nc · nmap · lsof -i</text>
+<rect x="10" y="144" width="130" height="46" rx="4" class="ln fillsoft"/>
+<text x="75" y="172" class="" text-anchor="middle">Internet</text>
+<rect x="150" y="144" width="200" height="46" rx="4" class="ln"/>
+<text x="160" y="172" class="mono">IP · ICMP · rotas</text>
+<rect x="360" y="144" width="270" height="46" rx="4" class="ln"/>
+<text x="370" y="172" class="mono">ip addr · ip route · ping · mtr</text>
+<rect x="10" y="200" width="130" height="46" rx="4" class="ln fillsoft"/>
+<text x="75" y="228" class="pt " text-anchor="middle">Enlace</text><text x="75" y="228" class="en " text-anchor="middle">Link</text>
+<rect x="150" y="200" width="200" height="46" rx="4" class="ln"/>
+<text x="160" y="228" class="mono">Ethernet · Wi-Fi · MAC · ARP</text>
+<rect x="360" y="200" width="270" height="46" rx="4" class="ln"/>
+<text x="370" y="228" class="mono">ip link · ip neigh · iw · ethtool</text>
+<text x="10" y="276" class="pt mut">tcpdump e Wireshark capturam pacotes de todas as camadas ao mesmo tempo.</text><text x="10" y="276" class="en mut">tcpdump and Wireshark capture packets of all layers at once.</text>
+</svg></div><figcaption><span class="pt">As quatro camadas do TCP/IP e a ferramenta certa para cada uma. Diagnostique de baixo para cima: cabo/Wi-Fi, IP, rota, DNS, porta, aplicação.</span><span class="en">The four TCP/IP layers and the right tool for each. Troubleshoot bottom-up: cable/Wi-Fi, IP, route, DNS, port, application.</span></figcaption></figure>
+<h3><span class="pt">Ver o que existe: interfaces, rotas e DNS</span><span class="en">See what exists: interfaces, routes and DNS</span></h3>
+<pre><code>ip -br addr                     # interfaces e IPs, uma linha cada (-br = brief)
+ip route                        # tabela de rotas; "default via X" é o seu gateway
+ip neigh                        # vizinhos na LAN (tabela ARP): quem está na minha rede
+ip -s link                      # contadores de pacotes e erros por interface
+nmcli device status             # estado (NetworkManager); nmtui = menu em texto
+resolvectl status               # servidores DNS em uso (systemd-resolved)
+cat /etc/hosts                  # nomes locais fixos</code></pre>
+<h3><span class="pt">Ver o que está acontecendo: conexões e portas</span><span class="en">See what is happening: connections and ports</span></h3>
+<pre><code>ss -tulpn                       # QUEM ESTÁ ESCUTANDO: t=TCP u=UDP l=listen p=processo n=numérico
+ss -tn state established        # conexões ativas agora
+ss -tnp dst :443                # conexões saindo para a porta 443, com o processo
+sudo lsof -i :8080              # que processo usa a porta 8080
+sudo tcpdump -i any -n port 53  # pacotes DNS ao vivo (Ctrl+C para parar)
+sudo tcpdump -i eth0 -w captura.pcap   # salva para abrir no Wireshark
+sudo nethogs                    # banda por PROCESSO (apt install nethogs)
+sudo iftop                      # banda por conexão</code></pre>
+<p><span class="pt">Como ler <code>ss -tulpn</code>: a coluna <em>Local Address</em> é a chave. <code>0.0.0.0:22</code> ou <code>*:22</code> = aceita de qualquer lugar; <code>127.0.0.1:5432</code> = só deste computador (seguro); <code>[::]:80</code> = o mesmo, mas em IPv6. Cada linha com endereço público é uma porta que um atacante pode tentar.</span><span class="en">How to read <code>ss -tulpn</code>: the <em>Local Address</em> column is the key. <code>0.0.0.0:22</code> or <code>*:22</code> = accepts from anywhere; <code>127.0.0.1:5432</code> = this computer only (safe); <code>[::]:80</code> = the same, but over IPv6. Every line with a public address is a port an attacker may try.</span></p>
+<h3><span class="pt">Interagir: testar, resolver nomes e falar HTTP</span><span class="en">Interact: test, resolve names and speak HTTP</span></h3>
+<pre><code>ping -c 4 1.1.1.1               # chega? (testa IP, sem DNS)
+ping -c 4 example.com           # se o IP funciona e este não, o problema é DNS
+mtr example.com                 # traceroute + ping contínuo (apt install mtr-tiny)
+traceroute example.com          # por quais roteadores o pacote passa
+
+dig example.com +short          # resolve nome → IP
+dig MX example.com              # registros de e-mail
+curl -I https://example.com     # só os cabeçalhos HTTP
+curl -v https://example.com     # tudo, inclusive o handshake TLS
+curl -s https://api.exemplo.dev/health | jq .
+
+nc -zv servidor 22              # a porta 22 está aberta? (z = só testa)
+nc -l 9000                      # abre um "servidor" simples na porta 9000</code></pre>
+<h3><span class="pt">Um roteiro de diagnóstico</span><span class="en">A troubleshooting script</span></h3>
+<ol class="ds-steps"><li><span class="pt"><code>ip -br addr</code>: a interface está <code>UP</code> e tem IP? Se não, o problema é cabo, Wi-Fi ou DHCP.</span><span class="en"><code>ip -br addr</code>: is the interface <code>UP</code> and does it have an IP? If not, it is the cable, Wi-Fi or DHCP.</span></li><li><span class="pt"><code>ip route</code> e <code>ping &lt;gateway&gt;</code>: você alcança o roteador?</span><span class="en"><code>ip route</code> and <code>ping &lt;gateway&gt;</code>: can you reach the router?</span></li><li><span class="pt"><code>ping 1.1.1.1</code>: sai para a internet?</span><span class="en"><code>ping 1.1.1.1</code>: does it reach the internet?</span></li><li><span class="pt"><code>dig example.com</code>: o nome resolve? Se o passo 3 funciona e este não, é DNS.</span><span class="en"><code>dig example.com</code>: does the name resolve? If step 3 works and this does not, it is DNS.</span></li><li><span class="pt"><code>nc -zv host porta</code>: a porta responde? Se não, firewall ou serviço parado.</span><span class="en"><code>nc -zv host port</code>: does the port answer? If not, firewall or stopped service.</span></li><li><span class="pt"><code>curl -v</code> e os logs do serviço (<code>journalctl -u</code>): a aplicação responde direito?</span><span class="en"><code>curl -v</code> and the service logs (<code>journalctl -u</code>): does the application answer properly?</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="ssh">
+<h2 id="ssh"><span class="pt">SSH: entrar, acompanhar e proteger</span><span class="en">SSH: log in, watch and protect</span></h2>
+
+<p><span class="pt">O <em>SSH</em> abre um terminal remoto cifrado (porta 22). É a porta de entrada de quase todo servidor Linux, então vale entender como funciona e como acompanhá-lo. O servidor prova quem é com uma <em>chave de host</em>; você prova quem é com senha ou, melhor, com um <em>par de chaves</em>: a privada nunca sai da sua máquina, a pública vai para o servidor.</span><span class="en"><em>SSH</em> opens an encrypted remote terminal (port 22). It is the front door of almost every Linux server, so it is worth understanding how it works and how to watch it. The server proves who it is with a <em>host key</em>; you prove who you are with a password or, better, a <em>key pair</em>: the private key never leaves your machine, the public one goes to the server.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 212" role="img" aria-label="Como o SSH funciona / How SSH works" style="min-width:560px">
+<rect x="10" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
+<text x="135" y="32" class="pt " text-anchor="middle">Cliente (seu PC)</text><text x="135" y="32" class="en " text-anchor="middle">Client (your PC)</text>
+<text x="24" y="62" class="mono">~/.ssh/id_ed25519</text>
+<text x="24" y="80" class="pt mut">sua chave PRIVADA (600)</text><text x="24" y="80" class="en mut">your PRIVATE key (600)</text>
+<text x="24" y="108" class="mono">~/.ssh/known_hosts</text>
+<text x="24" y="126" class="pt mut">chaves de servidores já vistos</text><text x="24" y="126" class="en mut">keys of servers already seen</text>
+<text x="24" y="154" class="mono">~/.ssh/config</text>
+<text x="24" y="172" class="pt mut">apelidos: “ssh meuserver”</text><text x="24" y="172" class="en mut">aliases: “ssh myserver”</text>
+<rect x="380" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
+<text x="505" y="32" class="pt " text-anchor="middle">Servidor</text><text x="505" y="32" class="en " text-anchor="middle">Server</text>
+<text x="394" y="62" class="mono">/etc/ssh/sshd_config</text>
+<text x="394" y="80" class="pt mut">regras do servidor</text><text x="394" y="80" class="en mut">server rules</text>
+<text x="394" y="108" class="mono">~/.ssh/authorized_keys</text>
+<text x="394" y="126" class="pt mut">chaves PÚBLICAS aceitas</text><text x="394" y="126" class="en mut">accepted PUBLIC keys</text>
+<text x="394" y="154" class="mono">/etc/ssh/ssh_host_*_key</text>
+<text x="394" y="172" class="pt mut">identidade do servidor</text><text x="394" y="172" class="en mut">server identity</text>
+<path d="M260 60L380 60" class="ln"/><path d="M372.8 63.5L380 60L372.8 56.5" class="ln"/>
+<path d="M380 90L260 90" class="ln"/><path d="M267.2 86.5L260 90L267.2 93.5" class="ln"/>
+<path d="M260 130L380 130" class="ln"/><path d="M372.8 133.5L380 130L372.8 126.5" class="ln"/>
+<text x="320" y="52" class="mono" text-anchor="middle">TCP :22</text>
+<text x="320" y="82" class="pt mut" text-anchor="middle">1 chave do host</text><text x="320" y="82" class="en mut" text-anchor="middle">1 host key</text>
+<text x="320" y="122" class="pt mut" text-anchor="middle">2 prova (assina)</text><text x="320" y="122" class="en mut" text-anchor="middle">2 proof (signs)</text>
+<text x="320" y="190" class="pt mut" text-anchor="middle">3 canal cifrado</text><text x="320" y="190" class="en mut" text-anchor="middle">3 encrypted channel</text>
+</svg></div><figcaption><span class="pt">Os arquivos de cada lado. Na primeira conexão o cliente pergunta se confia na chave do host e a grava em <code>known_hosts</code>; se ela mudar depois, o SSH avisa (pode ser ataque).</span><span class="en">The files on each side. On first connection the client asks whether to trust the host key and stores it in <code>known_hosts</code>; if it changes later, SSH warns you (it may be an attack).</span></figcaption></figure>
+<pre><code>ssh-keygen -t ed25519 -C "ana@notebook"   # cria o par de chaves (defina uma passphrase)
+ssh-copy-id ana@servidor                  # instala a pública no servidor
+ssh ana@servidor                          # entra
+ssh -v ana@servidor                       # diagnóstico: mostra cada etapa
+ssh ana@servidor 'df -h'                  # roda um comando e sai
+scp arquivo ana@servidor:/tmp/            # copia por SSH
+rsync -avz --progress pasta/ ana@servidor:/backup/   # sincroniza (só o que mudou)
+ssh -L 5432:localhost:5432 ana@servidor   # túnel: seu :5432 vira o banco do servidor
+ssh -J bastion ana@interno                # salta por um bastion host</code></pre>
+<pre><code># ~/.ssh/config  -&gt;  depois basta: ssh meuserver
+Host meuserver
+    HostName 203.0.113.10
+    User ana
+    IdentityFile ~/.ssh/id_ed25519</code></pre>
+<h3><span class="pt">Quem está conectado e o que aconteceu</span><span class="en">Who is connected and what happened</span></h3>
+<pre><code>who ; w                          # quem está logado agora e o que está executando
+last -n 20                       # últimos logins
+sudo lastb -n 20                 # tentativas de login que FALHARAM
+ss -tnp state established '( sport = :22 )'   # sessões SSH abertas
+sudo journalctl -u ssh --since "1 hour ago"   # log do sshd (Fedora: -u sshd)
+sudo grep "Failed password" /var/log/auth.log | awk '{print $(NF-3)}' | sort | uniq -c | sort -rn | head</code></pre>
+<h3><span class="pt">Endurecer o servidor SSH</span><span class="en">Hardening the SSH server</span></h3>
+<p><span class="pt">Crie um arquivo em <code>/etc/ssh/sshd_config.d/</code> (ou edite o <code>sshd_config</code>). Comentários ficam em linhas próprias.</span><span class="en">Create a file in <code>/etc/ssh/sshd_config.d/</code> (or edit <code>sshd_config</code>). Comments go on their own lines.</span></p>
+<pre><code># /etc/ssh/sshd_config.d/10-hardening.conf
+# ninguém entra direto como root
+PermitRootLogin no
+# só chaves (copie a sua ANTES de ligar isto!)
+PasswordAuthentication no
+PubkeyAuthentication yes
+# lista branca de usuários
+AllowUsers ana bia
+MaxAuthTries 3</code></pre>
+<pre><code>sudo sshd -t                     # valida a sintaxe ANTES de aplicar
+sudo systemctl reload ssh        # aplica sem derrubar as sessões atuais (Fedora: sshd)</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Antes de desligar a senha, abra <em>uma segunda sessão</em> e confirme que entra com a chave. Se errar numa máquina remota, você se tranca para fora. O <code>fail2ban</code> complementa: bane por alguns minutos os IPs que erram muitas vezes.</span><span class="en">Before turning the password off, open <em>a second session</em> and confirm the key works. If you get it wrong on a remote machine, you lock yourself out. <code>fail2ban</code> complements this: it bans IPs that fail too many times for a few minutes.</span></div>
+</section>
+<section class="content-section" aria-labelledby="firewall">
+<h2 id="firewall"><span class="pt">Firewall: filtrar o que entra</span><span class="en">Firewall: filtering what comes in</span></h2>
+
+<p><span class="pt">Um <em>firewall</em> é um porteiro: olha cada pacote e decide deixar passar, descartar ou recusar. No Linux quem filtra é o <em>netfilter</em>, dentro do kernel. O que você usa são “controles” para ele: <code>nftables</code> (o moderno), <code>iptables</code> (o antigo, hoje muitas vezes um tradutor para nftables), e frentes simples como <code>ufw</code> (Ubuntu/Debian) e <code>firewalld</code> (Fedora/RHEL).</span><span class="en">A <em>firewall</em> is a doorman: it looks at each packet and decides to let it through, drop it or reject it. In Linux the filtering is done by <em>netfilter</em>, inside the kernel. What you use are “controls” for it: <code>nftables</code> (the modern one), <code>iptables</code> (the old one, today often a translator to nftables), and simple front ends such as <code>ufw</code> (Ubuntu/Debian) and <code>firewalld</code> (Fedora/RHEL).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 266" role="img" aria-label="Fluxo do netfilter / netfilter flow" style="min-width:640px">
+<rect x="10" y="120" width="80" height="40" rx="4" class="ln fillsoft"/>
+<text x="50.0" y="144.0" class="pt " text-anchor="middle">pacote entra</text><text x="50.0" y="144.0" class="en " text-anchor="middle">packet in</text>
+<rect x="110" y="120" width="110" height="40" rx="4" class="ln"/>
+<text x="165.0" y="144.0" class="mono" text-anchor="middle">PREROUTING</text>
+<rect x="250" y="120" width="90" height="40" rx="4" class="ln"/>
+<text x="295.0" y="144.0" class="pt " text-anchor="middle">rota?</text><text x="295.0" y="144.0" class="en " text-anchor="middle">route?</text>
+<rect x="380" y="120" width="100" height="40" rx="4" class="ln"/>
+<text x="430.0" y="144.0" class="mono" text-anchor="middle">FORWARD</text>
+<rect x="540" y="120" width="130" height="40" rx="4" class="ln"/>
+<text x="605.0" y="144.0" class="mono" text-anchor="middle">POSTROUTING</text>
+<rect x="250" y="210" width="100" height="40" rx="4" class="ln"/>
+<text x="300.0" y="234.0" class="mono" text-anchor="middle">INPUT</text>
+<rect x="390" y="210" width="100" height="40" rx="4" class="ln fillsoft"/>
+<text x="440.0" y="234.0" class="pt " text-anchor="middle">processo local</text><text x="440.0" y="234.0" class="en " text-anchor="middle">local process</text>
+<rect x="540" y="210" width="130" height="40" rx="4" class="ln"/>
+<text x="605.0" y="234.0" class="mono" text-anchor="middle">OUTPUT</text>
+<path d="M90 140L110 140" class="ln"/><path d="M102.8 143.5L110 140L102.8 136.5" class="ln"/>
+<path d="M220 140L250 140" class="ln"/><path d="M242.8 143.5L250 140L242.8 136.5" class="ln"/>
+<path d="M340 140L380 140" class="ln"/><path d="M372.8 143.5L380 140L372.8 136.5" class="ln"/>
+<path d="M480 140L540 140" class="ln"/><path d="M532.8 143.5L540 140L532.8 136.5" class="ln"/>
+<path d="M295 160L295 210" class="ln"/><path d="M291.5 202.8L295 210L298.5 202.8" class="ln"/>
+<path d="M350 230L390 230" class="ln"/><path d="M382.8 233.5L390 230L382.8 226.5" class="ln"/>
+<path d="M490 230L540 230" class="ln"/><path d="M532.8 233.5L540 230L532.8 226.5" class="ln"/>
+<path d="M605 210L605 160" class="ln"/><path d="M608.5 167.2L605 160L601.5 167.2" class="ln"/>
+<path d="M605 120L605 80" class="ln"/><path d="M608.5 87.2L605 80L601.5 87.2" class="ln"/>
+<text x="615" y="98" class="pt mut">sai</text><text x="615" y="98" class="en mut">out</text>
+<text x="300" y="188" class="pt mut">é para mim</text><text x="300" y="188" class="en mut">for me</text>
+<text x="410" y="112" class="pt mut">só passando (roteador)</text><text x="410" y="112" class="en mut">just passing (router)</text>
+<text x="10" y="30" class="pt mut">Cada gancho tem regras: ACCEPT (passa), DROP (descarta calado), REJECT (recusa avisando).</text><text x="10" y="30" class="en mut">Each hook has rules: ACCEPT (let through), DROP (discard silently), REJECT (refuse with notice).</text>
+<text x="10" y="50" class="pt mut">Um PC comum usa quase só INPUT e OUTPUT; FORWARD é de roteadores e hosts de contêineres.</text><text x="10" y="50" class="en mut">An ordinary PC mostly uses INPUT and OUTPUT; FORWARD is for routers and container hosts.</text>
+</svg></div><figcaption><span class="pt">O caminho de um pacote pelos ganchos do netfilter. A regra mais importante de um computador pessoal está no <code>INPUT</code>: o que entra sem ter sido pedido.</span><span class="en">A packet’s path through the netfilter hooks. The most important rule on a personal computer is in <code>INPUT</code>: what comes in without having been asked for.</span></figcaption></figure>
+<h3><span class="pt">A política certa: negar por padrão</span><span class="en">The right policy: deny by default</span></h3>
+<p><span class="pt">A ideia de ouro: <em>bloqueie tudo que entra, libere só o necessário</em>. O que sai continua livre, e as respostas a conexões que <em>você</em> iniciou entram sozinhas (o firewall é <em>stateful</em>: lembra das conexões).</span><span class="en">The golden idea: <em>block everything coming in, allow only what is needed</em>. Outgoing traffic stays free, and replies to connections <em>you</em> started come in on their own (the firewall is <em>stateful</em>: it remembers connections).</span></p>
+<pre><code># ufw (Ubuntu/Debian): o caminho mais simples
+sudo ufw status verbose                  # está ativo? quais regras?
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp                    # LIBERE O SSH ANTES de ativar, se for remoto!
+sudo ufw allow from 192.168.1.0/24 to any port 9090 proto tcp   # só a sua LAN
+sudo ufw limit ssh                       # permite, mas freia força bruta
+sudo ufw enable
+sudo ufw status numbered ; sudo ufw delete 3   # listar e apagar uma regra
+
+# firewalld (Fedora/RHEL)
+sudo firewall-cmd --list-all
+sudo firewall-cmd --permanent --add-service=ssh
+sudo firewall-cmd --reload</code></pre>
+<pre><code># /etc/nftables.conf
+table inet filter {
+  chain input {
+    type filter hook input priority 0; policy drop;
+    ct state established,related accept   # respostas ao que EU pedi
+    ct state invalid drop
+    iif "lo" accept                       # tráfego interno da máquina
+    ip protocol icmp accept               # ping
+    ip6 nexthdr icmpv6 accept
+    tcp dport 22 accept                   # SSH
+  }
+  chain forward { type filter hook forward priority 0; policy drop; }
+  chain output  { type filter hook output  priority 0; policy accept; }
+}</code></pre>
+<pre><code>sudo nft -f /etc/nftables.conf            # aplica o arquivo
+sudo nft list ruleset                     # ver tudo o que está valendo
+sudo systemctl enable --now nftables      # carrega no boot</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Docker e ufw: o Docker mexe direto nas regras do netfilter, e portas publicadas com <code>-p 8080:80</code> podem ficar abertas ao mundo <em>mesmo com o ufw negando</em>. Publique só em localhost (<code>-p 127.0.0.1:8080:80</code>) ou trate o assunto na cadeia <code>DOCKER-USER</code>.</span><span class="en">Docker and ufw: Docker edits the netfilter rules directly, and ports published with <code>-p 8080:80</code> can be open to the world <em>even when ufw denies them</em>. Publish only on localhost (<code>-p 127.0.0.1:8080:80</code>) or handle it in the <code>DOCKER-USER</code> chain.</span></div>
+</section>
+<section class="content-section" aria-labelledby="hardening">
+<h2 id="hardening"><span class="pt">Proteger o computador e como saber</span><span class="en">Protecting the computer and how to know</span></h2>
+
+<p><span class="pt">Firewall é uma camada, não a defesa inteira. Segurança é <em>defesa em profundidade</em>: se uma camada falha, a próxima segura. A ordem prática é: reduzir o que está exposto, atualizar, limitar quem entra, vigiar e ter cópia de segurança.</span><span class="en">A firewall is one layer, not the whole defence. Security is <em>defence in depth</em>: if one layer fails, the next holds. The practical order is: reduce what is exposed, update, limit who gets in, watch, and keep backups.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 244" role="img" aria-label="Defesa em profundidade / Defence in depth" style="min-width:560px">
+<rect x="10.0" y="10" width="620" height="220" rx="4" class="ln"/>
+<rect x="40.0" y="46" width="560" height="168" rx="4" class="ln"/>
+<rect x="70.0" y="82" width="500" height="116" rx="4" class="ln"/>
+<rect x="100.0" y="118" width="440" height="64" rx="4" class="ln"/>
+<text x="22.0" y="28" class="pt ">Rede</text><text x="22.0" y="28" class="en ">Network</text>
+<text x="22.0" y="43" class="mut">firewall · só portas necessárias · Wi-Fi/roteador seguros</text>
+<text x="52.0" y="64" class="pt ">Sistema</text><text x="52.0" y="64" class="en ">System</text>
+<text x="52.0" y="79" class="mut">atualizações · usuários e sudo · SSH só com chave · fail2ban</text>
+<text x="82.0" y="100" class="pt ">Serviços</text><text x="82.0" y="100" class="en ">Services</text>
+<text x="82.0" y="115" class="mut">desligue o que não usa · ss -tulpn · sem root em serviços</text>
+<text x="112.0" y="136" class="pt ">Dados</text><text x="112.0" y="136" class="en ">Data</text>
+<text x="112.0" y="151" class="mut">backup 3-2-1 · disco cifrado (LUKS) · permissões justas</text>
+</svg></div><figcaption><span class="pt">Defesa em profundidade, de fora para dentro. O atacante precisa vencer todas as camadas; você só precisa que uma segure.</span><span class="en">Defence in depth, from the outside in. The attacker must beat every layer; you only need one to hold.</span></figcaption></figure>
+<h3><span class="pt">Como saber se o seu computador está protegido</span><span class="en">How to know whether your computer is protected</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Resultado saudável</span><span class="en">Healthy result</span></th></tr></thead><tbody><tr><td><span class="pt">O que está escutando?</span><span class="en">What is listening?</span></td><td><code>ss -tulpn</code></td><td><span class="pt">só o que você reconhece; o resto em <code>127.0.0.1</code></span><span class="en">only what you recognise; the rest on <code>127.0.0.1</code></span></td></tr><tr><td><span class="pt">O firewall está ativo?</span><span class="en">Is the firewall on?</span></td><td><code>sudo ufw status verbose</code> · <code>sudo nft list ruleset</code></td><td><span class="pt"><em>Status: active</em>, política <em>deny (incoming)</em></span><span class="en"><em>Status: active</em>, policy <em>deny (incoming)</em></span></td></tr><tr><td><span class="pt">Como me veem de fora?</span><span class="en">How do others see me?</span></td><td><code>nmap -sV IP-DA-MAQUINA</code> (de OUTRO computador seu)</td><td><span class="pt">só as portas que você liberou</span><span class="en">only the ports you opened</span></td></tr><tr><td><span class="pt">Há atualizações pendentes?</span><span class="en">Any pending updates?</span></td><td><code>apt list --upgradable</code> · <code>dnf check-update</code></td><td><span class="pt">vazio, ou só itens recentes</span><span class="en">empty, or only recent items</span></td></tr><tr><td><span class="pt">Alguém tentou entrar?</span><span class="en">Did anyone try to get in?</span></td><td><code>sudo lastb | head</code> · <code>journalctl -u ssh -p warning</code></td><td><span class="pt">poucas falhas; sem sucesso desconhecido em <code>last</code></span><span class="en">few failures; no unknown success in <code>last</code></span></td></tr><tr><td><span class="pt">Quem tem poder de root?</span><span class="en">Who has root power?</span></td><td><code>getent group sudo</code> · <code>awk -F: '$3==0' /etc/passwd</code></td><td><span class="pt">só quem deveria; só <code>root</code> com UID 0</span><span class="en">only who should; only <code>root</code> with UID 0</span></td></tr><tr><td><span class="pt">Há contas sem senha?</span><span class="en">Any accounts without a password?</span></td><td><code>sudo awk -F: '$2==""' /etc/shadow</code></td><td><span class="pt">sem saída</span><span class="en">no output</span></td></tr><tr><td><span class="pt">Existe uma auditoria pronta?</span><span class="en">Is there a ready-made audit?</span></td><td><code>sudo lynis audit system</code></td><td><span class="pt">lista de avisos e sugestões, com nota final</span><span class="en">list of warnings and suggestions with a final score</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Só rode <code>nmap</code>, varreduras e testes de força bruta em máquinas e redes <em>suas</em> ou com autorização por escrito. Varrer redes alheias pode ser crime e costuma violar os termos de provedores.</span><span class="en">Only run <code>nmap</code>, scans and brute-force tests on machines and networks that are <em>yours</em> or with written authorisation. Scanning other people’s networks can be a crime and usually breaks provider terms.</span></div>
+<h3><span class="pt">Lista de verificação mínima</span><span class="en">Minimum checklist</span></h3>
+<ol class="ds-steps"><li><span class="pt">Atualizações automáticas de segurança ligadas (<code>unattended-upgrades</code> no Debian/Ubuntu, <code>dnf-automatic</code> no Fedora).</span><span class="en">Automatic security updates on (<code>unattended-upgrades</code> on Debian/Ubuntu, <code>dnf-automatic</code> on Fedora).</span></li><li><span class="pt">Firewall com política de negar entrada por padrão.</span><span class="en">Firewall with a deny-incoming default policy.</span></li><li><span class="pt">Uso diário com usuário comum; <code>sudo</code> só quando preciso. Nunca navegar como root.</span><span class="en">Daily use with a regular user; <code>sudo</code> only when needed. Never browse as root.</span></li><li><span class="pt">SSH (se existir) só com chave, sem login de root, com <code>fail2ban</code>.</span><span class="en">SSH (if it exists) key-only, no root login, with <code>fail2ban</code>.</span></li><li><span class="pt">Serviços desnecessários desligados: <code>systemctl disable --now nome</code>.</span><span class="en">Unneeded services turned off: <code>systemctl disable --now name</code>.</span></li><li><span class="pt">Senhas fortes e únicas em um gerenciador; disco cifrado (LUKS) em notebooks.</span><span class="en">Strong, unique passwords in a manager; encrypted disk (LUKS) on laptops.</span></li><li><span class="pt">Backup 3-2-1 (3 cópias, 2 mídias, 1 fora do local) e <em>teste de restauração</em>.</span><span class="en">3-2-1 backup (3 copies, 2 media, 1 off-site) and a <em>restore test</em>.</span></li><li><span class="pt">Instalar software só de repositórios oficiais ou fontes verificadas; ler antes de rodar <code>curl … | sh</code>.</span><span class="en">Install software only from official repositories or verified sources; read before running <code>curl … | sh</code>.</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="tools">
+<h2 id="tools"><span class="pt">Ferramentas visuais: TUI e web</span><span class="en">Visual tools: TUI and web</span></h2>
+
+<p><span class="pt">Você não precisa decorar tudo: existem interfaces de terminal (TUI) e web que mostram saúde do sistema, logs, SSH, Git e contêineres de forma visual. As “lazy” (<em>lazygit</em>, <em>lazydocker</em>…) seguem a ideia de resumir dezenas de comandos em atalhos de teclado. Todas abaixo são projetos abertos conhecidos; confira a página oficial do projeto para a forma de instalação mais atual da sua distribuição.</span><span class="en">You do not need to memorise everything: there are terminal (TUI) and web interfaces that show system health, logs, SSH, Git and containers visually. The “lazy” ones (<em>lazygit</em>, <em>lazydocker</em>…) follow the idea of folding dozens of commands into keyboard shortcuts. All of the below are well-known open projects; check the project’s official page for the most current install method for your distribution.</span></p>
+<h3><span class="pt">No terminal (TUI)</span><span class="en">In the terminal (TUI)</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th><th><span class="pt">Instalar</span><span class="en">Install</span></th></tr></thead><tbody><tr><td><code>btop</code> · <code>htop</code> · <code>glances</code></td><td><span class="pt">saúde do sistema: CPU, memória, disco, rede e processos num painel ao vivo</span><span class="en">system health: CPU, memory, disk, network and processes in a live panel</span></td><td><code>sudo apt install btop htop glances</code></td></tr><tr><td><code>ncdu</code></td><td><span class="pt">“quem está comendo meu disco?”, navegando por pastas por tamanho</span><span class="en">“what is eating my disk?”, browsing folders by size</span></td><td><code>sudo apt install ncdu</code></td></tr><tr><td><code>lazygit</code></td><td><span class="pt">Git inteiro com atalhos: stage, commit, branch, rebase</span><span class="en">all of Git with shortcuts: stage, commit, branch, rebase</span></td><td><span class="pt">gerenciador de pacotes, Homebrew ou binário do GitHub</span><span class="en">package manager, Homebrew or GitHub binary</span></td></tr><tr><td><code>lazydocker</code></td><td><span class="pt">contêineres, imagens, logs e uso de recursos do Docker</span><span class="en">Docker containers, images, logs and resource use</span></td><td><span class="pt">Homebrew, <code>go install</code> ou binário do GitHub</span><span class="en">Homebrew, <code>go install</code> or GitHub binary</span></td></tr><tr><td><code>lazyjournal</code></td><td><span class="pt">navegar pelos logs do <code>journalctl</code> e de contêineres com filtro</span><span class="en">browse <code>journalctl</code> and container logs with filtering</span></td><td><span class="pt">binário do GitHub ou Homebrew</span><span class="en">GitHub binary or Homebrew</span></td></tr><tr><td><code>sshs</code></td><td><span class="pt">menu para escolher hosts do seu <code>~/.ssh/config</code> e conectar</span><span class="en">menu to pick hosts from your <code>~/.ssh/config</code> and connect</span></td><td><span class="pt">Homebrew, <code>cargo install</code> ou binário</span><span class="en">Homebrew, <code>cargo install</code> or binary</span></td></tr><tr><td><code>bandwhich</code> · <code>nethogs</code> · <code>iftop</code></td><td><span class="pt">quem usa a rede: por processo, conexão e host remoto</span><span class="en">who is using the network: by process, connection and remote host</span></td><td><code>sudo apt install nethogs iftop</code></td></tr><tr><td><code>trippy</code> · <code>mtr</code> · <code>gping</code></td><td><span class="pt">traceroute e ping contínuos, com gráfico</span><span class="en">continuous traceroute and ping, with a graph</span></td><td><span class="pt"><code>sudo apt install mtr-tiny</code> (mtr); os outros pelo site do projeto</span><span class="en"><code>sudo apt install mtr-tiny</code> (mtr); the others from the project site</span></td></tr><tr><td><code>termshark</code></td><td><span class="pt">o Wireshark no terminal</span><span class="en">Wireshark in the terminal</span></td><td><span class="pt"><code>sudo apt install termshark</code> (se disponível) ou binário</span><span class="en"><code>sudo apt install termshark</code> (if available) or binary</span></td></tr><tr><td><code>nmtui</code> · <code>yazi</code> · <code>ranger</code> · <code>fzf</code> · <code>tldr</code></td><td><span class="pt">rede por menu · navegador de arquivos · busca difusa · exemplos curtos de comandos</span><span class="en">network via menu · file browser · fuzzy search · short command examples</span></td><td><span class="pt">repositório da distribuição</span><span class="en">distribution repository</span></td></tr></tbody></table></div>
+<h3><span class="pt">Pelo navegador (web)</span><span class="en">In the browser (web)</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">O que mostra</span><span class="en">What it shows</span></th><th><span class="pt">Como subir</span><span class="en">How to start</span></th></tr></thead><tbody><tr><td><strong>Cockpit</strong></td><td><span class="pt">painel oficial da Red Hat: saúde, logs, serviços, discos, rede, usuários, firewall e <em>terminal</em>. Boa porta de entrada para ver SSH e o sistema sem decorar comandos</span><span class="en">the Red Hat project’s panel: health, logs, services, disks, network, users, firewall and a <em>terminal</em>. A good entry point for watching SSH and the system without memorising commands</span></td><td><code>sudo apt install cockpit &amp;&amp; sudo systemctl enable --now cockpit.socket</code> → <code>https://IP:9090</code></td></tr><tr><td><strong>Netdata</strong></td><td><span class="pt">milhares de métricas em tempo real, com alertas</span><span class="en">thousands of real-time metrics with alerts</span></td><td><span class="pt">script oficial de instalação ou pacote; porta 19999. Leia o script antes de executar.</span><span class="en">official install script or package; port 19999. Read the script before running it.</span></td></tr><tr><td><strong>Glances</strong> (modo web)</td><td><span class="pt">o mesmo painel do glances, no navegador</span><span class="en">the same glances panel, in the browser</span></td><td><code>glances -w</code> → porta 61208</td></tr><tr><td><strong>Grafana + Prometheus</strong></td><td><span class="pt">histórico e painéis para vários servidores (com <code>node_exporter</code> em cada um)</span><span class="en">history and dashboards for several servers (with <code>node_exporter</code> on each)</span></td><td><span class="pt">padrão de mercado; mais trabalho para montar</span><span class="en">industry standard; more work to set up</span></td></tr><tr><td><strong>Uptime Kuma</strong></td><td><span class="pt">“o site/serviço está no ar?”, com avisos</span><span class="en">“is the site/service up?”, with notifications</span></td><td><span class="pt">contêiner Docker</span><span class="en">Docker container</span></td></tr><tr><td><strong>Portainer</strong></td><td><span class="pt">gerenciar Docker pela web</span><span class="en">manage Docker from the web</span></td><td><span class="pt">contêiner Docker</span><span class="en">Docker container</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Todo painel web é uma porta nova aberta, com poder de administração. Exponha só na sua LAN ou via túnel SSH/VPN (<code>ssh -L 9090:localhost:9090 ana@servidor</code>), com senha forte e, se possível, um segundo fator. Nunca na internet aberta.</span><span class="en">Every web panel is a new open port with admin power. Expose it only on your LAN or through an SSH tunnel/VPN (<code>ssh -L 9090:localhost:9090 ana@server</code>), with a strong password and, if possible, a second factor. Never on the open internet.</span></div>
+<h3><span class="pt">Painel de saúde com comandos puros</span><span class="en">A health panel using plain commands</span></h3>
+<pre><code>uptime                          # há quanto tempo está ligado e o load average
+free -h                         # memória (olhe "available", não "free")
+df -h                           # discos cheios?
+lsblk                           # discos e partições
+vmstat 1 5                      # CPU, memória, swap e I/O a cada 1 s
+iostat -x 1 3                   # utilização de disco (pacote sysstat)
+systemctl --failed              # serviços que falharam
+journalctl -p err -b            # erros desde o boot
+sudo dmesg -T | tail            # mensagens recentes do kernel (disco, USB, memória)
+sensors                         # temperaturas (lm-sensors)
+sudo smartctl -H /dev/sda       # saúde do disco (smartmontools)
+lscpu ; lspci ; lsusb           # inventário de hardware
+uname -r ; cat /etc/os-release  # versão do kernel e da distribuição</code></pre>
+</section>
+<section class="content-section" aria-labelledby="history">
+<h2 id="history"><span class="pt">Limpar o histórico do terminal</span><span class="en">Clearing the terminal history</span></h2>
+
+<p><span class="pt">O shell guarda os comandos que você digita para poder repeti-los (seta para cima, <code>Ctrl+R</code>). No bash a lista fica na memória durante a sessão e é gravada em <code>~/.bash_history</code> quando você sai. Por isso uma senha digitada na linha de comando <em>fica gravada em texto puro</em>.</span><span class="en">The shell keeps the commands you type so you can repeat them (up arrow, <code>Ctrl+R</code>). In bash the list stays in memory during the session and is written to <code>~/.bash_history</code> when you exit. That is why a password typed on the command line <em>stays stored in plain text</em>.</span></p>
+<pre><code>history | tail -20              # veja os últimos
+history -d 482                  # apaga UMA entrada (pelo número)
+history -c                      # limpa a lista em MEMÓRIA
+history -w                      # grava a memória no arquivo -&gt; junto com -c, zera o arquivo
+history -c &amp;&amp; history -w        # zerar tudo de uma vez
+&gt; ~/.bash_history               # alternativa: esvazia o arquivo direto</code></pre>
+<p><span class="pt">Um detalhe que pega muita gente: <code>history -c</code> sozinho limpa só a memória; ao sair, o bash <em>grava de volta</em> o que ainda estiver no arquivo ou o que você digitar depois. Para uma sessão sem rastro, use um dos modos abaixo.</span><span class="en">A detail that catches many people: <code>history -c</code> alone clears only memory; on exit bash <em>writes back</em> what is still in the file or what you type afterwards. For a session without a trace, use one of the modes below.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Faça</span><span class="en">Do</span></th><th><span class="pt">Efeito</span><span class="en">Effect</span></th></tr></thead><tbody><tr><td><span class="pt">Que esta sessão não seja salva</span><span class="en">This session not to be saved</span></td><td><code>unset HISTFILE</code> ou <code>HISTFILE=/dev/null</code></td><td><span class="pt">ao sair, nada é gravado</span><span class="en">nothing is written on exit</span></td></tr><tr><td><span class="pt">Parar de registrar daqui para frente</span><span class="en">Stop recording from now on</span></td><td><code>set +o history</code> (volta com <code>set -o history</code>)</td><td><span class="pt">os próximos comandos nem entram na lista</span><span class="en">the next commands do not even enter the list</span></td></tr><tr><td><span class="pt">Não gravar um comando só</span><span class="en">Not save one command</span></td><td><span class="pt">começar a linha com um <em>espaço</em> (precisa de <code>HISTCONTROL=ignorespace</code>, padrão no Ubuntu)</span><span class="en">start the line with a <em>space</em> (needs <code>HISTCONTROL=ignorespace</code>, the Ubuntu default)</span></td><td><span class="pt">aquela linha é ignorada</span><span class="en">that line is ignored</span></td></tr><tr><td><span class="pt">Ignorar padrões para sempre</span><span class="en">Ignore patterns forever</span></td><td><code>HISTIGNORE="ls:cd:*senha*"</code> no <code>~/.bashrc</code></td><td><span class="pt">comandos que casam com o padrão não entram</span><span class="en">commands that match are not stored</span></td></tr><tr><td><span class="pt">Apagar tudo agora</span><span class="en">Erase everything now</span></td><td><code>history -c &amp;&amp; history -w</code></td><td><span class="pt">memória e arquivo zerados</span><span class="en">memory and file emptied</span></td></tr><tr><td><span class="pt">Limitar o tamanho</span><span class="en">Limit the size</span></td><td><code>HISTSIZE=1000</code> · <code>HISTFILESIZE=2000</code></td><td><span class="pt">memória e arquivo, respectivamente</span><span class="en">memory and file, respectively</span></td></tr></tbody></table></div>
+<h3><span class="pt">Outros shells e a tela</span><span class="en">Other shells and the screen</span></h3>
+<pre><code># zsh: arquivo ~/.zsh_history
+: &gt; ~/.zsh_history ; unset HISTFILE ; exit      # esvazia e não regrava ao sair
+setopt HIST_IGNORE_SPACE                         # espaço no começo = não grava
+
+# fish
+history clear
+
+# limpar a TELA (não é o histórico!)
+clear                           # limpa a tela (e, nos terminais modernos, o rolamento)
+clear -x                        # limpa a tela mas mantém o rolamento
+Ctrl+L                          # limpa a tela, mantém o rolamento
+reset                           # reinicializa o terminal se ele "quebrou"</code></pre>
+<h3><span class="pt">O histórico também vaza por outros lugares</span><span class="en">History also leaks elsewhere</span></h3>
+<ul class="ds-list"><li><span class="pt">Arquivos de histórico de outros programas: <code>~/.python_history</code>, <code>~/.lesshst</code>, <code>~/.viminfo</code>, <code>~/.mysql_history</code>, <code>~/.psql_history</code>.</span><span class="en">Other programs’ history files: <code>~/.python_history</code>, <code>~/.lesshst</code>, <code>~/.viminfo</code>, <code>~/.mysql_history</code>, <code>~/.psql_history</code>.</span></li><li><span class="pt">Os logs do sistema: o <code>sudo</code> registra cada comando em <code>/var/log/auth.log</code> ou no journal, e isso <em>não</em> é apagado por limpar o histórico do shell.</span><span class="en">System logs: <code>sudo</code> records each command in <code>/var/log/auth.log</code> or the journal, and that is <em>not</em> erased by clearing the shell history.</span></li><li><span class="pt">A lista de processos: argumentos de linha de comando aparecem para outros usuários em <code>ps</code> e em <code>/proc/PID/cmdline</code> enquanto o comando roda.</span><span class="en">The process list: command-line arguments are visible to other users in <code>ps</code> and <code>/proc/PID/cmdline</code> while the command runs.</span></li><li><span class="pt">Ferramentas de histórico sincronizado (como o <code>atuin</code>) guardam cópias fora do arquivo local.</span><span class="en">Synced-history tools (such as <code>atuin</code>) keep copies outside the local file.</span></li></ul>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Se uma senha, token ou chave de API foi digitada e gravada, <em>limpar o histórico não basta</em>: considere o segredo vazado e <em>troque-o</em>. Para o futuro, não coloque segredos em argumentos: leia sem eco (<code>read -rs SENHA</code>), use variáveis de ambiente, arquivos com permissão 600 ou o gerenciador de segredos.</span><span class="en">If a password, token or API key was typed and stored, <em>clearing the history is not enough</em>: treat the secret as leaked and <em>rotate it</em>. For the future, keep secrets out of arguments: read without echo (<code>read -rs SECRET</code>), use environment variables, files with permission 600 or a secrets manager.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Limpar o seu próprio histórico é privacidade e higiene. Apagar rastros em sistemas que não são seus, ou para esconder atividade de quem administra o ambiente, é outra coisa: em empresas o histórico e os logs costumam ser exigência de auditoria.</span><span class="en">Clearing your own history is privacy and hygiene. Erasing traces on systems that are not yours, or to hide activity from whoever administers the environment, is something else: in companies, history and logs are often an audit requirement.</span></div>
+</section>
+<section class="content-section" aria-labelledby="exam">
+<h2 id="exam"><span class="pt">Questões de prova e revisão</span><span class="en">Exam questions and review</span></h2>
+
+<p><span class="pt">Estas perguntas cobrem o que costuma cair em Linux Essentials, LPIC-1 e RHCSA. Tente responder sem olhar a coluna da direita.</span><span class="en">These questions cover what usually shows up in Linux Essentials, LPIC-1 and RHCSA. Try to answer without looking at the right-hand column.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">O que é UID 0 e por que ele importa?</span><span class="en">What is UID 0 and why does it matter?</span></td><td><span class="pt">O superusuário. O kernel ignora as checagens de permissão de arquivos para ele. O que manda é o número, não o nome “root”.</span><span class="en">The superuser. The kernel skips file permission checks for it. The number matters, not the name “root”.</span></td></tr><tr><td><span class="pt">Qual arquivo guarda os hashes das senhas e quem lê?</span><span class="en">Which file stores the password hashes, and who can read it?</span></td><td><span class="pt"><code>/etc/shadow</code>; só root (o <code>/etc/passwd</code> é legível por todos e só tem um “x”).</span><span class="en"><code>/etc/shadow</code>; only root (<code>/etc/passwd</code> is world-readable and only has an “x”).</span></td></tr><tr><td><span class="pt">Traduza <code>chmod 640 f</code> e <code>-rwxr-x---</code>.</span><span class="en">Translate <code>chmod 640 f</code> and <code>-rwxr-x---</code>.</span></td><td><span class="pt">640 = dono rw-, grupo r--, outros ---. E <code>rwxr-x---</code> = 750.</span><span class="en">640 = owner rw-, group r--, others ---. And <code>rwxr-x---</code> = 750.</span></td></tr><tr><td><span class="pt">Que permissões tem um arquivo novo com <code>umask 027</code>?</span><span class="en">What permissions does a new file get with <code>umask 027</code>?</span></td><td><span class="pt">666 − 027 = 640 (diretórios: 777 − 027 = 750).</span><span class="en">666 − 027 = 640 (directories: 777 − 027 = 750).</span></td></tr><tr><td><span class="pt">Para que serve o bit <em>sticky</em> em <code>/tmp</code>?</span><span class="en">What is the <em>sticky</em> bit on <code>/tmp</code> for?</span></td><td><span class="pt">Todos escrevem, mas só o dono do arquivo (ou root) pode apagá-lo ou renomeá-lo.</span><span class="en">Everyone writes, but only the file’s owner (or root) may delete or rename it.</span></td></tr><tr><td><span class="pt">Por que o <code>passwd</code> consegue mudar o <code>/etc/shadow</code> se o usuário comum não pode?</span><span class="en">How can <code>passwd</code> change <code>/etc/shadow</code> if a regular user cannot?</span></td><td><span class="pt">Ele é setuid root: roda com o UID efetivo do dono do arquivo (root).</span><span class="en">It is setuid root: it runs with the effective UID of the file’s owner (root).</span></td></tr><tr><td><span class="pt">Qual a diferença entre hard link e link simbólico?</span><span class="en">What is the difference between a hard link and a symbolic link?</span></td><td><span class="pt">Hard link: outro nome para o mesmo inode (não cruza partições). Simbólico: arquivo que guarda um caminho (pode quebrar).</span><span class="en">Hard link: another name for the same inode (cannot cross partitions). Symbolic: a file that stores a path (can break).</span></td></tr><tr><td><span class="pt">Diferença entre <code>fork()</code> e <code>exec()</code>?</span><span class="en">Difference between <code>fork()</code> and <code>exec()</code>?</span></td><td><span class="pt">fork cria um processo novo (cópia); exec troca o programa do processo atual, mantendo o PID.</span><span class="en">fork creates a new process (a copy); exec replaces the current process’s program, keeping the PID.</span></td></tr><tr><td><span class="pt">O que é um processo zumbi e um órfão? Como resolver?</span><span class="en">What are a zombie and an orphan process? How to fix?</span></td><td><span class="pt">Zumbi: terminou, mas o pai não deu <code>wait()</code>; resolve-se pelo pai. Órfão: o pai morreu antes; o PID 1 o adota.</span><span class="en">Zombie: finished, but the parent did not <code>wait()</code>; fix it via the parent. Orphan: the parent died first; PID 1 adopts it.</span></td></tr><tr><td><span class="pt">Qual a diferença entre SIGTERM e SIGKILL?</span><span class="en">Difference between SIGTERM and SIGKILL?</span></td><td><span class="pt">SIGTERM (15) pode ser tratado, permitindo limpeza; SIGKILL (9) não pode ser capturado nem ignorado.</span><span class="en">SIGTERM (15) can be handled, allowing cleanup; SIGKILL (9) cannot be caught or ignored.</span></td></tr><tr><td><span class="pt">Onde ficam logs, configurações e dados de usuários?</span><span class="en">Where do logs, configuration and user data live?</span></td><td><span class="pt"><code>/var/log</code>, <code>/etc</code>, <code>/home</code>.</span><span class="en"><code>/var/log</code>, <code>/etc</code>, <code>/home</code>.</span></td></tr><tr><td><span class="pt">Que comando lista as portas em escuta e o processo dono?</span><span class="en">Which command lists listening ports and the owning process?</span></td><td><span class="pt"><code>sudo ss -tulpn</code> (ou <code>lsof -i</code>); o antigo <code>netstat -tulpn</code> faz o mesmo.</span><span class="en"><code>sudo ss -tulpn</code> (or <code>lsof -i</code>); the old <code>netstat -tulpn</code> does the same.</span></td></tr><tr><td><span class="pt">Se <code>ping 1.1.1.1</code> funciona e <code>ping example.com</code> não, onde está o problema?</span><span class="en">If <code>ping 1.1.1.1</code> works and <code>ping example.com</code> does not, where is the problem?</span></td><td><span class="pt">DNS (resolução de nomes), não a conectividade.</span><span class="en">DNS (name resolution), not connectivity.</span></td></tr><tr><td><span class="pt">Qual a política de firewall recomendada para um desktop?</span><span class="en">What firewall policy is recommended for a desktop?</span></td><td><span class="pt">Negar entrada por padrão, permitir saída e respostas a conexões já estabelecidas; liberar só as portas necessárias.</span><span class="en">Deny incoming by default, allow outgoing and replies to established connections; open only needed ports.</span></td></tr><tr><td><span class="pt"><code>usermod -G dev ana</code> ou <code>usermod -aG dev ana</code>?</span><span class="en"><code>usermod -G dev ana</code> or <code>usermod -aG dev ana</code>?</span></td><td><span class="pt">Com <code>-a</code> (acrescenta). Sem ele, os outros grupos suplementares são removidos.</span><span class="en">With <code>-a</code> (append). Without it, the other supplementary groups are removed.</span></td></tr><tr><td><span class="pt">Por que <code>sudo echo x &gt; /etc/arquivo</code> falha?</span><span class="en">Why does <code>sudo echo x &gt; /etc/file</code> fail?</span></td><td><span class="pt">O redirecionamento é feito pelo shell do usuário, não pelo sudo. Use <code>| sudo tee</code>.</span><span class="en">The redirection is done by the user’s shell, not sudo. Use <code>| sudo tee</code>.</span></td></tr><tr><td><span class="pt"><code>history -c</code> apaga o arquivo <code>~/.bash_history</code>?</span><span class="en">Does <code>history -c</code> erase <code>~/.bash_history</code>?</span></td><td><span class="pt">Não; só a memória. Combine com <code>history -w</code> ou esvazie o arquivo.</span><span class="en">No; only memory. Combine with <code>history -w</code> or truncate the file.</span></td></tr></tbody></table></div>
+<h3><span class="pt">Mapa de revisão em uma tabela</span><span class="en">Review map in one table</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tema</span><span class="en">Topic</span></th><th><span class="pt">Comandos-chave</span><span class="en">Key commands</span></th><th><span class="pt">Arquivos-chave</span><span class="en">Key files</span></th></tr></thead><tbody><tr><td><span class="pt">Usuários</span><span class="en">Users</span></td><td><code>id useradd usermod passwd sudo su visudo</code></td><td><code>/etc/passwd /etc/shadow /etc/group /etc/sudoers</code></td></tr><tr><td><span class="pt">Permissões</span><span class="en">Permissions</span></td><td><code>ls -l chmod chown chgrp umask setfacl find -perm</code></td><td><span class="pt">bits rwx, octal, setuid/setgid/sticky</span><span class="en">rwx bits, octal, setuid/setgid/sticky</span></td></tr><tr><td><span class="pt">Estrutura</span><span class="en">Structure</span></td><td><code>ls cd pwd df du lsblk mount ln find</code></td><td><code>/etc /var /home /proc /dev /tmp /usr</code></td></tr><tr><td><span class="pt">Processos</span><span class="en">Processes</span></td><td><code>ps top pstree kill nice jobs fg bg systemctl</code></td><td><code>/proc/PID/ journalctl</code></td></tr><tr><td><span class="pt">Rede</span><span class="en">Network</span></td><td><code>ip ss ping dig curl nc tcpdump traceroute</code></td><td><code>/etc/hosts /etc/resolv.conf</code></td></tr><tr><td><span class="pt">Firewall</span><span class="en">Firewall</span></td><td><code>ufw nft iptables firewall-cmd</code></td><td><code>/etc/nftables.conf /etc/ufw/</code></td></tr><tr><td><span class="pt">SSH</span><span class="en">SSH</span></td><td><code>ssh ssh-keygen ssh-copy-id scp rsync</code></td><td><code>~/.ssh/ /etc/ssh/sshd_config</code></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://nostarch.com/tlpi" rel="noopener">Michael Kerrisk. The Linux Programming Interface. No Starch Press, 2010.</a></li><li><a href="https://nostarch.com/how-linux-works-3rd-edition" rel="noopener">Brian Ward. How Linux Works, 3rd edition. No Starch Press, 2021.</a></li><li><a href="https://pages.cs.wisc.edu/~remzi/OSTEP/" rel="noopener">Arpaci-Dusseau. Operating Systems: Three Easy Pieces (free online).</a></li><li><a href="https://man7.org/linux/man-pages/" rel="noopener">Linux man-pages project (man7.org): hier(7), passwd(5), signal(7), capabilities(7), ss(8), nft(8).</a></li><li><a href="https://refspecs.linuxfoundation.org/fhs.shtml" rel="noopener">Filesystem Hierarchy Standard, Linux Foundation.</a></li><li><a href="https://wiki.nftables.org/" rel="noopener">nftables wiki.</a></li><li><a href="https://cockpit-project.org/" rel="noopener">Cockpit project.</a></li></ul></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><rect x="7" y="7" width="18" height="18" rx="3.5"/><rect x="12" y="12" width="8" height="8" rx="1.5"/><path d="M12 7V3.5M20 7V3.5M12 28.5V25M20 28.5V25M7 12H3.5M7 20H3.5M28.5 12H25M28.5 20H25"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
