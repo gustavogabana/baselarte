@@ -20,11 +20,11 @@ The site quotes an IBM internal training presentation (1979): "A computer can ne
 - [Home](https://baselarte.com/): landing page describing the company, its principles.
 - [Notes](https://baselarte.com/notas/): index of study notes.
 - [AWS Notes](https://baselarte.com/notas/aws/): interactive AWS study guide (IAM, Organizations, VPC, ECS, RDS, S3, Route 53 and more) based on the official documentation, in English and Brazilian Portuguese.
-- [Design system notes](https://baselarte.com/notas/design-system/): how the site is designed (colour, type, layout, icons, motion, theme, language).
 - [GitHub to AWS with OIDC](https://baselarte.com/notas/github-aws-oidc/): CI/CD notes on deploying from GitHub Actions to AWS (ECR/ECS) with OIDC, for develop and production, based on the official docs.
 - [Cloudflare notes](https://baselarte.com/notas/cloudflare/): buying and configuring a domain, R2 with presigned URLs (private/public buckets, CDN), SSL certificates and HTTPS to an AWS ALB, based on the official docs.
 - [Software Engineering at Google notes](https://baselarte.com/notas/software-engineering-at-google/): book notes on time, scale and trade-offs, Hyrum's Law, testing, code review and continuous delivery.
 - [AI Engineering notes](https://baselarte.com/notas/ai-engineering/): book notes on tokens, sampling, prompting, RAG, agents, evaluation, finetuning, inference and AI application architecture.
 - [Grokking Algorithms notes](https://baselarte.com/notas/entendendo-algoritmos/): book notes on Big O notation, binary search, sorting, recursion, hash tables, graphs, Dijkstra, greedy algorithms, dynamic programming and k-nearest neighbours, with examples and code.
+- [How Linux works](https://baselarte.com/notas/linux/): visual, exam-style guide to users and root, permissions, the file tree, commands, processes, networking, SSH, firewalls, terminal and web monitoring tools, and clearing shell history.
 - [Full-stack platform case study](https://baselarte.com/notas/full-stack-engineering/): engineering notes on a real front end and back end: API-first, layered caching, session security, direct uploads, batched analytics and tests.
 - [Sitemap](https://baselarte.com/sitemap.xml)

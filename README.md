@@ -1,6 +1,6 @@
 # Baselarte
 
-Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (AWS, Cloudflare, books, design system). Live at [baselarte.com](https://baselarte.com).
+Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (AWS, Cloudflare, Linux, books). Live at [baselarte.com](https://baselarte.com).
 
 ```
  index.html ─┐                        ┌─▶ day / night      18:00 → 06:00
@@ -42,7 +42,6 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 - Nothing time-dependent is hardcoded (year, time and day period come from `main.js`).
 - No silent failures: every `catch` recovers and logs, or rethrows.
 - Descriptive names for variables, classes and data attributes.
-- Design system changes go in `notas/design-system/` too.
 
 ## Run
 
