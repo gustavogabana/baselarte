@@ -490,7 +490,7 @@ samp {
   width: 24px;
   height: 24px;
   flex: none;
-  fill: var(--fg-strong);
+  color: var(--fg-strong);
 }
 
 /* ==========================================================================
