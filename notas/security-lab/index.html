@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="sec.metaTitle">Security and networking lab | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:sec.metaDescription" content="Hands-on exercises on your own machines: sessions, stateful vs. stateless, nmap, SSH tunnels, WireGuard VPNs you host yourself, Wireshark, firewalls and a safe recon-tool overview, plus Docker networking explained with a real-machine comparison.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/security-lab/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/security-lab/">
+  <meta property="og:title" data-i18n-attributes="content:sec.metaTitle" content="Security and networking lab | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:sec.metaDescription" content="Hands-on exercises on your own machines: sessions, stateful vs. stateless, nmap, SSH tunnels, WireGuard VPNs you host yourself, Wireshark, firewalls and a safe recon-tool overview, plus Docker networking explained with a real-machine comparison.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:sec.metaTitle" content="Security and networking lab | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:sec.metaDescription" content="Hands-on exercises on your own machines: sessions, stateful vs. stateless, nmap, SSH tunnels, WireGuard VPNs you host yourself, Wireshark, firewalls and a safe recon-tool overview, plus Docker networking explained with a real-machine comparison.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg-1" x1="3" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#9168e3"/><stop offset="1" stop-color="#341672"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#lg-1)"/><g fill="#fff" fill-opacity=".97"><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(150.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(210.0 16 16)"/></g><circle cx="16" cy="16" r="2.3" fill="#2a1157"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html">AWS</a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../security-lab/index.html" aria-current="page"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../security-lab/index.html" aria-current="page"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#intro"><span class="pt">Antes de começar</span><span class="en">Before you start</span></a></li>
+<li><a href="#sessions"><span class="pt">Sessões: TCP com estado, UDP sem estado</span><span class="en">Sessions: stateful TCP, stateless UDP</span></a></li>
+<li><a href="#nmap"><span class="pt">nmap: o que existe na rede</span><span class="en">nmap: what exists on the network</span></a></li>
+<li><a href="#ssh"><span class="pt">SSH como ferramenta de rede</span><span class="en">SSH as a network tool</span></a></li>
+<li><a href="#wireguard"><span class="pt">VPN e WireGuard: hospede a sua</span><span class="en">VPN and WireGuard: host your own</span></a></li>
+<li><a href="#wireshark"><span class="pt">Wireshark e tcpdump: ver os pacotes</span><span class="en">Wireshark and tcpdump: seeing the packets</span></a></li>
+<li><a href="#firewall-lab"><span class="pt">Firewall: medir a defesa com o nmap</span><span class="en">Firewall: measuring the defence with nmap</span></a></li>
+<li><a href="#recon"><span class="pt">O kit de reconhecimento, com limites</span><span class="en">The recon kit, with limits</span></a></li>
+<li><a href="#docker-net"><span class="pt">Docker para o laboratório local</span><span class="en">Docker for the local lab</span></a></li>
+<li><a href="#cheat-sec"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.sec.title">Security and networking lab</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="sec.kicker">Hands-on lab</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="sec.heroTitle">Security, <em>hands on.</em></h1>
+  <p class="hero-lede" data-i18n="sec.heroLede">A practical 80/20 of networking and security tools: run them on your own machines, read the output, and know exactly what success looks like.</p>
+</section>
+<section class="content-section" aria-labelledby="intro">
+<h2 id="intro"><span class="pt">Antes de começar</span><span class="en">Before you start</span></h2>
+
+<p><span class="pt">Esta nota é um laboratório: cada seção ensina uma ferramenta e termina num exercício com um <em>resultado esperado</em> explícito, para você saber se funcionou. A ideia é 80/20: as ferramentas que cobrem a maior parte do que um desenvolvedor precisa de redes e segurança no dia a dia, sem tentar ser um curso de pentest.</span><span class="en">This note is a lab: each section teaches one tool and ends with an exercise that states an explicit <em>expected result</em>, so you know whether it worked. The idea is 80/20: the tools that cover most of what a developer needs from networking and security day to day, without trying to be a pentest course.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Regra de ouro: só escaneie, capture tráfego ou teste firewalls em máquinas e redes <em>suas</em> (sua própria VM, seu laboratório Docker, sua VPN) ou com autorização explícita por escrito. Fazer isso contra redes de terceiros sem permissão pode ser crime em praticamente todo lugar. Toda ferramenta aqui é a mesma usada por times de segurança <em>defensivos</em>: para entender e proteger o que é seu.</span><span class="en">Golden rule: only scan, capture traffic or test firewalls on machines and networks that are <em>yours</em> (your own VM, your Docker lab, your VPN) or with explicit written authorization. Doing this against someone else's network without permission can be a crime almost everywhere. Every tool here is the same one <em>defensive</em> security teams use: to understand and protect what is yours.</span></div>
+<h3><span class="pt">O que você precisa</span><span class="en">What you need</span></h3>
+<ul class="ds-list"><li><span class="pt">Uma máquina Linux: uma VM (VirtualBox/UTM/Multipass), WSL2 no Windows, ou um servidor de estudo na nuvem (veja a nota de AWS).</span><span class="en">A Linux machine: a VM (VirtualBox/UTM/Multipass), WSL2 on Windows, or a cloud study server (see the AWS note).</span></li><li><span class="pt">Docker, para a seção de laboratório local (opcional nas outras seções).</span><span class="en">Docker, for the local-lab section (optional in the other sections).</span></li><li><span class="pt">Um segundo dispositivo na mesma rede (celular, outro notebook) ajuda a ver o tráfego "de fora" em alguns exercícios, mas não é obrigatório.</span><span class="en">A second device on the same network (phone, another laptop) helps see traffic "from outside" in some exercises, but is not required.</span></li></ul>
+<h3><span class="pt">Mapa da nota</span><span class="en">Map of this note</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 760 72" role="img" aria-label="Mapa do laboratório / Lab map" style="min-width:700px">
+<rect x="10" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="50.0" y="39.0" class="pt " text-anchor="middle">Sessões</text><text x="50.0" y="39.0" class="en " text-anchor="middle">Sessions</text>
+<rect x="102" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="142.0" y="39.0" class="" text-anchor="middle">nmap</text>
+<path d="M90 35L102 35" class="ln"/><path d="M94.8 38.5L102 35L94.8 31.5" class="ln"/>
+<rect x="194" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="234.0" y="39.0" class="" text-anchor="middle">SSH</text>
+<path d="M182 35L194 35" class="ln"/><path d="M186.8 38.5L194 35L186.8 31.5" class="ln"/>
+<rect x="286" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="326.0" y="39.0" class="" text-anchor="middle">WireGuard</text>
+<path d="M274 35L286 35" class="ln"/><path d="M278.8 38.5L286 35L278.8 31.5" class="ln"/>
+<rect x="378" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="418.0" y="39.0" class="" text-anchor="middle">Wireshark</text>
+<path d="M366 35L378 35" class="ln"/><path d="M370.8 38.5L378 35L370.8 31.5" class="ln"/>
+<rect x="470" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="510.0" y="39.0" class="" text-anchor="middle">Firewall</text>
+<path d="M458 35L470 35" class="ln"/><path d="M462.8 38.5L470 35L462.8 31.5" class="ln"/>
+<rect x="562" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="602.0" y="39.0" class="" text-anchor="middle">Recon</text>
+<path d="M550 35L562 35" class="ln"/><path d="M554.8 38.5L562 35L554.8 31.5" class="ln"/>
+<rect x="654" y="10" width="80" height="50" rx="4" class="ln fillsoft"/>
+<text x="694.0" y="39.0" class="" text-anchor="middle">Docker</text>
+<path d="M642 35L654 35" class="ln"/><path d="M646.8 38.5L654 35L646.8 31.5" class="ln"/>
+</svg></div><figcaption><span class="pt">A ordem sugerida: cada seção usa uma ideia da anterior.</span><span class="en">The suggested order: each section uses an idea from the previous one.</span></figcaption></figure>
+</section>
+<section class="content-section" aria-labelledby="sessions">
+<h2 id="sessions"><span class="pt">Sessões: TCP com estado, UDP sem estado</span><span class="en">Sessions: stateful TCP, stateless UDP</span></h2>
+
+<p><span class="pt">Uma <em>sessão</em> é o estado que duas pontas guardam sobre uma conversa em andamento: quem é o outro lado, o que já foi enviado, o que falta confirmar. TCP é <em>stateful</em> (com estado): abre uma conexão, numera os bytes, reenvia o que se perde. UDP é <em>stateless</em> (sem estado): cada pacote (datagrama) é independente, sem conexão nem garantia de entrega.</span><span class="en">A <em>session</em> is the state both ends keep about an ongoing conversation: who the other side is, what has been sent, what is still unacknowledged. TCP is <em>stateful</em>: it opens a connection, numbers the bytes, and resends what gets lost. UDP is <em>stateless</em>: each packet (datagram) is independent, with no connection and no delivery guarantee.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 296" role="img" aria-label="TCP com estado / TCP, stateful" style="min-width:560px">
+<rect x="10" y="10" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="34.0" class="pt " text-anchor="middle">cliente</text><text x="65.0" y="34.0" class="en " text-anchor="middle">client</text>
+<rect x="400" y="10" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="34.0" class="pt " text-anchor="middle">servidor</text><text x="455.0" y="34.0" class="en " text-anchor="middle">server</text>
+<path d="M65 60L455 60" class="ln"/><path d="M447.8 63.5L455 60L447.8 56.5" class="ln"/>
+<text x="260" y="54" class="mono" text-anchor="middle">SYN</text>
+<path d="M455 110L65 110" class="ln"/><path d="M72.2 106.5L65 110L72.2 113.5" class="ln"/>
+<text x="260" y="104" class="mono" text-anchor="middle">SYN-ACK</text>
+<path d="M65 160L455 160" class="ln"/><path d="M447.8 163.5L455 160L447.8 156.5" class="ln"/>
+<text x="260" y="154" class="mono" text-anchor="middle">ACK</text>
+<text x="260" y="40" class="pt mut" text-anchor="middle">handshake de 3 vias (abre a sessão)</text><text x="260" y="40" class="en mut" text-anchor="middle">3-way handshake (opens the session)</text>
+<path d="M10 190L510 190" class="ln dash"/>
+<path d="M65 220L455 220" class="ln"/><path d="M447.8 223.5L455 220L447.8 216.5" class="ln"/>
+<text x="260" y="212" class="pt mono" text-anchor="middle">dados, com número de sequência</text><text x="260" y="212" class="en mono" text-anchor="middle">data, with a sequence number</text>
+<path d="M455 250L65 250" class="ln"/><path d="M72.2 246.5L65 250L72.2 253.5" class="ln"/>
+<text x="260" y="242" class="pt mono" text-anchor="middle">ACK: "recebi até aqui"</text><text x="260" y="242" class="en mono" text-anchor="middle">ACK: "got this far"</text>
+<text x="10" y="280" class="pt mut">Se um ACK não chega, o remetente reenvia: é isso que torna o TCP confiável e "com estado".</text><text x="10" y="280" class="en mut">If an ACK does not arrive, the sender resends: that is what makes TCP reliable and "stateful".</text>
+</svg></div><figcaption><span class="pt">TCP: a sessão existe nos dois lados desde o handshake até o FIN (encerramento).</span><span class="en">TCP: the session exists on both ends from the handshake until the FIN (close).</span></figcaption></figure>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 180" role="img" aria-label="UDP sem estado / UDP, stateless" style="min-width:560px">
+<rect x="10" y="60" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="84.0" class="pt " text-anchor="middle">cliente</text><text x="65.0" y="84.0" class="en " text-anchor="middle">client</text>
+<rect x="400" y="20" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="44.0" class="pt " text-anchor="middle">servidor DNS</text><text x="455.0" y="44.0" class="en " text-anchor="middle">DNS server</text>
+<rect x="400" y="100" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="124.0" class="pt " text-anchor="middle">servidor NTP</text><text x="455.0" y="124.0" class="en " text-anchor="middle">NTP server</text>
+<path d="M120 75L400 40" class="ln"/><path d="M393.3 44.3L400 40L392.4 37.4" class="ln"/>
+<text x="260" y="50" class="pt mono" text-anchor="middle">datagrama 1 (consulta)</text><text x="260" y="50" class="en mono" text-anchor="middle">datagram 1 (query)</text>
+<path d="M400 50L120 85" class="ln"/><path d="M126.7 80.7L120 85L127.6 87.6" class="ln"/>
+<text x="260" y="86" class="pt mono" text-anchor="middle">datagrama 2 (resposta)</text><text x="260" y="86" class="en mono" text-anchor="middle">datagram 2 (response)</text>
+<path d="M120 95L400 120" class="ln"/><path d="M392.5 122.8L400 120L393.1 115.9" class="ln"/>
+<text x="260" y="150" class="pt mut" text-anchor="middle">cada datagrama é independente: sem conexão, sem reenvio automático</text><text x="260" y="150" class="en mut" text-anchor="middle">each datagram is independent: no connection, no automatic resend</text>
+</svg></div><figcaption><span class="pt">UDP: sem sessão. Quem precisa de confiabilidade (como DNS às vezes) cuida disso na camada de cima.</span><span class="en">UDP: no session. Whoever needs reliability (like DNS sometimes) handles it a layer up.</span></figcaption></figure>
+<h3><span class="pt">Por que isso importa na prática</span><span class="en">Why this matters in practice</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Conceito</span><span class="en">Concept</span></th><th><span class="pt">O que significa</span><span class="en">What it means</span></th></tr></thead><tbody><tr><td><span class="pt">Firewall stateful</span><span class="en">Stateful firewall</span></td><td><span class="pt">lembra as conexões TCP que você abriu e libera as respostas sozinho (<code>ct state established</code> no nftables)</span><span class="en">remembers the TCP connections you opened and lets the replies through on its own (<code>ct state established</code> in nftables)</span></td></tr><tr><td><span class="pt">NAT e conntrack</span><span class="en">NAT and conntrack</span></td><td><span class="pt">seu roteador doméstico guarda uma tabela de sessões para saber a quem devolver cada resposta</span><span class="en">your home router keeps a session table to know whom to return each reply to</span></td></tr><tr><td><span class="pt">Por que UDP "vaza" menos pelo NAT</span><span class="en">Why UDP "leaks" less through NAT</span></td><td><span class="pt">sem sessão formal, o NAT usa um timeout curto; é por isso que WireGuard (UDP) manda pacotes de keepalive</span><span class="en">with no formal session, NAT uses a short timeout; that is why WireGuard (UDP) sends keepalive packets</span></td></tr><tr><td><span class="pt">Balanceador de carga "sticky"</span><span class="en">"Sticky" load balancer</span></td><td><span class="pt">precisa lembrar a sessão para mandar sempre o mesmo cliente ao mesmo servidor</span><span class="en">needs to remember the session to always send the same client to the same server</span></td></tr></tbody></table></div>
+<h3><span class="pt">Exercício: ver as duas coisas ao vivo</span><span class="en">Exercise: see both live</span></h3>
+<pre><code>ss -tn state established        <span class="tok-c"># conexões TCP com sessão aberta agora (seu navegador, SSH...)</span>
+ss -un                          <span class="tok-c"># "conexões" UDP: na verdade sockets locais, sem sessão de verdade</span>
+dig example.com                 <span class="tok-c"># uma consulta DNS: um datagrama de ida, um de volta</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> <code>ss -tn</code> mostra pares <code>Local Address:Port</code> / <code>Peer Address:Port</code> com estado <code>ESTAB</code> — isso é uma sessão TCP de verdade. <code>ss -un</code> mostra só sockets locais, sem "estado" de conexão, porque UDP não tem sessão no protocolo.</span><span class="en"><strong>Expected result:</strong> <code>ss -tn</code> shows <code>Local Address:Port</code> / <code>Peer Address:Port</code> pairs with state <code>ESTAB</code> — that is a real TCP session. <code>ss -un</code> shows only local sockets, with no connection "state", because UDP has no session in the protocol.</span></p>
+</section>
+<section class="content-section" aria-labelledby="nmap">
+<h2 id="nmap"><span class="pt">nmap: o que existe na rede</span><span class="en">nmap: what exists on the network</span></h2>
+
+<p><span class="pt"><code>nmap</code> (Network Mapper) responde a pergunta mais básica de rede: <em>o que existe, e o que está aberto?</em> Ele manda pacotes de teste para um alvo e lê as respostas para descobrir hosts vivos, portas abertas e, às vezes, até a versão do serviço rodando nelas. É a primeira ferramenta que qualquer time de segurança roda contra os <em>próprios</em> sistemas, para ver o que um atacante veria de fora.</span><span class="en"><code>nmap</code> (Network Mapper) answers the most basic network question: <em>what exists, and what is open?</em> It sends test packets to a target and reads the replies to find live hosts, open ports and sometimes even the service version running on them. It is the first tool any security team runs against its <em>own</em> systems, to see what an attacker would see from outside.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Rode o <code>nmap</code> só contra IPs seus (sua VM, seu contêiner, um servidor de estudo seu) ou contra <code>scanme.nmap.org</code>, que o próprio projeto Nmap mantém de propósito para testes. Escanear redes alheias sem permissão é ilegal em quase todo lugar.</span><span class="en">Only run <code>nmap</code> against your own IPs (your VM, your container, a study server of yours) or against <code>scanme.nmap.org</code>, which the Nmap project itself keeps around on purpose for testing. Scanning other people's networks without permission is illegal almost everywhere.</span></div>
+<h3><span class="pt">Instalar</span><span class="en">Install</span></h3>
+<pre><code>sudo apt install nmap     <span class="tok-c"># Debian/Ubuntu</span>
+sudo dnf install nmap     <span class="tok-c"># Fedora</span>
+brew install nmap         <span class="tok-c"># macOS</span></code></pre>
+<h3><span class="pt">Anatomia de um scan de portas</span><span class="en">Anatomy of a port scan</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 290" role="img" aria-label="Como o nmap classifica portas / How nmap classifies ports" style="min-width:700px">
+<rect x="10" y="90" width="110" height="50" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="119.0" class="" text-anchor="middle">nmap</text>
+<rect x="350" y="10" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="39.0" class="pt " text-anchor="middle">:22 aberta</text><text x="435.0" y="39.0" class="en " text-anchor="middle">:22 open</text>
+<path d="M120 115L350 35" class="ln"/><path d="M344.3 40.7L350 35L342.1 34.1" class="ln"/>
+<text x="230" y="100" class="mono mut" text-anchor="middle">SYN</text>
+<rect x="350" y="80" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="109.0" class="pt " text-anchor="middle">:80 aberta</text><text x="435.0" y="109.0" class="en " text-anchor="middle">:80 open</text>
+<path d="M120 115L350 105" class="ln"/><path d="M343.0 108.8L350 105L342.7 101.8" class="ln"/>
+<text x="230" y="105" class="mono mut" text-anchor="middle">SYN</text>
+<rect x="350" y="150" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="179.0" class="pt " text-anchor="middle">:443 fechada</text><text x="435.0" y="179.0" class="en " text-anchor="middle">:443 closed</text>
+<path d="M120 115L350 175" class="ln"/><path d="M342.2 176.5L350 175L343.9 169.8" class="ln"/>
+<text x="230" y="110" class="mono mut" text-anchor="middle">SYN</text>
+<rect x="350" y="220" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="249.0" class="pt " text-anchor="middle">:8080 filtrada</text><text x="435.0" y="249.0" class="en " text-anchor="middle">:8080 filtered</text>
+<path d="M120 115L350 245" class="ln"/><path d="M342.0 244.5L350 245L345.4 238.4" class="ln"/>
+<text x="230" y="115" class="mono mut" text-anchor="middle">SYN</text>
+<text x="600" y="35" class="pt mut">→ SYN-ACK = aberta</text><text x="600" y="35" class="en mut">→ SYN-ACK = open</text>
+<text x="600" y="105" class="pt mut">→ RST = fechada</text><text x="600" y="105" class="en mut">→ RST = closed</text>
+<text x="600" y="175" class="pt mut">→ sem resposta = filtrada
+(firewall descartando)</text><text x="600" y="175" class="en mut">→ no reply = filtered
+(firewall is dropping it)</text>
+</svg></div><figcaption><span class="pt">Um SYN scan (<code>-sS</code>) manda um SYN para cada porta e classifica pela resposta, sem completar a conexão.</span><span class="en">A SYN scan (<code>-sS</code>) sends a SYN to each port and classifies it by the reply, without completing the connection.</span></figcaption></figure>
+<h3><span class="pt">Exercício 1: escaneie a sua própria máquina</span><span class="en">Exercise 1: scan your own machine</span></h3>
+<pre><code>nmap localhost                       <span class="tok-c"># scan básico das 1000 portas mais comuns</span>
+nmap -p- localhost                   <span class="tok-c"># TODAS as 65535 portas (mais lento)</span>
+nmap -sV localhost                   <span class="tok-c"># tenta identificar a VERSÃO de cada serviço</span>
+nmap -O localhost                    <span class="tok-c"># tenta adivinhar o sistema operacional (precisa de sudo)</span>
+sudo nmap -sS -p 1-1000 localhost    <span class="tok-c"># SYN scan "silencioso", não completa a conexão</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> uma lista como <code>22/tcp open ssh</code>, <code>631/tcp open ipp</code> (se você tem impressão compartilhada), ou "0 portas abertas" numa máquina bem fechada. Compare com <code>ss -tulpn</code> (nota de Linux): toda porta que o nmap mostra como aberta deve aparecer também ali, do lado do servidor.</span><span class="en"><strong>Expected result:</strong> a list like <code>22/tcp open ssh</code>, <code>631/tcp open ipp</code> (if you have printer sharing), or "0 open ports" on a well-closed machine. Compare it with <code>ss -tulpn</code> (Linux note): every port nmap shows as open should also show up there, from the server side.</span></p>
+<h3><span class="pt">Exercício 2: escaneie um contêiner Docker</span><span class="en">Exercise 2: scan a Docker container</span></h3>
+<pre><code>docker run -d --name web -p 8080:80 nginx
+nmap -p 8080 localhost               <span class="tok-c"># a porta publicada</span>
+nmap localhost                       <span class="tok-c"># as outras portas do HOST continuam aparecendo, a 80 do container não</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> só a porta <code>8080</code> aparece aberta (a publicada com <code>-p</code>); a <code>80</code> "de dentro" do contêiner não aparece, porque o nmap, rodando no host, só enxerga a interface do host, não a rede interna do Docker. A seção sobre Docker mais abaixo explica por quê.</span><span class="en"><strong>Expected result:</strong> only port <code>8080</code> shows as open (the one published with <code>-p</code>); the container's internal <code>80</code> does not show up, because nmap, running on the host, only sees the host's interface, not Docker's internal network. The Docker section below explains why.</span></p>
+<h3><span class="pt">Opções do dia a dia</span><span class="en">Everyday options</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Opção</span><span class="en">Option</span></th><th><span class="pt">Faz</span><span class="en">Does</span></th></tr></thead><tbody><tr><td><code>-sS</code></td><td><span class="pt">SYN scan: rápido, não completa a conexão (precisa de <code>sudo</code>)</span><span class="en">SYN scan: fast, does not complete the connection (needs <code>sudo</code>)</span></td></tr><tr><td><code>-sT</code></td><td><span class="pt">connect scan: completa a conexão TCP normal (não precisa de <code>sudo</code>)</span><span class="en">connect scan: completes a normal TCP connection (no <code>sudo</code> needed)</span></td></tr><tr><td><code>-sU</code></td><td><span class="pt">escaneia portas UDP (mais lento e menos confiável que TCP)</span><span class="en">scans UDP ports (slower and less reliable than TCP)</span></td></tr><tr><td><code>-p 1-1000</code> · <code>-p-</code> · <code>-p 22,80,443</code></td><td><span class="pt">faixa, tudo, ou portas específicas</span><span class="en">a range, everything, or specific ports</span></td></tr><tr><td><code>-sV</code></td><td><span class="pt">detecta a versão do serviço (“nginx 1.25”)</span><span class="en">detects the service version (“nginx 1.25”)</span></td></tr><tr><td><code>-A</code></td><td><span class="pt">tudo junto: versão, SO, script básico, traceroute (mais barulhento e lento)</span><span class="en">everything together: version, OS, basic scripts, traceroute (noisier and slower)</span></td></tr><tr><td><code>-T4</code></td><td><span class="pt">mais rápido (até <code>-T5</code>); o padrão é conservador</span><span class="en">faster (up to <code>-T5</code>); the default is conservative</span></td></tr><tr><td><code>-oN arquivo.txt</code></td><td><span class="pt">salva a saída legível em arquivo</span><span class="en">saves readable output to a file</span></td></tr><tr><td><code>192.168.1.0/24</code></td><td><span class="pt">escaneia uma faixa inteira (só na sua LAN!)</span><span class="en">scans a whole range (only on your own LAN!)</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Nmap tem uma engine de scripts (NSE, <code>--script</code>) usada para checagens específicas, como testar se um servidor tem uma configuração TLS fraca. É poderosa e também de uso exclusivo em sistemas seus ou autorizados.</span><span class="en">Nmap has a scripting engine (NSE, <code>--script</code>) used for specific checks, like testing whether a server has weak TLS configuration. It is powerful, and likewise for use only on your own or authorized systems.</span></div>
+</section>
+<section class="content-section" aria-labelledby="ssh">
+<h2 id="ssh"><span class="pt">SSH como ferramenta de rede</span><span class="en">SSH as a network tool</span></h2>
+
+<p><span class="pt">A nota de Linux já cobre chaves e <code>sshd_config</code>. Aqui o foco é usar o SSH como <em>ferramenta de rede</em>: um túnel cifrado que você pode usar para alcançar serviços que, de outro jeito, não exporia.</span><span class="en">The Linux note already covers keys and <code>sshd_config</code>. Here the focus is using SSH as a <em>network tool</em>: an encrypted tunnel you can use to reach services that would otherwise not be exposed.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 190" role="img" aria-label="Túnel SSH local / Local SSH tunnel" style="min-width:620px">
+<rect x="10" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="89.0" class="pt " text-anchor="middle">seu notebook</text><text x="70.0" y="89.0" class="en " text-anchor="middle">your laptop</text>
+<rect x="260" y="60" width="140" height="50" rx="4" class="ln"/>
+<text x="330.0" y="89.0" class="pt " text-anchor="middle">servidor (SSH)</text><text x="330.0" y="89.0" class="en " text-anchor="middle">server (SSH)</text>
+<rect x="530" y="10" width="140" height="50" rx="4" class="ln fillsoft"/>
+<text x="600.0" y="32.0" class="pt " text-anchor="middle">banco :5432</text><text x="600.0" y="32.0" class="en " text-anchor="middle">database :5432</text>
+<text x="600.0" y="48.0" class="pt mut mono" text-anchor="middle">só localhost</text><text x="600.0" y="48.0" class="en mut mono" text-anchor="middle">localhost only</text>
+<path d="M130 85L260 85" class="ln"/><path d="M252.8 88.5L260 85L252.8 81.5" class="ln"/>
+<text x="195" y="75" class="pt mono" text-anchor="middle">túnel :5432</text><text x="195" y="75" class="en mono" text-anchor="middle">tunnel :5432</text>
+<path d="M400 40L530 40" class="ln dash"/>
+<text x="465" y="30" class="mut" text-anchor="middle">local</text>
+<path d="M400 70L530 40" class="ln"/><path d="M523.8 45.0L530 40L522.2 38.2" class="ln"/>
+<text x="10" y="140" class="pt mono">ssh -L 5432:localhost:5432 ana@servidor</text><text x="10" y="140" class="en mono">ssh -L 5432:localhost:5432 ana@server</text>
+<text x="10" y="165" class="pt mut">agora localhost:5432 no seu notebook é o banco do servidor</text><text x="10" y="165" class="en mut">now localhost:5432 on your laptop is the server’s database</text>
+</svg></div><figcaption><span class="pt">Encaminhamento local (<code>-L</code>): o que você manda para uma porta sua sai do outro lado do túnel.</span><span class="en">Local forwarding (<code>-L</code>): what you send to a port of yours comes out the other end of the tunnel.</span></figcaption></figure>
+<h3><span class="pt">Exercício: um túnel de verdade</span><span class="en">Exercise: a real tunnel</span></h3>
+<pre><code><span class="tok-c"># no "servidor" (pode ser uma segunda VM, ou um contêiner com sshd):</span>
+docker run -d --name srv -p 2222:22 -p 127.0.0.1:8081:80 linuxserver/openssh-server \
+  -e PASSWORD_ACCESS=true -e USER_PASSWORD=estudo -e USER_NAME=ana
+docker exec srv apk add --no-cache python3 2&gt;/dev/null || true
+docker exec -d srv python3 -m http.server 80
+
+<span class="tok-c"># no seu notebook: abra o túnel</span>
+ssh -p 2222 -L 9000:localhost:8081 ana@localhost   <span class="tok-c"># senha: estudo</span>
+
+<span class="tok-c"># numa SEGUNDA aba, com o túnel ainda aberto:</span>
+curl http://localhost:9000</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o <code>curl</code> retorna a página servida por <code>python3 -m http.server</code> <em>dentro</em> do contêiner, mesmo que a porta 80 dele só esteja ligada ao <code>localhost</code> interno — porque o túnel SSH carrega o tráfego da sua porta 9000 até lá. Feche o SSH (<code>Ctrl+C</code>) e repita o <code>curl</code>: agora falha, porque o túnel não existe mais.</span><span class="en"><strong>Expected result:</strong> <code>curl</code> returns the page served by <code>python3 -m http.server</code> <em>inside</em> the container, even though its port 80 is only bound to its internal <code>localhost</code> — because the SSH tunnel carries the traffic from your port 9000 there. Close SSH (<code>Ctrl+C</code>) and repeat the <code>curl</code>: it now fails, because the tunnel no longer exists.</span></p>
+<h3><span class="pt">As três formas de encaminhamento</span><span class="en">The three kinds of forwarding</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Direção</span><span class="en">Direction</span></th><th><span class="pt">Use quando</span><span class="en">Use when</span></th></tr></thead><tbody><tr><td><code>ssh -L porta_local:destino:porta ana@srv</code></td><td><span class="pt">você → servidor → destino</span><span class="en">you → server → destination</span></td><td><span class="pt">alcançar um banco/painel que só existe na rede do servidor</span><span class="en">reaching a database/panel that only exists on the server’s network</span></td></tr><tr><td><code>ssh -R porta_remota:localhost:porta ana@srv</code></td><td><span class="pt">servidor → você</span><span class="en">server → you</span></td><td><span class="pt">expor algo seu (um app local) através de um servidor com IP público</span><span class="en">exposing something of yours (a local app) through a server with a public IP</span></td></tr><tr><td><code>ssh -D 1080 ana@srv</code></td><td><span class="pt">proxy SOCKS: qualquer app → servidor → internet</span><span class="en">SOCKS proxy: any app → server → internet</span></td><td><span class="pt">navegar como se estivesse saindo pela rede do servidor</span><span class="en">browsing as if leaving from the server’s network</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="wireguard">
+<h2 id="wireguard"><span class="pt">VPN e WireGuard: hospede a sua</span><span class="en">VPN and WireGuard: host your own</span></h2>
+
+<p><span class="pt">Uma <em>VPN</em> (Virtual Private Network) estende uma rede privada pela internet: o tráfego entra cifrado num ponto e sai do outro lado como se estivesse dentro da rede remota. <code>WireGuard</code> é a forma moderna de fazer isso: um protocolo enxuto (poucos milhares de linhas, contra centenas de milhares do OpenVPN/IPsec), baseado em criptografia de chave pública, que vira uma interface de rede comum (<code>wg0</code>). É simples o bastante para você <em>hospedar a sua própria VPN</em> em minutos.</span><span class="en">A <em>VPN</em> (Virtual Private Network) extends a private network across the internet: traffic goes in encrypted at one point and comes out the other side as if it were inside the remote network. <code>WireGuard</code> is the modern way to do this: a lean protocol (a few thousand lines, versus hundreds of thousands for OpenVPN/IPsec), based on public-key cryptography, that shows up as an ordinary network interface (<code>wg0</code>). It is simple enough that you can <em>host your own VPN</em> in minutes.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 690 250" role="img" aria-label="WireGuard: dois peers, um túnel / WireGuard: two peers, one tunnel" style="min-width:560px">
+<rect x="10" y="20" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="47.0" class="pt " text-anchor="middle">seu notebook</text><text x="85.0" y="47.0" class="en " text-anchor="middle">your laptop</text>
+<text x="85.0" y="63.0" class="mut mono" text-anchor="middle">wg0: 10.8.0.2</text>
+<rect x="530" y="20" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="605.0" y="47.0" class="pt " text-anchor="middle">seu servidor</text><text x="605.0" y="47.0" class="en " text-anchor="middle">your server</text>
+<text x="605.0" y="63.0" class="mut mono" text-anchor="middle">wg0: 10.8.0.1</text>
+<rect x="10" y="120" width="670" height="90" rx="4" class="ln dash"/>
+<text x="345" y="140" class="pt mut" text-anchor="middle">internet (tudo aqui é cifrado)</text><text x="345" y="140" class="en mut" text-anchor="middle">internet (everything here is encrypted)</text>
+<path d="M85 80L85 120" class="ln"/><path d="M81.5 112.8L85 120L88.5 112.8" class="ln"/>
+<path d="M605 80L605 120" class="ln"/><path d="M601.5 112.8L605 120L608.5 112.8" class="ln"/>
+<path d="M85 180L605 180" class="ln"/><path d="M597.8 183.5L605 180L597.8 176.5" class="ln"/>
+<text x="345" y="172" class="pt mono" text-anchor="middle">UDP :51820 · pacotes cifrados e autenticados</text><text x="345" y="172" class="en mono" text-anchor="middle">UDP :51820 · encrypted, authenticated packets</text>
+<text x="10" y="235" class="pt mut">Cada lado tem uma chave privada (nunca sai da máquina) e conhece a chave PÚBLICA do outro — como SSH, mas para toda a conexão.</text><text x="10" y="235" class="en mut">Each side has a private key (never leaves the machine) and knows the other’s PUBLIC key — like SSH, but for the whole connection.</text>
+</svg></div><figcaption><span class="pt">Os dois lados viram uma pequena rede própria, <code>10.8.0.0/24</code>, por cima da internet normal.</span><span class="en">Both sides become a small network of their own, <code>10.8.0.0/24</code>, on top of the ordinary internet.</span></figcaption></figure>
+<h3><span class="pt">Exercício: hospede a sua própria VPN</span><span class="en">Exercise: host your own VPN</span></h3>
+<p><span class="pt">No seu servidor (uma VM de estudo na nuvem, ou uma VM local — veja a nota de AWS para subir uma de graça/baixo custo):</span><span class="en">On your server (a cloud study VM, or a local VM — see the AWS note to spin one up cheaply):</span></p>
+<pre><code><span class="tok-c"># SERVIDOR</span>
+sudo apt install wireguard
+umask 077   <span class="tok-c"># garante que as chaves nasçam só legíveis pelo dono</span>
+wg genkey | tee server.key | wg pubkey &gt; server.pub
+cat server.key   <span class="tok-c"># guarde: vai no [Interface] do servidor</span>
+cat server.pub   <span class="tok-c"># guarde: vai no [Peer] do notebook</span>
+
+sudo sysctl -w net.ipv4.ip_forward=1    <span class="tok-c"># deixa o servidor RETRANSMITIR pacotes</span></code></pre>
+<p><span class="pt">Arquivo de configuração do servidor:</span><span class="en">The server’s configuration file:</span></p>
+<pre><code># /etc/wireguard/wg0.conf  (servidor)
+[Interface]
+Address = 10.8.0.1/24
+ListenPort = 51820
+PrivateKey = &lt;conteúdo de server.key&gt;
+
+[Peer]                      # um bloco [Peer] para cada cliente
+PublicKey = &lt;conteúdo de laptop.pub&gt;
+AllowedIPs = 10.8.0.2/32    # só este IP da VPN vem desse peer</code></pre>
+<pre><code>sudo wg-quick up wg0                    <span class="tok-c"># sobe a interface</span>
+sudo systemctl enable wg-quick@wg0      <span class="tok-c"># liga no boot</span>
+sudo wg show                            <span class="tok-c"># confirma: peer, handshake, transferência</span></code></pre>
+<p><span class="pt">No seu notebook (o cliente):</span><span class="en">On your laptop (the client):</span></p>
+<pre><code><span class="tok-c"># NOTEBOOK</span>
+wg genkey | tee laptop.key | wg pubkey &gt; laptop.pub
+<span class="tok-c"># copie laptop.pub para o bloco [Peer] do servidor (acima) e reinicie: sudo wg-quick down wg0 &amp;&amp; sudo wg-quick up wg0</span></code></pre>
+<pre><code># /etc/wireguard/wg0.conf  (notebook)
+[Interface]
+Address = 10.8.0.2/24
+PrivateKey = &lt;conteúdo de laptop.key&gt;
+
+[Peer]
+PublicKey = &lt;conteúdo de server.pub&gt;
+Endpoint = SEU_IP_PUBLICO:51820
+AllowedIPs = 10.8.0.0/24    # só a rede da VPN passa pelo túnel (não TUDO)
+PersistentKeepalive = 25    # mantém o NAT "vivo" (lembra: UDP não tem sessão!)</code></pre>
+<pre><code>sudo wg-quick up wg0
+ping 10.8.0.1                 <span class="tok-c"># chega ao servidor pela VPN?</span>
+sudo wg show                  <span class="tok-c"># "latest handshake" recente = funcionando</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> <code>ping 10.8.0.1</code> responde, e <code>sudo wg show</code> mostra um <code>latest handshake</code> de segundos atrás nos dois lados. Se não houver handshake, confira: porta 51820/UDP liberada no firewall e no grupo de segurança da nuvem, <code>ip_forward</code> ligado no servidor, e se as chaves públicas foram trocadas corretamente (a pública do notebook no servidor, e vice-versa).</span><span class="en"><strong>Expected result:</strong> <code>ping 10.8.0.1</code> replies, and <code>sudo wg show</code> shows a <code>latest handshake</code> from seconds ago on both sides. If there is no handshake, check: port 51820/UDP open in the firewall and the cloud security group, <code>ip_forward</code> on at the server, and whether the public keys were exchanged correctly (the laptop’s public key on the server, and vice versa).</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Com <code>AllowedIPs = 0.0.0.0/0</code> no cliente, TODO o seu tráfego de internet passa pelo servidor (uma VPN "completa", útil em Wi-Fi não confiável). Com uma faixa menor (como <code>10.8.0.0/24</code>), só o tráfego para a rede da VPN passa por ela — o resto sai direto. Essa escolha é só o <code>AllowedIPs</code>.</span><span class="en">With <code>AllowedIPs = 0.0.0.0/0</code> on the client, ALL of your internet traffic goes through the server (a "full" VPN, useful on untrusted Wi-Fi). With a smaller range (like <code>10.8.0.0/24</code>), only traffic to the VPN network goes through it — everything else goes out directly. That choice is just <code>AllowedIPs</code>.</span></div>
+<h3><span class="pt">WireGuard gerenciado</span><span class="en">Managed WireGuard</span></h3>
+<p><span class="pt">Quando configurar à mão em vários dispositivos cansa, <code>wg-easy</code> (um contêiner com painel web) e <code>Tailscale</code>/<code>Netbird</code> (redes "mesh" sobre WireGuard, com login por conta) resolvem a parte chata de distribuir chaves. Internamente, todos usam o mesmo protocolo que você acabou de configurar à mão.</span><span class="en">When configuring by hand on several devices gets old, <code>wg-easy</code> (a container with a web panel) and <code>Tailscale</code>/<code>Netbird</code> (WireGuard-based "mesh" networks with account login) solve the tedious part of distributing keys. Internally, all of them use the same protocol you just configured by hand.</span></p>
+</section>
+<section class="content-section" aria-labelledby="wireshark">
+<h2 id="wireshark"><span class="pt">Wireshark e tcpdump: ver os pacotes</span><span class="en">Wireshark and tcpdump: seeing the packets</span></h2>
+
+<p><span class="pt"><code>tcpdump</code> captura pacotes no terminal; <code>Wireshark</code> faz o mesmo com uma interface gráfica para ler e filtrar o que foi capturado. Os dois leem a mesma coisa: os bytes que realmente passam pela sua placa de rede, camada por camada.</span><span class="en"><code>tcpdump</code> captures packets in the terminal; <code>Wireshark</code> does the same with a graphical interface to read and filter what was captured. Both read the same thing: the bytes that actually travel through your network card, layer by layer.</span></p>
+<h3><span class="pt">Instalar</span><span class="en">Install</span></h3>
+<pre><code>sudo apt install tcpdump wireshark termshark   <span class="tok-c"># termshark = Wireshark no terminal</span>
+sudo usermod -aG wireshark $USER               <span class="tok-c"># captura sem sudo (requer novo login)</span></code></pre>
+<h3><span class="pt">Exercício 1: ver um handshake TCP</span><span class="en">Exercise 1: see a TCP handshake</span></h3>
+<pre><code>sudo tcpdump -i any -n port 80 -c 20 &amp;          <span class="tok-c"># captura em segundo plano</span>
+curl -s http://example.com -o /dev/null
+wait</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> três linhas com flags <code>[S]</code>, <code>[S.]</code>, <code>[.]</code> (o SYN, SYN-ACK, ACK da seção de sessões), depois pacotes <code>[P.]</code> com dados, e no fim <code>[F.]</code> de cada lado fechando a conexão. É o diagrama da seção "Sessões", agora em bytes de verdade.</span><span class="en"><strong>Expected result:</strong> three lines with flags <code>[S]</code>, <code>[S.]</code>, <code>[.]</code> (the SYN, SYN-ACK, ACK from the sessions section), then <code>[P.]</code> data packets, and at the end <code>[F.]</code> from each side closing the connection. It is the "Sessions" diagram, now in real bytes.</span></p>
+<h3><span class="pt">Exercício 2: texto puro vs. cifrado</span><span class="en">Exercise 2: plain text vs. encrypted</span></h3>
+<pre><code>sudo tcpdump -i any -n -A port 80 -c 30 &amp;
+curl -s http://neverssl.com -o /dev/null
+wait
+<span class="tok-c"># compare:</span>
+sudo tcpdump -i any -n -A port 443 -c 30 &amp;
+curl -s https://example.com -o /dev/null
+wait</code></pre>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 150" role="img" aria-label="Texto puro vs. cifrado / Plain text vs. encrypted" style="min-width:600px">
+<rect x="10" y="10" width="270" height="60" rx="4" class="ln fillsoft"/>
+<text x="145.0" y="44.0" class="pt mono" text-anchor="middle">captura da porta 80 (HTTP)</text><text x="145.0" y="44.0" class="en mono" text-anchor="middle">port 80 capture (HTTP)</text>
+<text x="20" y="90" class="mono">GET / HTTP/1.1</text>
+<text x="20" y="108" class="mono mut">Host: neverssl.com</text>
+<text x="20" y="126" class="pt mut">← tudo legível</text><text x="20" y="126" class="en mut">← all readable</text>
+<rect x="350" y="10" width="270" height="60" rx="4" class="ln fillsoft"/>
+<text x="485.0" y="44.0" class="pt mono" text-anchor="middle">captura da porta 443 (HTTPS)</text><text x="485.0" y="44.0" class="en mono" text-anchor="middle">port 443 capture (HTTPS)</text>
+<text x="360" y="90" class="mono">\x17\x03\x03\x00\x45\xa2\xf1...</text>
+<text x="360" y="108" class="pt mut">(bytes sem sentido)</text><text x="360" y="108" class="en mut">(meaningless bytes)</text>
+<text x="360" y="126" class="pt mut">← cifrado pelo TLS</text><text x="360" y="126" class="en mut">← encrypted by TLS</text>
+</svg></div><figcaption><span class="pt"><strong>Resultado esperado:</strong> a captura da porta 80 mostra a requisição HTTP em texto puro, inclusive o <code>Host</code>; a da 443 mostra só ruído — é o TLS funcionando. Isso é literalmente por que HTTPS existe.</span><span class="en"><strong>Expected result:</strong> the port-80 capture shows the HTTP request in plain text, including the <code>Host</code>; the 443 one shows only noise — that is TLS working. This is literally why HTTPS exists.</span></figcaption></figure>
+<h3><span class="pt">Filtros essenciais</span><span class="en">Essential filters</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Filtro (Wireshark)</span><span class="en">Filter (Wireshark)</span></th><th><span class="pt">Mostra</span><span class="en">Shows</span></th></tr></thead><tbody><tr><td><code>tcp.port == 443</code></td><td><span class="pt">tráfego HTTPS</span><span class="en">HTTPS traffic</span></td></tr><tr><td><code>http</code></td><td><span class="pt">requisições e respostas HTTP decodificadas</span><span class="en">decoded HTTP requests and responses</span></td></tr><tr><td><code>dns</code></td><td><span class="pt">consultas e respostas de DNS</span><span class="en">DNS queries and responses</span></td></tr><tr><td><code>ip.addr == 10.8.0.1</code></td><td><span class="pt">tudo de/para um IP</span><span class="en">everything to/from one IP</span></td></tr><tr><td><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></td><td><span class="pt">só os SYN iniciais (útil para achar varreduras de porta)</span><span class="en">only the initial SYNs (useful for spotting port scans)</span></td></tr></tbody></table></div>
+<pre><code>tcpdump -i any -n port 53                               <span class="tok-c"># equivalente em tcpdump</span>
+tcpdump -i any -n <span class="tok-s">"tcp[13] &amp; 2 != 0 and tcp[13] &amp; 16 = 0"</span>  <span class="tok-c"># só SYN (sem ACK) — filtro cru de bits</span>
+sudo tcpdump -i any -w captura.pcap                      <span class="tok-c"># salva para abrir no Wireshark depois</span></code></pre>
+</section>
+<section class="content-section" aria-labelledby="firewall-lab">
+<h2 id="firewall-lab"><span class="pt">Firewall: medir a defesa com o nmap</span><span class="en">Firewall: measuring the defence with nmap</span></h2>
+
+<p><span class="pt">A nota de Linux explica a teoria do firewall. Aqui o exercício é fechar o laço: configurar uma regra e <em>provar</em> com o nmap que ela funciona, de fora para dentro.</span><span class="en">The Linux note explains the firewall theory. Here the exercise is to close the loop: set a rule and <em>prove</em> with nmap that it works, from the outside in.</span></p>
+<h3><span class="pt">Exercício: negar por padrão e medir com nmap</span><span class="en">Exercise: deny by default and measure with nmap</span></h3>
+<pre><code><span class="tok-c"># ANTES: confirme o que está aberto hoje</span>
+sudo ss -tulpn
+nmap -p- localhost
+
+<span class="tok-c"># aplique uma política restritiva (ufw; veja a nota de Linux para nftables puro)</span>
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+sudo ufw allow 22/tcp          <span class="tok-c"># não se tranque fora se isto for remoto!</span>
+sudo ufw enable
+
+<span class="tok-c"># DEPOIS: meça de novo</span>
+nmap -p- localhost</code></pre>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 180" role="img" aria-label="O antes e depois medidos pelo nmap / Before and after, measured by nmap" style="min-width:600px">
+<rect x="10" y="10" width="160" height="50" rx="4" class="ln fillsoft"/>
+<text x="90.0" y="39.0" class="pt " text-anchor="middle">antes</text><text x="90.0" y="39.0" class="en " text-anchor="middle">before</text>
+<rect x="200" y="10" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="250" y="40" class="mono" text-anchor="middle">22 ssh</text>
+<rect x="310" y="10" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="360" y="40" class="mono" text-anchor="middle">80 http</text>
+<rect x="420" y="10" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="470" y="40" class="mono" text-anchor="middle">3000 app-dev</text>
+<rect x="530" y="10" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="580" y="40" class="mono" text-anchor="middle">5432 postgres</text>
+<rect x="10" y="110" width="160" height="50" rx="4" class="ln"/>
+<text x="90.0" y="139.0" class="pt " text-anchor="middle">depois</text><text x="90.0" y="139.0" class="en " text-anchor="middle">after</text>
+<rect x="200" y="110" width="100" height="50" rx="4" class="brandfill"/>
+<text x="250" y="140" class="mono brandtext" text-anchor="middle">22 ssh</text>
+<rect x="310" y="110" width="100" height="50" rx="4" class="ln dash"/>
+<text x="360" y="140" class="pt mut" text-anchor="middle">80 filtrada</text><text x="360" y="140" class="en mut" text-anchor="middle">80 filtered</text>
+<rect x="420" y="110" width="100" height="50" rx="4" class="ln dash"/>
+<text x="470" y="140" class="pt mut" text-anchor="middle">3000 filtrada</text><text x="470" y="140" class="en mut" text-anchor="middle">3000 filtered</text>
+<rect x="530" y="110" width="100" height="50" rx="4" class="ln dash"/>
+<text x="580" y="140" class="pt mut" text-anchor="middle">5432 filtrada</text><text x="580" y="140" class="en mut" text-anchor="middle">5432 filtered</text>
+</svg></div><figcaption><span class="pt">O nmap antes mostra tudo que estava escutando sem querer; depois, só o que você liberou de propósito.</span><span class="en">nmap before shows everything that was listening unintentionally; after, only what you opened on purpose.</span></figcaption></figure>
+<p><span class="pt"><strong>Resultado esperado:</strong> o segundo <code>nmap -p-</code> mostra só a porta 22 (ou as que você liberou de propósito); as outras aparecem como <code>filtered</code> em vez de <code>open</code>. Se alguma porta que você <em>queria</em> aberta sumiu, falta uma regra <code>ufw allow</code> para ela.</span><span class="en"><strong>Expected result:</strong> the second <code>nmap -p-</code> shows only port 22 (or whichever you opened on purpose); the others show as <code>filtered</code> instead of <code>open</code>. If a port you <em>wanted</em> open disappeared, it is missing a <code>ufw allow</code> rule.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Teste primeiro numa VM ou contêiner descartável. Se estiver numa máquina remota, confirme que a porta do SSH está liberada <em>antes</em> de ativar o <code>ufw</code>, ou abra uma segunda sessão para testar sem se trancar fora.</span><span class="en">Test on a throwaway VM or container first. If you are on a remote machine, confirm the SSH port is allowed <em>before</em> enabling <code>ufw</code>, or open a second session to test without locking yourself out.</span></div>
+</section>
+<section class="content-section" aria-labelledby="recon">
+<h2 id="recon"><span class="pt">O kit de reconhecimento, com limites</span><span class="en">The recon kit, with limits</span></h2>
+
+<p><span class="pt">Um time de segurança (e um atacante) usa um kit pequeno e bem conhecido. Conhecer os nomes e para que servem já tira o mistério; usá-los de verdade exige sempre o mesmo limite: sistemas seus ou autorização explícita por escrito (um contrato de pentest, uma competição de CTF, um laboratório próprio).</span><span class="en">A security team (and an attacker) uses a small, well-known kit. Knowing the names and what they are for already removes the mystery; actually using them always requires the same boundary: your own systems or explicit written authorization (a pentest contract, a CTF competition, your own lab).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Para quê</span><span class="en">What it is for</span></th><th><span class="pt">Já viu nesta nota?</span><span class="en">Seen in this note?</span></th></tr></thead><tbody><tr><td><code>nmap</code></td><td><span class="pt">descobrir hosts e portas</span><span class="en">discovering hosts and ports</span></td><td><span class="pt">sim</span><span class="en">yes</span></td></tr><tr><td><code>Wireshark</code> / <code>tcpdump</code></td><td><span class="pt">ler o tráfego</span><span class="en">reading traffic</span></td><td><span class="pt">sim</span><span class="en">yes</span></td></tr><tr><td><code>netcat</code> (<code>nc</code>)</td><td><span class="pt">canivete de rede: testar portas, mandar/ouvir bytes crus</span><span class="en">network Swiss Army knife: testing ports, sending/listening raw bytes</span></td><td><span class="pt">nota de Linux</span><span class="en">Linux note</span></td></tr><tr><td><span class="pt"><em>Scanners de vulnerabilidade</em> (Nessus, OpenVAS)</span><span class="en"><em>Vulnerability scanners</em> (Nessus, OpenVAS)</span></td><td><span class="pt">comparam serviços e versões com um banco de falhas conhecidas</span><span class="en">compare services and versions against a database of known flaws</span></td><td><span class="pt">não (fora do 80/20)</span><span class="en">no (outside the 80/20)</span></td></tr><tr><td><span class="pt"><em>Proxies de aplicação web</em> (Burp Suite, OWASP ZAP)</span><span class="en"><em>Web app proxies</em> (Burp Suite, OWASP ZAP)</span></td><td><span class="pt">interceptam e editam requisições HTTP para testar uma aplicação</span><span class="en">intercept and edit HTTP requests to test an application</span></td><td><span class="pt">não</span><span class="en">no</span></td></tr><tr><td><span class="pt"><em>Testadores de senha</em> (Hydra, John the Ripper)</span><span class="en"><em>Password testers</em> (Hydra, John the Ripper)</span></td><td><span class="pt">tentam credenciais ou quebram hashes para medir a força de senhas</span><span class="en">try credentials or crack hashes to measure password strength</span></td><td><span class="pt">não</span><span class="en">no</span></td></tr><tr><td><span class="pt"><em>Frameworks de exploração</em> (Metasploit)</span><span class="en"><em>Exploitation frameworks</em> (Metasploit)</span></td><td><span class="pt">automatizam o uso de falhas conhecidas contra um alvo autorizado</span><span class="en">automate using known flaws against an authorized target</span></td><td><span class="pt">não</span><span class="en">no</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Esse kit é literalmente o currículo de certificações defensivas como CompTIA Security+ e do caminho de pentest como o eJPT/OSCP — e também o que times de "blue team" usam ao contrário, para caçar essas mesmas ferramentas sendo usadas contra eles nos logs. Se quiser praticar de verdade, plataformas como <a href="https://tryhackme.com" rel="noopener">TryHackMe</a> e <a href="https://www.hackthebox.com" rel="noopener">Hack The Box</a> dão alvos de propósito, de forma legal.</span><span class="en">This kit is literally the curriculum of defensive certifications like CompTIA Security+ and of the pentest path like eJPT/OSCP — and also what "blue team" defenders use in reverse, hunting for these same tools being used against them in the logs. If you want to practice for real, platforms like <a href="https://tryhackme.com" rel="noopener">TryHackMe</a> and <a href="https://www.hackthebox.com" rel="noopener">Hack The Box</a> give you purpose-built, legal targets.</span></div>
+<h3><span class="pt">O único exercício seguro de "ataque": força bruta contra o seu próprio SSH</span><span class="en">The one safe "attack" exercise: brute force against your own SSH</span></h3>
+<pre><code><span class="tok-c"># no seu laboratório: veja as tentativas de login falharem, do lado do SERVIDOR</span>
+sudo journalctl -u ssh -f &amp;
+<span class="tok-c"># de outro terminal, erre a senha de propósito algumas vezes</span>
+ssh ana@localhost   <span class="tok-c"># digite qualquer coisa errada, 3x</span>
+
+<span class="tok-c"># instale e observe o fail2ban reagir</span>
+sudo apt install fail2ban
+sudo systemctl enable --now fail2ban
+sudo fail2ban-client status sshd</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o journal mostra <code>Failed password</code> para cada tentativa; depois de configurar o <code>fail2ban</code> (padrão: 5 tentativas), o IP some de <code>fail2ban-client status sshd</code> e entra na lista de banidos — tente de novo e a conexão nem completa o handshake TCP.</span><span class="en"><strong>Expected result:</strong> the journal shows <code>Failed password</code> for each attempt; after setting up <code>fail2ban</code> (default: 5 attempts), the IP shows up in <code>fail2ban-client status sshd</code>'s ban list — try again and the connection does not even complete the TCP handshake.</span></p>
+</section>
+<section class="content-section" aria-labelledby="docker-net">
+<h2 id="docker-net"><span class="pt">Docker para o laboratório local</span><span class="en">Docker for the local lab</span></h2>
+
+<p><span class="pt">Para praticar com duas ou mais "máquinas" sem comprar duas máquinas, o jeito mais rápido é o Docker. Mas a rede de um contêiner <em>não é</em> a rede de uma máquina real, e isso confunde muita gente quando o laboratório não se comporta como esperado. Esta seção explica as duas, nessa ordem.</span><span class="en">To practice with two or more "machines" without buying two machines, the fastest way is Docker. But a container's network is <em>not</em> a real machine's network, and that confuses a lot of people when the lab does not behave as expected. This section explains both, in that order.</span></p>
+<h3><span class="pt">Sem Docker: como é numa máquina de verdade</span><span class="en">Without Docker: how it is on a real machine</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 810 150" role="img" aria-label="Rede sem Docker / Network without Docker" style="min-width:700px">
+<rect x="10" y="20" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="47.0" class="pt " text-anchor="middle">sua máquina</text><text x="85.0" y="47.0" class="en " text-anchor="middle">your machine</text>
+<text x="85.0" y="63.0" class="pt mut mono" text-anchor="middle">processos</text><text x="85.0" y="63.0" class="en mut mono" text-anchor="middle">processes</text>
+<rect x="220" y="20" width="150" height="60" rx="4" class="ln"/>
+<text x="295.0" y="54.0" class="pt " text-anchor="middle">placa de rede (NIC)</text><text x="295.0" y="54.0" class="en " text-anchor="middle">network card (NIC)</text>
+<rect x="430" y="20" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="505.0" y="54.0" class="pt " text-anchor="middle">switch físico</text><text x="505.0" y="54.0" class="en " text-anchor="middle">physical switch</text>
+<rect x="640" y="20" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="715.0" y="54.0" class="pt " text-anchor="middle">roteador / internet</text><text x="715.0" y="54.0" class="en " text-anchor="middle">router / internet</text>
+<path d="M170 50L220 50" class="ln"/><path d="M212.8 53.5L220 50L212.8 46.5" class="ln"/>
+<path d="M380 50L430 50" class="ln"/><path d="M422.8 53.5L430 50L422.8 46.5" class="ln"/>
+<path d="M590 50L640 50" class="ln"/><path d="M632.8 53.5L640 50L632.8 46.5" class="ln"/>
+<text x="10" y="110" class="pt mut">Um IP real por NIC. O firewall do Linux (netfilter) decide o que entra e sai nessa única interface.</text><text x="10" y="110" class="en mut">One real IP per NIC. Linux's firewall (netfilter) decides what comes in and out through that one interface.</text>
+<text x="10" y="130" class="pt mut">Outra máquina na rede fala com você por um switch e um cabo/Wi-Fi físicos — há hardware real no meio.</text><text x="10" y="130" class="en mut">Another machine on the network talks to you through a physical switch and cable/Wi-Fi — there is real hardware in between.</text>
+</svg></div><figcaption><span class="pt">A rede "de verdade": uma interface, um firewall, hardware real entre as máquinas.</span><span class="en">The "real" network: one interface, one firewall, real hardware between machines.</span></figcaption></figure>
+<h3><span class="pt">Com Docker: uma rede inteira simulada dentro da sua máquina</span><span class="en">With Docker: a whole network simulated inside your machine</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 280" role="img" aria-label="Rede do Docker / Docker networking" style="min-width:680px">
+<rect x="10" y="10" width="700" height="230" rx="4" class="ln dash"/>
+<text x="22" y="30" class="pt mut">sua máquina (host)</text><text x="22" y="30" class="en mut">your machine (host)</text>
+<rect x="30" y="50" width="110" height="40" rx="4" class="ln"/>
+<text x="85.0" y="67.0" class="" text-anchor="middle">eth0</text>
+<text x="85.0" y="83.0" class="pt mut mono" text-anchor="middle">IP real</text><text x="85.0" y="83.0" class="en mut mono" text-anchor="middle">real IP</text>
+<rect x="220" y="50" width="150" height="40" rx="4" class="ln fillsoft"/>
+<text x="295.0" y="67.0" class="" text-anchor="middle">docker0 (bridge)</text>
+<text x="295.0" y="83.0" class="mut mono" text-anchor="middle">172.17.0.1</text>
+<path d="M140 70L220 70" class="ln"/><path d="M212.8 73.5L220 70L212.8 66.5" class="ln"/>
+<rect x="220" y="130" width="150" height="50" rx="4" class="ln fillsoft"/>
+<text x="295.0" y="152.0" class="pt " text-anchor="middle">contêiner A</text><text x="295.0" y="152.0" class="en " text-anchor="middle">container A</text>
+<text x="295.0" y="168.0" class="mut mono" text-anchor="middle">172.17.0.2</text>
+<rect x="420" y="130" width="150" height="50" rx="4" class="ln fillsoft"/>
+<text x="495.0" y="152.0" class="pt " text-anchor="middle">contêiner B</text><text x="495.0" y="152.0" class="en " text-anchor="middle">container B</text>
+<text x="495.0" y="168.0" class="mut mono" text-anchor="middle">172.17.0.3</text>
+<path d="M295 110L295 130" class="ln"/><path d="M291.5 122.8L295 130L298.5 122.8" class="ln"/>
+<path d="M495 110L495 130" class="ln"/><path d="M491.5 122.8L495 130L498.5 122.8" class="ln"/>
+<path d="M295 155L420 155" class="ln"/><path d="M412.8 158.5L420 155L412.8 151.5" class="ln"/>
+<text x="357" y="145" class="pt mut" text-anchor="middle">veem-se direto</text><text x="357" y="145" class="en mut" text-anchor="middle">see each other directly</text>
+<rect x="530" y="50" width="150" height="40" rx="4" class="ln"/>
+<text x="605.0" y="74.0" class="mono" text-anchor="middle">-p 8080:80</text>
+<path d="M220 155L220 70" class="ln dash"/><path d="M223.5 77.2L220 70L216.5 77.2" class="ln"/>
+<path d="M530 65L300 155" class="ln dash"/><path d="M305.4 149.1L300 155L308.0 155.6" class="ln"/>
+<text x="10" y="260" class="pt mut">docker0 é um switch de software; cada contêiner ganha um par "veth" (um cabo de rede virtual) ligado a ele.</text><text x="10" y="260" class="en mut">docker0 is a software switch; each container gets a "veth" pair (a virtual network cable) plugged into it.</text>
+</svg></div><figcaption><span class="pt">Namespaces de rede dão a cada contêiner sua própria pilha de rede (interfaces, rotas, regras); o <code>docker0</code> os liga como um switch e faz NAT para o mundo de fora.</span><span class="en">Network namespaces give each container its own network stack (interfaces, routes, rules); <code>docker0</code> links them like a switch and NATs them out to the world.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Termo</span><span class="en">Term</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th></tr></thead><tbody><tr><td><span class="pt">Namespace de rede</span><span class="en">Network namespace</span></td><td><span class="pt">uma pilha de rede isolada por processo/contêiner: suas próprias interfaces, rotas e regras de firewall</span><span class="en">an isolated network stack per process/container: its own interfaces, routes and firewall rules</span></td></tr><tr><td><span class="pt">veth pair</span><span class="en">veth pair</span></td><td><span class="pt">um "cabo" de rede virtual com duas pontas: uma dentro do contêiner, outra ligada ao bridge</span><span class="en">a virtual network "cable" with two ends: one inside the container, one plugged into the bridge</span></td></tr><tr><td><span class="pt">Bridge (<code>docker0</code>)</span><span class="en">Bridge (<code>docker0</code>)</span></td><td><span class="pt">um switch de software que liga os contêineres entre si e ao host</span><span class="en">a software switch that links containers to each other and to the host</span></td></tr><tr><td><span class="pt"><code>-p 8080:80</code></span><span class="en"><code>-p 8080:80</code></span></td><td><span class="pt">uma regra de NAT: tráfego na porta 8080 do HOST é redirecionado para a 80 do contêiner</span><span class="en">a NAT rule: traffic on the HOST's port 8080 is redirected to the container's port 80</span></td></tr><tr><td><span class="pt">DNS embutido</span><span class="en">Embedded DNS</span></td><td><span class="pt">o Docker roda um DNS interno (127.0.0.11) para contêineres se acharem pelo nome do serviço</span><span class="en">Docker runs an internal DNS server (127.0.0.11) so containers find each other by service name</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">A diferença que mais confunde: dois contêineres na mesma rede Docker se enxergam <em>direto</em>, sem passar pelo firewall do host — o netfilter do host só vê o tráfego que cruza para fora do bridge. Isso também já apareceu na nota de Linux: regras do Docker ficam numa cadeia própria (<code>DOCKER-USER</code>) e podem abrir uma porta ao mundo <em>mesmo com o ufw negando</em>. Nunca assuma que um firewall de host protege contêineres sem conferir.</span><span class="en">The most confusing difference: two containers on the same Docker network see each other <em>directly</em>, without going through the host firewall — the host's netfilter only sees traffic that crosses out of the bridge. This also showed up in the Linux note: Docker's rules live in their own chain (<code>DOCKER-USER</code>) and can open a port to the world <em>even with ufw denying it</em>. Never assume a host firewall protects containers without checking.</span></div>
+<h3><span class="pt">Laboratório: duas "máquinas" em contêineres</span><span class="en">Lab: two "machines" in containers</span></h3>
+<pre><code>mkdir lab-rede &amp;&amp; cd lab-rede
+cat &gt; docker-compose.yml &lt;&lt;<span class="tok-s">'EOF'</span>
+services:
+  alvo:
+    image: nginx
+    networks: [lab]
+  ferramentas:
+    image: instrumentisto/nmap     <span class="tok-c"># já vem com nmap, tcpdump, curl</span>
+    networks: [lab]
+    command: sleep infinity
+networks:
+  lab:
+    driver: bridge
+EOF
+docker compose up -d
+docker compose exec ferramentas nmap alvo          <span class="tok-c"># escaneia pelo NOME (o DNS embutido resolve)</span>
+docker compose exec ferramentas sh -c <span class="tok-s">"nc -zv alvo 80 &amp;&amp; echo OK"</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> <code>nmap alvo</code> resolve o nome pelo DNS interno do Docker e mostra <code>80/tcp open</code>, mesmo sem nenhum <code>-p</code> no <code>docker-compose.yml</code> — porque, <em>dentro</em> da rede <code>lab</code>, os contêineres se enxergam direto, sem precisar publicar porta nenhuma. Compare com o exercício de nmap da seção anterior, feito do HOST contra a porta publicada: são dois cenários diferentes, e é exatamente essa diferença que costuma confundir.</span><span class="en"><strong>Expected result:</strong> <code>nmap alvo</code> resolves the name through Docker's internal DNS and shows <code>80/tcp open</code>, even with no <code>-p</code> at all in <code>docker-compose.yml</code> — because, <em>inside</em> the <code>lab</code> network, the containers see each other directly, with no port to publish. Compare this with the nmap exercise from the previous section, done from the HOST against the published port: these are two different scenarios, and that difference is exactly what usually trips people up.</span></p>
+<h3><span class="pt">Onde a simulação para</span><span class="en">Where the simulation stops</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">No contêiner</span><span class="en">In the container</span></th><th><span class="pt">Numa máquina/nuvem real</span><span class="en">On a real machine/cloud</span></th></tr></thead><tbody><tr><td><span class="pt">Um "cabo" virtual (veth) sem latência real</span><span class="en">A virtual "cable" (veth) with no real latency</span></td><td><span class="pt">cabo, Wi-Fi ou fibra de verdade, com latência, perda de pacote e limite de banda reais</span><span class="en">a real cable, Wi-Fi or fibre, with real latency, packet loss and bandwidth limits</span></td></tr><tr><td><span class="pt">Um switch de software (<code>docker0</code>) sem ARP de verdade</span><span class="en">A software switch (<code>docker0</code>) with no real ARP</span></td><td><span class="pt">um switch físico (ou uma VPC na nuvem) com tabelas ARP, VLANs, possivelmente outros inquilinos</span><span class="en">a physical switch (or a cloud VPC) with ARP tables, VLANs, possibly other tenants</span></td></tr><tr><td><span class="pt">Firewall do host pode nem ver o tráfego entre contêineres</span><span class="en">Host firewall may not even see inter-container traffic</span></td><td><span class="pt">grupos de segurança/NACLs da nuvem, e o firewall do SO, realmente filtram cada pacote</span><span class="en">cloud security groups/NACLs, and the OS firewall, really filter every packet</span></td></tr><tr><td><span class="pt">IP muda a cada <code>docker compose up</code></span><span class="en">IP changes on every <code>docker compose up</code></span></td><td><span class="pt">IP costuma ser estável (ou um Elastic IP/DNS gerenciado)</span><span class="en">IP is usually stable (or a managed Elastic IP/DNS)</span></td></tr></tbody></table></div>
+<p><span class="pt">Use contêineres para aprender comandos e ler saídas sem custo. Para medir o que um atacante real veria — latência, firewall de verdade, uma rota pela internet — volte para uma VM real ou de nuvem (nota de AWS) de vez em quando.</span><span class="en">Use containers to learn commands and read output at no cost. To measure what a real attacker would see — latency, a real firewall, a route across the actual internet — go back to a real or cloud VM (AWS note) every so often.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-sec">
+<h2 id="cheat-sec"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th></tr></thead><tbody><tr><td><span class="pt">ver conexões TCP abertas</span><span class="en">see open TCP connections</span></td><td><code>ss -tn state established</code></td></tr><tr><td><span class="pt">escanear minha própria máquina</span><span class="en">scan my own machine</span></td><td><code>nmap -sV -p- localhost</code></td></tr><tr><td><span class="pt">abrir um túnel SSH para um serviço remoto</span><span class="en">open an SSH tunnel to a remote service</span></td><td><code>ssh -L porta_local:localhost:porta ana@servidor</code></td></tr><tr><td><span class="pt">subir minha VPN</span><span class="en">bring my VPN up</span></td><td><code>sudo wg-quick up wg0</code> · <code>sudo wg show</code></td></tr><tr><td><span class="pt">capturar um handshake TCP</span><span class="en">capture a TCP handshake</span></td><td><code>sudo tcpdump -i any -n port 80 -c 20</code></td></tr><tr><td><span class="pt">provar que o firewall funciona</span><span class="en">prove the firewall works</span></td><td><code>nmap -p- localhost</code> antes e depois do <code>ufw enable</code></td></tr><tr><td><span class="pt">ver o Docker simular uma rede</span><span class="en">see Docker simulate a network</span></td><td><code>docker network inspect bridge</code></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">Por que o TCP é "com estado" e o UDP não?</span><span class="en">Why is TCP "stateful" and UDP is not?</span></td><td><span class="pt">TCP abre uma conexão com handshake e numera/reenvia bytes; UDP manda datagramas independentes, sem conexão.</span><span class="en">TCP opens a connection with a handshake and numbers/resends bytes; UDP sends independent datagrams, with no connection.</span></td></tr><tr><td><span class="pt">O que significa uma porta aparecer "filtered" no nmap?</span><span class="en">What does a port showing "filtered" in nmap mean?</span></td><td><span class="pt">O pacote de teste não teve resposta nenhuma — geralmente um firewall descartando, em vez de recusar.</span><span class="en">The test packet got no reply at all — usually a firewall dropping it instead of refusing it.</span></td></tr><tr><td><span class="pt">Qual a diferença entre <code>ssh -L</code> e <code>ssh -R</code>?</span><span class="en">What is the difference between <code>ssh -L</code> and <code>ssh -R</code>?</span></td><td><span class="pt"><code>-L</code> leva uma porta sua até o lado de lá; <code>-R</code> leva uma porta de lá até o seu lado.</span><span class="en"><code>-L</code> carries a port of yours to the far side; <code>-R</code> carries a port from the far side to you.</span></td></tr><tr><td><span class="pt">Por que o WireGuard manda pacotes de keepalive?</span><span class="en">Why does WireGuard send keepalive packets?</span></td><td><span class="pt">Porque é UDP, sem sessão; sem keepalive, o NAT no meio do caminho esquece a tradução depois de um tempo.</span><span class="en">Because it is UDP, with no session; without keepalives, NAT along the way forgets the translation after a while.</span></td></tr><tr><td><span class="pt">Como o Wireshark prova que o HTTPS funciona?</span><span class="en">How does Wireshark prove HTTPS works?</span></td><td><span class="pt">Uma captura da porta 443 mostra só bytes sem sentido, enquanto a da porta 80 mostra a requisição em texto puro.</span><span class="en">A port-443 capture shows only meaningless bytes, while the port-80 one shows the request in plain text.</span></td></tr><tr><td><span class="pt">Dois contêineres no mesmo <code>docker-compose.yml</code> precisam de <code>-p</code> para se enxergar?</span><span class="en">Do two containers in the same <code>docker-compose.yml</code> need <code>-p</code> to see each other?</span></td><td><span class="pt">Não: na mesma rede Docker eles se enxergam direto pelo nome do serviço; <code>-p</code> é só para expor ao HOST.</span><span class="en">No: on the same Docker network they see each other directly by service name; <code>-p</code> is only to expose to the HOST.</span></td></tr><tr><td><span class="pt">Que ferramentas requerem autorização explícita antes de usar?</span><span class="en">Which tools require explicit authorization before use?</span></td><td><span class="pt">Praticamente todas desta nota contra sistemas que não são seus: nmap, testadores de senha, frameworks de exploração.</span><span class="en">Practically all of this note's tools, against systems that are not yours: nmap, password testers, exploitation frameworks.</span></td></tr></tbody></table></div>
+<h3><span class="pt">Fontes recomendadas</span><span class="en">Recommended sources</span></h3>
+<p><span class="pt">Os livros abaixo aprofundam cada ferramenta desta nota.</span><span class="en">The books below go deeper into each tool in this note.</span></p>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://nmap.org/book/" rel="noopener">Gordon "Fyodor" Lyon. Nmap Network Scanning. Nmap Project (free online book).</a></li><li><a href="https://www.wireguard.com/papers/wireguard.pdf" rel="noopener">Jason A. Donenfeld. WireGuard: Next Generation Kernel Network Tunnel (whitepaper).</a></li><li><a href="https://nostarch.com/packetanalysis3" rel="noopener">Chris Sanders. Practical Packet Analysis, 3rd edition. No Starch Press, 2017.</a></li><li><a href="https://nostarch.com/tcpipguide" rel="noopener">Charles M. Kozierok. The TCP/IP Guide. No Starch Press.</a></li><li><a href="https://nostarch.com/network-security-monitoring" rel="noopener">Richard Bejtlich. The Practice of Network Security Monitoring. No Starch Press, 2013.</a></li><li><a href="https://docs.docker.com/network/" rel="noopener">Docker documentation. Networking overview.</a></li><li><a href="https://nostarch.com/tlpi" rel="noopener">Michael Kerrisk. The Linux Programming Interface, ch. 56-61 (sockets). No Starch Press, 2010.</a></li><li><a href="https://www.comptia.org/certifications/security" rel="noopener">CompTIA Security+ exam objectives (for the defensive side of this toolkit).</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg-2" x1="3" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#9168e3"/><stop offset="1" stop-color="#341672"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#lg-2)"/><g fill="#fff" fill-opacity=".97"><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(150.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(210.0 16 16)"/></g><circle cx="16" cy="16" r="2.3" fill="#2a1157"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
