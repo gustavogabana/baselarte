@@ -483,11 +483,14 @@ samp {
 }
 
 /* Brand mark: a "b" monogram on a purple gradient tile (see favicon.svg). */
+/* Brand mark: a five-petal flower, solid colour, no gradient (see favicon.svg).
+   The header/footer are always dark, so the mark is drawn in the chrome's
+   light ink colour, flat on the dark background. */
 .logo-mark {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   flex: none;
-  filter: drop-shadow(0 1px 2px color-mix(in srgb, var(--brand) 35%, transparent));
+  fill: var(--fg-strong);
 }
 
 /* ==========================================================================
