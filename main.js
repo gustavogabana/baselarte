@@ -189,9 +189,12 @@
      -------------------------------------------------------------------------- */
 
   function syncBrowserThemeColor() {
-    // Read from the CSS so the colour is defined in one place only.
-    const paperColor = getComputedStyle(documentRoot).getPropertyValue("--page").trim();
-    if (browserThemeColorMeta) browserThemeColorMeta.content = paperColor;
+    // The header (top of every page) is always dark, so the browser chrome
+    // (mobile address bar, etc.) follows the header's colour, not the
+    // content theme. Read from the CSS so it is defined in one place only.
+    const headerElement = document.querySelector(".site-header");
+    const chromeColor = getComputedStyle(headerElement ?? documentRoot).getPropertyValue("--page").trim();
+    if (browserThemeColorMeta) browserThemeColorMeta.content = chromeColor;
   }
 
   function updateThemeAndLocalTime() {

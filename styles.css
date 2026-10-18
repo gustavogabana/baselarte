@@ -166,6 +166,52 @@
   color-scheme: dark;
 }
 
+/* The header and footer ("chrome") always use the dark palette, no matter
+   which theme is picked for the content: redeclaring the tokens here makes
+   every existing header/footer rule (they all read var(--page), var(--glass),
+   var(--fg-strong)...) resolve to the dark values automatically. */
+.site-header,
+.site-footer {
+  --page: #0d0e12;
+  --page-faint: #15181e;
+  /* More opaque than the generic --glass: the header must read as solidly
+     dark over any content scrolling beneath it, light or dark. */
+  --glass: color-mix(in srgb, var(--page) 90%, transparent);
+  --glass-faint: color-mix(in srgb, var(--page-faint) 94%, transparent);
+  --surface-strong: #1e222a;
+  --surface-hover: #1e222a;
+  --surface-active: #2b303c;
+
+  --fg-strong: #efeff1;
+  --fg: #d5d7db;
+  --fg-faint: #b2b6bd;
+  --fg-on-action: #0d0e12;
+
+  --border: #b2b6bd33;
+  --border-faint: #b2b6bd1a;
+  --border-strong: #b2b6bd66;
+
+  --action: #2b89ff;
+  --action-hover: #389aff;
+  --action-active: #4ca1ff;
+  --action-surface: #111f37;
+  --action-border: #1c345f;
+  --visited: #b457ff;
+  --focus-inner: #389aff;
+  --focus-outer: #5990ff;
+
+  --brand: #8a5bd6;
+  --brand-fg: #b08be6;
+  --brand-surface: #1f1233;
+  --brand-border: #4a2b7c;
+
+  --shadow-low: 0 1px 1px 0 #656a760d, 0 2px 2px 0 #656a760d;
+  --shadow-mid: 0 2px 3px 0 #656a761a, 0 8px 16px -10px #656a7633;
+  --shadow-overlay: 0 2px 3px 0 #3b3d4540, 0 12px 24px 0 #3b3d4559;
+
+  color-scheme: dark;
+}
+
 /* ==========================================================================
    Base
    ========================================================================== */

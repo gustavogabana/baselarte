@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="pg.metaTitle">Postgres for developers, the 80/20 | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:pg.metaDescription" content="Relational databases 80/20, Postgres-focused: schemas, database managers, connecting, roles and passwords (the classic mix-up), access security, CTEs and window functions, indexes, UUIDs, full-text search instead of LIKE, grants, backups (3-2-1) and caching, with a Docker lab.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/postgres-for-devs/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/postgres-for-devs/">
+  <meta property="og:title" data-i18n-attributes="content:pg.metaTitle" content="Postgres for developers, the 80/20 | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:pg.metaDescription" content="Relational databases 80/20, Postgres-focused: schemas, database managers, connecting, roles and passwords (the classic mix-up), access security, CTEs and window functions, indexes, UUIDs, full-text search instead of LIKE, grants, backups (3-2-1) and caching, with a Docker lab.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:pg.metaTitle" content="Postgres for developers, the 80/20 | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:pg.metaDescription" content="Relational databases 80/20, Postgres-focused: schemas, database managers, connecting, roles and passwords (the classic mix-up), access security, CTEs and window functions, indexes, UUIDs, full-text search instead of LIKE, grants, backups (3-2-1) and caching, with a Docker lab.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg-1" x1="3" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#9168e3"/><stop offset="1" stop-color="#341672"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#lg-1)"/><g fill="#fff" fill-opacity=".97"><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(150.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(210.0 16 16)"/></g><circle cx="16" cy="16" r="2.3" fill="#2a1157"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../aws/index.html">AWS</a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../postgres-for-devs/index.html" aria-current="page"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-secondary" href="../index.html" data-i18n="nav.index">Index</a>
+        <a class="btn btn-primary" href="../terraform/index.html" data-i18n="nav.start">Terraform 80/20</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../postgres-for-devs/index.html" aria-current="page"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCase">Case study</h2>
+        <ul data-sidebar-group>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#basics"><span class="pt">O que é um banco relacional e um schema</span><span class="en">What a relational database and a schema are</span></a></li>
+<li><a href="#connecting"><span class="pt">Como conectar</span><span class="en">How to connect</span></a></li>
+<li><a href="#users"><span class="pt">Usuários e senhas: as três camadas</span><span class="en">Users and passwords: the three layers</span></a></li>
+<li><a href="#access-security"><span class="pt">Segurança de acesso: pg_hba, TLS e privilégio mínimo</span><span class="en">Access security: pg_hba, TLS and least privilege</span></a></li>
+<li><a href="#commands"><span class="pt">Comandos do dia a dia</span><span class="en">Everyday commands</span></a></li>
+<li><a href="#cte-window"><span class="pt">CTEs e window functions (o "pivô")</span><span class="en">CTEs and window functions (the "pivot")</span></a></li>
+<li><a href="#indexes"><span class="pt">Index: ler sem escanear tudo</span><span class="en">Indexes: reading without scanning everything</span></a></li>
+<li><a href="#uuid"><span class="pt">UUID ou serial?</span><span class="en">UUID or serial?</span></a></li>
+<li><a href="#fulltext"><span class="pt">Full-text search no lugar de LIKE</span><span class="en">Full-text search instead of LIKE</span></a></li>
+<li><a href="#access-grants"><span class="pt">Quem tem acesso ao quê</span><span class="en">Who has access to what</span></a></li>
+<li><a href="#backups"><span class="pt">Backups e a regra 3-2-1</span><span class="en">Backups and the 3-2-1 rule</span></a></li>
+<li><a href="#caching"><span class="pt">Cache: o 80/20 para quem programa</span><span class="en">Caching: the 80/20 for developers</span></a></li>
+<li><a href="#docker-lab"><span class="pt">Laboratório com Docker</span><span class="en">Lab with Docker</span></a></li>
+<li><a href="#cheat-pg"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.pg.title">Postgres for developers</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="pg.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="pg.heroTitle">Postgres, <em>the 80/20 for developers.</em></h1>
+  <p class="hero-lede" data-i18n="pg.heroLede">Relational databases from the ground up, Postgres-focused: schemas, connecting, roles and passwords, access security, indexes, CTEs, full-text search, backups and caching — with a Docker lab you can run today.</p>
+</section>
+<section class="content-section" aria-labelledby="basics">
+<h2 id="basics"><span class="pt">O que é um banco relacional e um schema</span><span class="en">What a relational database and a schema are</span></h2>
+
+<p><span class="pt">Um banco <em>relacional</em> guarda dados em tabelas: linhas (registros) e colunas (campos), com <em>relações</em> entre tabelas por chaves. É "relacional" no sentido matemático de relação (um conjunto de tuplas), não porque as tabelas se relacionam entre si — embora também façam isso. O gerenciador que guarda, organiza e responde consultas sobre esses dados é um <em>SGBD</em> (sistema de gerenciamento de banco de dados; em inglês, <em>RDBMS</em>).</span><span class="en">A <em>relational</em> database stores data in tables: rows (records) and columns (fields), with <em>relations</em> between tables through keys. It is "relational" in the mathematical sense of a relation (a set of tuples), not because tables relate to one another — though they also do that. The manager that stores, organizes and answers queries over that data is a <em>DBMS</em> (database management system).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 330" role="img" aria-label="Hierarquia do Postgres / Postgres hierarchy" style="min-width:700px">
+<rect x="10" y="10" width="160" height="50" rx="4" class="ln fillsoft"/>
+<text x="90.0" y="32.0" class="pt " text-anchor="middle">servidor Postgres</text><text x="90.0" y="32.0" class="en " text-anchor="middle">Postgres server</text>
+<text x="90.0" y="48.0" class="pt mut mono" text-anchor="middle">um processo (postgres)</text><text x="90.0" y="48.0" class="en mut mono" text-anchor="middle">one process (postgres)</text>
+<rect x="230" y="10" width="150" height="50" rx="4" class="ln"/>
+<text x="305.0" y="39.0" class="pt " text-anchor="middle">instância</text><text x="305.0" y="39.0" class="en " text-anchor="middle">instance</text>
+<path d="M170 35L230 35" class="ln"/><path d="M222.8 38.5L230 35L222.8 31.5" class="ln"/>
+<rect x="230" y="100" width="150" height="44" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="126.0" class="mono" text-anchor="middle">database "loja"</text>
+<path d="M305 60L305 100" class="ln"/><path d="M301.5 92.8L305 100L308.5 92.8" class="ln"/>
+<rect x="230" y="160" width="150" height="44" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="186.0" class="mono" text-anchor="middle">database "crm"</text>
+<path d="M305 60L305 160" class="ln"/><path d="M301.5 152.8L305 160L308.5 152.8" class="ln"/>
+<rect x="230" y="220" width="150" height="44" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="246.0" class="mono" text-anchor="middle">database "postgres"</text>
+<path d="M305 60L305 220" class="ln"/><path d="M301.5 212.8L305 220L308.5 212.8" class="ln"/>
+<rect x="430" y="100" width="140" height="44" rx="4" class="ln"/>
+<text x="500.0" y="126.0" class="mono" text-anchor="middle">schema public</text>
+<rect x="430" y="154" width="140" height="44" rx="4" class="ln"/>
+<text x="500.0" y="180.0" class="mono" text-anchor="middle">schema vendas</text>
+<path d="M380 122L430 122" class="ln"/><path d="M422.8 125.5L430 122L422.8 118.5" class="ln"/>
+<path d="M380 122L430 176" class="ln"/><path d="M422.6 173.1L430 176L427.7 168.4" class="ln"/>
+<rect x="620" y="80" width="140" height="40" rx="4" class="ln fillsoft"/>
+<text x="690.0" y="104.0" class="pt mono" text-anchor="middle">tabela usuarios</text><text x="690.0" y="104.0" class="en mono" text-anchor="middle">table usuarios</text>
+<rect x="620" y="128" width="140" height="40" rx="4" class="ln fillsoft"/>
+<text x="690.0" y="152.0" class="pt mono" text-anchor="middle">tabela pedidos</text><text x="690.0" y="152.0" class="en mono" text-anchor="middle">table pedidos</text>
+<path d="M570 122L620 100" class="ln"/><path d="M614.8 106.1L620 100L612.0 99.7" class="ln"/>
+<path d="M570 122L620 148" class="ln"/><path d="M612.0 147.8L620 148L615.2 141.6" class="ln"/>
+<text x="10" y="290" class="pt mut">Uma instância roda vários DATABASES isolados; um database tem vários SCHEMAS (pastas lógicas); um schema tem as TABELAS.</text><text x="10" y="290" class="en mut">One instance runs several isolated DATABASES; a database has several SCHEMAS (logical folders); a schema has the TABLES.</text>
+<text x="10" y="310" class="pt mut">Por padrão você está sempre no schema "public" — é por isso que a maioria do SQL que você vê nunca precisa nomeá-lo.</text><text x="10" y="310" class="en mut">By default you are always in the "public" schema — that is why most SQL you see never needs to name it.</text>
+</svg></div><figcaption><span class="pt">A hierarquia: instância → database → schema → tabela. Confundir "database" com "schema" é a troca mais comum.</span><span class="en">The hierarchy: instance → database → schema → table. Confusing "database" with "schema" is the most common mix-up.</span></figcaption></figure>
+<h3><span class="pt">O que é um schema, de fato</span><span class="en">What a schema actually is</span></h3>
+<p><span class="pt">Um <em>schema</em> é um namespace dentro de um database: uma forma de organizar tabelas (por exemplo, <code>vendas.pedidos</code> e <code>rh.funcionarios</code> no mesmo database) sem precisar de um database separado para cada área. É diferente do uso da palavra "schema" em outros bancos (no MySQL, "schema" costuma ser sinônimo de "database" inteiro).</span><span class="en">A <em>schema</em> is a namespace inside a database: a way to organize tables (for example, <code>vendas.pedidos</code> and <code>rh.funcionarios</code> in the same database) without needing a separate database for each area. This differs from how the word "schema" is used in other databases (in MySQL, "schema" is usually a synonym for a whole "database").</span></p>
+<pre><code><span class="tok-k">CREATE</span> <span class="tok-k">SCHEMA</span> vendas;
+<span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> vendas.pedidos (id bigint, total numeric(<span class="tok-n">10</span>,<span class="tok-n">2</span>));
+
+<span class="tok-k">SET</span> search_path <span class="tok-k">TO</span> vendas, public;   <span class="tok-c">-- define a ordem de busca; agora "pedidos" sozinho já encontra vendas.pedidos</span>
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> pedidos;               <span class="tok-c">-- funciona sem o prefixo "vendas."</span></code></pre>
+<h3><span class="pt">Gerenciadores de banco: as opções mais comuns</span><span class="en">Database managers: the common options</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">SGBD</span><span class="en">DBMS</span></th><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Quando escolher</span><span class="en">When to choose</span></th></tr></thead><tbody><tr><td><strong>PostgreSQL</strong></td><td><span class="pt">relacional, objeto-relacional</span><span class="en">relational, object-relational</span></td><td><span class="pt">o padrão para a maioria dos projetos novos: tipos avançados (JSON, arrays, UUID), extensível, forte em correção e concorrência</span><span class="en">the default for most new projects: advanced types (JSON, arrays, UUID), extensible, strong on correctness and concurrency</span></td></tr><tr><td><strong>MySQL / MariaDB</strong></td><td><span class="pt">relacional</span><span class="en">relational</span></td><td><span class="pt">onipresente em hospedagem compartilhada e WordPress; engines de storage plugáveis (InnoDB)</span><span class="en">ubiquitous in shared hosting and WordPress; pluggable storage engines (InnoDB)</span></td></tr><tr><td><strong>SQLite</strong></td><td><span class="pt">relacional, embutido (sem servidor)</span><span class="en">relational, embedded (serverless)</span></td><td><span class="pt">um arquivo só, zero configuração: apps mobile/desktop, testes, protótipos</span><span class="en">a single file, zero config: mobile/desktop apps, tests, prototypes</span></td></tr><tr><td><strong>SQL Server</strong></td><td><span class="pt">relacional</span><span class="en">relational</span></td><td><span class="pt">ecossistema Microsoft/.NET</span><span class="en">Microsoft/.NET ecosystem</span></td></tr><tr><td><strong>Oracle Database</strong></td><td><span class="pt">relacional</span><span class="en">relational</span></td><td><span class="pt">grandes empresas com contratos legados</span><span class="en">large enterprises with legacy contracts</span></td></tr><tr><td><span class="pt">Gerenciados (RDS, Cloud SQL, Neon, Supabase)</span><span class="en">Managed (RDS, Cloud SQL, Neon, Supabase)</span></td><td><span class="pt">o mesmo Postgres/MySQL, hospedado</span><span class="en">the same Postgres/MySQL, hosted</span></td><td><span class="pt">backups, patches e failover geridos pelo provedor (veja a nota de AWS, seção RDS)</span><span class="en">backups, patches and failover managed by the provider (see the AWS note, RDS section)</span></td></tr></tbody></table></div>
+<p><span class="pt">Esta nota usa Postgres porque é hoje a escolha padrão para projetos novos: licença permissiva, extensões (PostGIS, pg_trgm, pgvector), tipos de dado ricos e um dos motores de consulta mais corretos que existem.</span><span class="en">This note uses Postgres because it is today's default choice for new projects: a permissive license, extensions (PostGIS, pg_trgm, pgvector), rich data types, and one of the most correct query engines around.</span></p>
+<h3><span class="pt">Ferramentas para abrir um banco</span><span class="en">Tools to open a database</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Tipo</span><span class="en">Type</span></th></tr></thead><tbody><tr><td><code>psql</code></td><td><span class="pt">o cliente de linha de comando oficial, sempre disponível</span><span class="en">the official command-line client, always available</span></td></tr><tr><td>pgAdmin</td><td><span class="pt">painel web oficial do projeto Postgres</span><span class="en">the Postgres project's own web panel</span></td></tr><tr><td>DBeaver / TablePlus / DataGrip</td><td><span class="pt">clientes gráficos multiplataforma, funcionam com vários SGBDs</span><span class="en">cross-platform graphical clients, work with several DBMSs</span></td></tr><tr><td>VS Code (extensão SQLTools/PostgreSQL)</td><td><span class="pt">abrir e consultar sem sair do editor</span><span class="en">opening and querying without leaving the editor</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="connecting">
+<h2 id="connecting"><span class="pt">Como conectar</span><span class="en">How to connect</span></h2>
+
+<p><span class="pt">Conectar ao Postgres sempre passa pelos mesmos seis dados: quem você é, com qual senha, em qual máquina, em qual porta, e em qual database. Toda ferramenta — <code>psql</code>, uma lib de app, um painel gráfico — pede exatamente isso, às vezes como uma <em>connection string</em> só.</span><span class="en">Connecting to Postgres always goes through the same six pieces of data: who you are, with which password, on which machine, on which port, and which database. Every tool — <code>psql</code>, an app library, a graphical panel — asks for exactly that, sometimes as a single <em>connection string</em>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 100" role="img" aria-label="Anatomia da connection string / Connection string anatomy" style="min-width:620px">
+<rect x="10" y="20" width="96" height="40" rx="4" class="ln fillsoft"/>
+<text x="58.0" y="45" class="mono" text-anchor="middle">postgresql://</text>
+<text x="58.0" y="80" class="pt mut" text-anchor="middle">esquema</text><text x="58.0" y="80" class="en mut" text-anchor="middle">scheme</text>
+<rect x="110" y="20" width="46" height="40" rx="4" class="ln fillsoft"/>
+<text x="133.0" y="45" class="mono" text-anchor="middle">ana</text>
+<text x="133.0" y="80" class="pt mut" text-anchor="middle">usuário</text><text x="133.0" y="80" class="en mut" text-anchor="middle">user</text>
+<rect x="160" y="20" width="58" height="40" rx="4" class="ln fillsoft"/>
+<text x="189.0" y="45" class="mono" text-anchor="middle">:s3nha@</text>
+<text x="189.0" y="80" class="pt mut" text-anchor="middle">senha</text><text x="189.0" y="80" class="en mut" text-anchor="middle">password</text>
+<rect x="222" y="20" width="150" height="40" rx="4" class="ln fillsoft"/>
+<text x="297.0" y="45" class="mono" text-anchor="middle">db.exemplo.com</text>
+<text x="297.0" y="80" class="mut" text-anchor="middle">host</text>
+<rect x="376" y="20" width="50" height="40" rx="4" class="ln fillsoft"/>
+<text x="401.0" y="45" class="mono" text-anchor="middle">:5432</text>
+<text x="401.0" y="80" class="pt mut" text-anchor="middle">porta</text><text x="401.0" y="80" class="en mut" text-anchor="middle">port</text>
+<rect x="430" y="20" width="50" height="40" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="45" class="mono" text-anchor="middle">/loja</text>
+<text x="455.0" y="80" class="mut" text-anchor="middle">database</text>
+<rect x="484" y="20" width="148" height="40" rx="4" class="ln fillsoft"/>
+<text x="558.0" y="45" class="mono" text-anchor="middle">?sslmode=require</text>
+<text x="558.0" y="80" class="pt mut" text-anchor="middle">parâmetros</text><text x="558.0" y="80" class="en mut" text-anchor="middle">parameters</text>
+</svg></div><figcaption><span class="pt">A anatomia de uma connection string. <code>DATABASE_URL=postgresql://ana:s3nha@db.exemplo.com:5432/loja?sslmode=require</code></span><span class="en">The anatomy of a connection string. <code>DATABASE_URL=postgresql://ana:s3nha@db.exemplo.com:5432/loja?sslmode=require</code></span></figcaption></figure>
+<h3><span class="pt">Pelo psql</span><span class="en">Through psql</span></h3>
+<pre><code>psql -h db.exemplo.com -p 5432 -U ana -d loja        <span class="tok-c"># pede a senha interativamente</span>
+psql <span class="tok-s">"postgresql://ana:s3nha@db.exemplo.com:5432/loja"</span>   <span class="tok-c"># tudo numa string só</span>
+psql -U postgres                                     <span class="tok-c"># local, usuário "postgres", pede/usa auth local</span>
+PGPASSWORD=s3nha psql -h localhost -U ana loja        <span class="tok-c"># senha por variável (cuidado: aparece em `ps`!)</span></code></pre>
+<p><span class="pt">Dentro do <code>psql</code>, estes comandos resolvem 80% do dia a dia:</span><span class="en">Inside <code>psql</code>, these commands cover 80% of daily use:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Faz</span><span class="en">Does</span></th></tr></thead><tbody><tr><td><code>\l</code></td><td><span class="pt">lista os databases</span><span class="en">lists the databases</span></td></tr><tr><td><code>\c loja</code></td><td><span class="pt">troca de database</span><span class="en">switches database</span></td></tr><tr><td><code>\dn</code></td><td><span class="pt">lista os schemas</span><span class="en">lists the schemas</span></td></tr><tr><td><code>\dt</code> · <code>\dt vendas.*</code></td><td><span class="pt">lista tabelas (de um schema)</span><span class="en">lists tables (of a schema)</span></td></tr><tr><td><code>\d pedidos</code></td><td><span class="pt">descreve uma tabela: colunas, tipos, índices, chaves estrangeiras</span><span class="en">describes a table: columns, types, indexes, foreign keys</span></td></tr><tr><td><code>\du</code></td><td><span class="pt">lista roles (usuários)</span><span class="en">lists roles (users)</span></td></tr><tr><td><code>\x</code></td><td><span class="pt">alterna exibição "expandida" (uma coluna por linha, ótimo para tabelas largas)</span><span class="en">toggles "expanded" display (one column per line, great for wide tables)</span></td></tr><tr><td><code>\timing</code></td><td><span class="pt">mostra quanto tempo cada consulta leva</span><span class="en">shows how long each query takes</span></td></tr><tr><td><code>\q</code></td><td><span class="pt">sai</span><span class="en">quits</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Localmente, muita gente nem digita usuário/senha: o Postgres usa o método <code>peer</code> por padrão em conexões locais (via socket Unix), que confia no seu usuário <em>do sistema operacional</em>. Isso é exatamente o que a próxima seção desembaraça.</span><span class="en">Locally, a lot of people never type a user/password at all: Postgres uses the <code>peer</code> method by default on local connections (via Unix socket), trusting your <em>operating-system</em> user. That is exactly what the next section untangles.</span></div>
+</section>
+<section class="content-section" aria-labelledby="users">
+<h2 id="users"><span class="pt">Usuários e senhas: as três camadas</span><span class="en">Users and passwords: the three layers</span></h2>
+
+<p><span class="pt">Esta é a maior fonte de confusão para quem está começando, porque a palavra "usuário" significa <em>três coisas diferentes</em> que não têm relação automática entre si. Desembaraçar isso resolve a maioria dos "funciona na minha máquina, não funciona no servidor".</span><span class="en">This is the biggest source of confusion for beginners, because the word "user" means <em>three different things</em> with no automatic relation between them. Untangling this solves most "works on my machine, not on the server" problems.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 270" role="img" aria-label="Três tipos de usuário / Three kinds of user" style="min-width:680px">
+<rect x="10" y="20" width="220" height="60" rx="4" class="ln fillsoft"/>
+<text x="120.0" y="47.0" class="pt " text-anchor="middle">usuário do SO</text><text x="120.0" y="47.0" class="en " text-anchor="middle">OS user</text>
+<text x="120.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: "gustavo"</text><text x="120.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. "gustavo"</text>
+<rect x="250" y="20" width="220" height="60" rx="4" class="ln"/>
+<text x="360.0" y="47.0" class="pt " text-anchor="middle">role do Postgres</text><text x="360.0" y="47.0" class="en " text-anchor="middle">Postgres role</text>
+<text x="360.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: "ana"</text><text x="360.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. "ana"</text>
+<rect x="490" y="20" width="220" height="60" rx="4" class="ln fillsoft"/>
+<text x="600.0" y="47.0" class="pt " text-anchor="middle">usuário da aplicação</text><text x="600.0" y="47.0" class="en " text-anchor="middle">application user</text>
+<text x="600.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: conta do cliente</text><text x="600.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. customer's account</text>
+<text x="10" y="110" class="pt mut">• faz login na MÁQUINA</text><text x="10" y="110" class="en mut">• logs into the MACHINE</text>
+<text x="10" y="128" class="mut">(SSH, terminal)</text>
+<text x="10" y="150" class="pt mut">• existe em /etc/passwd</text><text x="10" y="150" class="en mut">• exists in /etc/passwd</text>
+<text x="250" y="110" class="pt mut">• faz login no BANCO</text><text x="250" y="110" class="en mut">• logs into the DATABASE</text>
+<text x="250" y="128" class="pt mut">• existe em pg_roles,</text><text x="250" y="128" class="en mut">• exists in pg_roles,</text>
+<text x="250" y="146" class="pt mut">  dentro do Postgres</text><text x="250" y="146" class="en mut">  inside Postgres</text>
+<text x="250" y="168" class="pt mut">• tem senha e permissões</text><text x="250" y="168" class="en mut">• has its OWN password</text>
+<text x="250" y="186" class="pt mut">  PRÓPRIAS</text><text x="250" y="186" class="en mut">  and permissions</text>
+<text x="490" y="110" class="pt mut">• é uma LINHA numa tabela</text><text x="490" y="110" class="en mut">• is a ROW in a</text>
+<text x="490" y="128" class="pt mut">  "usuarios"</text><text x="490" y="128" class="en mut">  "usuarios" table</text>
+<text x="490" y="150" class="pt mut">• sua aplicação entende</text><text x="490" y="150" class="en mut">• your application</text>
+<text x="490" y="168" class="pt mut">  essa senha, não o Postgres</text><text x="490" y="168" class="en mut">  understands that password</text>
+<text x="490" y="186" class="pt mut">• o Postgres não sabe</text><text x="490" y="186" class="en mut">• Postgres has no idea</text>
+<text x="490" y="204" class="pt mut">  que ela existe</text><text x="490" y="204" class="en mut">  it exists</text>
+<text x="10" y="240" class="pt mut">Os três são independentes: a role "ana" do Postgres não precisa existir como usuário do SO, e o Postgres nunca vê os usuários da sua aplicação.</text><text x="10" y="240" class="en mut">All three are independent: the Postgres role "ana" does not need to exist as an OS user, and Postgres never sees your application's users.</text>
+</svg></div><figcaption><span class="pt">As três camadas de "usuário" que costumam ser confundidas.</span><span class="en">The three layers of "user" that usually get mixed up.</span></figcaption></figure>
+<h3><span class="pt">Como as camadas se conectam na prática</span><span class="en">How the layers connect in practice</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Cenário</span><span class="en">Scenario</span></th><th><span class="pt">O que acontece</span><span class="en">What happens</span></th></tr></thead><tbody><tr><td><span class="pt">Você digita <code>psql</code> sem argumentos</span><span class="en">You type <code>psql</code> with no arguments</span></td><td><span class="pt">tenta conectar como uma role do Postgres com o MESMO NOME do seu usuário do SO, no database de mesmo nome — coincidência de nome, não de identidade</span><span class="en">tries to connect as a Postgres role with the SAME NAME as your OS user, to a database of the same name — a name coincidence, not an identity one</span></td></tr><tr><td><span class="pt">Instalação padrão cria o usuário do SO "postgres" e a role "postgres"</span><span class="en">A default install creates the OS user "postgres" and the role "postgres"</span></td><td><span class="pt"><code>sudo -u postgres psql</code> funciona porque o SO deixa o usuário "postgres" rodar o psql, que conecta à role "postgres" (super-usuária DO BANCO, não do SO)</span><span class="en"><code>sudo -u postgres psql</code> works because the OS lets the "postgres" OS user run psql, which connects as the "postgres" role (a DATABASE superuser, not an OS one)</span></td></tr><tr><td><span class="pt">Sua aplicação conecta com <code>DATABASE_URL</code></span><span class="en">Your app connects with <code>DATABASE_URL</code></span></td><td><span class="pt">usa uma role do Postgres (ex.: <code>app_user</code>) e SUA senha; não tem nenhuma relação com o usuário do SO onde o app roda</span><span class="en">uses a Postgres role (e.g. <code>app_user</code>) with ITS password; has no relation to the OS user the app runs as</span></td></tr><tr><td><span class="pt">Um cliente faz login no seu site</span><span class="en">A customer logs into your site</span></td><td><span class="pt">sua aplicação confere a senha na SUA tabela de usuários; o Postgres só vê a role da aplicação executando a consulta</span><span class="en">your application checks the password against YOUR users table; Postgres only sees the application's role running the query</span></td></tr></tbody></table></div>
+<h3><span class="pt">Exercício: criar uma role, um database e testar</span><span class="en">Exercise: create a role, a database, and test it</span></h3>
+<pre><code>sudo -u postgres psql    <span class="tok-c"># entra como a role "postgres" (super-usuária do banco)</span></code></pre>
+<pre><code><span class="tok-k">CREATE</span> <span class="tok-k">ROLE</span> ana <span class="tok-k">LOGIN</span> <span class="tok-k">PASSWORD</span> <span class="tok-s">'s3nha-forte-de-verdade'</span>;
+<span class="tok-k">CREATE</span> <span class="tok-k">DATABASE</span> loja <span class="tok-k">OWNER</span> ana;
+<span class="tok-k">GRANT</span> <span class="tok-k">ALL</span> PRIVILEGES <span class="tok-k">ON</span> <span class="tok-k">DATABASE</span> loja <span class="tok-k">TO</span> ana;
+\q</code></pre>
+<pre><code>psql -h localhost -U ana -d loja     <span class="tok-c"># agora conecte como ANA, não como postgres</span>
+<span class="tok-c"># Password for user ana: ****</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o segundo <code>psql</code> pede senha (porque agora você está entrando como a <em>role</em> <code>ana</code>, via rede/senha, não por confiança do sistema operacional) e o prompt muda para <code>loja=&gt;</code>. Se <code>ana</code> tentar <code>CREATE DATABASE</code> sem <code>CREATEDB</code>, recebe um erro de permissão — ela só é dona do banco <code>loja</code>, não super-usuária.</span><span class="en"><strong>Expected result:</strong> the second <code>psql</code> asks for a password (because you are now logging in as the <em>role</em> <code>ana</code>, over the network/password, not by operating-system trust) and the prompt changes to <code>loja=&gt;</code>. If <code>ana</code> tries <code>CREATE DATABASE</code> without <code>CREATEDB</code>, she gets a permission error — she only owns the <code>loja</code> database, she is not a superuser.</span></p>
+<h3><span class="pt">Atributos de role mais usados</span><span class="en">Most-used role attributes</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Atributo</span><span class="en">Attribute</span></th><th><span class="pt">Significa</span><span class="en">Means</span></th></tr></thead><tbody><tr><td><code>LOGIN</code></td><td><span class="pt">pode se conectar (sem isso, a role só serve para agrupar permissões)</span><span class="en">can connect (without it, the role only groups permissions)</span></td></tr><tr><td><code>SUPERUSER</code></td><td><span class="pt">ignora toda checagem de permissão — use só para administração, nunca para apps</span><span class="en">skips every permission check — use only for administration, never for apps</span></td></tr><tr><td><code>CREATEDB</code></td><td><span class="pt">pode criar databases</span><span class="en">can create databases</span></td></tr><tr><td><code>PASSWORD</code></td><td><span class="pt">define a senha (hash scram-sha-256 por padrão desde o Postgres 14)</span><span class="en">sets the password (scram-sha-256 hash by default since Postgres 14)</span></td></tr><tr><td><code>VALID UNTIL</code></td><td><span class="pt">data de expiração da senha</span><span class="en">the password's expiry date</span></td></tr><tr><td><code>IN ROLE outra_role</code></td><td><span class="pt">herda as permissões de outra role (ótimo para grupos como <code>app_readonly</code>)</span><span class="en">inherits another role's permissions (great for groups like <code>app_readonly</code>)</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="access-security">
+<h2 id="access-security"><span class="pt">Segurança de acesso: pg_hba, TLS e privilégio mínimo</span><span class="en">Access security: pg_hba, TLS and least privilege</span></h2>
+
+<p><span class="pt">Quem pode se conectar, de onde, e como ela precisa provar quem é — tudo isso é decidido por um arquivo: <code>pg_hba.conf</code> (host-based authentication). É o "firewall de identidade" do Postgres, separado do firewall de rede (nftables/ufw) e separado das permissões SQL (<code>GRANT</code>).</span><span class="en">Who may connect, from where, and how they must prove who they are — all of that is decided by one file: <code>pg_hba.conf</code> (host-based authentication). It is Postgres's "identity firewall", separate from the network firewall (nftables/ufw) and separate from SQL permissions (<code>GRANT</code>).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 120" role="img" aria-label="Os três portões / The three gates" style="min-width:600px">
+<rect x="10" y="10" width="95" height="60" rx="4" class="ln fillsoft"/>
+<text x="57.5" y="44.0" class="pt " text-anchor="middle">cliente</text><text x="57.5" y="44.0" class="en " text-anchor="middle">client</text>
+<rect x="140" y="10" width="150" height="60" rx="4" class="ln"/>
+<text x="215.0" y="37.0" class="" text-anchor="middle">firewall</text>
+<text x="215.0" y="53.0" class="pt mut mono" text-anchor="middle">porta aberta?</text><text x="215.0" y="53.0" class="en mut mono" text-anchor="middle">port open?</text>
+<rect x="325" y="10" width="165" height="60" rx="4" class="ln fillsoft"/>
+<text x="407.5" y="37.0" class="mono" text-anchor="middle">pg_hba.conf</text>
+<text x="407.5" y="53.0" class="pt mut mono" text-anchor="middle">pode entrar?</text><text x="407.5" y="53.0" class="en mut mono" text-anchor="middle">may enter?</text>
+<rect x="525" y="10" width="125" height="60" rx="4" class="ln"/>
+<text x="587.5" y="37.0" class="" text-anchor="middle">GRANT</text>
+<text x="587.5" y="53.0" class="pt mut mono" text-anchor="middle">pode fazer o quê?</text><text x="587.5" y="53.0" class="en mut mono" text-anchor="middle">may do what?</text>
+<path d="M105 40L140 40" class="ln"/><path d="M132.8 43.5L140 40L132.8 36.5" class="ln"/>
+<path d="M290 40L325 40" class="ln"/><path d="M317.8 43.5L325 40L317.8 36.5" class="ln"/>
+<path d="M490 40L525 40" class="ln"/><path d="M517.8 43.5L525 40L517.8 36.5" class="ln"/>
+<text x="10" y="100" class="pt mut">Três portões independentes: rede, identidade (quem pode entrar) e permissão (o que pode fazer depois de dentro).</text><text x="10" y="100" class="en mut">Three independent gates: network, identity (who may enter) and permission (what it may do once inside).</text>
+</svg></div><figcaption><span class="pt">A conexão só acontece se passar pelos três.</span><span class="en">The connection only happens if it passes all three.</span></figcaption></figure>
+<h3><span class="pt">Lendo o pg_hba.conf</span><span class="en">Reading pg_hba.conf</span></h3>
+<pre><code># TYPE  DATABASE  USER   ADDRESS          METHOD
+local   all       postgres                         peer
+local   all       all                               scram-sha-256
+host    loja      ana     127.0.0.1/32              scram-sha-256
+host    loja      app     10.0.0.0/8                scram-sha-256
+hostssl all       all     0.0.0.0/0                 scram-sha-256
+host    all       all     0.0.0.0/0                 reject</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Coluna</span><span class="en">Column</span></th><th><span class="pt">Significa</span><span class="en">Means</span></th></tr></thead><tbody><tr><td>TYPE</td><td><span class="pt"><code>local</code> = socket Unix (mesma máquina); <code>host</code> = TCP (com ou sem TLS); <code>hostssl</code> = TCP, exige TLS</span><span class="en"><code>local</code> = Unix socket (same machine); <code>host</code> = TCP (with or without TLS); <code>hostssl</code> = TCP, requires TLS</span></td></tr><tr><td>METHOD</td><td><span class="pt"><code>peer</code>/<code>ident</code> = confia no usuário do SO; <code>scram-sha-256</code> = senha (o padrão recomendado); <code>trust</code> = sem senha nenhuma; <code>reject</code> = nega</span><span class="en"><code>peer</code>/<code>ident</code> = trusts the OS user; <code>scram-sha-256</code> = password (the recommended default); <code>trust</code> = no password at all; <code>reject</code> = deny</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Regras são lidas de cima para baixo e a <em>primeira</em> que combinar vence. <code>trust</code> (sem senha) só faz sentido para <code>local</code>, numa máquina de estudo só sua — nunca em algo acessível pela rede. Depois de editar: <code>sudo systemctl reload postgresql</code> (recarrega sem derrubar conexões).</span><span class="en">Rules are read top to bottom and the <em>first</em> match wins. <code>trust</code> (no password) only makes sense for <code>local</code>, on a study machine that is only yours — never on anything network-reachable. After editing: <code>sudo systemctl reload postgresql</code> (reloads without dropping connections).</span></div>
+<h3><span class="pt">TLS e o que "sslmode" realmente garante</span><span class="en">TLS and what "sslmode" actually guarantees</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt"><code>sslmode</code></span><span class="en"><code>sslmode</code></span></th><th><span class="pt">Garante</span><span class="en">Guarantees</span></th></tr></thead><tbody><tr><td><code>disable</code></td><td><span class="pt">nada: conexão em texto puro — ok só em <code>localhost</code></span><span class="en">nothing: plain-text connection — fine only on <code>localhost</code></span></td></tr><tr><td><code>require</code></td><td><span class="pt">cifra o tráfego, mas NÃO confere a identidade do servidor (vulnerável a um impostor na rede)</span><span class="en">encrypts traffic, but does NOT verify the server's identity (open to a network impostor)</span></td></tr><tr><td><code>verify-full</code></td><td><span class="pt">cifra e confere o certificado do servidor contra uma CA confiável — o equivalente real de "HTTPS seguro"</span><span class="en">encrypts and verifies the server's certificate against a trusted CA — the real equivalent of "secure HTTPS"</span></td></tr></tbody></table></div>
+<h3><span class="pt">Privilégio mínimo</span><span class="en">Least privilege</span></h3>
+<p><span class="pt">A aplicação nunca deveria conectar como super-usuária. O padrão sensato: uma role por aplicação, com só as permissões que ela usa.</span><span class="en">The application should never connect as a superuser. The sensible default: one role per application, with only the permissions it uses.</span></p>
+<pre><code><span class="tok-k">CREATE</span> <span class="tok-k">ROLE</span> app_readonly NOLOGIN;
+<span class="tok-k">GRANT</span> <span class="tok-k">CONNECT</span> <span class="tok-k">ON</span> <span class="tok-k">DATABASE</span> loja <span class="tok-k">TO</span> app_readonly;
+<span class="tok-k">GRANT</span> USAGE <span class="tok-k">ON</span> <span class="tok-k">SCHEMA</span> public <span class="tok-k">TO</span> app_readonly;
+<span class="tok-k">GRANT</span> <span class="tok-k">SELECT</span> <span class="tok-k">ON</span> <span class="tok-k">ALL</span> TABLES <span class="tok-k">IN</span> <span class="tok-k">SCHEMA</span> public <span class="tok-k">TO</span> app_readonly;
+<span class="tok-k">ALTER</span> <span class="tok-k">DEFAULT</span> PRIVILEGES <span class="tok-k">IN</span> <span class="tok-k">SCHEMA</span> public <span class="tok-k">GRANT</span> <span class="tok-k">SELECT</span> <span class="tok-k">ON</span> TABLES <span class="tok-k">TO</span> app_readonly;  <span class="tok-c">-- vale para tabelas FUTURAS também</span>
+
+<span class="tok-k">CREATE</span> <span class="tok-k">ROLE</span> app_web <span class="tok-k">LOGIN</span> <span class="tok-k">PASSWORD</span> <span class="tok-s">'outra-senha-forte'</span> <span class="tok-k">IN</span> <span class="tok-k">ROLE</span> app_readonly;
+<span class="tok-k">GRANT</span> <span class="tok-k">INSERT</span>, <span class="tok-k">UPDATE</span>, <span class="tok-k">DELETE</span> <span class="tok-k">ON</span> pedidos, itens_pedido <span class="tok-k">TO</span> app_web;   <span class="tok-c">-- só nessas tabelas</span></code></pre>
+<h3><span class="pt">Pooling de conexões</span><span class="en">Connection pooling</span></h3>
+<p><span class="pt">Cada conexão Postgres custa memória (um processo por conexão). Para apps com muitas conexões curtas (serverless, muitas réplicas), um <em>pooler</em> como <code>PgBouncer</code> ou <code>Supavisor</code> fica entre a aplicação e o Postgres, reaproveitando um número menor de conexões reais — o lado de segurança é que o pooler também costuma ser o lugar certo para autenticar e limitar por aplicação.</span><span class="en">Every Postgres connection costs memory (one process per connection). For apps with many short-lived connections (serverless, many replicas), a <em>pooler</em> like <code>PgBouncer</code> or <code>Supavisor</code> sits between the application and Postgres, reusing a smaller number of real connections — the security angle is that the pooler is also usually the right place to authenticate and limit per application.</span></p>
+</section>
+<section class="content-section" aria-labelledby="commands">
+<h2 id="commands"><span class="pt">Comandos do dia a dia</span><span class="en">Everyday commands</span></h2>
+
+<p><span class="pt">Um resumo do SQL que cobre a maior parte do trabalho de um desenvolvedor: criar estrutura (DDL) e ler/escrever dados (DML).</span><span class="en">A summary of the SQL that covers most of a developer's work: creating structure (DDL) and reading/writing data (DML).</span></p>
+<h3><span class="pt">DDL: estrutura</span><span class="en">DDL: structure</span></h3>
+<pre><code><span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> pedidos (
+  id          bigint <span class="tok-k">GENERATED</span> <span class="tok-k">ALWAYS</span> <span class="tok-k">AS</span> <span class="tok-k">IDENTITY</span> <span class="tok-k">PRIMARY</span> <span class="tok-k">KEY</span>,
+  cliente_id  bigint <span class="tok-k">NOT</span> <span class="tok-k">NULL</span> <span class="tok-k">REFERENCES</span> clientes(id),
+  total       numeric(<span class="tok-n">10</span>,<span class="tok-n">2</span>) <span class="tok-k">NOT</span> <span class="tok-k">NULL</span> <span class="tok-k">DEFAULT</span> <span class="tok-n">0</span>,
+  status      text <span class="tok-k">NOT</span> <span class="tok-k">NULL</span> <span class="tok-k">DEFAULT</span> <span class="tok-s">'pendente'</span>,
+  criado_em   timestamptz <span class="tok-k">NOT</span> <span class="tok-k">NULL</span> <span class="tok-k">DEFAULT</span> now()
+);
+
+<span class="tok-k">ALTER</span> <span class="tok-k">TABLE</span> pedidos ADD COLUMN observacao text;
+<span class="tok-k">ALTER</span> <span class="tok-k">TABLE</span> pedidos <span class="tok-k">ALTER</span> COLUMN total <span class="tok-k">SET</span> <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>;
+<span class="tok-k">DROP</span> <span class="tok-k">TABLE</span> <span class="tok-k">IF</span> <span class="tok-k">EXISTS</span> tabela_antiga;
+<span class="tok-k">CREATE</span> <span class="tok-k">INDEX</span> idx_pedidos_cliente <span class="tok-k">ON</span> pedidos (cliente_id);</code></pre>
+<h3><span class="pt">DML: dados</span><span class="en">DML: data</span></h3>
+<pre><code><span class="tok-k">SELECT</span> id, total <span class="tok-k">FROM</span> pedidos <span class="tok-k">WHERE</span> status = <span class="tok-s">'pendente'</span> <span class="tok-k">ORDER</span> <span class="tok-k">BY</span> criado_em DESC <span class="tok-k">LIMIT</span> <span class="tok-n">20</span>;
+
+<span class="tok-k">INSERT</span> <span class="tok-k">INTO</span> pedidos (cliente_id, total) <span class="tok-k">VALUES</span> (<span class="tok-n">42</span>, <span class="tok-n">199.90</span>) <span class="tok-k">RETURNING</span> id;
+
+<span class="tok-k">UPDATE</span> pedidos <span class="tok-k">SET</span> status = <span class="tok-s">'pago'</span> <span class="tok-k">WHERE</span> id = <span class="tok-n">7</span>;
+
+<span class="tok-k">DELETE</span> <span class="tok-k">FROM</span> pedidos <span class="tok-k">WHERE</span> status = <span class="tok-s">'cancelado'</span> <span class="tok-k">AND</span> criado_em &lt; now() - interval <span class="tok-s">'1 year'</span>;
+
+<span class="tok-k">SELECT</span> c.nome, count(p.id) <span class="tok-k">AS</span> total_pedidos
+<span class="tok-k">FROM</span> clientes c
+<span class="tok-k">LEFT</span> <span class="tok-k">JOIN</span> pedidos p <span class="tok-k">ON</span> p.cliente_id = c.id
+<span class="tok-k">GROUP</span> <span class="tok-k">BY</span> c.nome
+<span class="tok-k">HAVING</span> count(p.id) &gt; <span class="tok-n">0</span>
+<span class="tok-k">ORDER</span> <span class="tok-k">BY</span> total_pedidos DESC;</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo de JOIN</span><span class="en">JOIN type</span></th><th><span class="pt">Traz</span><span class="en">Brings</span></th></tr></thead><tbody><tr><td><code>INNER JOIN</code></td><td><span class="pt">só linhas com correspondência nas duas tabelas</span><span class="en">only rows matching in both tables</span></td></tr><tr><td><code>LEFT JOIN</code></td><td><span class="pt">todas as linhas da esquerda, com NULL onde não houver correspondência à direita</span><span class="en">all rows from the left, with NULL where there is no match on the right</span></td></tr><tr><td><code>FULL JOIN</code></td><td><span class="pt">todas as linhas dos dois lados</span><span class="en">all rows from both sides</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">A transação é a unidade de "tudo ou nada": <code>BEGIN; ... ; COMMIT;</code> (ou <code>ROLLBACK;</code> para desfazer). O Postgres já roda cada comando isolado em sua própria transação implícita por padrão.</span><span class="en">The transaction is the "all or nothing" unit: <code>BEGIN; ... ; COMMIT;</code> (or <code>ROLLBACK;</code> to undo). Postgres already runs each standalone statement in its own implicit transaction by default.</span></div>
+</section>
+<section class="content-section" aria-labelledby="cte-window">
+<h2 id="cte-window"><span class="pt">CTEs e window functions (o "pivô")</span><span class="en">CTEs and window functions (the "pivot")</span></h2>
+
+<p><span class="pt"><em>CTEs</em> (Common Table Expressions, o bloco <code>WITH</code>) dão nome a uma subconsulta para usá-la como se fosse uma tabela, tornando consultas grandes legíveis. <em>Window functions</em> (funções de janela) fazem cálculos "através" de um grupo de linhas sem colapsá-las numa só — é a ferramenta certa para o que costuma ser pedido como "pivô" (comparar cada linha com um agregado do seu grupo).</span><span class="en"><em>CTEs</em> (Common Table Expressions, the <code>WITH</code> block) name a subquery so it can be used as if it were a table, making large queries readable. <em>Window functions</em> compute "across" a group of rows without collapsing them into one — the right tool for what is usually asked for as a "pivot" (comparing each row against an aggregate of its group).</span></p>
+<h3><span class="pt">CTE simples</span><span class="en">A simple CTE</span></h3>
+<pre><code><span class="tok-k">WITH</span> pedidos_pagos <span class="tok-k">AS</span> (
+  <span class="tok-k">SELECT</span> cliente_id, total <span class="tok-k">FROM</span> pedidos <span class="tok-k">WHERE</span> status = <span class="tok-s">'pago'</span>
+)
+<span class="tok-k">SELECT</span> c.nome, sum(p.total) <span class="tok-k">AS</span> total_gasto
+<span class="tok-k">FROM</span> clientes c
+<span class="tok-k">JOIN</span> pedidos_pagos p <span class="tok-k">ON</span> p.cliente_id = c.id
+<span class="tok-k">GROUP</span> <span class="tok-k">BY</span> c.nome
+<span class="tok-k">ORDER</span> <span class="tok-k">BY</span> total_gasto DESC;</code></pre>
+<h3><span class="pt">CTE recursiva: percorrer uma árvore</span><span class="en">Recursive CTE: walking a tree</span></h3>
+<pre><code><span class="tok-k">WITH</span> <span class="tok-k">RECURSIVE</span> subordinados <span class="tok-k">AS</span> (
+  <span class="tok-k">SELECT</span> id, nome, gerente_id <span class="tok-k">FROM</span> funcionarios <span class="tok-k">WHERE</span> id = <span class="tok-n">1</span>        <span class="tok-c">-- âncora: o chefe</span>
+  <span class="tok-k">UNION</span> <span class="tok-k">ALL</span>
+  <span class="tok-k">SELECT</span> f.id, f.nome, f.gerente_id
+  <span class="tok-k">FROM</span> funcionarios f
+  <span class="tok-k">JOIN</span> subordinados s <span class="tok-k">ON</span> f.gerente_id = s.id                         <span class="tok-c">-- passo recursivo</span>
+)
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> subordinados;</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> todos os subordinados diretos e indiretos do funcionário 1, por quantos níveis existirem — sem precisar saber a profundidade do organograma de antemão.</span><span class="en"><strong>Expected result:</strong> every direct and indirect subordinate of employee 1, through however many levels exist — with no need to know the org chart's depth beforehand.</span></p>
+<h3><span class="pt">Window functions: o "pivô" do Postgres</span><span class="en">Window functions: Postgres's "pivot"</span></h3>
+<p><span class="pt">Bancos como o SQL Server têm um comando <code>PIVOT</code>; o Postgres resolve o mesmo problema com <code>FILTER</code> (agregação condicional) ou funções de janela com <code>OVER</code>.</span><span class="en">Databases like SQL Server have a <code>PIVOT</code> command; Postgres solves the same problem with <code>FILTER</code> (conditional aggregation) or window functions with <code>OVER</code>.</span></p>
+<pre><code><span class="tok-c">-- "pivô" clássico: uma coluna por status, por mês</span>
+<span class="tok-k">SELECT</span>
+  date_trunc(<span class="tok-s">'month'</span>, criado_em) <span class="tok-k">AS</span> mes,
+  count(*) <span class="tok-k">FILTER</span> (<span class="tok-k">WHERE</span> status = <span class="tok-s">'pago'</span>)      <span class="tok-k">AS</span> pagos,
+  count(*) <span class="tok-k">FILTER</span> (<span class="tok-k">WHERE</span> status = <span class="tok-s">'cancelado'</span>) <span class="tok-k">AS</span> cancelados
+<span class="tok-k">FROM</span> pedidos
+<span class="tok-k">GROUP</span> <span class="tok-k">BY</span> mes
+<span class="tok-k">ORDER</span> <span class="tok-k">BY</span> mes;
+
+<span class="tok-c">-- window function: o total do cliente ao lado de CADA pedido, sem agrupar</span>
+<span class="tok-k">SELECT</span>
+  id, cliente_id, total,
+  sum(total) <span class="tok-k">OVER</span> (<span class="tok-k">PARTITION</span> <span class="tok-k">BY</span> cliente_id) <span class="tok-k">AS</span> total_do_cliente,
+  rank()     <span class="tok-k">OVER</span> (<span class="tok-k">PARTITION</span> <span class="tok-k">BY</span> cliente_id <span class="tok-k">ORDER</span> <span class="tok-k">BY</span> total DESC) <span class="tok-k">AS</span> posicao
+<span class="tok-k">FROM</span> pedidos;</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> a segunda consulta mantém uma linha por pedido (diferente de um <code>GROUP BY</code>, que colapsaria), com <code>total_do_cliente</code> repetindo a soma do grupo em cada linha e <code>posicao</code> ranqueando os pedidos de cada cliente do maior para o menor.</span><span class="en"><strong>Expected result:</strong> the second query keeps one row per order (unlike a <code>GROUP BY</code>, which would collapse them), with <code>total_do_cliente</code> repeating the group's sum on every row and <code>posicao</code> ranking each customer's orders from largest to smallest.</span></p>
+</section>
+<section class="content-section" aria-labelledby="indexes">
+<h2 id="indexes"><span class="pt">Index: ler sem escanear tudo</span><span class="en">Indexes: reading without scanning everything</span></h2>
+
+<p><span class="pt">Um índice é como o sumário de um livro: uma estrutura à parte que aponta direto para onde cada valor está, em vez de o Postgres ler a tabela inteira (<em>sequential scan</em>) para achar o que você pediu. Custa espaço em disco e um pouco de velocidade a mais em cada escrita; em compensação, consultas que filtram ou ordenam por aquela coluna ficam ordens de magnitude mais rápidas.</span><span class="en">An index is like a book's index: a separate structure that points straight to where each value is, instead of Postgres reading the whole table (a <em>sequential scan</em>) to find what you asked for. It costs disk space and a little extra time on every write; in exchange, queries that filter or sort by that column get orders of magnitude faster.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Bom para</span><span class="en">Good for</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th></tr></thead><tbody><tr><td><strong>B-tree</strong> (padrão)</td><td><span class="pt">igualdade e faixas: <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code></span><span class="en">equality and ranges: <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code></span></td><td><code>CREATE INDEX ON pedidos (cliente_id);</code></td></tr><tr><td><strong>GIN</strong></td><td><span class="pt">valores "compostos": JSONB, arrays, full-text search</span><span class="en">composite values: JSONB, arrays, full-text search</span></td><td><code>CREATE INDEX ON produtos USING gin (busca);</code></td></tr><tr><td><strong>GiST</strong></td><td><span class="pt">dados geométricos/geográficos, faixas que se sobrepõem</span><span class="en">geometric/geographic data, overlapping ranges</span></td><td><span class="pt">PostGIS, <code>tsrange</code></span><span class="en">PostGIS, <code>tsrange</code></span></td></tr><tr><td><strong>BRIN</strong></td><td><span class="pt">tabelas enormes, ordenadas fisicamente (ex.: logs por data)</span><span class="en">huge tables, physically ordered (e.g. logs by date)</span></td><td><span class="pt">bem menor que um B-tree, bom o bastante quando os dados já chegam em ordem</span><span class="en">much smaller than a B-tree, good enough when data already arrives in order</span></td></tr><tr><td><strong>Único</strong> (<code>UNIQUE</code>)</td><td><span class="pt">garante que não haja duplicata, além de acelerar</span><span class="en">guarantees no duplicates, as well as speeding things up</span></td><td><code>CREATE UNIQUE INDEX ON usuarios (email);</code></td></tr></tbody></table></div>
+<h3><span class="pt">Exercício: ver o índice funcionando</span><span class="en">Exercise: see the index at work</span></h3>
+<pre><code><span class="tok-k">EXPLAIN</span> <span class="tok-k">ANALYZE</span> <span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> pedidos <span class="tok-k">WHERE</span> cliente_id = <span class="tok-n">42</span>;
+<span class="tok-c">-- antes de criar o índice: "Seq Scan on pedidos ... rows=1 ... Execution Time: 8.421 ms"</span>
+
+<span class="tok-k">CREATE</span> <span class="tok-k">INDEX</span> idx_pedidos_cliente <span class="tok-k">ON</span> pedidos (cliente_id);
+
+<span class="tok-k">EXPLAIN</span> <span class="tok-k">ANALYZE</span> <span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> pedidos <span class="tok-k">WHERE</span> cliente_id = <span class="tok-n">42</span>;
+<span class="tok-c">-- depois: "Index Scan using idx_pedidos_cliente ... Execution Time: 0.045 ms"</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o plano muda de <code>Seq Scan</code> (lê a tabela inteira) para <code>Index Scan</code> ou <code>Bitmap Index Scan</code>, e o <code>Execution Time</code> cai — em tabelas pequenas a diferença é pequena, mas cresce junto com a tabela. <code>EXPLAIN ANALYZE</code> <em>executa</em> a consulta de verdade; para só ver o plano sem rodar, use <code>EXPLAIN</code> sozinho.</span><span class="en"><strong>Expected result:</strong> the plan changes from <code>Seq Scan</code> (reads the whole table) to <code>Index Scan</code> or <code>Bitmap Index Scan</code>, and <code>Execution Time</code> drops — on small tables the difference is small, but it grows with the table. <code>EXPLAIN ANALYZE</code> <em>actually runs</em> the query; to see just the plan without running it, use <code>EXPLAIN</code> alone.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Índice não é de graça: cada <code>INSERT</code>/<code>UPDATE</code> precisa atualizar todos os índices da tabela também. Não crie um índice "só por garantia" em toda coluna — crie para as consultas que você de fato tem (olhe o <code>WHERE</code>, o <code>JOIN</code> e o <code>ORDER BY</code> das consultas lentas).</span><span class="en">Indexes are not free: every <code>INSERT</code>/<code>UPDATE</code> has to update all of the table's indexes too. Do not create an index "just in case" on every column — create them for the queries you actually have (look at the <code>WHERE</code>, the <code>JOIN</code> and the <code>ORDER BY</code> of your slow queries).</span></div>
+</section>
+<section class="content-section" aria-labelledby="uuid">
+<h2 id="uuid"><span class="pt">UUID ou serial?</span><span class="en">UUID or serial?</span></h2>
+
+<p><span class="pt">A chave primária de uma tabela costuma ser um número sequencial (<code>serial</code>/<code>GENERATED ALWAYS AS IDENTITY</code>) ou um <code>UUID</code> (um número aleatório gigante, praticamente único no universo). Cada um resolve um problema diferente.</span><span class="en">A table's primary key is usually either a sequential number (<code>serial</code>/<code>GENERATED ALWAYS AS IDENTITY</code>) or a <code>UUID</code> (a huge random number, practically unique in the universe). Each solves a different problem.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt"></span><span class="en"></span></th><th><span class="pt">serial / IDENTITY</span><span class="en">serial / IDENTITY</span></th><th><span class="pt">UUID</span><span class="en">UUID</span></th></tr></thead><tbody><tr><td><span class="pt">Tamanho</span><span class="en">Size</span></td><td>4–8 bytes</td><td>16 bytes</td></tr><tr><td><span class="pt">Ordem</span><span class="en">Order</span></td><td><span class="pt">crescente e previsível</span><span class="en">increasing and predictable</span></td><td><span class="pt">aleatório (v4) — ruim para o índice; ordenável no tempo (v7) — bom</span><span class="en">random (v4) — bad for the index; time-ordered (v7) — good</span></td></tr><tr><td><span class="pt">Adivinhável?</span><span class="en">Guessable?</span></td><td><span class="pt">sim: o pedido 1001 existe se o 1000 existir</span><span class="en">yes: order 1001 exists if 1000 does</span></td><td><span class="pt">não, na prática impossível de adivinhar</span><span class="en">no, practically impossible to guess</span></td></tr><tr><td><span class="pt">Gerar sem ir ao banco</span><span class="en">Generate without a round trip</span></td><td><span class="pt">não (o banco decide o próximo número)</span><span class="en">no (the database decides the next number)</span></td><td><span class="pt">sim: o cliente pode gerar o ID antes de inserir</span><span class="en">yes: the client can generate the ID before inserting</span></td></tr><tr><td><span class="pt">Bom para</span><span class="en">Good for</span></td><td><span class="pt">a maioria dos casos internos; IDs curtos em URLs</span><span class="en">most internal cases; short IDs in URLs</span></td><td><span class="pt">IDs expostos publicamente, sistemas distribuídos, merges entre bancos</span><span class="en">publicly exposed IDs, distributed systems, merging data across databases</span></td></tr></tbody></table></div>
+<pre><code><span class="tok-c">-- serial moderno (desde o Postgres 10, prefira a IDENTITY ao velho "serial")</span>
+<span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> pedidos (id bigint <span class="tok-k">GENERATED</span> <span class="tok-k">ALWAYS</span> <span class="tok-k">AS</span> <span class="tok-k">IDENTITY</span> <span class="tok-k">PRIMARY</span> <span class="tok-k">KEY</span>, ...);
+
+<span class="tok-c">-- UUID</span>
+<span class="tok-k">CREATE</span> <span class="tok-k">EXTENSION</span> <span class="tok-k">IF</span> <span class="tok-k">NOT</span> <span class="tok-k">EXISTS</span> pgcrypto;           <span class="tok-c">-- só em Postgres &lt; 13</span>
+<span class="tok-k">CREATE</span> <span class="tok-k">TABLE</span> sessoes (
+  id uuid <span class="tok-k">PRIMARY</span> <span class="tok-k">KEY</span> <span class="tok-k">DEFAULT</span> gen_random_uuid(),    <span class="tok-c">-- nativo desde o Postgres 13</span>
+  usuario_id bigint <span class="tok-k">NOT</span> <span class="tok-k">NULL</span>,
+  criada_em timestamptz <span class="tok-k">NOT</span> <span class="tok-k">NULL</span> <span class="tok-k">DEFAULT</span> now()
+);</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">UUID v4 (totalmente aleatório) espalha as escritas pelo índice de forma ruim para o cache e o disco. UUID v7 (ordenado no tempo, como um "serial disfarçado") existe para resolver isso — e o <code>ULID</code> é uma alternativa fora do padrão UUID com a mesma ideia. Prefira v7/ULID quando precisar das vantagens do UUID sem perder a localidade de um ID crescente.</span><span class="en">UUID v4 (fully random) spreads writes across the index in a way that is bad for caching and disk. UUID v7 (time-ordered, like a "disguised serial") exists to fix that — and <code>ULID</code> is a non-UUID-standard alternative with the same idea. Prefer v7/ULID when you need UUID's advantages without losing an increasing ID's locality.</span></div>
+</section>
+<section class="content-section" aria-labelledby="fulltext">
+<h2 id="fulltext"><span class="pt">Full-text search no lugar de LIKE</span><span class="en">Full-text search instead of LIKE</span></h2>
+
+<p><span class="pt"><code>LIKE '%palavra%'</code> funciona, mas não usa índice de forma eficiente (o <code>%</code> no início impede o B-tree de "pular" direto ao lugar certo) e não entende idioma nenhum — busca "corre" não acha "correu". Para busca de texto de verdade, o Postgres tem busca textual embutida.</span><span class="en"><code>LIKE '%word%'</code> works, but does not use an index efficiently (the leading <code>%</code> stops a B-tree from "jumping" straight to the right place) and understands no language at all — searching "run" will not find "ran". For real text search, Postgres has built-in full-text search.</span></p>
+<h3><span class="pt">tsvector e tsquery</span><span class="en">tsvector and tsquery</span></h3>
+<pre><code><span class="tok-k">ALTER</span> <span class="tok-k">TABLE</span> produtos ADD COLUMN busca tsvector
+  <span class="tok-k">GENERATED</span> <span class="tok-k">ALWAYS</span> <span class="tok-k">AS</span> (to_tsvector(<span class="tok-s">'portuguese'</span>, nome || <span class="tok-s">' '</span> || descricao)) STORED;
+
+<span class="tok-k">CREATE</span> <span class="tok-k">INDEX</span> idx_produtos_busca <span class="tok-k">ON</span> produtos <span class="tok-k">USING</span> gin (busca);
+
+<span class="tok-k">SELECT</span> nome <span class="tok-k">FROM</span> produtos
+<span class="tok-k">WHERE</span> busca @@ to_tsquery(<span class="tok-s">'portuguese'</span>, <span class="tok-s">'camisa &amp; azul'</span>)     <span class="tok-c">-- E</span>
+   <span class="tok-k">OR</span> busca @@ to_tsquery(<span class="tok-s">'portuguese'</span>, <span class="tok-s">'camisa | blusa'</span>);   <span class="tok-c">-- OU</span>
+
+<span class="tok-k">SELECT</span> nome, ts_rank(busca, to_tsquery(<span class="tok-s">'portuguese'</span>, <span class="tok-s">'camisa'</span>)) <span class="tok-k">AS</span> relevancia
+<span class="tok-k">FROM</span> produtos
+<span class="tok-k">WHERE</span> busca @@ to_tsquery(<span class="tok-s">'portuguese'</span>, <span class="tok-s">'camisa'</span>)
+<span class="tok-k">ORDER</span> <span class="tok-k">BY</span> relevancia DESC;</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> buscar "camisa" encontra também "camisas" (o <code>to_tsvector</code> reduz palavras à raiz — <em>stemming</em>) e o <code>ts_rank</code> ordena pela relevância, algo que <code>LIKE</code> nunca faz.</span><span class="en"><strong>Expected result:</strong> searching "shirt" also finds "shirts" (<code>to_tsvector</code> reduces words to their root — <em>stemming</em>) and <code>ts_rank</code> sorts by relevance, something <code>LIKE</code> never does.</span></p>
+<h3><span class="pt">Quando o full-text search é demais: pg_trgm</span><span class="en">When full-text search is overkill: pg_trgm</span></h3>
+<p><span class="pt">Para "busca parecida" (tolerar erros de digitação, autocompletar) sem a complexidade de idioma do full-text, a extensão <code>pg_trgm</code> indexa trigramas (grupos de 3 letras) e acelera <code>ILIKE</code>/<code>similarity()</code>.</span><span class="en">For "fuzzy search" (tolerating typos, autocomplete) without full-text's language complexity, the <code>pg_trgm</code> extension indexes trigrams (groups of 3 letters) and speeds up <code>ILIKE</code>/<code>similarity()</code>.</span></p>
+<pre><code><span class="tok-k">CREATE</span> <span class="tok-k">EXTENSION</span> <span class="tok-k">IF</span> <span class="tok-k">NOT</span> <span class="tok-k">EXISTS</span> pg_trgm;
+<span class="tok-k">CREATE</span> <span class="tok-k">INDEX</span> idx_produtos_nome_trgm <span class="tok-k">ON</span> produtos <span class="tok-k">USING</span> gin (nome gin_trgm_ops);
+
+<span class="tok-k">SELECT</span> nome <span class="tok-k">FROM</span> produtos <span class="tok-k">WHERE</span> nome <span class="tok-k">ILIKE</span> <span class="tok-s">'%camisa%'</span>;         <span class="tok-c">-- agora usa o índice</span>
+<span class="tok-k">SELECT</span> nome, similarity(nome, <span class="tok-s">'camiza azul'</span>) <span class="tok-k">AS</span> parecido
+<span class="tok-k">FROM</span> produtos <span class="tok-k">ORDER</span> <span class="tok-k">BY</span> parecido DESC <span class="tok-k">LIMIT</span> <span class="tok-n">5</span>;                  <span class="tok-c">-- tolera o erro de digitação</span></code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Use quando</span><span class="en">Use when</span></th></tr></thead><tbody><tr><td><code>LIKE</code>/<code>ILIKE</code> sem índice</td><td><span class="pt">tabela pequena, ou um prefixo fixo (<code>LIKE 'joão%'</code>, que ainda usa B-tree)</span><span class="en">small table, or a fixed prefix (<code>LIKE 'joão%'</code>, which still uses a B-tree)</span></td></tr><tr><td>Full-text search (<code>tsvector</code>)</td><td><span class="pt">busca de verdade em texto corrido: artigos, descrições, documentos</span><span class="en">real search over running text: articles, descriptions, documents</span></td></tr><tr><td><code>pg_trgm</code></td><td><span class="pt">autocompletar, tolerar erro de digitação, busca parecida em nomes/códigos</span><span class="en">autocomplete, typo tolerance, fuzzy search over names/codes</span></td></tr><tr><td><span class="pt">Elasticsearch/Meilisearch (fora do Postgres)</span><span class="en">Elasticsearch/Meilisearch (outside Postgres)</span></td><td><span class="pt">busca como funcionalidade central do produto, facetas, escala muito grande</span><span class="en">search as the product's core feature, facets, very large scale</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="access-grants">
+<h2 id="access-grants"><span class="pt">Quem tem acesso ao quê</span><span class="en">Who has access to what</span></h2>
+
+<p><span class="pt">"Quem tem acesso a quê" no Postgres se decide em camadas: a role precisa existir, precisa de permissão no database, no schema, e por fim na tabela (ou até na linha). <code>GRANT</code> concede, <code>REVOKE</code> retira.</span><span class="en">Who has access to what, in Postgres, is decided in layers: the role must exist, and needs permission on the database, on the schema, and finally on the table (or even on the row). <code>GRANT</code> gives, <code>REVOKE</code> takes away.</span></p>
+<pre><code><span class="tok-k">GRANT</span> <span class="tok-k">CONNECT</span> <span class="tok-k">ON</span> <span class="tok-k">DATABASE</span> loja <span class="tok-k">TO</span> ana;
+<span class="tok-k">GRANT</span> USAGE <span class="tok-k">ON</span> <span class="tok-k">SCHEMA</span> vendas <span class="tok-k">TO</span> ana;
+<span class="tok-k">GRANT</span> <span class="tok-k">SELECT</span>, <span class="tok-k">INSERT</span> <span class="tok-k">ON</span> vendas.pedidos <span class="tok-k">TO</span> ana;
+<span class="tok-k">GRANT</span> <span class="tok-k">SELECT</span> (nome, email) <span class="tok-k">ON</span> clientes <span class="tok-k">TO</span> suporte;        <span class="tok-c">-- só essas colunas</span>
+<span class="tok-k">REVOKE</span> <span class="tok-k">INSERT</span> <span class="tok-k">ON</span> vendas.pedidos <span class="tok-k">FROM</span> ana;
+
+<span class="tok-c">-- o que uma role pode fazer:</span>
+<span class="tok-k">SELECT</span> grantee, table_name, privilege_type
+<span class="tok-k">FROM</span> information_schema.role_table_grants
+<span class="tok-k">WHERE</span> grantee = <span class="tok-s">'ana'</span>;</code></pre>
+<h3><span class="pt">Row-Level Security (RLS): permissão por linha</span><span class="en">Row-Level Security (RLS): permission per row</span></h3>
+<p><span class="pt">Quando até <em>colunas</em> não bastam — por exemplo, cada cliente só pode ver seus próprios pedidos — o RLS aplica um filtro automático em toda consulta daquela role, sem precisar confiar que todo <code>WHERE</code> da aplicação está correto.</span><span class="en">When even <em>columns</em> are not enough — for example, each customer may only see their own orders — RLS applies an automatic filter to every query from that role, without having to trust that every <code>WHERE</code> in the application is correct.</span></p>
+<pre><code><span class="tok-k">ALTER</span> <span class="tok-k">TABLE</span> pedidos <span class="tok-k">ENABLE</span> ROW LEVEL <span class="tok-k">SECURITY</span>;
+
+<span class="tok-k">CREATE</span> POLICY pedidos_do_proprio_cliente <span class="tok-k">ON</span> pedidos
+  <span class="tok-k">USING</span> (cliente_id = current_setting(<span class="tok-s">'app.cliente_id'</span>)::bigint);
+
+<span class="tok-c">-- a aplicação define quem está logado antes de consultar:</span>
+<span class="tok-k">SET</span> app.cliente_id = <span class="tok-s">'42'</span>;
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> pedidos;   <span class="tok-c">-- só retorna pedidos do cliente 42, mesmo sem WHERE</span></code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">RLS é uma segunda camada de defesa, não uma desculpa para pular a checagem na aplicação — mas é exatamente o tipo de coisa que evita um vazamento quando um <code>WHERE</code> é esquecido em algum lugar do código.</span><span class="en">RLS is a second layer of defence, not an excuse to skip the check in the application — but it is exactly the kind of thing that prevents a leak when a <code>WHERE</code> is forgotten somewhere in the code.</span></div>
+</section>
+<section class="content-section" aria-labelledby="backups">
+<h2 id="backups"><span class="pt">Backups e a regra 3-2-1</span><span class="en">Backups and the 3-2-1 rule</span></h2>
+
+<p><span class="pt">Um backup só vale alguma coisa se você já tiver <em>restaurado</em> ele com sucesso pelo menos uma vez. O Postgres tem três ferramentas principais, e por cima delas vale uma regra que não é específica de banco de dados: a <strong>3-2-1</strong>.</span><span class="en">A backup is only worth something once you have <em>restored</em> it successfully at least once. Postgres has three main tools, and on top of them sits a rule that is not database-specific at all: the <strong>3-2-1</strong> rule.</span></p>
+<h3><span class="pt">As três ferramentas</span><span class="en">The three tools</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th><th><span class="pt">Use para</span><span class="en">Use for</span></th></tr></thead><tbody><tr><td><code>pg_dump</code></td><td><span class="pt">exporta um database (ou parte dele) para um arquivo lógico (SQL ou formato próprio)</span><span class="en">exports a database (or part of it) to a logical file (SQL or custom format)</span></td><td><span class="pt">backups do dia a dia, mover dados entre versões/servidores</span><span class="en">day-to-day backups, moving data between versions/servers</span></td></tr><tr><td><code>pg_dumpall</code></td><td><span class="pt">como o <code>pg_dump</code>, mas inclui roles e configurações de todo o cluster</span><span class="en">like <code>pg_dump</code>, but includes roles and settings for the whole cluster</span></td><td><span class="pt">backup completo de um servidor com vários databases</span><span class="en">a full backup of a server with several databases</span></td></tr><tr><td><code>pg_basebackup</code> + WAL</td><td><span class="pt">cópia física dos arquivos de dados + o log de escrita contínuo (WAL)</span><span class="en">a physical copy of the data files + the continuous write-ahead log (WAL)</span></td><td><span class="pt">bancos grandes, e recuperação para QUALQUER instante (PITR)</span><span class="en">large databases, and recovery to ANY point in time (PITR)</span></td></tr></tbody></table></div>
+<pre><code>pg_dump -U postgres -h localhost -Fc loja &gt; loja_$(date +%F).dump   <span class="tok-c"># formato comprimido, -Fc</span>
+pg_dump -U postgres loja &gt; loja.sql                                 <span class="tok-c"># texto puro, legível, dá pra ler/editar</span>
+
+pg_restore -U postgres -d loja_nova loja_$(date +%F).dump           <span class="tok-c"># restaura o formato -Fc</span>
+psql -U postgres -d loja_nova &lt; loja.sql                            <span class="tok-c"># restaura o SQL puro</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> depois do <code>pg_restore</code> num database novo e vazio, <code>\dt</code> mostra as mesmas tabelas do original, e um <code>SELECT count(*)</code> bate com a contagem de antes do dump.</span><span class="en"><strong>Expected result:</strong> after <code>pg_restore</code> into a new, empty database, <code>\dt</code> shows the same tables as the original, and a <code>SELECT count(*)</code> matches the count from before the dump.</span></p>
+<h3><span class="pt">Point-in-time recovery (PITR), em uma frase</span><span class="en">Point-in-time recovery (PITR), in one sentence</span></h3>
+<p><span class="pt">Com <code>pg_basebackup</code> (uma foto dos arquivos) mais o <em>WAL</em> (write-ahead log: todo write é gravado ali antes de ir para a tabela) arquivado continuamente, dá para reconstruir o banco exatamente como estava um segundo antes de alguém rodar um <code>DELETE</code> sem <code>WHERE</code> — não só "como estava no backup de ontem à noite".</span><span class="en">With <code>pg_basebackup</code> (a snapshot of the files) plus the continuously archived <em>WAL</em> (write-ahead log: every write is recorded there before it reaches the table), you can rebuild the database exactly as it was one second before someone ran a <code>DELETE</code> with no <code>WHERE</code> — not just "as it was in last night's backup".</span></p>
+<h3><span class="pt">A regra 3-2-1</span><span class="en">The 3-2-1 rule</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 160" role="img" aria-label="A regra 3-2-1 / The 3-2-1 rule" style="min-width:600px">
+<rect x="10" y="10" width="170" height="50" rx="4" class="brandfill"/>
+<text x="95.0" y="32.0" class="pt " text-anchor="middle">3 cópias</text><text x="95.0" y="32.0" class="en " text-anchor="middle">3 copies</text>
+<text x="95.0" y="48.0" class="pt mut mono" text-anchor="middle">o original + 2 backups</text><text x="95.0" y="48.0" class="en mut mono" text-anchor="middle">the original + 2 backups</text>
+<rect x="220" y="10" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="32.0" class="pt " text-anchor="middle">2 mídias diferentes</text><text x="305.0" y="32.0" class="en " text-anchor="middle">2 different media</text>
+<text x="305.0" y="48.0" class="pt mut mono" text-anchor="middle">ex.: disco local + nuvem</text><text x="305.0" y="48.0" class="en mut mono" text-anchor="middle">e.g. local disk + cloud</text>
+<rect x="430" y="10" width="170" height="50" rx="4" class="ln fillsoft"/>
+<text x="515.0" y="32.0" class="pt " text-anchor="middle">1 fora do local</text><text x="515.0" y="32.0" class="en " text-anchor="middle">1 off-site</text>
+<text x="515.0" y="48.0" class="pt mut mono" text-anchor="middle">outra região/provedor</text><text x="515.0" y="48.0" class="en mut mono" text-anchor="middle">another region/provider</text>
+<text x="10" y="95" class="pt mut">Se as 3 cópias estiverem no mesmo disco: um disco falho apaga tudo.</text><text x="10" y="95" class="en mut">If all 3 copies are on the same disk: one failed disk wipes everything.</text>
+<text x="10" y="115" class="pt mut">Se as 2 mídias estiverem na mesma sala: um incêndio/roubo apaga tudo.</text><text x="10" y="115" class="en mut">If the 2 media are in the same room: one fire/theft wipes everything.</text>
+<text x="10" y="135" class="pt mut">A cópia fora do local sobrevive a um desastre na região inteira.</text><text x="10" y="135" class="en mut">The off-site copy survives a disaster affecting the whole region.</text>
+</svg></div><figcaption><span class="pt">3 cópias dos dados, em 2 tipos de mídia diferentes, com 1 delas fora do local — não é regra de banco de dados, é regra de qualquer backup que importa.</span><span class="en">3 copies of the data, on 2 different kinds of media, with 1 kept off-site — not a database-specific rule, it is the rule for any backup that matters.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Exemplo no mundo Postgres</span><span class="en">Example in the Postgres world</span></th></tr></thead><tbody><tr><td><span class="pt">Cópia 1</span><span class="en">Copy 1</span></td><td><span class="pt">o banco em produção</span><span class="en">the production database</span></td></tr><tr><td><span class="pt">Cópia 2</span><span class="en">Copy 2</span></td><td><span class="pt"><code>pg_dump</code> diário num disco/volume separado da mesma máquina</span><span class="en">a daily <code>pg_dump</code> on a disk/volume separate from the same machine</span></td></tr><tr><td><span class="pt">Cópia 3 (fora do local)</span><span class="en">Copy 3 (off-site)</span></td><td><span class="pt">o dump enviado para outro provedor/região (S3 em outra região, outra nuvem)</span><span class="en">the dump shipped to another provider/region (S3 in another region, another cloud)</span></td></tr><tr><td><span class="pt">Em serviços gerenciados</span><span class="en">On managed services</span></td><td><span class="pt">RDS já faz backups automáticos com retenção e cópia entre zonas; confirme se ela cobre outra REGIÃO também</span><span class="en">RDS already does automatic backups with retention and cross-zone copies; confirm it also covers another REGION</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Um backup que nunca foi restaurado é uma hipótese, não um backup. Agende um teste de restauração periódico — mensal é um bom começo — e meça quanto tempo leva (seu RTO, <em>recovery time objective</em>).</span><span class="en">A backup that has never been restored is a hypothesis, not a backup. Schedule a periodic restore test — monthly is a good start — and measure how long it takes (your RTO, <em>recovery time objective</em>).</span></div>
+</section>
+<section class="content-section" aria-labelledby="caching">
+<h2 id="caching"><span class="pt">Cache: o 80/20 para quem programa</span><span class="en">Caching: the 80/20 for developers</span></h2>
+
+<p><span class="pt">Cache é "guardar uma resposta pronta para não refazer o trabalho". É provavelmente a técnica isolada que mais acelera sistemas reais — e também a que mais causa bugs sutis, porque introduz uma segunda fonte de verdade que pode ficar desatualizada.</span><span class="en">A cache is "keeping a ready-made answer so you do not redo the work". It is probably the single technique that speeds up real systems the most — and also the one that causes the most subtle bugs, because it introduces a second source of truth that can go stale.</span></p>
+<h3><span class="pt">Onde o Postgres já faz cache por conta própria</span><span class="en">Where Postgres already caches on its own</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">O que guarda</span><span class="en">What it keeps</span></th></tr></thead><tbody><tr><td><code>shared_buffers</code></td><td><span class="pt">páginas de dados recentemente usadas, na memória do próprio Postgres</span><span class="en">recently used data pages, in Postgres's own memory</span></td></tr><tr><td><span class="pt">cache de página do SO</span><span class="en">OS page cache</span></td><td><span class="pt">o Linux também guarda os mesmos arquivos em memória livre — é por isso que a segunda leitura de algo é quase sempre mais rápida</span><span class="en">Linux also keeps those same files in free memory — which is why a second read of something is almost always faster</span></td></tr><tr><td><span class="pt">plano de consulta</span><span class="en">query plan</span></td><td><span class="pt">consultas preparadas reaproveitam o plano já calculado</span><span class="en">prepared statements reuse an already-computed plan</span></td></tr></tbody></table></div>
+<h3><span class="pt">O 80/20 de cache de aplicação</span><span class="en">The 80/20 of application caching</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Padrão</span><span class="en">Pattern</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Risco principal</span><span class="en">Main risk</span></th></tr></thead><tbody><tr><td><span class="pt">Cache-aside (lazy loading)</span><span class="en">Cache-aside (lazy loading)</span></td><td><span class="pt">a aplicação lê o cache; se faltar, lê o banco e GRAVA no cache</span><span class="en">the application reads the cache; on a miss, it reads the database and WRITES to the cache</span></td><td><span class="pt">dado desatualizado até expirar ou ser invalidado</span><span class="en">stale data until it expires or is invalidated</span></td></tr><tr><td><span class="pt">Write-through</span><span class="en">Write-through</span></td><td><span class="pt">toda escrita vai para o banco E o cache, juntas</span><span class="en">every write goes to the database AND the cache, together</span></td><td><span class="pt">escrita fica mais lenta (duas gravações)</span><span class="en">writes get slower (two writes)</span></td></tr><tr><td><span class="pt">TTL (time to live)</span><span class="en">TTL (time to live)</span></td><td><span class="pt">cada entrada expira sozinha depois de N segundos</span><span class="en">each entry expires on its own after N seconds</span></td><td><span class="pt">escolher N é um equilíbrio entre "atual" e "rápido"</span><span class="en">choosing N is a trade-off between "fresh" and "fast"</span></td></tr><tr><td><span class="pt">Invalidação explícita</span><span class="en">Explicit invalidation</span></td><td><span class="pt">ao escrever, apaga/atualiza a entrada do cache na hora</span><span class="en">on write, delete/update the cache entry right away</span></td><td><span class="pt">é fácil esquecer um caminho de escrita e deixar cache "furado"</span><span class="en">easy to forget a write path and leave the cache "stale"</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">"Existem só duas coisas difíceis em ciência da computação: invalidação de cache e nomear coisas." A piada clássica de Phil Karlton é clássica porque é verdade: prefira TTLs curtos e caches simples a esquemas de invalidação espertos demais.</span><span class="en">"There are only two hard things in computer science: cache invalidation and naming things." Phil Karlton's classic joke is classic because it is true: prefer short TTLs and simple caches over overly clever invalidation schemes.</span></div>
+<h3><span class="pt">Onde colocar o cache</span><span class="en">Where to put the cache</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 160" role="img" aria-label="Onde cachear / Where to cache" style="min-width:620px">
+<rect x="10" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="82.0" class="pt " text-anchor="middle">navegador</text><text x="70.0" y="82.0" class="en " text-anchor="middle">browser</text>
+<text x="70.0" y="98.0" class="pt mut mono" text-anchor="middle">cache HTTP</text><text x="70.0" y="98.0" class="en mut mono" text-anchor="middle">HTTP cache</text>
+<rect x="180" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
+<text x="240.0" y="82.0" class="" text-anchor="middle">CDN</text>
+<text x="240.0" y="98.0" class="pt mut mono" text-anchor="middle">respostas inteiras</text><text x="240.0" y="98.0" class="en mut mono" text-anchor="middle">whole responses</text>
+<rect x="350" y="60" width="140" height="50" rx="4" class="ln"/>
+<text x="420.0" y="82.0" class="" text-anchor="middle">app / Redis</text>
+<text x="420.0" y="98.0" class="pt mut mono" text-anchor="middle">objetos, sessões</text><text x="420.0" y="98.0" class="en mut mono" text-anchor="middle">objects, sessions</text>
+<rect x="540" y="60" width="140" height="50" rx="4" class="ln fillsoft"/>
+<text x="610.0" y="82.0" class="" text-anchor="middle">Postgres</text>
+<text x="610.0" y="98.0" class="mut mono" text-anchor="middle">shared_buffers</text>
+<path d="M130 85L180 85" class="ln"/><path d="M172.8 88.5L180 85L172.8 81.5" class="ln"/>
+<path d="M300 85L350 85" class="ln"/><path d="M342.8 88.5L350 85L342.8 81.5" class="ln"/>
+<path d="M490 85L540 85" class="ln"/><path d="M532.8 88.5L540 85L532.8 81.5" class="ln"/>
+<text x="10" y="140" class="pt mut">Quanto mais perto do usuário, mais rápido — e mais fácil de servir dado velho sem perceber.</text><text x="10" y="140" class="en mut">The closer to the user, the faster — and the easier to serve stale data without noticing.</text>
+</svg></div><figcaption><span class="pt">Camadas de cache de um pedido típico, da borda até o banco.</span><span class="en">Cache layers of a typical request, from the edge down to the database.</span></figcaption></figure>
+<h3><span class="pt">O problema N+1: o "cache que você nem precisava"</span><span class="en">The N+1 problem: the "cache you did not even need"</span></h3>
+<pre><code><span class="tok-c">-- N+1: 1 consulta para os pedidos + N consultas, uma por pedido, para o cliente</span>
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> pedidos <span class="tok-k">LIMIT</span> <span class="tok-n">20</span>;                     <span class="tok-c">-- 1</span>
+<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</span> clientes <span class="tok-k">WHERE</span> id = <span class="tok-n">1</span>;                <span class="tok-c">-- repetida 20x por um ORM "ingênuo"</span>
+
+<span class="tok-c">-- resolvido com UM join, sem precisar de cache nenhum</span>
+<span class="tok-k">SELECT</span> p.*, c.nome <span class="tok-k">FROM</span> pedidos p <span class="tok-k">JOIN</span> clientes c <span class="tok-k">ON</span> c.id = p.cliente_id <span class="tok-k">LIMIT</span> <span class="tok-n">20</span>;</code></pre>
+<p><span class="pt">Boa parte do "preciso de cache" na prática é, na verdade, uma consulta ruim. Antes de adicionar uma camada de cache, rode <code>EXPLAIN ANALYZE</code> e confira se um índice ou um <code>JOIN</code> já resolvem.</span><span class="en">A good part of "I need a cache" in practice is actually a bad query. Before adding a cache layer, run <code>EXPLAIN ANALYZE</code> and check whether an index or a <code>JOIN</code> already fixes it.</span></p>
+</section>
+<section class="content-section" aria-labelledby="docker-lab">
+<h2 id="docker-lab"><span class="pt">Laboratório com Docker</span><span class="en">Lab with Docker</span></h2>
+
+<p><span class="pt">Um Postgres local em segundos, para treinar tudo desta nota sem instalar nada no sistema.</span><span class="en">A local Postgres in seconds, to practise everything in this note without installing anything on your system.</span></p>
+<pre><code>mkdir lab-postgres &amp;&amp; cd lab-postgres
+cat &gt; docker-compose.yml &lt;&lt;<span class="tok-s">'EOF'</span>
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ana
+      POSTGRES_PASSWORD: s3nha-forte-de-verdade
+      POSTGRES_DB: loja
+    ports:
+      - <span class="tok-s">"127.0.0.1:5432:5432"</span>
+    volumes:
+      - dados:/var/lib/postgresql/data
+volumes:
+  dados:
+EOF
+docker compose up -d
+docker compose exec db psql -U ana -d loja -c <span class="tok-s">"SELECT version();"</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> a última linha imprime a versão do Postgres — se aparecer, o container subiu, aceitou a senha definida e criou o database <code>loja</code>.</span><span class="en"><strong>Expected result:</strong> the last line prints the Postgres version — if it shows up, the container came up, accepted the configured password, and created the <code>loja</code> database.</span></p>
+<pre><code>psql <span class="tok-s">"postgresql://ana:s3nha-forte-de-verdade@localhost:5432/loja"</span>   <span class="tok-c"># do seu HOST, direto</span>
+docker compose exec db pg_dump -U ana loja &gt; backup.sql              <span class="tok-c"># pratique o backup da seção anterior</span>
+docker compose down                                                   <span class="tok-c"># para os containers, mantém o volume</span>
+docker compose down -v                                                <span class="tok-c"># remove TAMBÉM o volume (apaga os dados)</span></code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Diferenças entre este laboratório e um banco real (gerenciado ou em produção): aqui os dados vivem num <em>volume Docker</em> no seu disco — ele sobrevive a um <code>docker compose down</code>, mas some com <code>-v</code>, com uma reinstalação do Docker, ou se você trocar de máquina; um serviço gerenciado como o RDS tem o disco (EBS) e os backups automáticos independentes do processo. A rede também é a mesma do Docker explicada na nota de segurança: <code>127.0.0.1:5432:5432</code> deixa a porta só no seu host; sem o <code>127.0.0.1</code>, ficaria acessível por qualquer coisa que alcance a sua máquina. E não há TLS nem <code>pg_hba.conf</code> customizado aqui — a imagem oficial já libera senha de qualquer host dentro do container por padrão, o que é aceitável só porque é um laboratório local.</span><span class="en">Differences between this lab and a real database (managed or in production): here the data lives in a <em>Docker volume</em> on your disk — it survives a <code>docker compose down</code>, but disappears with <code>-v</code>, with a Docker reinstall, or if you switch machines; a managed service like RDS has the disk (EBS) and automated backups independent of the process. The network is also the same Docker setup explained in the security note: <code>127.0.0.1:5432:5432</code> keeps the port local to your host only; without the <code>127.0.0.1</code>, it would be reachable by anything that can reach your machine. And there is no TLS or custom <code>pg_hba.conf</code> here — the official image already allows password auth from any host inside the container by default, which is acceptable only because this is a local lab.</span></div>
+<p><span class="pt">Para algo mais perto de produção, veja a nota de AWS (RDS) ou suba um Postgres numa VM de verdade e aplique o <code>pg_hba.conf</code> e o TLS desta nota de propósito.</span><span class="en">For something closer to production, see the AWS note (RDS) or spin up Postgres on a real VM and apply this note's <code>pg_hba.conf</code> and TLS on purpose.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-pg">
+<h2 id="cheat-pg"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th></tr></thead><tbody><tr><td><span class="pt">listar databases/schemas/tabelas</span><span class="en">list databases/schemas/tables</span></td><td><code>\l</code> · <code>\dn</code> · <code>\dt</code></td></tr><tr><td><span class="pt">ver a estrutura de uma tabela</span><span class="en">see a table's structure</span></td><td><code>\d nome_tabela</code></td></tr><tr><td><span class="pt">criar usuário e dar acesso só leitura</span><span class="en">create a user and grant read-only access</span></td><td><code>CREATE ROLE ... LOGIN; GRANT SELECT ON ...</code></td></tr><tr><td><span class="pt">ver se uma consulta usa índice</span><span class="en">see whether a query uses an index</span></td><td><code>EXPLAIN ANALYZE SELECT ...</code></td></tr><tr><td><span class="pt">backup e restauração</span><span class="en">backup and restore</span></td><td><code>pg_dump -Fc db &gt; f.dump</code> · <code>pg_restore -d db f.dump</code></td></tr><tr><td><span class="pt">buscar texto de verdade</span><span class="en">search text for real</span></td><td><code>to_tsvector</code> / <code>to_tsquery</code></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">Qual a diferença entre um database e um schema?</span><span class="en">What is the difference between a database and a schema?</span></td><td><span class="pt">Database é isolado (não dá para fazer JOIN entre dois); schema é um namespace DENTRO de um database.</span><span class="en">A database is isolated (you cannot JOIN across two); a schema is a namespace INSIDE one database.</span></td></tr><tr><td><span class="pt">Por que o Postgres pede senha às vezes e não pede outras?</span><span class="en">Why does Postgres sometimes ask for a password and sometimes not?</span></td><td><span class="pt">Depende do método no pg_hba.conf: peer/ident confia no usuário do SO; scram-sha-256 pede senha.</span><span class="en">It depends on the pg_hba.conf method: peer/ident trusts the OS user; scram-sha-256 asks for a password.</span></td></tr><tr><td><span class="pt">A role "ana" do Postgres precisa existir como usuário do Linux?</span><span class="en">Does the Postgres role "ana" need to exist as a Linux user?</span></td><td><span class="pt">Não — são sistemas de identidade completamente separados.</span><span class="en">No — they are completely separate identity systems.</span></td></tr><tr><td><span class="pt">Quando um índice B-tree não ajuda num LIKE?</span><span class="en">When does a B-tree index not help with a LIKE?</span></td><td><span class="pt">Quando o padrão começa com %, como '%palavra%'; aí nem o índice nem um prefixo fixo ajudam.</span><span class="en">When the pattern starts with %, like '%word%'; then neither the index nor a fixed prefix helps.</span></td></tr><tr><td><span class="pt">O que muda entre EXPLAIN e EXPLAIN ANALYZE?</span><span class="en">What changes between EXPLAIN and EXPLAIN ANALYZE?</span></td><td><span class="pt">EXPLAIN só mostra o plano estimado; EXPLAIN ANALYZE executa de verdade e mostra tempos reais.</span><span class="en">EXPLAIN only shows the estimated plan; EXPLAIN ANALYZE actually runs it and shows real timings.</span></td></tr><tr><td><span class="pt">Por que UUID v4 pode ser ruim para performance de índice?</span><span class="en">Why can UUID v4 be bad for index performance?</span></td><td><span class="pt">É totalmente aleatório, então as escritas se espalham pelo índice inteiro em vez de ficarem no "final".</span><span class="en">It is fully random, so writes spread across the whole index instead of staying at the "end".</span></td></tr><tr><td><span class="pt">O que a regra 3-2-1 exige além de "ter backup"?</span><span class="en">What does the 3-2-1 rule require beyond "having a backup"?</span></td><td><span class="pt">3 cópias, em 2 mídias diferentes, com 1 fora do local — e testar a restauração.</span><span class="en">3 copies, on 2 different media, with 1 kept off-site — and testing the restore.</span></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://www.postgresql.org/docs/current/" rel="noopener">PostgreSQL Global Development Group. PostgreSQL Documentation (official, free).</a></li><li><a href="https://www.dataintensive.net/" rel="noopener">Martin Kleppmann. Designing Data-Intensive Applications. O'Reilly, 2017.</a></li><li><a href="https://theartofpostgresql.com/" rel="noopener">Dimitri Fontaine. The Art of PostgreSQL.</a></li><li><a href="https://use-the-index-luke.com/" rel="noopener">Markus Winand. Use The Index, Luke! (free online, SQL indexing).</a></li><li><a href="https://www.postgresql.org/docs/current/auth-pg-hba-conf.html" rel="noopener">PostgreSQL Documentation. The pg_hba.conf file.</a></li><li><a href="https://www.postgresql.org/docs/current/textsearch.html" rel="noopener">PostgreSQL Documentation. Full Text Search.</a></li><li><a href="https://www.postgresql.org/docs/current/backup.html" rel="noopener">PostgreSQL Documentation. Backup and Restore.</a></li><li><a href="https://www.postgresql.org/docs/current/rules-privileges.html" rel="noopener">PostgreSQL Documentation. Privileges and Row Security Policies.</a></li><li><a href="https://redis.io/learn/howtos/solutions/caching-architecture" rel="noopener">Redis documentation. Caching architecture patterns (cache-aside, write-through).</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg-2" x1="3" y1="2" x2="29" y2="30" gradientUnits="userSpaceOnUse"><stop stop-color="#9168e3"/><stop offset="1" stop-color="#341672"/></linearGradient></defs><circle cx="16" cy="16" r="16" fill="url(#lg-2)"/><g fill="#fff" fill-opacity=".97"><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(-30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(30.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(90.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(150.0 16 16)"/><ellipse cx="16" cy="9.1" rx="3.9" ry="9.3" transform="rotate(210.0 16 16)"/></g><circle cx="16" cy="16" r="2.3" fill="#2a1157"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
