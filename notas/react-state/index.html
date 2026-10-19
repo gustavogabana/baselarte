@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="rs.metaTitle">React state: Context API and Zustand | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:rs.metaDescription" content="How React's Context API and Zustand work, from the official docs: createContext and useContext, the reducer + context pattern, selectors, per-request stores in Next.js, and when to use each.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/react-state/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/react-state/">
+  <meta property="og:title" data-i18n-attributes="content:rs.metaTitle" content="React state: Context API and Zustand | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:rs.metaDescription" content="How React's Context API and Zustand work, from the official docs: createContext and useContext, the reducer + context pattern, selectors, per-request stores in Next.js, and when to use each.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:rs.metaTitle" content="React state: Context API and Zustand | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:rs.metaDescription" content="How React's Context API and Zustand work, from the official docs: createContext and useContext, the reducer + context pattern, selectors, per-request stores in Next.js, and when to use each.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=2" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+    <div class="header-sub">
+      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
+      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
+        <a href="../aws/index.html">AWS</a>
+        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
+        <details class="nav-menu">
+          <summary data-i18n="nav.menu">All notes</summary>
+          <ul class="nav-menu-list"><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../react-state/index.html" aria-current="page"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li><li><a href="../aws/index.html">AWS</a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li><li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li></ul>
+        </details>
+      </nav>
+      <div class="header-actions">
+        <a class="btn btn-primary" href="../index.html" data-i18n="nav.index">Index</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html" aria-current="page"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#why"><span class="pt">O problema que as duas resolvem</span><span class="en">The problem both solve</span></a></li>
+<li><a href="#context"><span class="pt">Context API: o que o React já traz</span><span class="en">Context API: what React ships with</span></a></li>
+<li><a href="#reducer"><span class="pt">Context + useReducer: o padrão oficial</span><span class="en">Context + useReducer: the official pattern</span></a></li>
+<li><a href="#ctx-next"><span class="pt">Context no Next.js (App Router)</span><span class="en">Context in Next.js (App Router)</span></a></li>
+<li><a href="#zustand"><span class="pt">Zustand: store, seletores e ações</span><span class="en">Zustand: store, selectors and actions</span></a></li>
+<li><a href="#zustand-next"><span class="pt">Zustand no Next.js: um store por requisição</span><span class="en">Zustand in Next.js: one store per request</span></a></li>
+<li><a href="#compare"><span class="pt">Context ou Zustand? Comparando</span><span class="en">Context or Zustand? Comparing</span></a></li>
+<li><a href="#lab"><span class="pt">Exercício: tema e contador</span><span class="en">Exercise: theme and counter</span></a></li>
+<li><a href="#cheat-rs"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="rs.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="rs.heroTitle">State in React, <em>shared on purpose.</em></h1>
+  <p class="hero-lede" data-i18n="rs.heroLede">Context API and Zustand, straight from the official docs: how each works, how they behave in React and Next.js, and when to pick which.</p>
+</section>
+<section class="content-section" aria-labelledby="why">
+<h2 id="why"><span class="pt">O problema que as duas resolvem</span><span class="en">The problem both solve</span></h2>
+<p><span class="pt">Quase todo app React precisa, cedo ou tarde, que dois componentes distantes enxerguem o mesmo dado: o usuário logado, o tema, o carrinho. Esta nota usa só a documentação oficial (react.dev, Next.js e Zustand) para mostrar as duas ferramentas mais comuns para isso: a <strong>Context API</strong>, que já vem no React, e o <strong>Zustand</strong>, uma biblioteca pequena de estado. E, principalmente, <em>quando</em> usar cada uma.</span><span class="en">Almost every React app eventually needs two distant components to see the same data: the signed-in user, the theme, the cart. This note uses only the official documentation (react.dev, Next.js and Zustand) to show the two most common tools for that: the <strong>Context API</strong>, which ships with React, and <strong>Zustand</strong>, a small state library. And above all, <em>when</em> to use each one.</span></p>
+<h3><span class="pt">O problema: prop drilling</span><span class="en">The problem: prop drilling</span></h3>
+<p><span class="pt">Props são o caminho normal para passar dados de pai para filho. Quando o dado precisa atravessar muitas camadas que não o usam, só para chegar lá embaixo, o código vira encanamento: isso é o <em>prop drilling</em>. A própria documentação do React manda tentar duas coisas antes de buscar contexto: <strong>passar props explicitamente</strong> (deixa o fluxo claro) e <strong>extrair componentes e passar JSX como <code>children</code></strong>, o que elimina camadas que só repassam dados.</span><span class="en">Props are the normal way to pass data from parent to child. When the data has to cross many layers that do not use it just to reach the bottom, the code turns into plumbing: that is <em>prop drilling</em>. The React docs themselves say to try two things before reaching for context: <strong>pass props explicitly</strong> (it keeps the flow clear) and <strong>extract components and pass JSX as <code>children</code></strong>, which removes layers that only forward data.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Onde o estado mora</span><span class="en">Where the state lives</span></th><th><span class="pt">Quando</span><span class="en">When</span></th></tr></thead><tbody><tr><td><code>useState</code> / <code>useReducer</code></td><td><span class="pt">só um componente (ou seus filhos diretos) precisa</span><span class="en">only one component (or its direct children) needs it</span></td></tr><tr><td><span class="pt">Subir o estado ("lifting up")</span><span class="en">Lifting state up</span></td><td><span class="pt">poucos irmãos precisam; props bastam</span><span class="en">a few siblings need it; props are enough</span></td></tr><tr><td>Context API</td><td><span class="pt">muitos componentes em profundidades diferentes leem o mesmo valor, que muda pouco (tema, usuário, idioma)</span><span class="en">many components at different depths read the same value, which changes rarely (theme, user, language)</span></td></tr><tr><td>Zustand</td><td><span class="pt">estado compartilhado que muda com frequência ou tem muitos consumidores, e você quer re-renderizar só quem usa a parte alterada</span><span class="en">shared state that changes often or has many consumers, and you want to re-render only whoever uses the changed part</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="context">
+<h2 id="context"><span class="pt">Context API: o que o React já traz</span><span class="en">Context API: what React ships with</span></h2>
+<p><span class="pt">Context deixa um componente pai oferecer um valor a <em>toda a subárvore</em> abaixo dele, em qualquer profundidade, sem passar props camada por camada. São três passos:</span><span class="en">Context lets a parent component offer a value to <em>the whole subtree</em> below it, at any depth, without passing props layer by layer. There are three steps:</span></p>
+<ul><li><span class="pt"><strong>Criar</strong> o contexto com <code>createContext(valorPadrão)</code> e exportá-lo.</span><span class="en"><strong>Create</strong> the context with <code>createContext(defaultValue)</code> and export it.</span></li><li><span class="pt"><strong>Usar</strong> o valor em qualquer componente com <code>useContext(MeuContexto)</code>.</span><span class="en"><strong>Use</strong> the value in any component with <code>useContext(MyContext)</code>.</span></li><li><span class="pt"><strong>Prover</strong> o valor a partir de um ancestral, envolvendo os filhos em <code>&lt;MeuContexto value={...}&gt;</code>.</span><span class="en"><strong>Provide</strong> the value from an ancestor by wrapping the children in <code>&lt;MyContext value={...}&gt;</code>.</span></li></ul>
+<pre><code>// ThemeContext.js
+import { createContext, useContext, useState } from 'react';
+
+export const ThemeContext = createContext('light');   // 1) criar (valor padrão: 'light')
+
+export function ThemeProvider({ children }) {
+  const [theme, setTheme] = useState('dark');
+  return (
+    // 3) prover (React 19: o próprio contexto é o provider)
+    &lt;ThemeContext value={{ theme, setTheme }}&gt;
+      {children}
+    &lt;/ThemeContext&gt;
+  );
+}
+
+export function useTheme() {
+  return useContext(ThemeContext);                     // 2) usar
+}
+
+// Qualquer componente, em qualquer profundidade:
+function ThemeButton() {
+  const { theme, setTheme } = useTheme();
+  return &lt;button onClick={() =&gt; setTheme(theme === 'dark' ? 'light' : 'dark')}&gt;{theme}&lt;/button&gt;;
+}</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Regra da documentação</span><span class="en">Rule from the docs</span></th><th><span class="pt">Significa</span><span class="en">Meaning</span></th></tr></thead><tbody><tr><td><span class="pt">O provider mais próximo vence</span><span class="en">Nearest provider wins</span></td><td><span class="pt">é como herança de CSS; providers aninhados sobrescrevem o valor só para a sua subárvore</span><span class="en">like CSS inheritance; nested providers override the value only for their subtree</span></td></tr><tr><td><span class="pt">O valor padrão só vale sem provider</span><span class="en">The default only applies without a provider</span></td><td><span class="pt">nunca muda; escolha um padrão útil (<code>'light'</code>, não <code>null</code>) e os testes funcionam sem provider</span><span class="en">it never changes; pick a useful default (<code>'light'</code>, not <code>null</code>) and tests work without a provider</span></td></tr><tr><td><span class="pt">O provider fica <em>acima</em></span><span class="en">The provider sits <em>above</em></span></td><td><span class="pt"><code>useContext</code> não enxerga o provider renderizado pelo mesmo componente</span><span class="en"><code>useContext</code> does not see a provider rendered by the same component</span></td></tr><tr><td><span class="pt">Componentes intermediários não importam</span><span class="en">Intermediate components do not matter</span></td><td><span class="pt">podem existir quantos quiser, até <code>&lt;div&gt;</code>; nem <code>memo</code> impede o consumidor de receber o valor novo</span><span class="en">there can be any number, even <code>&lt;div&gt;</code>; not even <code>memo</code> stops a consumer from receiving the new value</span></td></tr><tr><td><span class="pt">Sempre <code>value</code></span><span class="en">Always <code>value</code></span></td><td><span class="pt">escrever <code>&lt;Ctx theme={theme}&gt;</code> em vez de <code>value=</code> faz o consumidor receber <code>undefined</code></span><span class="en">writing <code>&lt;Ctx theme={theme}&gt;</code> instead of <code>value=</code> makes consumers receive <code>undefined</code></span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Em React 18 e anterior o provider se escrevia <code>&lt;MeuContexto.Provider value={...}&gt;</code>. Em React 19 o contexto vira o provider (<code>&lt;MeuContexto value={...}&gt;</code>); a forma antiga ainda aparece em muito código e em alguns trechos da documentação do Next.js.</span><span class="en">In React 18 and earlier the provider was written <code>&lt;MyContext.Provider value={...}&gt;</code>. In React 19 the context itself is the provider (<code>&lt;MyContext value={...}&gt;</code>); the old form still shows up in a lot of code and in some Next.js docs snippets.</span></div>
+<h3><span class="pt">A pegadinha: re-render de todos os consumidores</span><span class="en">The catch: every consumer re-renders</span></h3>
+<p><span class="pt">Quando o <code>value</code> do provider muda (comparado com <code>Object.is</code>), o React re-renderiza <strong>todos</strong> os componentes que leem aquele contexto. Não existe "selecionar só uma parte". E um objeto ou função escrito direto no <code>value</code> é novo a cada render do pai, o que dispara re-render nos consumidores mesmo sem mudança real. A documentação mostra a correção com <code>useMemo</code> e <code>useCallback</code>:</span><span class="en">When the provider's <code>value</code> changes (compared with <code>Object.is</code>), React re-renders <strong>all</strong> components that read that context. There is no "select only one part". And an object or function written straight into <code>value</code> is new on every parent render, which triggers consumer re-renders even with no real change. The docs show the fix with <code>useMemo</code> and <code>useCallback</code>:</span></p>
+<pre><code>function AuthProvider({ children }) {
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const login = useCallback((response) =&gt; {
+    storeCredentials(response.credentials);
+    setCurrentUser(response.user);
+  }, []);
+
+  const contextValue = useMemo(() =&gt; ({ currentUser, login }), [currentUser, login]);
+
+  return &lt;AuthContext value={contextValue}&gt;{children}&lt;/AuthContext&gt;;
+}</code></pre>
+</section>
+<section class="content-section" aria-labelledby="reducer">
+<h2 id="reducer"><span class="pt">Context + useReducer: o padrão oficial</span><span class="en">Context + useReducer: the official pattern</span></h2>
+<p><span class="pt">Para estado com várias ações (adicionar, remover, editar), a documentação do React recomenda juntar <code>useReducer</code> com contexto. O padrão: <strong>dois contextos</strong>, um para ler o estado e outro para o <code>dispatch</code>, mais <em>custom hooks</em> para esconder a fiação. Quem só dispara ações não precisa re-renderizar quando o estado muda, porque o <code>dispatch</code> nunca muda de identidade.</span><span class="en">For state with several actions (add, remove, edit), the React docs recommend combining <code>useReducer</code> with context. The pattern: <strong>two contexts</strong>, one to read the state and another for <code>dispatch</code>, plus <em>custom hooks</em> to hide the wiring. Whoever only fires actions does not need to re-render when state changes, because <code>dispatch</code> never changes identity.</span></p>
+<pre><code>// TasksContext.js — contexto, reducer, provider e hooks no mesmo arquivo
+import { createContext, useContext, useReducer } from 'react';
+
+const TasksContext = createContext(null);
+const TasksDispatchContext = createContext(null);
+
+export function TasksProvider({ children }) {
+  const [tasks, dispatch] = useReducer(tasksReducer, initialTasks);
+  return (
+    &lt;TasksContext value={tasks}&gt;
+      &lt;TasksDispatchContext value={dispatch}&gt;
+        {children}
+      &lt;/TasksDispatchContext&gt;
+    &lt;/TasksContext&gt;
+  );
+}
+
+export const useTasks = () =&gt; useContext(TasksContext);
+export const useTasksDispatch = () =&gt; useContext(TasksDispatchContext);
+
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case 'added':   return [...tasks, { id: action.id, text: action.text, done: false }];
+    case 'deleted': return tasks.filter((t) =&gt; t.id !== action.id);
+    default: throw Error('Unknown action: ' + action.type);
+  }
+}
+const initialTasks = [];
+
+// Em qualquer lugar abaixo do provider:
+const tasks = useTasks();
+const dispatch = useTasksDispatch();
+dispatch({ type: 'added', id: nextId++, text });</code></pre>
+<p><span class="pt">Um app pode ter vários pares assim (um para tarefas, outro para o usuário, outro para o tema). Separar contextos por assunto também limita o estrago do re-render: mudar o tema não acorda quem só lê tarefas.</span><span class="en">An app can have several such pairs (one for tasks, another for the user, another for the theme). Splitting contexts by topic also limits the re-render cost: changing the theme does not wake up whoever only reads tasks.</span></p>
+</section>
+<section class="content-section" aria-labelledby="ctx-next">
+<h2 id="ctx-next"><span class="pt">Context no Next.js (App Router)</span><span class="en">Context in Next.js (App Router)</span></h2>
+<p><span class="pt">O App Router do Next.js faz de <strong>Server Components</strong> o padrão para layouts e páginas. Eles buscam dados, usam segredos e não enviam JavaScript ao navegador, mas <strong>não suportam contexto nem hooks</strong>. Ou seja: o contexto vive só nos <strong>Client Components</strong> (arquivos com <code>'use client'</code>).</span><span class="en">The Next.js App Router makes <strong>Server Components</strong> the default for layouts and pages. They fetch data, use secrets and ship no JavaScript to the browser, but they <strong>do not support context or hooks</strong>. In other words: context lives only in <strong>Client Components</strong> (files with <code>'use client'</code>).</span></p>
+<p><span class="pt">A receita oficial: criar um Client Component que recebe <code>children</code> e importá-lo no <code>layout</code>, que continua sendo um Server Component.</span><span class="en">The official recipe: create a Client Component that accepts <code>children</code> and import it in the <code>layout</code>, which stays a Server Component.</span></p>
+<pre><code>// app/theme-provider.tsx
+'use client';
+import { createContext } from 'react';
+
+export const ThemeContext = createContext({});
+
+export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+  return &lt;ThemeContext.Provider value="dark"&gt;{children}&lt;/ThemeContext.Provider&gt;;
+}
+
+// app/layout.tsx  (Server Component)
+import ThemeProvider from './theme-provider';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html&gt;
+      &lt;body&gt;
+        &lt;ThemeProvider&gt;{children}&lt;/ThemeProvider&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}</code></pre>
+<ul><li><span class="pt"><strong>Provider o mais fundo possível.</strong> Note que o <code>ThemeProvider</code> envolve só <code>{children}</code>, não o <code>&lt;html&gt;</code> inteiro: assim o Next.js consegue otimizar as partes estáticas dos Server Components.</span><span class="en"><strong>Providers as deep as possible.</strong> Note that <code>ThemeProvider</code> wraps only <code>{children}</code>, not the whole <code>&lt;html&gt;</code>: that lets Next.js optimize the static parts of your Server Components.</span></li><li><span class="pt"><strong><code>'use client'</code> é uma fronteira.</strong> Tudo que o arquivo importa e renderiza diretamente entra no bundle do cliente; Server Components passados como <code>children</code> continuam no servidor.</span><span class="en"><strong><code>'use client'</code> is a boundary.</strong> Everything the file imports and renders directly goes into the client bundle; Server Components passed as <code>children</code> stay on the server.</span></li><li><span class="pt"><strong>Dados do servidor chegam por props.</strong> Um Server Component busca o dado e o passa a um Client Component como prop (precisa ser serializável); só então ele pode ir para um contexto ou store.</span><span class="en"><strong>Server data arrives via props.</strong> A Server Component fetches the data and passes it to a Client Component as a prop (it must be serializable); only then can it go into a context or store.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="zustand">
+<h2 id="zustand"><span class="pt">Zustand: store, seletores e ações</span><span class="en">Zustand: store, selectors and actions</span></h2>
+<p><span class="pt">O Zustand é uma biblioteca pequena de estado com API de hooks, pouca cerimônia e <strong>sem provider</strong> no uso básico. O <em>store</em> é um hook criado com <code>create</code>; ele guarda dados <em>e</em> as ações que os alteram.</span><span class="en">Zustand is a small state library with a hooks API, little ceremony and <strong>no provider</strong> in basic use. The <em>store</em> is a hook created with <code>create</code>; it holds data <em>and</em> the actions that change it.</span></p>
+<pre><code>npm install zustand</code></pre>
+<pre><code>import { create } from 'zustand';
+
+const useBear = create((set) =&gt; ({
+  bears: 0,
+  increasePopulation: () =&gt; set((state) =&gt; ({ bears: state.bears + 1 })),
+  removeAllBears: () =&gt; set({ bears: 0 }),
+}));
+
+function BearCounter() {
+  const bears = useBear((state) =&gt; state.bears);       // seletor: pega só o que usa
+  return &lt;h1&gt;{bears} bears around here...&lt;/h1&gt;;
+}
+
+function Controls() {
+  const increasePopulation = useBear((state) =&gt; state.increasePopulation);
+  return &lt;button onClick={increasePopulation}&gt;one up&lt;/button&gt;;
+}</code></pre>
+<h3><span class="pt">Seletores: a diferença que importa</span><span class="en">Selectors: the difference that matters</span></h3>
+<p><span class="pt">Cada componente passa ao hook um <strong>seletor</strong>, uma função que escolhe um pedaço do estado. O componente só re-renderiza quando o resultado do seletor muda (comparado com <code>Object.is</code>). No exemplo, o <code>BearCounter</code> atualiza quando <code>bears</code> muda; o <code>Controls</code> lê só a função e quase nunca re-renderiza.</span><span class="en">Each component hands the hook a <strong>selector</strong>, a function that picks a slice of the state. The component re-renders only when the selector's result changes (compared with <code>Object.is</code>). In the example, <code>BearCounter</code> updates when <code>bears</code> changes; <code>Controls</code> reads only the function and almost never re-renders.</span></p>
+<p><span class="pt">Cuidado com seletores que devolvem um valor <em>novo</em> a cada chamada (como <code>Object.keys(state)</code>, que cria um array novo): eles re-renderizam a cada mudança do store. A correção oficial é embrulhar o seletor em <code>useShallow</code>, que compara o resultado de forma rasa:</span><span class="en">Beware of selectors that return a <em>new</em> value on every call (like <code>Object.keys(state)</code>, which builds a new array): they re-render on every store change. The official fix is to wrap the selector in <code>useShallow</code>, which compares the result shallowly:</span></p>
+<pre><code>import { useShallow } from 'zustand/react/shallow';
+
+const names = useMeals(useShallow((state) =&gt; Object.keys(state)));</code></pre>
+<h3><span class="pt">Atualizando o estado</span><span class="en">Updating state</span></h3>
+<ul><li><span class="pt"><strong><code>set</code> faz mesclagem rasa:</strong> passe só as chaves que mudam; as outras do primeiro nível continuam.</span><span class="en"><strong><code>set</code> merges shallowly:</strong> pass only the keys that change; the other first-level keys stay.</span></li><li><span class="pt"><strong>Objetos aninhados são imutáveis:</strong> copie cada nível com spread (<code>...state.deep</code>) ou use o middleware <strong>Immer</strong> para escrever em estilo "mutável" dentro de <code>produce</code>.</span><span class="en"><strong>Nested objects are immutable:</strong> copy each level with spread (<code>...state.deep</code>) or use the <strong>Immer</strong> middleware to write in a "mutable" style inside <code>produce</code>.</span></li><li><span class="pt"><strong>Em TypeScript</strong> use a forma curried <code>create&lt;Estado&gt;()((set) =&gt; ...)</code> para tipar o store.</span><span class="en"><strong>In TypeScript</strong> use the curried form <code>create&lt;State&gt;()((set) =&gt; ...)</code> to type the store.</span></li></ul>
+<pre><code>set((state) =&gt; ({
+  deep: {
+    ...state.deep,
+    nested: { ...state.deep.nested, count: state.deep.nested.count + 1 },
+  },
+}));</code></pre>
+</section>
+<section class="content-section" aria-labelledby="zustand-next">
+<h2 id="zustand-next"><span class="pt">Zustand no Next.js: um store por requisição</span><span class="en">Zustand in Next.js: one store per request</span></h2>
+<p><span class="pt">Aqui está a pegadinha central. Um store criado com <code>create</code> é <strong>estado de módulo</strong>, global. Um servidor Next.js atende muitas requisições ao mesmo tempo; se o store for global, <strong>o estado de um usuário pode vazar para a renderização de outro</strong>. Por isso o guia oficial do Zustand para Next.js manda criar o store <strong>por requisição</strong>, com uma fábrica, e distribuí-lo por contexto.</span><span class="en">Here is the central catch. A store created with <code>create</code> is <strong>module state</strong>, global. A Next.js server handles many requests at once; if the store is global, <strong>one user's state can leak into another's render</strong>. That is why the official Zustand guide for Next.js says to create the store <strong>per request</strong>, with a factory, and distribute it through context.</span></p>
+<pre><code>// src/stores/counter-store.ts — a fábrica (zustand/vanilla)
+import { createStore } from 'zustand/vanilla';
+
+export type CounterState = { count: number };
+export type CounterActions = { incrementCount: () =&gt; void; decrementCount: () =&gt; void };
+export type CounterStore = CounterState &amp; CounterActions;
+
+export const defaultInitState: CounterState = { count: 0 };
+
+export const createCounterStore = (initState: CounterState = defaultInitState) =&gt;
+  createStore&lt;CounterStore&gt;()((set) =&gt; ({
+    ...initState,
+    incrementCount: () =&gt; set((s) =&gt; ({ count: s.count + 1 })),
+    decrementCount: () =&gt; set((s) =&gt; ({ count: s.count - 1 })),
+  }));</code></pre>
+<pre><code>// src/providers/counter-store-provider.tsx
+'use client';
+import { type ReactNode, createContext, useState, useContext } from 'react';
+import { useStore } from 'zustand';
+import { type CounterStore, createCounterStore } from '@/stores/counter-store';
+
+export type CounterStoreApi = ReturnType&lt;typeof createCounterStore&gt;;
+const CounterStoreContext = createContext&lt;CounterStoreApi | undefined&gt;(undefined);
+
+export const CounterStoreProvider = ({ children }: { children: ReactNode }) =&gt; {
+  const [store] = useState(() =&gt; createCounterStore());   // criado uma vez por instância
+  return &lt;CounterStoreContext.Provider value={store}&gt;{children}&lt;/CounterStoreContext.Provider&gt;;
+};
+
+export const useCounterStore = &lt;T,&gt;(selector: (s: CounterStore) =&gt; T): T =&gt; {
+  const ctx = useContext(CounterStoreContext);
+  if (!ctx) throw new Error('useCounterStore must be used within CounterStoreProvider');
+  return useStore(ctx, selector);
+};</code></pre>
+<pre><code>// src/app/layout.tsx — App Router (no Pages Router: dentro do _app)
+import { CounterStoreProvider } from '@/providers/counter-store-provider';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    &lt;html lang="en"&gt;
+      &lt;body&gt;
+        &lt;CounterStoreProvider&gt;{children}&lt;/CounterStoreProvider&gt;
+      &lt;/body&gt;
+    &lt;/html&gt;
+  );
+}
+
+// src/components/home-page.tsx
+'use client';
+import { useCounterStore } from '@/providers/counter-store-provider';
+
+export const HomePage = () =&gt; {
+  const count = useCounterStore((s) =&gt; s.count);
+  const increment = useCounterStore((s) =&gt; s.incrementCount);
+  return &lt;button onClick={increment}&gt;Count: {count}&lt;/button&gt;;
+};</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Repare: aqui o Zustand usa <strong>Context só como encanamento</strong> para entregar a instância do store. O re-render seletivo continua vindo dos seletores. A consequência prática é que o contexto distribui <em>onde está</em> o store, mas não o faz re-renderizar todo mundo (a referência do store nunca muda).</span><span class="en">Note: here Zustand uses <strong>Context only as plumbing</strong> to deliver the store instance. Selective re-rendering still comes from selectors. The practical result is that context distributes <em>where the store is</em> without re-rendering everyone (the store reference never changes).</span></div>
+<ul><li><span class="pt"><strong>Server Components não leem nem escrevem no store.</strong> Eles não usam hooks nem contexto; busque dados no servidor e passe-os por props.</span><span class="en"><strong>Server Components neither read nor write the store.</strong> They cannot use hooks or context; fetch data on the server and pass it down as props.</span></li><li><span class="pt"><strong>Hidratação:</strong> o Next.js renderiza no servidor e de novo no cliente; se os dois resultados diferem, há erro de hidratação. Inicialize o store no servidor com dados e reinicialize no cliente com os <em>mesmos</em> dados (a fábrica aceita um <code>initState</code> para isso). Valores do navegador, como <code>localStorage</code> ou <code>window.matchMedia</code>, só devem ser lidos depois da hidratação.</span><span class="en"><strong>Hydration:</strong> Next.js renders on the server and again on the client; if the two outputs differ you get a hydration error. Initialise the store on the server with data and re-initialise on the client with the <em>same</em> data (the factory accepts an <code>initState</code> for that). Browser-only values such as <code>localStorage</code> or <code>window.matchMedia</code> should be read only after hydration.</span></li><li><span class="pt"><strong>Um store por rota</strong> é possível (provider dentro da página), mas o guia desaconselha, a menos que cada rota precise de um store separado.</span><span class="en"><strong>One store per route</strong> is possible (provider inside the page), but the guide advises against it unless each route truly needs a separate store.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="compare">
+<h2 id="compare"><span class="pt">Context ou Zustand? Comparando</span><span class="en">Context or Zustand? Comparing</span></h2>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt"></span><span class="en"></span></th><th><span class="pt">Context API</span><span class="en">Context API</span></th><th><span class="pt">Zustand</span><span class="en">Zustand</span></th></tr></thead><tbody><tr><td><span class="pt">Vem de onde</span><span class="en">Where it comes from</span></td><td><span class="pt">React (nada a instalar)</span><span class="en">React (nothing to install)</span></td><td><span class="pt">biblioteca separada</span><span class="en">separate library</span></td></tr><tr><td><span class="pt">Provider</span><span class="en">Provider</span></td><td><span class="pt">obrigatório</span><span class="en">required</span></td><td><span class="pt">não, no uso básico; no Next.js, sim (store por requisição)</span><span class="en">not in basic use; in Next.js, yes (per-request store)</span></td></tr><tr><td><span class="pt">Re-render</span><span class="en">Re-render</span></td><td><span class="pt">todo consumidor quando o <code>value</code> muda</span><span class="en">every consumer when <code>value</code> changes</span></td><td><span class="pt">só quem usa o pedaço mudado (seletores)</span><span class="en">only whoever uses the changed slice (selectors)</span></td></tr><tr><td><span class="pt">Onde fica a lógica</span><span class="en">Where logic lives</span></td><td><span class="pt">em <code>useState</code>/<code>useReducer</code> do provider</span><span class="en">in the provider's <code>useState</code>/<code>useReducer</code></span></td><td><span class="pt">dentro do store (dados + ações juntos)</span><span class="en">inside the store (data + actions together)</span></td></tr><tr><td><span class="pt">Uso fora de componentes</span><span class="en">Use outside components</span></td><td><span class="pt">não</span><span class="en">no</span></td><td><span class="pt">sim (o store é um objeto com <code>getState</code>)</span><span class="en">yes (the store is an object with <code>getState</code>)</span></td></tr><tr><td><span class="pt">Melhor para</span><span class="en">Best for</span></td><td><span class="pt">valores estáveis e injeção de dependência: tema, idioma, usuário</span><span class="en">stable values and dependency injection: theme, language, user</span></td><td><span class="pt">estado de cliente dinâmico: carrinho, filtros, UI complexa, editores</span><span class="en">dynamic client state: cart, filters, complex UI, editors</span></td></tr></tbody></table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="Re-render: Context vs Zustand" style="min-width:640px">
+<text x="10" y="20" class="pt mut">Context: o valor muda e TODOS os consumidores re-renderizam</text><text x="10" y="20" class="en mut">Context: the value changes and ALL consumers re-render</text>
+<rect x="10" y="32" width="140" height="44" rx="4" class="ln fillsoft"/><text x="80" y="59" class="mono" text-anchor="middle">Provider</text>
+<rect x="190" y="32" width="100" height="44" rx="4" class="ln fillsoft"/><text x="240" y="59" class="mono" text-anchor="middle">A ↻</text>
+<rect x="310" y="32" width="100" height="44" rx="4" class="ln fillsoft"/><text x="360" y="59" class="mono" text-anchor="middle">B ↻</text>
+<rect x="430" y="32" width="100" height="44" rx="4" class="ln fillsoft"/><text x="480" y="59" class="mono" text-anchor="middle">C ↻</text>
+<path d="M150 54L190 54M290 54L310 54M410 54L430 54" class="ln"/>
+<text x="10" y="120" class="pt mut">Zustand: só o componente cujo seletor mudou re-renderiza</text><text x="10" y="120" class="en mut">Zustand: only the component whose selector changed re-renders</text>
+<rect x="10" y="132" width="140" height="44" rx="4" class="ln fillsoft"/><text x="80" y="159" class="mono" text-anchor="middle">store</text>
+<rect x="190" y="132" width="100" height="44" rx="4" class="ln fillsoft"/><text x="240" y="159" class="mono" text-anchor="middle">A ↻</text>
+<rect x="310" y="132" width="100" height="44" rx="4" class="ln"/><text x="360" y="159" class="mono mut" text-anchor="middle">B</text>
+<rect x="430" y="132" width="100" height="44" rx="4" class="ln"/><text x="480" y="159" class="mono mut" text-anchor="middle">C</text>
+<path d="M150 154L190 154" class="ln"/><path d="M150 164L310 164" class="ln dash"/><path d="M150 174L430 174" class="ln dash"/>
+<text x="10" y="220" class="pt mut">↻ = re-renderiza. Linhas pontilhadas: conectados ao store, mas o seletor deles não mudou.</text><text x="10" y="220" class="en mut">↻ = re-renders. Dashed lines: connected to the store, but their selector did not change.</text>
+</svg></div><figcaption><span class="pt">A diferença central: Context avisa todos os consumidores; Zustand compara o resultado de cada seletor.</span><span class="en">The core difference: Context notifies every consumer; Zustand compares each selector's result.</span></figcaption></figure>
+<h3><span class="pt">Como decidir</span><span class="en">How to decide</span></h3>
+<ul><li><span class="pt"><strong>Comece pelo mais simples:</strong> estado local, depois subir o estado, depois <code>children</code>. Só então contexto.</span><span class="en"><strong>Start with the simplest:</strong> local state, then lifting state up, then <code>children</code>. Only then context.</span></li><li><span class="pt"><strong>Contexto</strong> para o que muda pouco e muitos leem: tema, idioma, usuário autenticado, configuração.</span><span class="en"><strong>Context</strong> for what rarely changes and many read: theme, language, authenticated user, configuration.</span></li><li><span class="pt"><strong>Zustand</strong> quando o estado muda com frequência, tem muitos consumidores independentes, ou a lógica fica grande demais para um provider.</span><span class="en"><strong>Zustand</strong> when state changes often, has many independent consumers, or the logic grows too big for a provider.</span></li><li><span class="pt"><strong>Dados que vêm do servidor</strong> (listas, perfis) não são "estado global de UI": busque-os em Server Components e passe por props. Guarde no store só o que é estado de interface.</span><span class="en"><strong>Data that comes from the server</strong> (lists, profiles) is not "global UI state": fetch it in Server Components and pass it down as props. Keep only interface state in the store.</span></li><li><span class="pt">Os dois combinam: Context para tema e usuário, Zustand para o carrinho.</span><span class="en">They combine: Context for theme and user, Zustand for the cart.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">Exercício: tema e contador</span><span class="en">Exercise: theme and counter</span></h2>
+<p><span class="pt">Um app Next.js pequeno com os dois: tema por Context, contador por Zustand (store por requisição). Pré-requisito: Node.js instalado.</span><span class="en">A small Next.js app with both: theme through Context, counter through Zustand (per-request store). Prerequisite: Node.js installed.</span></p>
+<pre><code>npx create-next-app@latest lab-estado --ts --app
+cd lab-estado
+npm install zustand
+mkdir -p src/stores src/providers</code></pre>
+<p><span class="pt">Crie os arquivos <code>src/stores/counter-store.ts</code> e <code>src/providers/counter-store-provider.tsx</code> da seção anterior, e um <code>src/providers/theme-provider.tsx</code> (<code>'use client'</code>) com o <code>ThemeProvider</code> e o <code>useTheme</code> da seção de Context. Depois envolva o <code>{children}</code> do <code>layout.tsx</code> nos dois providers e crie um componente cliente que use os hooks.</span><span class="en">Create the files <code>src/stores/counter-store.ts</code> and <code>src/providers/counter-store-provider.tsx</code> from the previous section, and a <code>src/providers/theme-provider.tsx</code> (<code>'use client'</code>) with the <code>ThemeProvider</code> and <code>useTheme</code> from the Context section. Then wrap the <code>{children}</code> of <code>layout.tsx</code> in both providers and create a client component that uses the hooks.</span></p>
+<pre><code>npm run dev      # http://localhost:3000</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o botão do tema alterna o texto e o contador sobe ao clicar. Para <em>ver</em> a diferença de re-render, instale a extensão React Developer Tools, ative "Highlight updates when components render" e clique no contador: só os componentes que leem o <code>count</code> piscam. Depois troque o seletor por <code>useCounterStore((s) =&gt; s)</code> (o store inteiro) e veja mais componentes piscarem.</span><span class="en"><strong>Expected result:</strong> the theme button toggles the text and the counter goes up on click. To <em>see</em> the re-render difference, install the React Developer Tools extension, enable "Highlight updates when components render" and click the counter: only the components that read <code>count</code> flash. Then change the selector to <code>useCounterStore((s) =&gt; s)</code> (the whole store) and watch more components flash.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-rs">
+<h2 id="cheat-rs"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Uso</span><span class="en">I use</span></th></tr></thead><tbody><tr><td><span class="pt">passar um valor para toda a subárvore</span><span class="en">pass a value to the whole subtree</span></td><td><code>createContext</code> + <code>useContext</code> + <code>&lt;Ctx value&gt;</code></td></tr><tr><td><span class="pt">estado com várias ações via contexto</span><span class="en">state with several actions via context</span></td><td><code>useReducer</code> + 2 contextos + custom hooks</td></tr><tr><td><span class="pt">contexto no App Router</span><span class="en">context in the App Router</span></td><td><span class="pt">Client Component com <code>'use client'</code> recebendo <code>children</code>, importado no layout</span><span class="en">Client Component with <code>'use client'</code> accepting <code>children</code>, imported in the layout</span></td></tr><tr><td><span class="pt">um store simples</span><span class="en">a simple store</span></td><td><code>create((set) =&gt; ({...}))</code></td></tr><tr><td><span class="pt">re-renderizar só o necessário</span><span class="en">re-render only what is needed</span></td><td><span class="pt">seletor, e <code>useShallow</code> se ele devolve objeto/array novo</span><span class="en">a selector, and <code>useShallow</code> if it returns a new object/array</span></td></tr><tr><td><span class="pt">Zustand com Next.js</span><span class="en">Zustand with Next.js</span></td><td><span class="pt"><code>createStore</code> + provider <code>'use client'</code> com <code>useState(() =&gt; ...)</code></span><span class="en"><code>createStore</code> + <code>'use client'</code> provider with <code>useState(() =&gt; ...)</code></span></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">O que é prop drilling e o que a documentação do React manda tentar antes do contexto?</span><span class="en">What is prop drilling and what do the React docs say to try before context?</span></li><li><span class="pt">Por que um objeto escrito direto em <code>value</code> causa re-renders extras, e como corrigir?</span><span class="en">Why does an object written straight into <code>value</code> cause extra re-renders, and how do you fix it?</span></li><li><span class="pt">Por que o padrão reducer + contexto usa dois contextos?</span><span class="en">Why does the reducer + context pattern use two contexts?</span></li><li><span class="pt">Por que Server Components não usam contexto, e onde o provider deve ficar?</span><span class="en">Why can Server Components not use context, and where should the provider live?</span></li><li><span class="pt">O que um seletor do Zustand faz e quando o <code>useShallow</code> entra?</span><span class="en">What does a Zustand selector do and when does <code>useShallow</code> come in?</span></li><li><span class="pt">Por que um store global é um risco num servidor Next.js, e qual é a correção oficial?</span><span class="en">Why is a global store a risk on a Next.js server, and what is the official fix?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://react.dev/learn/passing-data-deeply-with-context" rel="noopener">React: Passing Data Deeply with Context</a></li>
+<li><a href="https://react.dev/learn/scaling-up-with-reducer-and-context" rel="noopener">React: Scaling Up with Reducer and Context</a></li>
+<li><a href="https://react.dev/reference/react/useContext" rel="noopener">React: useContext</a></li>
+<li><a href="https://nextjs.org/docs/app/getting-started/server-and-client-components" rel="noopener">Next.js: Server and Client Components (Context providers)</a></li>
+<li><a href="https://zustand.docs.pmnd.rs/learn/getting-started/introduction" rel="noopener">Zustand: Introduction</a></li>
+<li><a href="https://zustand.docs.pmnd.rs/learn/guides/nextjs" rel="noopener">Zustand: Setup with Next.js</a></li>
+<li><a href="https://zustand.docs.pmnd.rs/learn/guides/updating-state" rel="noopener">Zustand: Updating state</a></li>
+<li><a href="https://zustand.docs.pmnd.rs/learn/guides/prevent-rerenders-with-use-shallow" rel="noopener">Zustand: Prevent rerenders with useShallow</a></li>
+<li><a href="https://zustand.docs.pmnd.rs/learn/guides/ssr-and-hydration" rel="noopener">Zustand: SSR and Hydration</a></li>
+</ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
