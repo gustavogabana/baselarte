@@ -168,38 +168,41 @@
 <h2 id="sessions"><span class="pt">Sessões: TCP com estado, UDP sem estado</span><span class="en">Sessions: stateful TCP, stateless UDP</span></h2>
 
 <p><span class="pt">Uma <em>sessão</em> é o estado que duas pontas guardam sobre uma conversa em andamento: quem é o outro lado, o que já foi enviado, o que falta confirmar. TCP é <em>stateful</em> (com estado): abre uma conexão, numera os bytes, reenvia o que se perde. UDP é <em>stateless</em> (sem estado): cada pacote (datagrama) é independente, sem conexão nem garantia de entrega.</span><span class="en">A <em>session</em> is the state both ends keep about an ongoing conversation: who the other side is, what has been sent, what is still unacknowledged. TCP is <em>stateful</em>: it opens a connection, numbers the bytes, and resends what gets lost. UDP is <em>stateless</em>: each packet (datagram) is independent, with no connection and no delivery guarantee.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 296" role="img" aria-label="TCP com estado / TCP, stateful" style="min-width:560px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 305" role="img" aria-label="TCP com estado / TCP, stateful" style="min-width:560px">
 <rect x="10" y="10" width="110" height="40" rx="4" class="ln fillsoft"/>
-<text x="65.0" y="34.0" class="pt " text-anchor="middle">cliente</text><text x="65.0" y="34.0" class="en " text-anchor="middle">client</text>
+<text x="65" y="35" class="pt" text-anchor="middle">cliente</text><text x="65" y="35" class="en" text-anchor="middle">client</text>
 <rect x="400" y="10" width="110" height="40" rx="4" class="ln fillsoft"/>
-<text x="455.0" y="34.0" class="pt " text-anchor="middle">servidor</text><text x="455.0" y="34.0" class="en " text-anchor="middle">server</text>
-<path d="M65 60L455 60" class="ln"/><path d="M447.8 63.5L455 60L447.8 56.5" class="ln"/>
-<text x="260" y="54" class="mono" text-anchor="middle">SYN</text>
-<path d="M455 110L65 110" class="ln"/><path d="M72.2 106.5L65 110L72.2 113.5" class="ln"/>
-<text x="260" y="104" class="mono" text-anchor="middle">SYN-ACK</text>
-<path d="M65 160L455 160" class="ln"/><path d="M447.8 163.5L455 160L447.8 156.5" class="ln"/>
-<text x="260" y="154" class="mono" text-anchor="middle">ACK</text>
-<text x="260" y="40" class="pt mut" text-anchor="middle">handshake de 3 vias (abre a sessão)</text><text x="260" y="40" class="en mut" text-anchor="middle">3-way handshake (opens the session)</text>
-<path d="M10 190L510 190" class="ln dash"/>
-<path d="M65 220L455 220" class="ln"/><path d="M447.8 223.5L455 220L447.8 216.5" class="ln"/>
-<text x="260" y="212" class="pt mono" text-anchor="middle">dados, com número de sequência</text><text x="260" y="212" class="en mono" text-anchor="middle">data, with a sequence number</text>
-<path d="M455 250L65 250" class="ln"/><path d="M72.2 246.5L65 250L72.2 253.5" class="ln"/>
-<text x="260" y="242" class="pt mono" text-anchor="middle">ACK: "recebi até aqui"</text><text x="260" y="242" class="en mono" text-anchor="middle">ACK: "got this far"</text>
-<text x="10" y="280" class="pt mut">Se um ACK não chega, o remetente reenvia: é isso que torna o TCP confiável e "com estado".</text><text x="10" y="280" class="en mut">If an ACK does not arrive, the sender resends: that is what makes TCP reliable and "stateful".</text>
+<text x="455" y="35" class="pt" text-anchor="middle">servidor</text><text x="455" y="35" class="en" text-anchor="middle">server</text>
+<path d="M65 50L65 265" class="ln dash"/>
+<path d="M455 50L455 265" class="ln dash"/>
+<text x="260" y="74" class="pt mut" text-anchor="middle">handshake de 3 vias (abre a sessão)</text><text x="260" y="74" class="en mut" text-anchor="middle">3-way handshake (opens the session)</text>
+<path d="M65 108L455 108" class="ln"/><path d="M448.2 104.7L455 108L448.2 111.3" class="ln"/>
+<text x="260" y="102" class="mono" text-anchor="middle">SYN</text>
+<path d="M455 142L65 142" class="ln"/><path d="M71.8 145.3L65 142L71.8 138.7" class="ln"/>
+<text x="260" y="136" class="mono" text-anchor="middle">SYN-ACK</text>
+<path d="M65 176L455 176" class="ln"/><path d="M448.2 172.7L455 176L448.2 179.3" class="ln"/>
+<text x="260" y="170" class="mono" text-anchor="middle">ACK</text>
+<path d="M10 196L510 196" class="ln dash"/>
+<path d="M65 226L455 226" class="ln"/><path d="M448.2 222.7L455 226L448.2 229.3" class="ln"/>
+<text x="260" y="220" class="pt mono" text-anchor="middle">dados, com número de sequência</text><text x="260" y="220" class="en mono" text-anchor="middle">data, with a sequence number</text>
+<path d="M455 256L65 256" class="ln"/><path d="M71.8 259.3L65 256L71.8 252.7" class="ln"/>
+<text x="260" y="250" class="pt mono" text-anchor="middle">ACK: "recebi até aqui"</text><text x="260" y="250" class="en mono" text-anchor="middle">ACK: "got this far"</text>
+<text x="10" y="290" class="pt mut" text-anchor="start">Se um ACK não chega, o remetente reenvia: é isso que torna o TCP confiável e "com estado".</text><text x="10" y="290" class="en mut" text-anchor="start">If an ACK does not arrive, the sender resends: that is what makes TCP reliable and "stateful".</text>
 </svg></div><figcaption><span class="pt">TCP: a sessão existe nos dois lados desde o handshake até o FIN (encerramento).</span><span class="en">TCP: the session exists on both ends from the handshake until the FIN (close).</span></figcaption></figure>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 180" role="img" aria-label="UDP sem estado / UDP, stateless" style="min-width:560px">
-<rect x="10" y="60" width="110" height="40" rx="4" class="ln fillsoft"/>
-<text x="65.0" y="84.0" class="pt " text-anchor="middle">cliente</text><text x="65.0" y="84.0" class="en " text-anchor="middle">client</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 200" role="img" aria-label="UDP sem estado / UDP, stateless" style="min-width:560px">
+<rect x="10" y="20" width="110" height="130" rx="4" class="ln fillsoft"/>
+<text x="65" y="89" class="pt" text-anchor="middle">cliente</text><text x="65" y="89" class="en" text-anchor="middle">client</text>
 <rect x="400" y="20" width="110" height="40" rx="4" class="ln fillsoft"/>
-<text x="455.0" y="44.0" class="pt " text-anchor="middle">servidor DNS</text><text x="455.0" y="44.0" class="en " text-anchor="middle">DNS server</text>
-<rect x="400" y="100" width="110" height="40" rx="4" class="ln fillsoft"/>
-<text x="455.0" y="124.0" class="pt " text-anchor="middle">servidor NTP</text><text x="455.0" y="124.0" class="en " text-anchor="middle">NTP server</text>
-<path d="M120 75L400 40" class="ln"/><path d="M393.3 44.3L400 40L392.4 37.4" class="ln"/>
-<text x="260" y="50" class="pt mono" text-anchor="middle">datagrama 1 (consulta)</text><text x="260" y="50" class="en mono" text-anchor="middle">datagram 1 (query)</text>
-<path d="M400 50L120 85" class="ln"/><path d="M126.7 80.7L120 85L127.6 87.6" class="ln"/>
-<text x="260" y="86" class="pt mono" text-anchor="middle">datagrama 2 (resposta)</text><text x="260" y="86" class="en mono" text-anchor="middle">datagram 2 (response)</text>
-<path d="M120 95L400 120" class="ln"/><path d="M392.5 122.8L400 120L393.1 115.9" class="ln"/>
-<text x="260" y="150" class="pt mut" text-anchor="middle">cada datagrama é independente: sem conexão, sem reenvio automático</text><text x="260" y="150" class="en mut" text-anchor="middle">each datagram is independent: no connection, no automatic resend</text>
+<text x="455" y="45" class="pt" text-anchor="middle">servidor DNS</text><text x="455" y="45" class="en" text-anchor="middle">DNS server</text>
+<rect x="400" y="110" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="455" y="135" class="pt" text-anchor="middle">servidor NTP</text><text x="455" y="135" class="en" text-anchor="middle">NTP server</text>
+<path d="M120 34L400 34" class="ln"/><path d="M393.2 30.7L400 34L393.2 37.3" class="ln"/>
+<text x="260" y="28" class="pt mono" text-anchor="middle">datagrama 1 (consulta)</text><text x="260" y="28" class="en mono" text-anchor="middle">datagram 1 (query)</text>
+<path d="M400 54L120 54" class="ln"/><path d="M126.8 57.3L120 54L126.8 50.7" class="ln"/>
+<text x="260" y="72" class="pt mono" text-anchor="middle">datagrama 2 (resposta)</text><text x="260" y="72" class="en mono" text-anchor="middle">datagram 2 (response)</text>
+<path d="M120 128L400 128" class="ln"/><path d="M393.2 124.7L400 128L393.2 131.3" class="ln"/>
+<text x="260" y="122" class="pt mono" text-anchor="middle">datagrama 3 (hora?)</text><text x="260" y="122" class="en mono" text-anchor="middle">datagram 3 (time?)</text>
+<text x="10" y="185" class="pt mut" text-anchor="start">cada datagrama é independente: sem conexão, sem reenvio automático</text><text x="10" y="185" class="en mut" text-anchor="start">each datagram is independent: no connection, no automatic resend</text>
 </svg></div><figcaption><span class="pt">UDP: sem sessão. Quem precisa de confiabilidade (como DNS às vezes) cuida disso na camada de cima.</span><span class="en">UDP: no session. Whoever needs reliability (like DNS sometimes) handles it a layer up.</span></figcaption></figure>
 <h3><span class="pt">Por que isso importa na prática</span><span class="en">Why this matters in practice</span></h3>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Conceito</span><span class="en">Concept</span></th><th><span class="pt">O que significa</span><span class="en">What it means</span></th></tr></thead><tbody><tr><td><span class="pt">Firewall stateful</span><span class="en">Stateful firewall</span></td><td><span class="pt">lembra as conexões TCP que você abriu e libera as respostas sozinho (<code>ct state established</code> no nftables)</span><span class="en">remembers the TCP connections you opened and lets the replies through on its own (<code>ct state established</code> in nftables)</span></td></tr><tr><td><span class="pt">NAT e conntrack</span><span class="en">NAT and conntrack</span></td><td><span class="pt">seu roteador doméstico guarda uma tabela de sessões para saber a quem devolver cada resposta</span><span class="en">your home router keeps a session table to know whom to return each reply to</span></td></tr><tr><td><span class="pt">Por que UDP "vaza" menos pelo NAT</span><span class="en">Why UDP "leaks" less through NAT</span></td><td><span class="pt">sem sessão formal, o NAT usa um timeout curto; é por isso que WireGuard (UDP) manda pacotes de keepalive</span><span class="en">with no formal session, NAT uses a short timeout; that is why WireGuard (UDP) sends keepalive packets</span></td></tr><tr><td><span class="pt">Balanceador de carga "sticky"</span><span class="en">"Sticky" load balancer</span></td><td><span class="pt">precisa lembrar a sessão para mandar sempre o mesmo cliente ao mesmo servidor</span><span class="en">needs to remember the session to always send the same client to the same server</span></td></tr></tbody></table></div>
@@ -261,21 +264,20 @@ nmap localhost                       <span class="tok-c"># as outras portas do H
 <h2 id="ssh"><span class="pt">SSH como ferramenta de rede</span><span class="en">SSH as a network tool</span></h2>
 
 <p><span class="pt">A nota de Linux já cobre chaves e <code>sshd_config</code>. Aqui o foco é usar o SSH como <em>ferramenta de rede</em>: um túnel cifrado que você pode usar para alcançar serviços que, de outro jeito, não exporia.</span><span class="en">The Linux note already covers keys and <code>sshd_config</code>. Here the focus is using SSH as a <em>network tool</em>: an encrypted tunnel you can use to reach services that would otherwise not be exposed.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 190" role="img" aria-label="Túnel SSH local / Local SSH tunnel" style="min-width:620px">
-<rect x="10" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
-<text x="70.0" y="89.0" class="pt " text-anchor="middle">seu notebook</text><text x="70.0" y="89.0" class="en " text-anchor="middle">your laptop</text>
-<rect x="260" y="60" width="140" height="50" rx="4" class="ln"/>
-<text x="330.0" y="89.0" class="pt " text-anchor="middle">servidor (SSH)</text><text x="330.0" y="89.0" class="en " text-anchor="middle">server (SSH)</text>
-<rect x="530" y="10" width="140" height="50" rx="4" class="ln fillsoft"/>
-<text x="600.0" y="32.0" class="pt " text-anchor="middle">banco :5432</text><text x="600.0" y="32.0" class="en " text-anchor="middle">database :5432</text>
-<text x="600.0" y="48.0" class="pt mut mono" text-anchor="middle">só localhost</text><text x="600.0" y="48.0" class="en mut mono" text-anchor="middle">localhost only</text>
-<path d="M130 85L260 85" class="ln"/><path d="M252.8 88.5L260 85L252.8 81.5" class="ln"/>
-<text x="195" y="75" class="pt mono" text-anchor="middle">túnel :5432</text><text x="195" y="75" class="en mono" text-anchor="middle">tunnel :5432</text>
-<path d="M400 40L530 40" class="ln dash"/>
-<text x="465" y="30" class="mut" text-anchor="middle">local</text>
-<path d="M400 70L530 40" class="ln"/><path d="M523.8 45.0L530 40L522.2 38.2" class="ln"/>
-<text x="10" y="140" class="pt mono">ssh -L 5432:localhost:5432 ana@servidor</text><text x="10" y="140" class="en mono">ssh -L 5432:localhost:5432 ana@server</text>
-<text x="10" y="165" class="pt mut">agora localhost:5432 no seu notebook é o banco do servidor</text><text x="10" y="165" class="en mut">now localhost:5432 on your laptop is the server’s database</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 185" role="img" aria-label="Túnel SSH local / Local SSH tunnel" style="min-width:620px">
+<rect x="10" y="40" width="130" height="50" rx="4" class="ln fillsoft"/>
+<text x="75" y="69" class="pt" text-anchor="middle">seu notebook</text><text x="75" y="69" class="en" text-anchor="middle">your laptop</text>
+<rect x="260" y="40" width="150" height="50" rx="4" class="ln"/>
+<text x="335" y="69" class="pt" text-anchor="middle">servidor (SSH)</text><text x="335" y="69" class="en" text-anchor="middle">server (SSH)</text>
+<rect x="530" y="35" width="150" height="60" rx="4" class="ln fillsoft"/>
+<text x="605" y="60" class="pt" text-anchor="middle">banco :5432</text><text x="605" y="60" class="en" text-anchor="middle">database :5432</text>
+<text x="605" y="78" class="pt mut mono" text-anchor="middle">só localhost</text><text x="605" y="78" class="en mut mono" text-anchor="middle">localhost only</text>
+<path d="M140 65L260 65" class="ln"/><path d="M253.2 61.7L260 65L253.2 68.3" class="ln"/>
+<text x="200" y="56" class="pt mono" text-anchor="middle">túnel :5432</text><text x="200" y="56" class="en mono" text-anchor="middle">tunnel :5432</text>
+<path d="M410 65L530 65" class="ln dash"/><path d="M523.2 61.7L530 65L523.2 68.3" class="ln"/>
+<text x="470" y="56" class="mut" text-anchor="middle">local</text>
+<text x="10" y="140" class="pt mono" text-anchor="start">ssh -L 5432:localhost:5432 ana@servidor</text><text x="10" y="140" class="en mono" text-anchor="start">ssh -L 5432:localhost:5432 ana@server</text>
+<text x="10" y="165" class="pt mut" text-anchor="start">agora localhost:5432 no seu notebook é o banco do servidor</text><text x="10" y="165" class="en mut" text-anchor="start">now localhost:5432 on your laptop is the server’s database</text>
 </svg></div><figcaption><span class="pt">Encaminhamento local (<code>-L</code>): o que você manda para uma porta sua sai do outro lado do túnel.</span><span class="en">Local forwarding (<code>-L</code>): what you send to a port of yours comes out the other end of the tunnel.</span></figcaption></figure>
 <h3><span class="pt">Exercício: um túnel de verdade</span><span class="en">Exercise: a real tunnel</span></h3>
 <pre><code><span class="tok-c"># no "servidor" (pode ser uma segunda VM, ou um contêiner com sshd):</span>
