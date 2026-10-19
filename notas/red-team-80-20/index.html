@@ -132,33 +132,31 @@
 <p><span class="pt">"Red team" é o time que ataca de propósito, com contrato e limites claros, para encontrar falhas antes de quem não tem boas intenções encontrar. Esta nota é um 80/20 do que esse time faz: as fases de um ataque, uma ferramenta ou técnica típica de cada uma, e — tão importante quanto — a defesa que neutraliza cada uma delas. Tudo aqui roda contra alvos de laboratório que você mesmo sobe em Docker, nunca contra sistemas de terceiros.</span><span class="en">"Red team" is the group that attacks on purpose, under contract and clear boundaries, to find flaws before someone without good intentions does. This note is an 80/20 of what that group does: the phases of an attack, a typical tool or technique for each, and — just as important — the defence that neutralises each one. Everything here runs against lab targets you spin up yourself in Docker, never against someone else's systems.</span></p>
 <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Isto não é um manual de invasão: é um mapa, no nível de uma certificação como CompTIA Security+/PenTest+ ou de um curso introdutório de OSCP/eJPT. As técnicas citadas são de conhecimento público (MITRE ATT&CK, OWASP) e os laboratórios usam alvos feitos de propósito para serem atacados (DVWA, Metasploitable, Juice Shop). Testar qualquer uma delas fora de um laboratório seu, ou sem um contrato de pentest assinado, pode ser crime — mesmo "só para ver se funciona".</span><span class="en">This is not a how-to-break-in manual: it is a map, at the level of a CompTIA Security+/PenTest+ certification or an introductory OSCP/eJPT course. The techniques named are public knowledge (MITRE ATT&CK, OWASP) and the labs use targets built on purpose to be attacked (DVWA, Metasploitable, Juice Shop). Trying any of this outside a lab of your own, or without a signed pentest contract, can be a crime — even "just to see if it works".</span></div>
 <h3><span class="pt">O ciclo de um ataque</span><span class="en">The attack lifecycle</span></h3>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 120" role="img" aria-label="A cadeia de ataque / The attack chain" style="min-width:700px">
-<rect x="10" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="54.0" y="42.0" class="" text-anchor="middle">Recon</text>
-<rect x="110" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="154.0" y="42.0" class="pt " text-anchor="middle">Acesso
-inicial</text><text x="154.0" y="42.0" class="en " text-anchor="middle">Initial
-access</text>
-<path d="M98 38L110 38" class="ln"/><path d="M102.8 41.5L110 38L102.8 34.5" class="ln"/>
-<rect x="210" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="254.0" y="42.0" class="pt " text-anchor="middle">Execução</text><text x="254.0" y="42.0" class="en " text-anchor="middle">Execution</text>
-<path d="M198 38L210 38" class="ln"/><path d="M202.8 41.5L210 38L202.8 34.5" class="ln"/>
-<rect x="310" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="354.0" y="42.0" class="pt " text-anchor="middle">Escalada</text><text x="354.0" y="42.0" class="en " text-anchor="middle">Privilege
-escalation</text>
-<path d="M298 38L310 38" class="ln"/><path d="M302.8 41.5L310 38L302.8 34.5" class="ln"/>
-<rect x="410" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="454.0" y="42.0" class="pt " text-anchor="middle">Persistência</text><text x="454.0" y="42.0" class="en " text-anchor="middle">Persistence</text>
-<path d="M398 38L410 38" class="ln"/><path d="M402.8 41.5L410 38L402.8 34.5" class="ln"/>
-<rect x="510" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="554.0" y="42.0" class="pt " text-anchor="middle">Movimento
-lateral</text><text x="554.0" y="42.0" class="en " text-anchor="middle">Lateral
-movement</text>
-<path d="M498 38L510 38" class="ln"/><path d="M502.8 41.5L510 38L502.8 34.5" class="ln"/>
-<rect x="610" y="10" width="88" height="56" rx="4" class="ln fillsoft"/>
-<text x="654.0" y="42.0" class="pt " text-anchor="middle">Exfiltração</text><text x="654.0" y="42.0" class="en " text-anchor="middle">Exfiltration</text>
-<path d="M598 38L610 38" class="ln"/><path d="M602.8 41.5L610 38L602.8 34.5" class="ln"/>
-<text x="10" y="100" class="pt mut">Baseado nas táticas do MITRE ATT&CK — o catálogo público de técnicas usado por ofensiva e defesa.</text><text x="10" y="100" class="en mut">Based on MITRE ATT&CK tactics — the public technique catalogue used by both offence and defence.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 812 120" role="img" aria-label="A cadeia de ataque / The attack chain" style="min-width:700px">
+<rect x="10" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="58" y="43" class="" text-anchor="middle">Recon</text>
+<path d="M106 38L126 38" class="ln"/><path d="M119.2 34.7L126 38L119.2 41.3" class="ln"/>
+<rect x="126" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="174" y="35" class="pt" text-anchor="middle">Acesso</text><text x="174" y="35" class="en" text-anchor="middle">Initial</text>
+<text x="174" y="52" class="pt" text-anchor="middle">inicial</text><text x="174" y="52" class="en" text-anchor="middle">access</text>
+<path d="M222 38L242 38" class="ln"/><path d="M235.2 34.7L242 38L235.2 41.3" class="ln"/>
+<rect x="242" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="290" y="43" class="pt" text-anchor="middle">Execução</text><text x="290" y="43" class="en" text-anchor="middle">Execution</text>
+<path d="M338 38L358 38" class="ln"/><path d="M351.2 34.7L358 38L351.2 41.3" class="ln"/>
+<rect x="358" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="406" y="35" class="pt" text-anchor="middle">Escalada de</text><text x="406" y="35" class="en" text-anchor="middle">Privilege</text>
+<text x="406" y="52" class="pt" text-anchor="middle">privilégio</text><text x="406" y="52" class="en" text-anchor="middle">escalation</text>
+<path d="M454 38L474 38" class="ln"/><path d="M467.2 34.7L474 38L467.2 41.3" class="ln"/>
+<rect x="474" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="522" y="43" class="pt" text-anchor="middle">Persistência</text><text x="522" y="43" class="en" text-anchor="middle">Persistence</text>
+<path d="M570 38L590 38" class="ln"/><path d="M583.2 34.7L590 38L583.2 41.3" class="ln"/>
+<rect x="590" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="638" y="35" class="pt" text-anchor="middle">Movimento</text><text x="638" y="35" class="en" text-anchor="middle">Lateral</text>
+<text x="638" y="52" class="pt" text-anchor="middle">lateral</text><text x="638" y="52" class="en" text-anchor="middle">movement</text>
+<path d="M686 38L706 38" class="ln"/><path d="M699.2 34.7L706 38L699.2 41.3" class="ln"/>
+<rect x="706" y="10" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="754" y="43" class="pt" text-anchor="middle">Exfiltração</text><text x="754" y="43" class="en" text-anchor="middle">Exfiltration</text>
+<text x="10" y="100" class="pt mut" text-anchor="start">Baseado nas táticas do MITRE ATT&amp;CK — o catálogo público de técnicas usado por ofensiva e defesa.</text><text x="10" y="100" class="en mut" text-anchor="start">Based on MITRE ATT&amp;CK tactics — the public technique catalogue used by both offence and defence.</text>
 </svg></div><figcaption><span class="pt">Cada seção desta nota cobre um elo desta cadeia, com o conceito, um laboratório seguro e a defesa.</span><span class="en">Each section of this note covers one link of this chain, with the concept, a safe lab and the defence.</span></figcaption></figure>
 <h3><span class="pt">O laboratório: tudo em Docker, isolado</span><span class="en">The lab: all in Docker, isolated</span></h3>
 <p><span class="pt">Os exercícios usam três alvos de treino bem conhecidos, cada um feito de propósito para ter falhas: <strong>DVWA</strong> (Damn Vulnerable Web Application), <strong>OWASP Juice Shop</strong> e <strong>Metasploitable2</strong>. Uma rede Docker própria os isola da sua rede real — releia a seção de Docker da nota de segurança e redes antes de começar, se ainda não viu como a rede de contêineres funciona.</span><span class="en">The exercises use three well-known training targets, each built on purpose to have flaws: <strong>DVWA</strong> (Damn Vulnerable Web Application), <strong>OWASP Juice Shop</strong> and <strong>Metasploitable2</strong>. A Docker network of its own isolates them from your real network — re-read the Docker section of the security and networking note first if you have not seen how container networking works.</span></p>
@@ -263,16 +261,17 @@ docker compose exec kali sqlmap -u <span class="tok-s">"http://dvwa/vulnerabilit
 <h2 id="shell"><span class="pt">Do comando ao shell: o que vem depois</span><span class="en">From command to shell: what comes next</span></h2>
 
 <p><span class="pt">Quando uma falha permite executar comandos no servidor (não só ler dados), o próximo passo típico é abrir um <em>shell reverso</em>: o servidor vulnerável se conecta DE VOLTA para uma máquina do atacante, que fica ouvindo numa porta. "Reverso" porque é o alvo que inicia a conexão — o que costuma atravessar firewalls configurados só para bloquear conexões de ENTRADA.</span><span class="en">When a flaw allows running commands on the server (not just reading data), the typical next step is opening a <em>reverse shell</em>: the vulnerable server connects BACK to an attacker machine, which is listening on a port. "Reverse" because the target initiates the connection — which tends to sail through firewalls configured only to block INBOUND connections.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 600 170" role="img" aria-label="Shell reverso / Reverse shell" style="min-width:560px">
-<rect x="10" y="60" width="180" height="60" rx="4" class="ln fillsoft"/>
-<text x="100.0" y="87.0" class="pt " text-anchor="middle">seu "kali" (ouvindo)</text><text x="100.0" y="87.0" class="en " text-anchor="middle">your "kali" (listening)</text>
-<text x="100.0" y="103.0" class="mut mono" text-anchor="middle">nc -lvnp 4444</text>
-<rect x="400" y="60" width="180" height="60" rx="4" class="ln"/>
-<text x="490.0" y="87.0" class="pt " text-anchor="middle">DVWA (vulnerável)</text><text x="490.0" y="87.0" class="en " text-anchor="middle">DVWA (vulnerable)</text>
-<text x="490.0" y="103.0" class="pt mut mono" text-anchor="middle">campo de comando</text><text x="490.0" y="103.0" class="en mut mono" text-anchor="middle">command field</text>
-<path d="M400 90L190 90" class="ln"/><path d="M197.2 86.5L190 90L197.2 93.5" class="ln"/>
-<text x="295" y="80" class="pt mut" text-anchor="middle">← conecta de volta</text><text x="295" y="80" class="en mut" text-anchor="middle">← connects back</text>
-<text x="10" y="150" class="pt mut">O alvo INICIA a conexão para você; muitos firewalls só filtram quem tenta entrar, não quem tenta sair.</text><text x="10" y="150" class="en mut">The target INITIATES the connection to you; many firewalls only filter inbound attempts, not outbound ones.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 600 165" role="img" aria-label="Shell reverso / Reverse shell" style="min-width:560px">
+<rect x="10" y="40" width="200" height="60" rx="4" class="ln fillsoft"/>
+<text x="110" y="66" class="pt" text-anchor="middle">seu "kali" (ouvindo)</text><text x="110" y="66" class="en" text-anchor="middle">your "kali" (listening)</text>
+<text x="110" y="84" class="mut mono" text-anchor="middle">nc -lvnp 4444</text>
+<rect x="400" y="40" width="190" height="60" rx="4" class="ln"/>
+<text x="495" y="66" class="pt" text-anchor="middle">DVWA (vulnerável)</text><text x="495" y="66" class="en" text-anchor="middle">DVWA (vulnerable)</text>
+<text x="495" y="84" class="pt mut mono" text-anchor="middle">campo de comando</text><text x="495" y="84" class="en mut mono" text-anchor="middle">command field</text>
+<path d="M400 70L210 70" class="ln"/><path d="M216.8 73.3L210 70L216.8 66.7" class="ln"/>
+<text x="305" y="60" class="pt mut" text-anchor="middle">conecta de volta</text><text x="305" y="60" class="en mut" text-anchor="middle">connects back</text>
+<text x="10" y="130" class="pt mut" text-anchor="start">O alvo INICIA a conexão para você; muitos firewalls só filtram</text><text x="10" y="130" class="en mut" text-anchor="start">The target INITIATES the connection to you; many firewalls only filter</text>
+<text x="10" y="148" class="pt mut" text-anchor="start">quem tenta entrar, não quem tenta sair.</text><text x="10" y="148" class="en mut" text-anchor="start">inbound attempts, not outbound ones.</text>
 </svg></div><figcaption><span class="pt">A lógica de um shell reverso: o "ataque" é convencer o alvo a rodar o comando de conexão.</span><span class="en">The logic of a reverse shell: the "attack" is convincing the target to run the connect-back command.</span></figcaption></figure>
 <h3><span class="pt">Exercício: do campo de comando ao shell</span><span class="en">Exercise: from the command field to a shell</span></h3>
 <pre><code><span class="tok-c"># 1. no seu "kali" (laboratório): abra um ouvinte</span>
