@@ -86,7 +86,7 @@
 
   /* Layout */
   --header-top: 64px;
-  --header-sub: 64px;
+  --header-sub: 0px;
   --sidebar-width: 320px;
   --toc-width: 240px;
   --content-max: 46rem;
@@ -494,7 +494,7 @@ samp {
 }
 
 /* ==========================================================================
-   Header: two tiers (global bar, then a section bar), sticky like the docs
+   Header: one sticky bar
    ========================================================================== */
 
 .site-header {
@@ -1768,7 +1768,7 @@ html:not(.js-enabled) .requires-js {
 
 @media (max-width: 900px) {
   :root {
-    --header-sub: 56px;
+    --header-sub: 0px;
   }
 
   .sidebar-toggle {

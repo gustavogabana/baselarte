@@ -31,8 +31,8 @@
   <meta name="twitter:description" data-i18n-attributes="content:tf.metaDescription" content="The 20% of Terraform that covers 80% of the work: workflow, HCL, state, modules, CI, and a complete AWS walkthrough with remote state on S3, VPC, EC2, IAM and S3.">
 
   <!-- Icons & manifest -->
-  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
-  <link rel="icon" href="../../favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="../../favicon.svg?v=3" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=3" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
 
@@ -69,21 +69,6 @@
         </button>
       </div>
     </div>
-    <div class="header-sub">
-      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
-      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
-        <a href="../terraform/index.html" aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
-        <a href="../aws/index.html">AWS</a>
-        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
-        <details class="nav-menu">
-          <summary data-i18n="nav.menu">All notes</summary>
-          <ul class="nav-menu-list"><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li><li><a href="../aws/index.html">AWS</a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../terraform/index.html" aria-current="page"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li><li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li></ul>
-        </details>
-      </nav>
-      <div class="header-actions">
-        <a class="btn btn-primary" href="../index.html" data-i18n="nav.index">Index</a>
-      </div>
-    </div>
   </header>
 
   <main id="main">
@@ -100,6 +85,7 @@
         <ul data-sidebar-group>
           <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
           <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
         </ul>
         <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
         <ul data-sidebar-group>
@@ -141,32 +127,30 @@
 
 <p><span class="pt">Terraform é uma ferramenta de <em>infraestrutura como código</em> (IaC): em vez de clicar no console da nuvem, você <em>descreve</em> em arquivos de texto o que quer que exista (redes, servidores, buckets, permissões) e o Terraform descobre o que precisa criar, alterar ou apagar para a realidade ficar igual à descrição. A linguagem é a HCL, e o trabalho é feito por <em>providers</em> (plugins) que falam com a API de cada serviço: AWS, Azure, Google Cloud, Cloudflare, GitHub, Kubernetes e milhares de outros.</span><span class="en">Terraform is an <em>infrastructure as code</em> (IaC) tool: instead of clicking in the cloud console, you <em>describe</em> in text files what should exist (networks, servers, buckets, permissions) and Terraform works out what to create, change or delete so reality matches the description. The language is HCL, and the work is done by <em>providers</em> (plugins) that talk to each service’s API: AWS, Azure, Google Cloud, Cloudflare, GitHub, Kubernetes and thousands more.</span></p>
 <p><span class="pt">A ideia central é ser <em>declarativo</em>: você diz o <em>destino</em> (“quero 2 subnets e 1 bucket”), não os passos. É como a planta de uma casa: o Terraform compara a planta com a obra e só executa a diferença. Rodar de novo sem mudar nada não faz nada (<em>idempotência</em>).</span><span class="en">The core idea is being <em>declarative</em>: you state the <em>destination</em> (“I want 2 subnets and 1 bucket”), not the steps. It is like a house blueprint: Terraform compares the blueprint with the building and only carries out the difference. Running it again with no changes does nothing (<em>idempotence</em>).</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 236" role="img" aria-label="Ciclo do Terraform / Terraform cycle" style="min-width:560px">
-<rect x="10" y="60" width="110" height="56" rx="4" class="ln fillsoft"/>
-<text x="65.0" y="85.0" class="pt " text-anchor="middle">Código</text><text x="65.0" y="85.0" class="en " text-anchor="middle">Code</text>
-<text x="65.0" y="101.0" class="mut mono" text-anchor="middle">*.tf</text>
-<rect x="170" y="20" width="100" height="44" rx="4" class="ln"/>
-<text x="220.0" y="46.0" class="mono" text-anchor="middle">init</text>
-<rect x="170" y="80" width="100" height="44" rx="4" class="ln brandfill"/>
-<text x="220.0" y="106.0" class="mono" text-anchor="middle">plan</text>
-<rect x="170" y="140" width="100" height="44" rx="4" class="ln"/>
-<text x="220.0" y="166.0" class="mono" text-anchor="middle">apply</text>
-<rect x="320" y="60" width="150" height="56" rx="4" class="ln fillsoft"/>
-<text x="395.0" y="85.0" class="pt " text-anchor="middle">Estado</text><text x="395.0" y="85.0" class="en " text-anchor="middle">State</text>
-<text x="395.0" y="101.0" class="mut mono" text-anchor="middle">terraform.tfstate</text>
-<rect x="520" y="60" width="110" height="56" rx="4" class="ln fillsoft"/>
-<text x="575.0" y="85.0" class="pt " text-anchor="middle">Nuvem</text><text x="575.0" y="85.0" class="en " text-anchor="middle">Cloud</text>
-<text x="575.0" y="101.0" class="pt mut mono" text-anchor="middle">API do provider</text><text x="575.0" y="101.0" class="en mut mono" text-anchor="middle">provider API</text>
-<path d="M120 76L170 42" class="ln"/><path d="M166.0 48.9L170 42L162.1 43.2" class="ln"/>
-<path d="M220 64L220 80" class="ln"/><path d="M216.5 72.8L220 80L223.5 72.8" class="ln"/>
-<path d="M220 124L220 140" class="ln"/><path d="M216.5 132.8L220 140L223.5 132.8" class="ln"/>
-<path d="M270 102L320 92" class="ln"/><path d="M313.6 96.8L320 92L312.3 90.0" class="ln"/>
-<path d="M270 162L575 116" class="ln"/><path d="M568.4 120.5L575 116L567.4 113.6" class="ln"/>
-<path d="M470 88L520 88" class="ln"/><path d="M512.8 91.5L520 88L512.8 84.5" class="ln"/>
-<path d="M520 98L470 98" class="ln"/><path d="M477.2 94.5L470 98L477.2 101.5" class="ln"/>
-<text x="575" y="150" class="pt mut" text-anchor="middle">apply cria/altera</text><text x="575" y="150" class="en mut" text-anchor="middle">apply creates/edits</text>
-<text x="10" y="204" class="pt mut">init baixa providers e módulos · plan mostra a diferença sem alterar nada.</text><text x="10" y="204" class="en mut">init downloads providers and modules · plan shows the difference without changing anything.</text>
-<text x="10" y="224" class="pt mut">apply executa as ações e grava o novo estado.</text><text x="10" y="224" class="en mut">apply carries out the actions and records the new state.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 236" role="img" aria-label="Ciclo do Terraform / Terraform cycle" style="min-width:560px">
+<rect x="10" y="10" width="110" height="56" rx="4" class="ln fillsoft"/>
+<text x="65" y="35" class="pt" text-anchor="middle">Código</text><text x="65" y="35" class="en" text-anchor="middle">Code</text>
+<text x="65" y="53" class="mut mono" text-anchor="middle">*.tf</text>
+<rect x="170" y="20" width="100" height="36" rx="4" class="ln"/>
+<text x="220" y="43" class="mono" text-anchor="middle">init</text>
+<rect x="320" y="20" width="100" height="36" rx="4" class="ln brandfill"/>
+<text x="370" y="43" class="mono" text-anchor="middle">plan</text>
+<rect x="470" y="20" width="100" height="36" rx="4" class="ln"/>
+<text x="520" y="43" class="mono" text-anchor="middle">apply</text>
+<path d="M120 38L170 38" class="ln"/><path d="M163.2 34.7L170 38L163.2 41.3" class="ln"/>
+<path d="M270 38L320 38" class="ln"/><path d="M313.2 34.7L320 38L313.2 41.3" class="ln"/>
+<path d="M420 38L470 38" class="ln"/><path d="M463.2 34.7L470 38L463.2 41.3" class="ln"/>
+<rect x="285" y="110" width="170" height="56" rx="4" class="ln fillsoft"/>
+<text x="370" y="135" class="pt" text-anchor="middle">Estado</text><text x="370" y="135" class="en" text-anchor="middle">State</text>
+<text x="370" y="153" class="mut mono" text-anchor="middle">terraform.tfstate</text>
+<rect x="500" y="110" width="140" height="56" rx="4" class="ln fillsoft"/>
+<text x="570" y="135" class="pt" text-anchor="middle">Nuvem</text><text x="570" y="135" class="en" text-anchor="middle">Cloud</text>
+<text x="570" y="153" class="pt mut mono" text-anchor="middle">API do provider</text><text x="570" y="153" class="en mut mono" text-anchor="middle">provider API</text>
+<path d="M370 56L370 110" class="ln"/><path d="M373.3 103.2L370 110L366.7 103.2" class="ln"/>
+<path d="M520 56L570 110" class="ln"/><path d="M567.8 102.8L570 110L563.0 107.3" class="ln"/>
+<path d="M500 138L455 138" class="ln"/><path d="M461.8 141.3L455 138L461.8 134.7" class="ln"/>
+<text x="10" y="200" class="pt mut" text-anchor="start">init baixa providers e módulos · plan mostra a diferença sem alterar nada.</text><text x="10" y="200" class="en mut" text-anchor="start">init downloads providers and modules · plan shows the difference without changing anything.</text>
+<text x="10" y="220" class="pt mut" text-anchor="start">apply executa as ações na nuvem e grava o novo estado.</text><text x="10" y="220" class="en mut" text-anchor="start">apply carries out the actions in the cloud and records the new state.</text>
 </svg></div><figcaption><span class="pt">O ciclo do Terraform. O <code>plan</code> é o seu ponto de segurança: leia-o antes de aplicar.</span><span class="en">The Terraform cycle. <code>plan</code> is your safety checkpoint: read it before applying.</span></figcaption></figure>
 <h3><span class="pt">Terraform, OpenTofu, CloudFormation e Pulumi</span><span class="en">Terraform, OpenTofu, CloudFormation and Pulumi</span></h3>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Linguagem</span><span class="en">Language</span></th><th><span class="pt">Alcance</span><span class="en">Scope</span></th><th><span class="pt">Quando escolher</span><span class="en">When to choose</span></th></tr></thead><tbody><tr><td><strong>Terraform</strong> (HashiCorp)</td><td>HCL</td><td><span class="pt">qualquer nuvem e serviço com provider</span><span class="en">any cloud and service with a provider</span></td><td><span class="pt">padrão de mercado, enorme ecossistema; licença BSL desde 2023</span><span class="en">market standard, huge ecosystem; BSL license since 2023</span></td></tr><tr><td><strong>OpenTofu</strong></td><td>HCL</td><td><span class="pt">igual ao Terraform (fork da Linux Foundation, licença MPL)</span><span class="en">same as Terraform (Linux Foundation fork, MPL license)</span></td><td><span class="pt">você precisa de licença aberta; os comandos são quase iguais (<code>tofu</code>)</span><span class="en">you need an open license; commands are nearly identical (<code>tofu</code>)</span></td></tr><tr><td><strong>CloudFormation</strong></td><td>YAML/JSON</td><td><span class="pt">só AWS</span><span class="en">AWS only</span></td><td><span class="pt">tudo na AWS e você quer o estado gerenciado pela própria AWS</span><span class="en">all-in on AWS and you want AWS-managed state</span></td></tr><tr><td><strong>Pulumi</strong></td><td>TypeScript, Python, Go…</td><td><span class="pt">multi-nuvem</span><span class="en">multi-cloud</span></td><td><span class="pt">o time prefere linguagem de programação geral a uma DSL</span><span class="en">the team prefers a general-purpose language to a DSL</span></td></tr></tbody></table></div>
@@ -463,30 +447,29 @@ export TF_VAR_db_password=<span class="tok-s">"$(aws secretsmanager get-secret-v
 <h2 id="modules"><span class="pt">Módulos e ambientes</span><span class="en">Modules and environments</span></h2>
 
 <p><span class="pt">Um <em>módulo</em> é uma pasta com arquivos <code>.tf</code> usada por outro código via bloco <code>module</code>. O diretório onde você roda <code>terraform apply</code> é o <em>módulo raiz</em>; os que ele chama são <em>módulos filhos</em>. Variáveis são as entradas e outputs, as saídas. Módulos vêm de uma pasta local, do Terraform Registry, do Git ou de um bucket.</span><span class="en">A <em>module</em> is a folder of <code>.tf</code> files used by other code through a <code>module</code> block. The directory where you run <code>terraform apply</code> is the <em>root module</em>; the ones it calls are <em>child modules</em>. Variables are the inputs and outputs the results. Modules come from a local folder, the Terraform Registry, Git or a bucket.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 262" role="img" aria-label="Módulo raiz e módulos filhos / Root and child modules" style="min-width:560px">
-<rect x="10" y="30" width="210" height="190" rx="4" class="ln fillsoft"/>
-<text x="115" y="52" class="pt " text-anchor="middle">Módulo raiz</text><text x="115" y="52" class="en " text-anchor="middle">Root module</text>
-<text x="115" y="70" class="mono mut" text-anchor="middle">envs/dev/main.tf</text>
-<text x="26" y="110" class="mono">module "network" {…}</text>
-<text x="26" y="140" class="mono">module "web" {…}</text>
-<text x="26" y="170" class="mono">module "data" {…}</text>
-<rect x="420" y="30" width="210" height="54" rx="4" class="brandfill"/>
-<text x="525" y="52" class="mono brandtext" text-anchor="middle">modules/network</text>
-<text x="525" y="70" class="pt mut" text-anchor="middle">rede: VPC, subnets</text><text x="525" y="70" class="en mut" text-anchor="middle">network: VPC, subnets</text>
-<path d="M220 106L420 46" class="ln"/><path d="M414.1 51.4L420 46L412.1 44.7" class="ln"/>
-<path d="M420 70L220 112" class="ln dash"/><path d="M226.3 107.1L220 112L227.8 113.9" class="ln"/>
-<rect x="420" y="96" width="210" height="54" rx="4" class="brandfill"/>
-<text x="525" y="118" class="mono brandtext" text-anchor="middle">modules/web</text>
-<text x="525" y="136" class="pt mut" text-anchor="middle">servidores e SG</text><text x="525" y="136" class="en mut" text-anchor="middle">servers and SG</text>
-<path d="M220 136L420 112" class="ln"/><path d="M413.3 116.3L420 112L412.4 109.4" class="ln"/>
-<path d="M420 136L220 142" class="ln dash"/><path d="M227.1 138.3L220 142L227.3 145.3" class="ln"/>
-<rect x="420" y="162" width="210" height="54" rx="4" class="brandfill"/>
-<text x="525" y="184" class="mono brandtext" text-anchor="middle">modules/data</text>
-<text x="525" y="202" class="pt mut" text-anchor="middle">banco e bucket</text><text x="525" y="202" class="en mut" text-anchor="middle">database and bucket</text>
-<path d="M220 166L420 178" class="ln"/><path d="M412.6 181.0L420 178L413.0 174.1" class="ln"/>
-<path d="M420 202L220 172" class="ln dash"/><path d="M227.6 169.6L220 172L226.6 176.5" class="ln"/>
-<text x="320" y="76" class="pt mut" text-anchor="middle">variáveis →</text><text x="320" y="76" class="en mut" text-anchor="middle">variables →</text>
-<text x="320" y="246" class="pt mut" text-anchor="middle">← outputs (ex.: module.network.public_subnets)</text><text x="320" y="246" class="en mut" text-anchor="middle">← outputs (e.g. module.network.public_subnets)</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 262" role="img" aria-label="Módulo raiz e módulos filhos / Root and child modules" style="min-width:560px">
+<rect x="10" y="20" width="210" height="190" rx="4" class="ln fillsoft"/>
+<text x="115" y="44" class="pt" text-anchor="middle">Módulo raiz</text><text x="115" y="44" class="en" text-anchor="middle">Root module</text>
+<text x="115" y="62" class="mut mono" text-anchor="middle">envs/dev/main.tf</text>
+<text x="26" y="110" class="mono" text-anchor="start">module "network" {…}</text>
+<text x="26" y="140" class="mono" text-anchor="start">module "web" {…}</text>
+<text x="26" y="170" class="mono" text-anchor="start">module "data" {…}</text>
+<rect x="420" y="20" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="42" class="mono brandtext" text-anchor="middle">modules/network</text>
+<text x="525" y="60" class="pt mut" text-anchor="middle">rede: VPC, subnets</text><text x="525" y="60" class="en mut" text-anchor="middle">network: VPC, subnets</text>
+<path d="M220 100L420 36" class="ln"/><path d="M412.6 35.0L420 36L414.6 41.2" class="ln"/>
+<path d="M420 58L220 118" class="ln dash"/><path d="M227.4 119.2L220 118L225.5 112.9" class="ln"/>
+<rect x="420" y="86" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="108" class="mono brandtext" text-anchor="middle">modules/web</text>
+<text x="525" y="126" class="pt mut" text-anchor="middle">servidores e SG</text><text x="525" y="126" class="en mut" text-anchor="middle">servers and SG</text>
+<path d="M220 130L420 102" class="ln"/><path d="M412.9 99.7L420 102L413.8 106.2" class="ln"/>
+<path d="M420 124L220 148" class="ln dash"/><path d="M227.1 150.4L220 148L226.3 144.0" class="ln"/>
+<rect x="420" y="152" width="210" height="54" rx="4" class="brandfill"/>
+<text x="525" y="174" class="mono brandtext" text-anchor="middle">modules/data</text>
+<text x="525" y="192" class="pt mut" text-anchor="middle">banco e bucket</text><text x="525" y="192" class="en mut" text-anchor="middle">database and bucket</text>
+<path d="M220 160L420 168" class="ln"/><path d="M413.4 164.5L420 168L413.1 171.0" class="ln"/>
+<path d="M420 190L220 178" class="ln dash"/><path d="M226.5 181.7L220 178L226.9 175.1" class="ln"/>
+<text x="320" y="248" class="pt mut" text-anchor="middle">→ variáveis (linha cheia) · ← outputs (tracejada), ex.: module.network.public_subnets</text><text x="320" y="248" class="en mut" text-anchor="middle">→ variables (solid) · ← outputs (dashed), e.g. module.network.public_subnets</text>
 </svg></div><figcaption><span class="pt">O módulo raiz alimenta os filhos com variáveis e consome os outputs deles.</span><span class="en">The root module feeds the children with variables and consumes their outputs.</span></figcaption></figure>
 <pre><code>infra/
 ├── modules/

@@ -31,8 +31,8 @@
   <meta name="twitter:description" data-i18n-attributes="content:wa.metaDescription" content="HTTPS and security headers (HSTS, CSP with nonces, building your own middleware, Next.js and Nginx), cookie attributes, stateful sessions vs. stateless JWT (access + refresh tokens), CSRF, SQL injection and XSS from the builder's side, and the new frontier: AI agent security (prompt injection, excessive agency, MCP risks), per OWASP.">
 
   <!-- Icons & manifest -->
-  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
-  <link rel="icon" href="../../favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="../../favicon.svg?v=3" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=3" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
 
@@ -69,21 +69,6 @@
         </button>
       </div>
     </div>
-    <div class="header-sub">
-      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
-      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
-        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
-        <a href="../aws/index.html">AWS</a>
-        <a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a>
-        <details class="nav-menu">
-          <summary data-i18n="nav.menu">All notes</summary>
-          <ul class="nav-menu-list"><li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li><li><a href="../aws/index.html">AWS</a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li><li><a href="../web-app-security/index.html" aria-current="page"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li></ul>
-        </details>
-      </nav>
-      <div class="header-actions">
-        <a class="btn btn-primary" href="../index.html" data-i18n="nav.index">Index</a>
-      </div>
-    </div>
   </header>
 
   <main id="main">
@@ -100,6 +85,7 @@
         <ul data-sidebar-group>
           <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
           <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
         </ul>
         <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
         <ul data-sidebar-group>
@@ -359,20 +345,20 @@ curl -sI http://localhost:3000 | grep -iE <span class="tok-s">"strict-transport|
 <h2 id="stateful"><span class="pt">Autenticação stateful: sessões no servidor</span><span class="en">Stateful authentication: server-side sessions</span></h2>
 
 <p><span class="pt">Autenticação <em>stateful</em> (com estado): o servidor guarda, num banco ou cache (Redis é o padrão de mercado), um registro de cada sessão ativa. O cookie carrega só um ID opaco e aleatório — o resto da informação (quem é o usuário, quando expira) fica no servidor.</span><span class="en"><em>Stateful</em> authentication: the server keeps, in a database or cache (Redis is the market standard), a record of each active session. The cookie carries only an opaque, random ID — the rest of the information (who the user is, when it expires) lives on the server.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 680 140" role="img" aria-label="Sessão stateful / Stateful session" style="min-width:620px">
-<rect x="10" y="20" width="140" height="50" rx="4" class="ln fillsoft"/>
-<text x="80.0" y="42.0" class="pt " text-anchor="middle">navegador</text><text x="80.0" y="42.0" class="en " text-anchor="middle">browser</text>
-<text x="80.0" y="58.0" class="mut mono" text-anchor="middle">cookie: sid=a1b2c3</text>
-<rect x="260" y="20" width="140" height="50" rx="4" class="ln"/>
-<text x="330.0" y="49.0" class="pt " text-anchor="middle">servidor</text><text x="330.0" y="49.0" class="en " text-anchor="middle">server</text>
-<rect x="530" y="20" width="140" height="50" rx="4" class="ln fillsoft"/>
-<text x="600.0" y="42.0" class="mono" text-anchor="middle">Redis</text>
-<text x="600.0" y="58.0" class="mut mono" text-anchor="middle">sid → user_id, exp</text>
-<path d="M150 45L260 45" class="ln"/><path d="M252.8 48.5L260 45L252.8 41.5" class="ln"/>
-<path d="M400 45L530 45" class="ln"/><path d="M522.8 48.5L530 45L522.8 41.5" class="ln"/>
-<path d="M530 60L400 60" class="ln"/><path d="M407.2 56.5L400 60L407.2 63.5" class="ln"/>
-<text x="465" y="85" class="pt mut" text-anchor="middle">consulta/confirma</text><text x="465" y="85" class="en mut" text-anchor="middle">look up/confirm</text>
-<text x="10" y="120" class="pt mut">O cookie não tem informação nenhuma por si só: fora de contexto, "a1b2c3" não diz nada. Revogar = apagar a linha no Redis.</text><text x="10" y="120" class="en mut">The cookie has no information on its own: out of context, "a1b2c3" means nothing. Revoking = delete the row in Redis.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 680 150" role="img" aria-label="Sessão stateful / Stateful session" style="min-width:620px">
+<rect x="10" y="20" width="150" height="54" rx="4" class="ln fillsoft"/>
+<text x="85" y="42" class="pt" text-anchor="middle">navegador</text><text x="85" y="42" class="en" text-anchor="middle">browser</text>
+<text x="85" y="60" class="mut mono" text-anchor="middle">cookie: sid=a1b2c3</text>
+<rect x="270" y="20" width="140" height="54" rx="4" class="ln"/>
+<text x="340" y="52" class="pt" text-anchor="middle">servidor</text><text x="340" y="52" class="en" text-anchor="middle">server</text>
+<rect x="520" y="20" width="150" height="54" rx="4" class="ln fillsoft"/>
+<text x="595" y="42" class="mono" text-anchor="middle">Redis</text>
+<text x="595" y="60" class="mut mono" text-anchor="middle">sid → user_id, exp</text>
+<path d="M160 38L270 38" class="ln"/><path d="M263.2 34.7L270 38L263.2 41.3" class="ln"/>
+<path d="M520 38L410 38" class="ln"/><path d="M416.8 41.3L410 38L416.8 34.7" class="ln"/>
+<text x="465" y="64" class="pt mut" text-anchor="middle">consulta/confirma</text><text x="465" y="64" class="en mut" text-anchor="middle">look up/confirm</text>
+<text x="10" y="112" class="pt mut" text-anchor="start">O cookie sozinho não diz nada: fora de contexto, "a1b2c3" não significa nada.</text><text x="10" y="112" class="en mut" text-anchor="start">The cookie alone says nothing: out of context, "a1b2c3" means nothing.</text>
+<text x="10" y="132" class="pt mut" text-anchor="start">Revogar a sessão = apagar a linha no Redis.</text><text x="10" y="132" class="en mut" text-anchor="start">Revoking the session = delete the row in Redis.</text>
 </svg></div><figcaption><span class="pt">A cada requisição, o servidor troca o ID do cookie por dados reais numa consulta.</span><span class="en">On every request, the server exchanges the cookie ID for real data in a lookup.</span></figcaption></figure>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Vantagem</span><span class="en">Advantage</span></th><th><span class="pt">Custo</span><span class="en">Cost</span></th></tr></thead><tbody><tr><td><span class="pt">Revogar é trivial: apague a linha e a sessão morre na hora</span><span class="en">Revoking is trivial: delete the row and the session dies instantly</span></td><td><span class="pt">precisa de um banco/cache compartilhado — escalar horizontalmente exige um Redis central, não memória local</span><span class="en">needs a shared database/cache — scaling horizontally requires a central Redis, not local memory</span></td></tr><tr><td><span class="pt">O cookie não carrega dado nenhum sensível</span><span class="en">The cookie carries no sensitive data at all</span></td><td><span class="pt">toda requisição faz uma consulta extra (mitigável com cache)</span><span class="en">every request makes an extra lookup (mitigable with caching)</span></td></tr></tbody></table></div>
 <h3><span class="pt">Logout, na prática</span><span class="en">Logout, in practice</span></h3>
@@ -387,37 +373,40 @@ POST /logout   -&gt; apaga a chave sid no Redis, expira o cookie no navegador</c
 
 <p><span class="pt">Autenticação <em>stateless</em> (sem estado): em vez de um ID opaco, o servidor assina um token que carrega os dados nele mesmo — tipicamente um <strong>JWT</strong> (JSON Web Token). Qualquer servidor que conheça a chave de assinatura pode validar o token sozinho, sem consultar banco nenhum. É o modelo padrão para APIs e microsserviços, e para SPAs que falam com uma API separada.</span><span class="en"><em>Stateless</em> authentication: instead of an opaque ID, the server signs a token that carries the data inside itself — typically a <strong>JWT</strong> (JSON Web Token). Any server that knows the signing key can validate the token on its own, with no database lookup. It is the standard model for APIs and microservices, and for SPAs talking to a separate API.</span></p>
 <h3><span class="pt">A anatomia de um JWT</span><span class="en">The anatomy of a JWT</span></h3>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 140" role="img" aria-label="Anatomia de um JWT / JWT anatomy" style="min-width:600px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 650 160" role="img" aria-label="Anatomia de um JWT / JWT anatomy" style="min-width:600px">
 <rect x="10" y="10" width="190" height="44" rx="4" class="ln fillsoft"/>
-<text x="105.0" y="36" class="mono" text-anchor="middle">eyJhbGciOiJIUzI1NiJ9</text>
-<text x="105.0" y="70" class="" text-anchor="middle">header</text>
-<text x="105.0" y="88" class="mut" text-anchor="middle">algoritmo, tipo</text>
-<rect x="208" y="10" width="260" height="44" rx="4" class="ln fillsoft"/>
-<text x="338.0" y="36" class="mono" text-anchor="middle">eyJzdWIiOiIxMjMiLCJleHAiOi4uLn0</text>
-<text x="338.0" y="70" class="" text-anchor="middle">payload</text>
-<text x="338.0" y="88" class="mut" text-anchor="middle">claims: sub, exp, roles…</text>
-<rect x="476" y="10" width="160" height="44" rx="4" class="ln fillsoft"/>
-<text x="556.0" y="36" class="mono" text-anchor="middle">SflKxwRJSMe...</text>
-<text x="556.0" y="70" class="pt " text-anchor="middle">assinatura</text><text x="556.0" y="70" class="en " text-anchor="middle">signature</text>
-<text x="556.0" y="88" class="mut" text-anchor="middle">prova que ninguém alterou o resto</text>
-<text x="10" y="120" class="pt mut">header.payload.signature — os dois primeiros são só Base64 (LEGÍVEIS por qualquer um, não cifrados); só a assinatura impede alteração.</text><text x="10" y="120" class="en mut">header.payload.signature — the first two are just Base64 (READABLE by anyone, not encrypted); only the signature prevents tampering.</text>
+<text x="105.0" y="37" class="mono" text-anchor="middle">eyJhbGciOiJIUzI1NiJ9</text>
+<text x="105.0" y="76" class="" text-anchor="middle">header</text>
+<text x="105.0" y="94" class="pt mut" text-anchor="middle">algoritmo, tipo</text><text x="105.0" y="94" class="en mut" text-anchor="middle">algorithm, type</text>
+<rect x="216" y="10" width="260" height="44" rx="4" class="ln fillsoft"/>
+<text x="346.0" y="37" class="mono" text-anchor="middle">eyJzdWIiOiIxMjMiLCJleHAiOi4uLn0</text>
+<text x="346.0" y="76" class="" text-anchor="middle">payload</text>
+<text x="346.0" y="94" class="mut" text-anchor="middle">claims: sub, exp, roles…</text>
+<rect x="482" y="10" width="158" height="44" rx="4" class="ln fillsoft"/>
+<text x="561.0" y="37" class="mono" text-anchor="middle">SflKxwRJSMe...</text>
+<text x="561.0" y="76" class="pt" text-anchor="middle">assinatura</text><text x="561.0" y="76" class="en" text-anchor="middle">signature</text>
+<text x="561.0" y="94" class="pt mut" text-anchor="middle">prova que nada mudou</text><text x="561.0" y="94" class="en mut" text-anchor="middle">proves nothing changed</text>
+<text x="10" y="128" class="pt mut" text-anchor="start">header.payload.signature — os dois primeiros são só Base64 (legíveis por qualquer um).</text><text x="10" y="128" class="en mut" text-anchor="start">header.payload.signature — the first two are just Base64 (readable by anyone).</text>
+<text x="10" y="148" class="pt mut" text-anchor="start">Só a assinatura impede alteração; nada ali é cifrado.</text><text x="10" y="148" class="en mut" text-anchor="start">Only the signature prevents tampering; nothing here is encrypted.</text>
 </svg></div><figcaption><span class="pt">Nunca coloque um segredo no payload de um JWT: qualquer pessoa pode decodificá-lo em jwt.io sem a chave.</span><span class="en">Never put a secret in a JWT's payload: anyone can decode it on jwt.io without the key.</span></figcaption></figure>
 <h3><span class="pt">Access token curto + refresh token longo</span><span class="en">Short access token + long refresh token</span></h3>
 <p><span class="pt">O padrão que resolve o maior problema do modelo stateless (não dá para "apagar" um token já emitido) é usar DOIS tokens com vidas diferentes:</span><span class="en">The pattern that solves stateless's biggest problem (you cannot "delete" an already-issued token) is using TWO tokens with different lifetimes:</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 520 190" role="img" aria-label="Access + refresh / Access + refresh" style="min-width:480px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 540 215" role="img" aria-label="Access + refresh / Access + refresh" style="min-width:500px">
 <rect x="10" y="20" width="210" height="60" rx="4" class="brandfill"/>
-<text x="115.0" y="47.0" class="" text-anchor="middle">access token</text>
-<text x="115.0" y="63.0" class="pt mut mono" text-anchor="middle">minutos · em cada requisição</text><text x="115.0" y="63.0" class="en mut mono" text-anchor="middle">minutes · on every request</text>
-<rect x="300" y="20" width="210" height="60" rx="4" class="ln fillsoft"/>
-<text x="405.0" y="47.0" class="" text-anchor="middle">refresh token</text>
-<text x="405.0" y="63.0" class="pt mut mono" text-anchor="middle">dias/semanas · só para renovar</text><text x="405.0" y="63.0" class="en mut mono" text-anchor="middle">days/weeks · only to renew</text>
-<path d="M220 50L300 50" class="ln dash"/><path d="M292.8 53.5L300 50L292.8 46.5" class="ln"/>
-<text x="260" y="38" class="pt mut" text-anchor="middle">expirou?</text><text x="260" y="38" class="en mut" text-anchor="middle">expired?</text>
-<path d="M405 80L405 120" class="ln"/><path d="M401.5 112.8L405 120L408.5 112.8" class="ln"/>
-<rect x="300" y="120" width="210" height="50" rx="4" class="ln"/>
-<text x="405.0" y="149.0" class="mono" text-anchor="middle">POST /refresh</text>
-<text x="10" y="145" class="pt mut">A resposta traz um access token novo (e, com rotação, um refresh token novo também) —</text><text x="10" y="145" class="en mut">The response carries a new access token (and, with rotation, a new refresh token too) —</text>
-<text x="10" y="163" class="pt mut">veja "rotação" logo abaixo.</text><text x="10" y="163" class="en mut">see "rotation" just below.</text>
+<text x="115" y="46" class="" text-anchor="middle">access token</text>
+<text x="115" y="65" class="pt mut mono" text-anchor="middle">minutos · cada requisição</text><text x="115" y="65" class="en mut mono" text-anchor="middle">minutes · every request</text>
+<rect x="320" y="20" width="210" height="60" rx="4" class="ln fillsoft"/>
+<text x="425" y="46" class="" text-anchor="middle">refresh token</text>
+<text x="425" y="65" class="pt mut mono" text-anchor="middle">dias/semanas · só renova</text><text x="425" y="65" class="en mut mono" text-anchor="middle">days/weeks · renew only</text>
+<path d="M220 50L320 50" class="ln dash"/><path d="M313.2 46.7L320 50L313.2 53.3" class="ln"/>
+<text x="270" y="38" class="pt mut" text-anchor="middle">expirou?</text><text x="270" y="38" class="en mut" text-anchor="middle">expired?</text>
+<path d="M425 80L425 124" class="ln"/><path d="M428.3 117.2L425 124L421.7 117.2" class="ln"/>
+<rect x="320" y="124" width="210" height="46" rx="4" class="ln"/>
+<text x="425" y="152" class="mono" text-anchor="middle">POST /refresh</text>
+<path d="M320 147L220 147" class="ln"/><path d="M226.8 150.3L220 147L226.8 143.7" class="ln"/>
+<rect x="10" y="124" width="210" height="46" rx="4" class="brandfill"/>
+<text x="115" y="152" class="pt" text-anchor="middle">access token novo</text><text x="115" y="152" class="en" text-anchor="middle">new access token</text>
+<text x="10" y="198" class="pt mut" text-anchor="start">Com rotação, a resposta traz também um refresh token novo (veja abaixo).</text><text x="10" y="198" class="en mut" text-anchor="start">With rotation, the response also carries a new refresh token (see below).</text>
 </svg></div><figcaption><span class="pt">O access token vive pouco (o estrago de um vazamento é limitado pelo tempo); o refresh token vive mais, mas só serve para pedir um access token novo.</span><span class="en">The access token lives briefly (the damage from a leak is limited by time); the refresh token lives longer, but only serves to request a new access token.</span></figcaption></figure>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Onde guardar</span><span class="en">Where to store</span></th><th><span class="pt">Risco principal</span><span class="en">Main risk</span></th></tr></thead><tbody><tr><td><span class="pt"><code>localStorage</code>/<code>sessionStorage</code></span><span class="en"><code>localStorage</code>/<code>sessionStorage</code></span></td><td><span class="pt">acessível por QUALQUER script na página — um XSS rouba o token inteiro</span><span class="en">readable by ANY script on the page — one XSS steals the whole token</span></td></tr><tr><td><span class="pt">Cookie <code>HttpOnly</code> + <code>Secure</code> + <code>SameSite=Strict/Lax</code></span><span class="en">Cookie <code>HttpOnly</code> + <code>Secure</code> + <code>SameSite=Strict/Lax</code></span></td><td><span class="pt">invisível a scripts (mitiga XSS), mas exige proteção de CSRF para o endpoint que o lê</span><span class="en">invisible to scripts (mitigates XSS), but needs CSRF protection for the endpoint that reads it</span></td></tr><tr><td><span class="pt">Memória (variável JS, nunca persistida)</span><span class="en">Memory (a JS variable, never persisted)</span></td><td><span class="pt">mais seguro para o access token; some ao recarregar a página (por isso existe o refresh token)</span><span class="en">safest for the access token; disappears on page reload (which is exactly why the refresh token exists)</span></td></tr></tbody></table></div>
 <p><span class="pt">Padrão recomendado hoje: access token em memória, refresh token num cookie <code>HttpOnly</code>+<code>Secure</code>+<code>SameSite=Strict</code>. Evite <code>localStorage</code> para qualquer um dos dois se puder.</span><span class="en">Today's recommended pattern: access token in memory, refresh token in an <code>HttpOnly</code>+<code>Secure</code>+<code>SameSite=Strict</code> cookie. Avoid <code>localStorage</code> for either one if you can.</span></p>
@@ -443,19 +432,19 @@ POST /refresh  (cookie: refresh_token=rt_antigo)
 <h2 id="csrf"><span class="pt">CSRF: o pedido que você não pediu</span><span class="en">CSRF: the request you did not ask for</span></h2>
 
 <p><span class="pt"><em>Cross-Site Request Forgery</em>: um site malicioso faz o SEU navegador mandar uma requisição para um site onde você já está logado, usando seus cookies automaticamente — sem roubar nada, só abusando do fato de que o navegador sempre anexa os cookies do domínio.</span><span class="en"><em>Cross-Site Request Forgery</em>: a malicious site makes YOUR browser send a request to a site where you are already logged in, using your cookies automatically — without stealing anything, just abusing the fact that the browser always attaches the domain's cookies.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 160" role="img" aria-label="CSRF / CSRF" style="min-width:680px">
-<rect x="10" y="60" width="170" height="60" rx="4" class="ln fillsoft"/>
-<text x="95.0" y="94.0" class="pt " text-anchor="middle">você, logado em banco.com</text><text x="95.0" y="94.0" class="en " text-anchor="middle">you, logged into bank.com</text>
-<rect x="280" y="10" width="200" height="50" rx="4" class="ln"/>
-<text x="380.0" y="32.0" class="pt " text-anchor="middle">site-malicioso.com</text><text x="380.0" y="32.0" class="en " text-anchor="middle">evil-site.com</text>
-<text x="380.0" y="48.0" class="pt mut mono" text-anchor="middle">&lt;form action="banco.com"&gt;</text><text x="380.0" y="48.0" class="en mut mono" text-anchor="middle">&lt;form action="bank.com"&gt;</text>
-<rect x="550" y="60" width="150" height="60" rx="4" class="ln fillsoft"/>
-<text x="625.0" y="94.0" class="pt " text-anchor="middle">banco.com</text><text x="625.0" y="94.0" class="en " text-anchor="middle">bank.com</text>
-<path d="M180 90L280 40" class="ln"/><path d="M275.1 46.3L280 40L272.0 40.1" class="ln"/>
-<text x="230" y="60" class="pt mut" text-anchor="middle">1. visita</text><text x="230" y="60" class="en mut" text-anchor="middle">1. visits</text>
-<path d="M280 55L550 85" class="ln"/><path d="M542.5 87.7L550 85L543.2 80.7" class="ln"/>
-<text x="415" y="55" class="pt mut" text-anchor="middle">2. formulário AUTO-ENVIA</text><text x="415" y="55" class="en mut" text-anchor="middle">2. form AUTO-SUBMITS</text>
-<text x="415" y="110" class="pt mut" text-anchor="middle">(com os cookies de banco.com)</text><text x="415" y="110" class="en mut" text-anchor="middle">(with bank.com's cookies)</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 740 170" role="img" aria-label="CSRF / CSRF" style="min-width:680px">
+<rect x="10" y="70" width="180" height="56" rx="4" class="ln fillsoft"/>
+<text x="100" y="102" class="pt" text-anchor="middle">você, logado em banco.com</text><text x="100" y="102" class="en" text-anchor="middle">you, logged into bank.com</text>
+<rect x="250" y="10" width="220" height="52" rx="4" class="ln"/>
+<text x="360" y="32" class="pt" text-anchor="middle">site-malicioso.com</text><text x="360" y="32" class="en" text-anchor="middle">evil-site.com</text>
+<text x="360" y="50" class="pt mut mono" text-anchor="middle">&lt;form action="banco.com"&gt;</text><text x="360" y="50" class="en mut mono" text-anchor="middle">&lt;form action="bank.com"&gt;</text>
+<rect x="570" y="80" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="645" y="112" class="pt" text-anchor="middle">banco.com</text><text x="645" y="112" class="en" text-anchor="middle">bank.com</text>
+<path d="M190 86L250 46" class="ln"/><path d="M242.6 47.0L250 46L246.2 52.5" class="ln"/>
+<text x="150" y="52" class="pt mut" text-anchor="middle">1. visita</text><text x="150" y="52" class="en mut" text-anchor="middle">1. visits</text>
+<path d="M470 50L580 80" class="ln"/><path d="M574.3 75.1L580 80L572.6 81.4" class="ln"/>
+<text x="645" y="56" class="pt mut" text-anchor="middle">2. o formulário se envia sozinho</text><text x="645" y="56" class="en mut" text-anchor="middle">2. the form submits itself</text>
+<text x="645" y="156" class="pt mut" text-anchor="middle">(com os cookies de banco.com)</text><text x="645" y="156" class="en mut" text-anchor="middle">(with bank.com's cookies)</text>
 </svg></div><figcaption><span class="pt">O navegador não sabe que o pedido "não era bem-vindo" — ele só vê um formulário normal pedindo para enviar a banco.com, com os cookies certos em mãos.</span><span class="en">The browser does not know the request was "unwelcome" — it just sees a normal form asking to submit to bank.com, with the right cookies in hand.</span></figcaption></figure>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Defesa</span><span class="en">Defence</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th></tr></thead><tbody><tr><td><span class="pt"><code>SameSite=Lax</code>/<code>Strict</code> no cookie</span><span class="en"><code>SameSite=Lax</code>/<code>Strict</code> on the cookie</span></td><td><span class="pt">o navegador simplesmente NÃO anexa o cookie numa requisição de fundo vinda de outro site — resolve a maior parte dos casos sozinho, hoje</span><span class="en">the browser simply does NOT attach the cookie on a background request coming from another site — solves most cases on its own, today</span></td></tr><tr><td><span class="pt">Token CSRF (synchronizer token)</span><span class="en">CSRF token (synchronizer token)</span></td><td><span class="pt">um valor aleatório, único por sessão/formulário, que o site malicioso não tem como adivinhar ou ler (same-origin policy o impede)</span><span class="en">a random, per-session/per-form value the malicious site has no way to guess or read (same-origin policy blocks it)</span></td></tr><tr><td><span class="pt">Checar o cabeçalho <code>Origin</code>/<code>Referer</code></span><span class="en">Checking the <code>Origin</code>/<code>Referer</code> header</span></td><td><span class="pt">rejeita requisições sensíveis cuja origem não bate com a esperada — uma camada extra, não a única</span><span class="en">rejects sensitive requests whose origin does not match what is expected — an extra layer, not the only one</span></td></tr></tbody></table></div>
 <div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><code>SameSite=Lax</code> (o padrão em navegadores modernos quando nada é especificado) já neutraliza boa parte do CSRF clássico. Ainda assim, APIs com estado que mudam dados (POST/PUT/DELETE) continuam se beneficiando de um token CSRF como segunda camada — "defesa em profundidade", o mesmo princípio da nota de Linux.</span><span class="en"><code>SameSite=Lax</code> (the default in modern browsers when nothing is specified) already neutralises much of classic CSRF. Still, state-changing APIs (POST/PUT/DELETE) keep benefiting from a CSRF token as a second layer — "defence in depth", the same principle from the Linux note.</span></div>
@@ -491,18 +480,19 @@ const query = `<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</spa
 <h3><span class="pt">Prompt injection, de perto</span><span class="en">Prompt injection, up close</span></h3>
 <p><span class="pt">É o risco #1 da lista, e o mais diferente de tudo que veio antes nesta nota: não existe "escapar a entrada" que resolva, porque a instrução maliciosa e o conteúdo legítimo chegam pelo MESMO canal — texto em linguagem natural. Dois sabores:</span><span class="en">It is risk #1 on the list, and the one most unlike everything else in this note: there is no "escape the input" fix, because the malicious instruction and the legitimate content arrive through the SAME channel — natural-language text. Two flavours:</span></p>
 <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 130" role="img" aria-label="Prompt injection indireta / Indirect prompt injection" style="min-width:700px">
-<rect x="10" y="20" width="170" height="56" rx="4" class="ln fillsoft"/>
-<text x="95.0" y="45.0" class="pt " text-anchor="middle">você</text><text x="95.0" y="45.0" class="en " text-anchor="middle">you</text>
-<text x="95.0" y="61.0" class="pt mut mono" text-anchor="middle">"resuma este e-mail"</text><text x="95.0" y="61.0" class="en mut mono" text-anchor="middle">"summarize this email"</text>
-<rect x="260" y="20" width="230" height="56" rx="4" class="ln"/>
-<text x="375.0" y="45.0" class="pt " text-anchor="middle">agente de IA</text><text x="375.0" y="45.0" class="en " text-anchor="middle">AI agent</text>
-<text x="375.0" y="61.0" class="pt mut mono" text-anchor="middle">lê o e-mail como contexto</text><text x="375.0" y="61.0" class="en mut mono" text-anchor="middle">reads the email as context</text>
-<rect x="570" y="20" width="180" height="56" rx="4" class="ln fillsoft"/>
-<text x="660.0" y="45.0" class="pt " text-anchor="middle">e-mail</text><text x="660.0" y="45.0" class="en " text-anchor="middle">email</text>
-<text x="660.0" y="61.0" class="pt mut mono" text-anchor="middle">"ignore tudo e...</text><text x="660.0" y="61.0" class="en mut mono" text-anchor="middle">"ignore everything and...</text>
-<path d="M180 48L260 48" class="ln"/><path d="M252.8 51.5L260 48L252.8 44.5" class="ln"/>
-<path d="M570 48L490 48" class="ln"/><path d="M497.2 44.5L490 48L497.2 51.5" class="ln"/>
-<text x="530" y="100" class="pt mut" text-anchor="middle">← instrução maliciosa ESCONDIDA no dado que o agente só deveria LER</text><text x="530" y="100" class="en mut" text-anchor="middle">← malicious instruction HIDDEN in data the agent was only meant to READ</text>
+<rect x="10" y="20" width="180" height="56" rx="4" class="ln fillsoft"/>
+<text x="100" y="45" class="pt" text-anchor="middle">você</text><text x="100" y="45" class="en" text-anchor="middle">you</text>
+<text x="100" y="63" class="pt mut mono" text-anchor="middle">"resuma este e-mail"</text><text x="100" y="63" class="en mut mono" text-anchor="middle">"summarize this email"</text>
+<rect x="280" y="20" width="230" height="56" rx="4" class="ln"/>
+<text x="395" y="45" class="pt" text-anchor="middle">agente de IA</text><text x="395" y="45" class="en" text-anchor="middle">AI agent</text>
+<text x="395" y="63" class="pt mut mono" text-anchor="middle">lê o e-mail como contexto</text><text x="395" y="63" class="en mut mono" text-anchor="middle">reads the email as context</text>
+<rect x="600" y="20" width="170" height="56" rx="4" class="ln fillsoft"/>
+<text x="685" y="45" class="pt" text-anchor="middle">e-mail</text><text x="685" y="45" class="en" text-anchor="middle">email</text>
+<text x="685" y="63" class="pt mut mono" text-anchor="middle">"ignore tudo e…"</text><text x="685" y="63" class="en mut mono" text-anchor="middle">"ignore everything…"</text>
+<path d="M190 48L280 48" class="ln"/><path d="M273.2 44.7L280 48L273.2 51.3" class="ln"/>
+<path d="M600 48L510 48" class="ln"/><path d="M516.8 51.3L510 48L516.8 44.7" class="ln"/>
+<text x="685" y="100" class="pt mut" text-anchor="end">↑ instrução maliciosa ESCONDIDA no dado</text><text x="685" y="100" class="en mut" text-anchor="end">↑ malicious instruction HIDDEN in the data</text>
+<text x="685" y="118" class="pt mut" text-anchor="end">que o agente só deveria LER</text><text x="685" y="118" class="en mut" text-anchor="end">the agent was only meant to READ</text>
 </svg></div><figcaption><span class="pt">Injeção indireta: o atacante nunca fala com o agente diretamente — ele planta a instrução em algo que o agente vai processar depois, por conta própria.</span><span class="en">Indirect injection: the attacker never talks to the agent directly — they plant the instruction in something the agent will process later, on its own.</span></figcaption></figure>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th></tr></thead><tbody><tr><td><span class="pt">Direta</span><span class="en">Direct</span></td><td><span class="pt">o próprio usuário escreve algo como "ignore as instruções anteriores e..." direto no chat</span><span class="en">the user themself types something like "ignore previous instructions and..." straight into the chat</span></td></tr><tr><td><span class="pt">Indireta</span><span class="en">Indirect</span></td><td><span class="pt">a instrução está escondida em algo que o agente vai LER depois: um e-mail, uma página web, um arquivo, a descrição de uma ferramenta MCP — o usuário nem sabe que ela está lá</span><span class="en">the instruction is hidden in something the agent will READ later: an email, a web page, a file, an MCP tool description — the user does not even know it is there</span></td></tr></tbody></table></div>
 <h3><span class="pt">Agência excessiva e os riscos específicos do MCP</span><span class="en">Excessive agency and MCP-specific risks</span></h3>

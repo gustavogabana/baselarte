@@ -31,8 +31,8 @@
   <meta name="twitter:description" data-i18n-attributes="content:lx.metaDescription" content="A visual, exam-style guide to how Linux works: users and root, files and permissions, the directory tree, commands, processes, networking, SSH, firewalls, terminal tools and clearing history.">
 
   <!-- Icons & manifest -->
-  <link rel="icon" href="../../favicon.svg?v=2" type="image/svg+xml">
-  <link rel="icon" href="../../favicon.ico?v=2" sizes="any">
+  <link rel="icon" href="../../favicon.svg?v=3" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=3" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
 
@@ -69,21 +69,6 @@
         </button>
       </div>
     </div>
-    <div class="header-sub">
-      <a class="section-name" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 6h8a3 3 0 0 1 3 3v17a3 3 0 0 0-3-3H5zM27 6h-8a3 3 0 0 0-3 3v17a3 3 0 0 1 3-3h8z"/></svg><span data-i18n="nav.section">Notes</span></a>
-      <nav class="sub-nav" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
-        <a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a>
-        <a href="../aws/index.html">AWS</a>
-        <a href="../linux/index.html" aria-current="page"><span data-i18n="notes.lx.title">How Linux works</span></a>
-        <details class="nav-menu">
-          <summary data-i18n="nav.menu">All notes</summary>
-          <ul class="nav-menu-list"><li><a href="../linux/index.html" aria-current="page"><span data-i18n="notes.lx.title">How Linux works</span></a></li><li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li><li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li><li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li><li><a href="../aws/index.html">AWS</a></li><li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li><li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li><li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li><li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li><li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li><li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li><li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li><li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li><li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li></ul>
-        </details>
-      </nav>
-      <div class="header-actions">
-        <a class="btn btn-primary" href="../index.html" data-i18n="nav.index">Index</a>
-      </div>
-    </div>
   </header>
 
 
@@ -102,6 +87,7 @@
         <ul data-sidebar-group>
           <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
           <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
         </ul>
         <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
         <ul data-sidebar-group>
@@ -164,7 +150,7 @@
 <text x="166" y="97" class="mut mono">bash · zsh · ls · cp · grep · systemctl</text>
 <rect x="150" y="116" width="470" height="44" rx="4" class="ln fillsoft"/>
 <text x="166" y="135" class="pt ">Bibliotecas</text><text x="166" y="135" class="en ">Libraries</text>
-<text x="166" y="151" class="mut mono">glibc (libc): traduz funções em chamadas ao kernel</text>
+<text x="166" y="151" class="pt mut mono">glibc (libc): traduz funções em chamadas ao kernel</text><text x="166" y="151" class="en mut mono">glibc (libc): turns functions into kernel calls</text>
 <text x="20" y="34" class="pt mut">espaço do</text><text x="20" y="34" class="en mut">user</text>
 <text x="20" y="48" class="pt mut">usuário</text><text x="20" y="48" class="en mut">space</text>
 <path d="M138 8V160" class="ln"/>
@@ -224,26 +210,26 @@
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo</span><span class="en">File</span></th><th><span class="pt">Guarda</span><span class="en">Holds</span></th><th><span class="pt">Quem lê</span><span class="en">Who can read</span></th></tr></thead><tbody><tr><td><code>/etc/passwd</code></td><td><span class="pt">contas: nome, UID, GID, home, shell</span><span class="en">accounts: name, UID, GID, home, shell</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/shadow</code></td><td><span class="pt">hash da senha, validade, bloqueio</span><span class="en">password hash, expiry, lock</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr><tr><td><code>/etc/group</code></td><td><span class="pt">grupos e seus membros</span><span class="en">groups and their members</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/sudoers</code> e <code>/etc/sudoers.d/</code></td><td><span class="pt">quem pode virar quem (editar só com <code>visudo</code>)</span><span class="en">who may become whom (edit only with <code>visudo</code>)</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr></tbody></table></div>
 <h3><span class="pt">O superusuário (root)</span><span class="en">The superuser (root)</span></h3>
 <p><span class="pt">O superusuário é quem tem <em>UID 0</em>, não quem se chama “root”. Para o kernel, UID 0 ignora as checagens de permissão de arquivos e pode, por exemplo, ler qualquer arquivo, matar qualquer processo e abrir portas abaixo de 1024. No Linux moderno esse poder é dividido em <em>capabilities</em> (ex.: <code>CAP_NET_BIND_SERVICE</code> só para abrir portas baixas), mas o root tradicional tem todas. Por isso a regra de ouro é: <em>use root só no instante em que precisar</em>.</span><span class="en">The superuser is whoever has <em>UID 0</em>, not whoever is named “root”. To the kernel, UID 0 skips file permission checks and can, for example, read any file, kill any process and bind ports below 1024. Modern Linux splits that power into <em>capabilities</em> (e.g. <code>CAP_NET_BIND_SERVICE</code> just for low ports), but the traditional root has them all. Hence the golden rule: <em>use root only at the moment you need it</em>.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 164" role="img" aria-label="Fluxo do sudo / sudo flow" style="min-width:560px">
-<rect x="10" y="40" width="120" height="56" rx="4" class="ln fillsoft"/>
-<text x="70.0" y="65.0" class="" text-anchor="middle">ana (UID 1000)</text>
-<text x="70.0" y="81.0" class="pt mut mono" text-anchor="middle">usuário comum</text><text x="70.0" y="81.0" class="en mut mono" text-anchor="middle">regular user</text>
-<rect x="180" y="20" width="150" height="96" rx="4" class="ln"/>
-<text x="255.0" y="72.0" class="mono" text-anchor="middle">sudo apt update</text>
-<text x="255" y="98" class="pt mut" text-anchor="middle">pede ao sudo</text><text x="255" y="98" class="en mut" text-anchor="middle">asks sudo</text>
-<rect x="380" y="20" width="120" height="40" rx="4" class="ln"/>
-<text x="440.0" y="44.0" class="" text-anchor="middle">sudoers?</text>
-<rect x="380" y="76" width="120" height="40" rx="4" class="ln"/>
-<text x="440.0" y="100.0" class="pt " text-anchor="middle">pede senha de ana</text><text x="440.0" y="100.0" class="en " text-anchor="middle">asks ana’s password</text>
-<rect x="530" y="40" width="105" height="56" rx="4" class="ln fillsoft"/>
-<text x="582.5" y="65.0" class="" text-anchor="middle">root (UID 0)</text>
-<text x="582.5" y="81.0" class="pt mut mono" text-anchor="middle">1 comando</text><text x="582.5" y="81.0" class="en mut mono" text-anchor="middle">1 command</text>
-<path d="M130 68L180 68" class="ln"/><path d="M172.8 71.5L180 68L172.8 64.5" class="ln"/>
-<path d="M330 50L380 40" class="ln"/><path d="M373.6 44.8L380 40L372.3 38.0" class="ln"/>
-<path d="M330 90L380 96" class="ln"/><path d="M372.4 98.6L380 96L373.3 91.7" class="ln"/>
-<path d="M500 60L530 60" class="ln"/><path d="M522.8 63.5L530 60L522.8 56.5" class="ln"/>
-<path d="M500 96L530 80" class="ln"/><path d="M525.3 86.5L530 80L522.0 80.3" class="ln"/>
-<text x="20" y="150" class="pt mut">Tudo fica registrado: /var/log/auth.log (Debian/Ubuntu) ou journalctl _COMM=sudo.</text><text x="20" y="150" class="en mut">Everything is logged: /var/log/auth.log (Debian/Ubuntu) or journalctl _COMM=sudo.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 164" role="img" aria-label="Fluxo do sudo / sudo flow" style="min-width:700px">
+<rect x="10" y="40" width="130" height="56" rx="4" class="ln fillsoft"/>
+<text x="75" y="65" class="" text-anchor="middle">ana (UID 1000)</text>
+<text x="75" y="83" class="pt mut mono" text-anchor="middle">usuário comum</text><text x="75" y="83" class="en mut mono" text-anchor="middle">regular user</text>
+<rect x="190" y="20" width="140" height="96" rx="4" class="ln"/>
+<text x="260" y="64" class="mono" text-anchor="middle">sudo apt update</text>
+<text x="260" y="90" class="pt mut" text-anchor="middle">pede ao sudo</text><text x="260" y="90" class="en mut" text-anchor="middle">asks sudo</text>
+<rect x="390" y="20" width="190" height="40" rx="4" class="ln"/>
+<text x="485" y="44" class="pt" text-anchor="middle">está no sudoers?</text><text x="485" y="44" class="en" text-anchor="middle">in sudoers?</text>
+<rect x="390" y="76" width="190" height="40" rx="4" class="ln"/>
+<text x="485" y="100" class="pt" text-anchor="middle">pede a senha de ana</text><text x="485" y="100" class="en" text-anchor="middle">asks ana’s password</text>
+<rect x="640" y="40" width="130" height="56" rx="4" class="ln fillsoft"/>
+<text x="705" y="65" class="" text-anchor="middle">root (UID 0)</text>
+<text x="705" y="83" class="pt mut mono" text-anchor="middle">1 comando</text><text x="705" y="83" class="en mut mono" text-anchor="middle">1 command</text>
+<path d="M140 68L190 68" class="ln"/><path d="M183.2 64.7L190 68L183.2 71.3" class="ln"/>
+<path d="M330 50L390 40" class="ln"/><path d="M382.8 37.9L390 40L383.9 44.3" class="ln"/>
+<path d="M330 86L390 96" class="ln"/><path d="M383.9 91.7L390 96L382.8 98.1" class="ln"/>
+<path d="M580 40L640 58" class="ln"/><path d="M634.5 52.9L640 58L632.6 59.2" class="ln"/>
+<path d="M580 96L640 78" class="ln"/><path d="M632.6 76.8L640 78L634.5 83.1" class="ln"/>
+<text x="20" y="150" class="pt mut" text-anchor="start">Tudo fica registrado: /var/log/auth.log (Debian/Ubuntu) ou journalctl _COMM=sudo.</text><text x="20" y="150" class="en mut" text-anchor="start">Everything is logged: /var/log/auth.log (Debian/Ubuntu) or journalctl _COMM=sudo.</text>
 </svg></div><figcaption><span class="pt">O fluxo do sudo: a pessoa continua sendo ela mesma, e só aquele comando roda como root. Isso deixa um rastro de auditoria, ao contrário de um shell root permanente.</span><span class="en">The sudo flow: the person stays themselves, and only that command runs as root. That leaves an audit trail, unlike a permanent root shell.</span></figcaption></figure>
 <pre><code>id                         # uid=1000(ana) gid=1000(ana) groups=1000(ana),27(sudo),1001(dev)
 whoami                     # ana
@@ -269,7 +255,7 @@ sudo visudo                # edita o sudoers com validação de sintaxe</code></
 <h2 id="perms"><span class="pt">Arquivos e permissões</span><span class="en">Files and permissions</span></h2>
 
 <p><span class="pt">Todo arquivo tem um <em>dono</em> (usuário), um <em>grupo</em> e nove bits de permissão: leitura (<code>r</code>), escrita (<code>w</code>) e execução (<code>x</code>) para três públicos: o dono (<code>u</code>), o grupo (<code>g</code>) e todo o resto (<code>o</code>). O kernel escolhe <em>um</em> público, nesta ordem: se você é o dono, vale só a regra do dono; senão, se está no grupo, vale a do grupo; senão, a de outros.</span><span class="en">Every file has an <em>owner</em> (user), a <em>group</em> and nine permission bits: read (<code>r</code>), write (<code>w</code>) and execute (<code>x</code>) for three audiences: the owner (<code>u</code>), the group (<code>g</code>) and everybody else (<code>o</code>). The kernel picks <em>one</em> audience, in this order: if you are the owner, only the owner rule applies; otherwise, if you are in the group, the group rule; otherwise, the others rule.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 178" role="img" aria-label="Anatomia das permissões / Permission anatomy" style="min-width:640px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 178" role="img" aria-label="Anatomia das permissões / Permission anatomy" style="min-width:700px">
 <text x="20" y="40" class="mut mono">ls -l:</text>
 <rect x="130" y="20" width="42" height="34" rx="4" class="ln"/>
 <text x="151" y="43" class="mono" text-anchor="middle">-</text>
@@ -494,7 +480,7 @@ journalctl -p err -b           # só erros desde o último boot</code></pre>
 </svg></div><figcaption><span class="pt">Uma sessão SSH vista como árvore: o <code>systemd</code> iniciou o <code>sshd</code>, que criou um processo para ana, que criou o <code>bash</code>, que criou <code>vim</code> e <code>ls</code>. Veja a sua com <code>pstree -p</code>.</span><span class="en">An SSH session seen as a tree: <code>systemd</code> started <code>sshd</code>, which created a process for ana, which created <code>bash</code>, which created <code>vim</code> and <code>ls</code>. See yours with <code>pstree -p</code>.</span></figcaption></figure>
 <h3><span class="pt">Como um processo nasce: fork, exec e wait</span><span class="en">How a process is born: fork, exec and wait</span></h3>
 <p><span class="pt">Linux cria processos em duas etapas (Kerrisk, cap. 24–27). <code>fork()</code> <em>clona</em> o processo atual: nasce um filho idêntico, com PID novo. Em seguida o filho chama <code>exec()</code>, que <em>troca o programa</em> dentro dele (o PID continua). O pai chama <code>wait()</code> para esperar o filho terminar e ler o código de saída. É exatamente isso que o bash faz quando você digita <code>ls</code>.</span><span class="en">Linux creates processes in two steps (Kerrisk, ch. 24–27). <code>fork()</code> <em>clones</em> the current process: an identical child is born with a new PID. Then the child calls <code>exec()</code>, which <em>swaps the program</em> inside it (the PID stays). The parent calls <code>wait()</code> to wait for the child to finish and read its exit code. This is exactly what bash does when you type <code>ls</code>.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 254" role="img" aria-label="fork exec wait" style="min-width:560px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 254" role="img" aria-label="fork exec wait" style="min-width:620px">
 <rect x="70" y="8" width="160" height="34" rx="4" class="ln fillsoft"/>
 <text x="150.0" y="29.0" class="pt " text-anchor="middle">bash (pai)</text><text x="150.0" y="29.0" class="en " text-anchor="middle">bash (parent)</text>
 <rect x="400" y="8" width="190" height="34" rx="4" class="ln fillsoft"/>
@@ -597,35 +583,35 @@ renice 5 -p 2301</code></pre>
 <h2 id="network"><span class="pt">Redes: ver, entender e interagir</span><span class="en">Networking: see, understand and interact</span></h2>
 
 <p><span class="pt">Para a rede, o Linux usa a pilha TCP/IP no kernel. Quem fala com ela são os <em>sockets</em> (Kerrisk, cap. 56–61): um programa pede ao kernel um socket, liga-o a um IP e uma <em>porta</em> e passa a enviar e receber bytes. Uma conexão é identificada por quatro valores: IP e porta de origem, IP e porta de destino.</span><span class="en">For networking, Linux uses the TCP/IP stack inside the kernel. Programs talk to it through <em>sockets</em> (Kerrisk, ch. 56–61): a program asks the kernel for a socket, binds it to an IP and a <em>port</em>, and sends and receives bytes. A connection is identified by four values: source IP and port, destination IP and port.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 288" role="img" aria-label="Camadas de rede / Network layers" style="min-width:560px">
-<text x="20" y="20" class="pt mut">camada</text><text x="20" y="20" class="en mut">layer</text>
-<text x="160" y="20" class="pt mut">protocolos</text><text x="160" y="20" class="en mut">protocols</text>
-<text x="370" y="20" class="pt mut">ferramentas para ver e interagir</text><text x="370" y="20" class="en mut">tools to inspect and interact</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 288" role="img" aria-label="Camadas de rede / Network layers" style="min-width:600px">
+<text x="20" y="20" class="pt mut" text-anchor="start">camada</text><text x="20" y="20" class="en mut" text-anchor="start">layer</text>
+<text x="160" y="20" class="pt mut" text-anchor="start">protocolos</text><text x="160" y="20" class="en mut" text-anchor="start">protocols</text>
+<text x="400" y="20" class="pt mut" text-anchor="start">ferramentas para ver e interagir</text><text x="400" y="20" class="en mut" text-anchor="start">tools to inspect and interact</text>
 <rect x="10" y="32" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="60" class="pt " text-anchor="middle">Aplicação</text><text x="75" y="60" class="en " text-anchor="middle">Application</text>
-<rect x="150" y="32" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="60" class="mono">HTTP · SSH · DNS · SMTP</text>
-<rect x="360" y="32" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="60" class="mono">curl · ssh · dig · wget</text>
+<text x="75" y="60" class="pt" text-anchor="middle">Aplicação</text><text x="75" y="60" class="en" text-anchor="middle">Application</text>
+<rect x="150" y="32" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="60" class="mono" text-anchor="start">HTTP · SSH · DNS · SMTP</text>
+<rect x="390" y="32" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="60" class="mono" text-anchor="start">curl · ssh · dig · wget</text>
 <rect x="10" y="88" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="116" class="pt " text-anchor="middle">Transporte</text><text x="75" y="116" class="en " text-anchor="middle">Transport</text>
-<rect x="150" y="88" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="116" class="mono">TCP · UDP · portas</text>
-<rect x="360" y="88" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="116" class="mono">ss · nc · nmap · lsof -i</text>
+<text x="75" y="116" class="pt" text-anchor="middle">Transporte</text><text x="75" y="116" class="en" text-anchor="middle">Transport</text>
+<rect x="150" y="88" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="116" class="pt mono" text-anchor="start">TCP · UDP · portas</text><text x="160" y="116" class="en mono" text-anchor="start">TCP · UDP · ports</text>
+<rect x="390" y="88" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="116" class="mono" text-anchor="start">ss · nc · nmap · lsof -i</text>
 <rect x="10" y="144" width="130" height="46" rx="4" class="ln fillsoft"/>
 <text x="75" y="172" class="" text-anchor="middle">Internet</text>
-<rect x="150" y="144" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="172" class="mono">IP · ICMP · rotas</text>
-<rect x="360" y="144" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="172" class="mono">ip addr · ip route · ping · mtr</text>
+<rect x="150" y="144" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="172" class="pt mono" text-anchor="start">IP · ICMP · rotas</text><text x="160" y="172" class="en mono" text-anchor="start">IP · ICMP · routes</text>
+<rect x="390" y="144" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="172" class="mono" text-anchor="start">ip addr · ip route · ping · mtr</text>
 <rect x="10" y="200" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="228" class="pt " text-anchor="middle">Enlace</text><text x="75" y="228" class="en " text-anchor="middle">Link</text>
-<rect x="150" y="200" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="228" class="mono">Ethernet · Wi-Fi · MAC · ARP</text>
-<rect x="360" y="200" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="228" class="mono">ip link · ip neigh · iw · ethtool</text>
-<text x="10" y="276" class="pt mut">tcpdump e Wireshark capturam pacotes de todas as camadas ao mesmo tempo.</text><text x="10" y="276" class="en mut">tcpdump and Wireshark capture packets of all layers at once.</text>
+<text x="75" y="228" class="pt" text-anchor="middle">Enlace</text><text x="75" y="228" class="en" text-anchor="middle">Link</text>
+<rect x="150" y="200" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="228" class="mono" text-anchor="start">Ethernet · Wi-Fi · MAC · ARP</text>
+<rect x="390" y="200" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="228" class="mono" text-anchor="start">ip link · ip neigh · iw · ethtool</text>
+<text x="10" y="276" class="pt mut" text-anchor="start">tcpdump e Wireshark capturam pacotes de todas as camadas ao mesmo tempo.</text><text x="10" y="276" class="en mut" text-anchor="start">tcpdump and Wireshark capture packets of all layers at once.</text>
 </svg></div><figcaption><span class="pt">As quatro camadas do TCP/IP e a ferramenta certa para cada uma. Diagnostique de baixo para cima: cabo/Wi-Fi, IP, rota, DNS, porta, aplicação.</span><span class="en">The four TCP/IP layers and the right tool for each. Troubleshoot bottom-up: cable/Wi-Fi, IP, route, DNS, port, application.</span></figcaption></figure>
 <h3><span class="pt">Ver o que existe: interfaces, rotas e DNS</span><span class="en">See what exists: interfaces, routes and DNS</span></h3>
 <pre><code>ip -br addr                     # interfaces e IPs, uma linha cada (-br = brief)
@@ -666,7 +652,7 @@ nc -l 9000                      # abre um "servidor" simples na porta 9000</code
 <h2 id="ssh"><span class="pt">SSH: entrar, acompanhar e proteger</span><span class="en">SSH: log in, watch and protect</span></h2>
 
 <p><span class="pt">O <em>SSH</em> abre um terminal remoto cifrado (porta 22). É a porta de entrada de quase todo servidor Linux, então vale entender como funciona e como acompanhá-lo. O servidor prova quem é com uma <em>chave de host</em>; você prova quem é com senha ou, melhor, com um <em>par de chaves</em>: a privada nunca sai da sua máquina, a pública vai para o servidor.</span><span class="en"><em>SSH</em> opens an encrypted remote terminal (port 22). It is the front door of almost every Linux server, so it is worth understanding how it works and how to watch it. The server proves who it is with a <em>host key</em>; you prove who you are with a password or, better, a <em>key pair</em>: the private key never leaves your machine, the public one goes to the server.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 212" role="img" aria-label="Como o SSH funciona / How SSH works" style="min-width:560px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 212" role="img" aria-label="Como o SSH funciona / How SSH works" style="min-width:600px">
 <rect x="10" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
 <text x="135" y="32" class="pt " text-anchor="middle">Cliente (seu PC)</text><text x="135" y="32" class="en " text-anchor="middle">Client (your PC)</text>
 <text x="24" y="62" class="mono">~/.ssh/id_ed25519</text>
@@ -675,21 +661,22 @@ nc -l 9000                      # abre um "servidor" simples na porta 9000</code
 <text x="24" y="126" class="pt mut">chaves de servidores já vistos</text><text x="24" y="126" class="en mut">keys of servers already seen</text>
 <text x="24" y="154" class="mono">~/.ssh/config</text>
 <text x="24" y="172" class="pt mut">apelidos: “ssh meuserver”</text><text x="24" y="172" class="en mut">aliases: “ssh myserver”</text>
-<rect x="380" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
-<text x="505" y="32" class="pt " text-anchor="middle">Servidor</text><text x="505" y="32" class="en " text-anchor="middle">Server</text>
-<text x="394" y="62" class="mono">/etc/ssh/sshd_config</text>
-<text x="394" y="80" class="pt mut">regras do servidor</text><text x="394" y="80" class="en mut">server rules</text>
-<text x="394" y="108" class="mono">~/.ssh/authorized_keys</text>
-<text x="394" y="126" class="pt mut">chaves PÚBLICAS aceitas</text><text x="394" y="126" class="en mut">accepted PUBLIC keys</text>
-<text x="394" y="154" class="mono">/etc/ssh/ssh_host_*_key</text>
-<text x="394" y="172" class="pt mut">identidade do servidor</text><text x="394" y="172" class="en mut">server identity</text>
-<path d="M260 60L380 60" class="ln"/><path d="M372.8 63.5L380 60L372.8 56.5" class="ln"/>
-<path d="M380 90L260 90" class="ln"/><path d="M267.2 86.5L260 90L267.2 93.5" class="ln"/>
-<path d="M260 130L380 130" class="ln"/><path d="M372.8 133.5L380 130L372.8 126.5" class="ln"/>
-<text x="320" y="52" class="mono" text-anchor="middle">TCP :22</text>
-<text x="320" y="82" class="pt mut" text-anchor="middle">1 chave do host</text><text x="320" y="82" class="en mut" text-anchor="middle">1 host key</text>
-<text x="320" y="122" class="pt mut" text-anchor="middle">2 prova (assina)</text><text x="320" y="122" class="en mut" text-anchor="middle">2 proof (signs)</text>
-<text x="320" y="190" class="pt mut" text-anchor="middle">3 canal cifrado</text><text x="320" y="190" class="en mut" text-anchor="middle">3 encrypted channel</text>
+<rect x="440" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
+<text x="565" y="32" class="pt " text-anchor="middle">Servidor</text><text x="565" y="32" class="en " text-anchor="middle">Server</text>
+<text x="454" y="62" class="mono">/etc/ssh/sshd_config</text>
+<text x="454" y="80" class="pt mut">regras do servidor</text><text x="454" y="80" class="en mut">server rules</text>
+<text x="454" y="108" class="mono">~/.ssh/authorized_keys</text>
+<text x="454" y="126" class="pt mut">chaves PÚBLICAS aceitas</text><text x="454" y="126" class="en mut">accepted PUBLIC keys</text>
+<text x="454" y="154" class="mono">/etc/ssh/ssh_host_*_key</text>
+<text x="454" y="172" class="pt mut">identidade do servidor</text><text x="454" y="172" class="en mut">server identity</text>
+
+
+
+<text x="350" y="52" class="mono" text-anchor="middle">TCP :22</text>
+<text x="350" y="82" class="pt mut" text-anchor="middle">1 chave do host</text><text x="350" y="82" class="en mut" text-anchor="middle">1 host key</text>
+<text x="350" y="122" class="pt mut" text-anchor="middle">2 prova (assina)</text><text x="350" y="122" class="en mut" text-anchor="middle">2 proof (signs)</text>
+<text x="350" y="150" class="pt mut" text-anchor="middle">3 canal cifrado</text><text x="350" y="150" class="en mut" text-anchor="middle">3 encrypted channel</text>
+<path d="M260 60L440 60" class="ln"/><path d="M433.2 56.7L440 60L433.2 63.3" class="ln"/><path d="M440 90L260 90" class="ln"/><path d="M266.8 93.3L260 90L266.8 86.7" class="ln"/><path d="M260 130L440 130" class="ln"/><path d="M433.2 126.7L440 130L433.2 133.3" class="ln"/>
 </svg></div><figcaption><span class="pt">Os arquivos de cada lado. Na primeira conexão o cliente pergunta se confia na chave do host e a grava em <code>known_hosts</code>; se ela mudar depois, o SSH avisa (pode ser ataque).</span><span class="en">The files on each side. On first connection the client asks whether to trust the host key and stores it in <code>known_hosts</code>; if it changes later, SSH warns you (it may be an attack).</span></figcaption></figure>
 <pre><code>ssh-keygen -t ed25519 -C "ana@notebook"   # cria o par de chaves (defina uma passphrase)
 ssh-copy-id ana@servidor                  # instala a pública no servidor
@@ -802,19 +789,19 @@ sudo systemctl enable --now nftables      # carrega no boot</code></pre>
 <h2 id="hardening"><span class="pt">Proteger o computador e como saber</span><span class="en">Protecting the computer and how to know</span></h2>
 
 <p><span class="pt">Firewall é uma camada, não a defesa inteira. Segurança é <em>defesa em profundidade</em>: se uma camada falha, a próxima segura. A ordem prática é: reduzir o que está exposto, atualizar, limitar quem entra, vigiar e ter cópia de segurança.</span><span class="en">A firewall is one layer, not the whole defence. Security is <em>defence in depth</em>: if one layer fails, the next holds. The practical order is: reduce what is exposed, update, limit who gets in, watch, and keep backups.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 244" role="img" aria-label="Defesa em profundidade / Defence in depth" style="min-width:560px">
-<rect x="10.0" y="10" width="620" height="220" rx="4" class="ln"/>
-<rect x="40.0" y="46" width="560" height="168" rx="4" class="ln"/>
-<rect x="70.0" y="82" width="500" height="116" rx="4" class="ln"/>
-<rect x="100.0" y="118" width="440" height="64" rx="4" class="ln"/>
-<text x="22.0" y="28" class="pt ">Rede</text><text x="22.0" y="28" class="en ">Network</text>
-<text x="22.0" y="43" class="mut">firewall · só portas necessárias · Wi-Fi/roteador seguros</text>
-<text x="52.0" y="64" class="pt ">Sistema</text><text x="52.0" y="64" class="en ">System</text>
-<text x="52.0" y="79" class="mut">atualizações · usuários e sudo · SSH só com chave · fail2ban</text>
-<text x="82.0" y="100" class="pt ">Serviços</text><text x="82.0" y="100" class="en ">Services</text>
-<text x="82.0" y="115" class="mut">desligue o que não usa · ss -tulpn · sem root em serviços</text>
-<text x="112.0" y="136" class="pt ">Dados</text><text x="112.0" y="136" class="en ">Data</text>
-<text x="112.0" y="151" class="mut">backup 3-2-1 · disco cifrado (LUKS) · permissões justas</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 270" role="img" aria-label="Defesa em profundidade / Defence in depth" style="min-width:620px">
+<rect x="10" y="10" width="680" height="250" rx="4" class="ln"/>
+<text x="24" y="30" class="pt" text-anchor="start">Rede</text><text x="24" y="30" class="en" text-anchor="start">Network</text>
+<text x="24" y="48" class="pt mut" text-anchor="start">firewall · só portas necessárias · Wi-Fi/roteador seguros</text><text x="24" y="48" class="en mut" text-anchor="start">firewall · only needed ports · secure Wi-Fi/router</text>
+<rect x="40" y="64" width="620" height="196" rx="4" class="ln"/>
+<text x="54" y="84" class="pt" text-anchor="start">Sistema</text><text x="54" y="84" class="en" text-anchor="start">System</text>
+<text x="54" y="102" class="pt mut" text-anchor="start">atualizações · usuários e sudo · SSH só com chave · fail2ban</text><text x="54" y="102" class="en mut" text-anchor="start">updates · users and sudo · key-only SSH · fail2ban</text>
+<rect x="70" y="118" width="560" height="142" rx="4" class="ln"/>
+<text x="84" y="138" class="pt" text-anchor="start">Serviços</text><text x="84" y="138" class="en" text-anchor="start">Services</text>
+<text x="84" y="156" class="pt mut" text-anchor="start">desligue o que não usa · ss -tulpn · sem root em serviços</text><text x="84" y="156" class="en mut" text-anchor="start">turn off what you do not use · ss -tulpn · no root services</text>
+<rect x="100" y="172" width="500" height="88" rx="4" class="ln"/>
+<text x="114" y="192" class="pt" text-anchor="start">Dados</text><text x="114" y="192" class="en" text-anchor="start">Data</text>
+<text x="114" y="210" class="pt mut" text-anchor="start">backup 3-2-1 · disco cifrado (LUKS) · permissões justas</text><text x="114" y="210" class="en mut" text-anchor="start">3-2-1 backup · encrypted disk (LUKS) · tight permissions</text>
 </svg></div><figcaption><span class="pt">Defesa em profundidade, de fora para dentro. O atacante precisa vencer todas as camadas; você só precisa que uma segure.</span><span class="en">Defence in depth, from the outside in. The attacker must beat every layer; you only need one to hold.</span></figcaption></figure>
 <h3><span class="pt">Como saber se o seu computador está protegido</span><span class="en">How to know whether your computer is protected</span></h3>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Resultado saudável</span><span class="en">Healthy result</span></th></tr></thead><tbody><tr><td><span class="pt">O que está escutando?</span><span class="en">What is listening?</span></td><td><code>ss -tulpn</code></td><td><span class="pt">só o que você reconhece; o resto em <code>127.0.0.1</code></span><span class="en">only what you recognise; the rest on <code>127.0.0.1</code></span></td></tr><tr><td><span class="pt">O firewall está ativo?</span><span class="en">Is the firewall on?</span></td><td><code>sudo ufw status verbose</code> · <code>sudo nft list ruleset</code></td><td><span class="pt"><em>Status: active</em>, política <em>deny (incoming)</em></span><span class="en"><em>Status: active</em>, policy <em>deny (incoming)</em></span></td></tr><tr><td><span class="pt">Como me veem de fora?</span><span class="en">How do others see me?</span></td><td><code>nmap -sV IP-DA-MAQUINA</code> (de OUTRO computador seu)</td><td><span class="pt">só as portas que você liberou</span><span class="en">only the ports you opened</span></td></tr><tr><td><span class="pt">Há atualizações pendentes?</span><span class="en">Any pending updates?</span></td><td><code>apt list --upgradable</code> · <code>dnf check-update</code></td><td><span class="pt">vazio, ou só itens recentes</span><span class="en">empty, or only recent items</span></td></tr><tr><td><span class="pt">Alguém tentou entrar?</span><span class="en">Did anyone try to get in?</span></td><td><code>sudo lastb | head</code> · <code>journalctl -u ssh -p warning</code></td><td><span class="pt">poucas falhas; sem sucesso desconhecido em <code>last</code></span><span class="en">few failures; no unknown success in <code>last</code></span></td></tr><tr><td><span class="pt">Quem tem poder de root?</span><span class="en">Who has root power?</span></td><td><code>getent group sudo</code> · <code>awk -F: '$3==0' /etc/passwd</code></td><td><span class="pt">só quem deveria; só <code>root</code> com UID 0</span><span class="en">only who should; only <code>root</code> with UID 0</span></td></tr><tr><td><span class="pt">Há contas sem senha?</span><span class="en">Any accounts without a password?</span></td><td><code>sudo awk -F: '$2==""' /etc/shadow</code></td><td><span class="pt">sem saída</span><span class="en">no output</span></td></tr><tr><td><span class="pt">Existe uma auditoria pronta?</span><span class="en">Is there a ready-made audit?</span></td><td><code>sudo lynis audit system</code></td><td><span class="pt">lista de avisos e sugestões, com nota final</span><span class="en">list of warnings and suggestions with a final score</span></td></tr></tbody></table></div>
