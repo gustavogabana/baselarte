@@ -138,36 +138,29 @@
 <h2 id="basics"><span class="pt">O que é um banco relacional e um schema</span><span class="en">What a relational database and a schema are</span></h2>
 
 <p><span class="pt">Um banco <em>relacional</em> guarda dados em tabelas: linhas (registros) e colunas (campos), com <em>relações</em> entre tabelas por chaves. É "relacional" no sentido matemático de relação (um conjunto de tuplas), não porque as tabelas se relacionam entre si — embora também façam isso. O gerenciador que guarda, organiza e responde consultas sobre esses dados é um <em>SGBD</em> (sistema de gerenciamento de banco de dados; em inglês, <em>RDBMS</em>).</span><span class="en">A <em>relational</em> database stores data in tables: rows (records) and columns (fields), with <em>relations</em> between tables through keys. It is "relational" in the mathematical sense of a relation (a set of tuples), not because tables relate to one another — though they also do that. The manager that stores, organizes and answers queries over that data is a <em>DBMS</em> (database management system).</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 800 330" role="img" aria-label="Hierarquia do Postgres / Postgres hierarchy" style="min-width:700px">
-<rect x="10" y="10" width="160" height="50" rx="4" class="ln fillsoft"/>
-<text x="90.0" y="32.0" class="pt " text-anchor="middle">servidor Postgres</text><text x="90.0" y="32.0" class="en " text-anchor="middle">Postgres server</text>
-<text x="90.0" y="48.0" class="pt mut mono" text-anchor="middle">um processo (postgres)</text><text x="90.0" y="48.0" class="en mut mono" text-anchor="middle">one process (postgres)</text>
-<rect x="230" y="10" width="150" height="50" rx="4" class="ln"/>
-<text x="305.0" y="39.0" class="pt " text-anchor="middle">instância</text><text x="305.0" y="39.0" class="en " text-anchor="middle">instance</text>
-<path d="M170 35L230 35" class="ln"/><path d="M222.8 38.5L230 35L222.8 31.5" class="ln"/>
-<rect x="230" y="100" width="150" height="44" rx="4" class="ln fillsoft"/>
-<text x="305.0" y="126.0" class="mono" text-anchor="middle">database "loja"</text>
-<path d="M305 60L305 100" class="ln"/><path d="M301.5 92.8L305 100L308.5 92.8" class="ln"/>
-<rect x="230" y="160" width="150" height="44" rx="4" class="ln fillsoft"/>
-<text x="305.0" y="186.0" class="mono" text-anchor="middle">database "crm"</text>
-<path d="M305 60L305 160" class="ln"/><path d="M301.5 152.8L305 160L308.5 152.8" class="ln"/>
-<rect x="230" y="220" width="150" height="44" rx="4" class="ln fillsoft"/>
-<text x="305.0" y="246.0" class="mono" text-anchor="middle">database "postgres"</text>
-<path d="M305 60L305 220" class="ln"/><path d="M301.5 212.8L305 220L308.5 212.8" class="ln"/>
-<rect x="430" y="100" width="140" height="44" rx="4" class="ln"/>
-<text x="500.0" y="126.0" class="mono" text-anchor="middle">schema public</text>
-<rect x="430" y="154" width="140" height="44" rx="4" class="ln"/>
-<text x="500.0" y="180.0" class="mono" text-anchor="middle">schema vendas</text>
-<path d="M380 122L430 122" class="ln"/><path d="M422.8 125.5L430 122L422.8 118.5" class="ln"/>
-<path d="M380 122L430 176" class="ln"/><path d="M422.6 173.1L430 176L427.7 168.4" class="ln"/>
-<rect x="620" y="80" width="140" height="40" rx="4" class="ln fillsoft"/>
-<text x="690.0" y="104.0" class="pt mono" text-anchor="middle">tabela usuarios</text><text x="690.0" y="104.0" class="en mono" text-anchor="middle">table usuarios</text>
-<rect x="620" y="128" width="140" height="40" rx="4" class="ln fillsoft"/>
-<text x="690.0" y="152.0" class="pt mono" text-anchor="middle">tabela pedidos</text><text x="690.0" y="152.0" class="en mono" text-anchor="middle">table pedidos</text>
-<path d="M570 122L620 100" class="ln"/><path d="M614.8 106.1L620 100L612.0 99.7" class="ln"/>
-<path d="M570 122L620 148" class="ln"/><path d="M612.0 147.8L620 148L615.2 141.6" class="ln"/>
-<text x="10" y="290" class="pt mut">Uma instância roda vários DATABASES isolados; um database tem vários SCHEMAS (pastas lógicas); um schema tem as TABELAS.</text><text x="10" y="290" class="en mut">One instance runs several isolated DATABASES; a database has several SCHEMAS (logical folders); a schema has the TABLES.</text>
-<text x="10" y="310" class="pt mut">Por padrão você está sempre no schema "public" — é por isso que a maioria do SQL que você vê nunca precisa nomeá-lo.</text><text x="10" y="310" class="en mut">By default you are always in the "public" schema — that is why most SQL you see never needs to name it.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 300" role="img" aria-label="Hierarquia do Postgres / Postgres hierarchy" style="min-width:680px">
+<rect x="10" y="10" width="700" height="210" rx="4" class="ln dash"/>
+<text x="24" y="32" class="pt mut" text-anchor="start">instância = servidor Postgres (um processo: postgres)</text><text x="24" y="32" class="en mut" text-anchor="start">instance = Postgres server (one process: postgres)</text>
+<rect x="40" y="56" width="170" height="36" rx="4" class="ln fillsoft"/>
+<text x="125" y="79" class="mono" text-anchor="middle">database "loja"</text>
+<rect x="40" y="106" width="170" height="36" rx="4" class="ln fillsoft"/>
+<text x="125" y="129" class="mono" text-anchor="middle">database "crm"</text>
+<rect x="40" y="156" width="170" height="36" rx="4" class="ln fillsoft"/>
+<text x="125" y="179" class="mono" text-anchor="middle">database "postgres"</text>
+<rect x="290" y="56" width="150" height="36" rx="4" class="ln fillsoft"/>
+<text x="365" y="79" class="mono" text-anchor="middle">schema public</text>
+<rect x="290" y="106" width="150" height="36" rx="4" class="ln fillsoft"/>
+<text x="365" y="129" class="mono" text-anchor="middle">schema vendas</text>
+<rect x="520" y="40" width="170" height="36" rx="4" class="ln fillsoft"/>
+<text x="605" y="63" class="pt mono" text-anchor="middle">tabela usuarios</text><text x="605" y="63" class="en mono" text-anchor="middle">table usuarios</text>
+<rect x="520" y="92" width="170" height="36" rx="4" class="ln fillsoft"/>
+<text x="605" y="115" class="pt mono" text-anchor="middle">tabela pedidos</text><text x="605" y="115" class="en mono" text-anchor="middle">table pedidos</text>
+<path d="M210 74L290 74" class="ln"/><path d="M283.2 70.7L290 74L283.2 77.3" class="ln"/>
+<path d="M210 74L290 124" class="ln"/><path d="M286.0 117.7L290 124L282.5 123.2" class="ln"/>
+<path d="M440 74L520 58" class="ln"/><path d="M512.7 56.1L520 58L514.0 62.5" class="ln"/>
+<path d="M440 74L520 110" class="ln"/><path d="M515.2 104.3L520 110L512.5 110.2" class="ln"/>
+<text x="10" y="244" class="pt mut" text-anchor="start">Uma instância roda vários DATABASES isolados; um database tem vários SCHEMAS</text><text x="10" y="244" class="en mut" text-anchor="start">One instance runs several isolated DATABASES; a database has several SCHEMAS</text><text x="10" y="264" class="pt mut" text-anchor="start">(pastas lógicas); um schema tem as TABELAS.</text><text x="10" y="264" class="en mut" text-anchor="start">(logical folders); a schema has the TABLES.</text>
+<text x="10" y="284" class="pt mut" text-anchor="start">Por padrão você está no schema "public" — por isso o SQL quase nunca o nomeia.</text><text x="10" y="284" class="en mut" text-anchor="start">By default you are in the "public" schema — that is why SQL rarely names it.</text>
 </svg></div><figcaption><span class="pt">A hierarquia: instância → database → schema → tabela. Confundir "database" com "schema" é a troca mais comum.</span><span class="en">The hierarchy: instance → database → schema → table. Confusing "database" with "schema" is the most common mix-up.</span></figcaption></figure>
 <h3><span class="pt">O que é um schema, de fato</span><span class="en">What a schema actually is</span></h3>
 <p><span class="pt">Um <em>schema</em> é um namespace dentro de um database: uma forma de organizar tabelas (por exemplo, <code>vendas.pedidos</code> e <code>rh.funcionarios</code> no mesmo database) sem precisar de um database separado para cada área. É diferente do uso da palavra "schema" em outros bancos (no MySQL, "schema" costuma ser sinônimo de "database" inteiro).</span><span class="en">A <em>schema</em> is a namespace inside a database: a way to organize tables (for example, <code>vendas.pedidos</code> and <code>rh.funcionarios</code> in the same database) without needing a separate database for each area. This differs from how the word "schema" is used in other databases (in MySQL, "schema" is usually a synonym for a whole "database").</span></p>
@@ -222,31 +215,26 @@ PGPASSWORD=s3nha psql -h localhost -U ana loja        <span class="tok-c"># senh
 <h2 id="users"><span class="pt">Usuários e senhas: as três camadas</span><span class="en">Users and passwords: the three layers</span></h2>
 
 <p><span class="pt">Esta é a maior fonte de confusão para quem está começando, porque a palavra "usuário" significa <em>três coisas diferentes</em> que não têm relação automática entre si. Desembaraçar isso resolve a maioria dos "funciona na minha máquina, não funciona no servidor".</span><span class="en">This is the biggest source of confusion for beginners, because the word "user" means <em>three different things</em> with no automatic relation between them. Untangling this solves most "works on my machine, not on the server" problems.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 270" role="img" aria-label="Três tipos de usuário / Three kinds of user" style="min-width:680px">
-<rect x="10" y="20" width="220" height="60" rx="4" class="ln fillsoft"/>
-<text x="120.0" y="47.0" class="pt " text-anchor="middle">usuário do SO</text><text x="120.0" y="47.0" class="en " text-anchor="middle">OS user</text>
-<text x="120.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: "gustavo"</text><text x="120.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. "gustavo"</text>
-<rect x="250" y="20" width="220" height="60" rx="4" class="ln"/>
-<text x="360.0" y="47.0" class="pt " text-anchor="middle">role do Postgres</text><text x="360.0" y="47.0" class="en " text-anchor="middle">Postgres role</text>
-<text x="360.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: "ana"</text><text x="360.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. "ana"</text>
-<rect x="490" y="20" width="220" height="60" rx="4" class="ln fillsoft"/>
-<text x="600.0" y="47.0" class="pt " text-anchor="middle">usuário da aplicação</text><text x="600.0" y="47.0" class="en " text-anchor="middle">application user</text>
-<text x="600.0" y="63.0" class="pt mut mono" text-anchor="middle">ex.: conta do cliente</text><text x="600.0" y="63.0" class="en mut mono" text-anchor="middle">e.g. customer's account</text>
-<text x="10" y="110" class="pt mut">• faz login na MÁQUINA</text><text x="10" y="110" class="en mut">• logs into the MACHINE</text>
-<text x="10" y="128" class="mut">(SSH, terminal)</text>
-<text x="10" y="150" class="pt mut">• existe em /etc/passwd</text><text x="10" y="150" class="en mut">• exists in /etc/passwd</text>
-<text x="250" y="110" class="pt mut">• faz login no BANCO</text><text x="250" y="110" class="en mut">• logs into the DATABASE</text>
-<text x="250" y="128" class="pt mut">• existe em pg_roles,</text><text x="250" y="128" class="en mut">• exists in pg_roles,</text>
-<text x="250" y="146" class="pt mut">  dentro do Postgres</text><text x="250" y="146" class="en mut">  inside Postgres</text>
-<text x="250" y="168" class="pt mut">• tem senha e permissões</text><text x="250" y="168" class="en mut">• has its OWN password</text>
-<text x="250" y="186" class="pt mut">  PRÓPRIAS</text><text x="250" y="186" class="en mut">  and permissions</text>
-<text x="490" y="110" class="pt mut">• é uma LINHA numa tabela</text><text x="490" y="110" class="en mut">• is a ROW in a</text>
-<text x="490" y="128" class="pt mut">  "usuarios"</text><text x="490" y="128" class="en mut">  "usuarios" table</text>
-<text x="490" y="150" class="pt mut">• sua aplicação entende</text><text x="490" y="150" class="en mut">• your application</text>
-<text x="490" y="168" class="pt mut">  essa senha, não o Postgres</text><text x="490" y="168" class="en mut">  understands that password</text>
-<text x="490" y="186" class="pt mut">• o Postgres não sabe</text><text x="490" y="186" class="en mut">• Postgres has no idea</text>
-<text x="490" y="204" class="pt mut">  que ela existe</text><text x="490" y="204" class="en mut">  it exists</text>
-<text x="10" y="240" class="pt mut">Os três são independentes: a role "ana" do Postgres não precisa existir como usuário do SO, e o Postgres nunca vê os usuários da sua aplicação.</text><text x="10" y="240" class="en mut">All three are independent: the Postgres role "ana" does not need to exist as an OS user, and Postgres never sees your application's users.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 720 205" role="img" aria-label="Três tipos de usuário / Three kinds of user" style="min-width:680px">
+<rect x="10" y="10" width="220" height="54" rx="4" class="ln fillsoft"/>
+<text x="120" y="34" class="pt" text-anchor="middle">usuário do SO</text><text x="120" y="34" class="en" text-anchor="middle">OS user</text>
+<text x="120" y="52" class="pt mut mono" text-anchor="middle">ex.: "gustavo"</text><text x="120" y="52" class="en mut mono" text-anchor="middle">e.g. "gustavo"</text>
+<text x="18" y="90" class="pt" text-anchor="start">• login na MÁQUINA</text><text x="18" y="90" class="en" text-anchor="start">• logs into the MACHINE</text>
+<text x="18" y="110" class="pt" text-anchor="start">• vive em /etc/passwd</text><text x="18" y="110" class="en" text-anchor="start">• lives in /etc/passwd</text>
+<rect x="250" y="10" width="220" height="54" rx="4" class="ln"/>
+<text x="360" y="34" class="pt" text-anchor="middle">role do Postgres</text><text x="360" y="34" class="en" text-anchor="middle">Postgres role</text>
+<text x="360" y="52" class="pt mut mono" text-anchor="middle">ex.: "ana"</text><text x="360" y="52" class="en mut mono" text-anchor="middle">e.g. "ana"</text>
+<text x="258" y="90" class="pt" text-anchor="start">• login no BANCO</text><text x="258" y="90" class="en" text-anchor="start">• logs into the DATABASE</text>
+<text x="258" y="110" class="pt" text-anchor="start">• vive em pg_roles</text><text x="258" y="110" class="en" text-anchor="start">• lives in pg_roles</text>
+<text x="258" y="130" class="pt" text-anchor="start">• senha e permissões PRÓPRIAS</text><text x="258" y="130" class="en" text-anchor="start">• OWN password and permissions</text>
+<rect x="490" y="10" width="220" height="54" rx="4" class="ln fillsoft"/>
+<text x="600" y="34" class="pt" text-anchor="middle">usuário da aplicação</text><text x="600" y="34" class="en" text-anchor="middle">application user</text>
+<text x="600" y="52" class="pt mut mono" text-anchor="middle">ex.: conta do cliente</text><text x="600" y="52" class="en mut mono" text-anchor="middle">e.g. customer's account</text>
+<text x="498" y="90" class="pt" text-anchor="start">• é uma LINHA em "usuarios"</text><text x="498" y="90" class="en" text-anchor="start">• is a ROW in "usuarios"</text>
+<text x="498" y="110" class="pt" text-anchor="start">• só a aplicação a entende</text><text x="498" y="110" class="en" text-anchor="start">• only the app understands it</text>
+<text x="498" y="130" class="pt" text-anchor="start">• o Postgres nem sabe dela</text><text x="498" y="130" class="en" text-anchor="start">• Postgres doesn't know it</text>
+<text x="10" y="170" class="pt mut" text-anchor="start">Os três são independentes: a role "ana" não precisa existir como usuário do SO,</text><text x="10" y="170" class="en mut" text-anchor="start">All three are independent: the role "ana" need not exist as an OS user,</text>
+<text x="10" y="190" class="pt mut" text-anchor="start">e o Postgres nunca vê os usuários da sua aplicação.</text><text x="10" y="190" class="en mut" text-anchor="start">and Postgres never sees your application's users.</text>
 </svg></div><figcaption><span class="pt">As três camadas de "usuário" que costumam ser confundidas.</span><span class="en">The three layers of "user" that usually get mixed up.</span></figcaption></figure>
 <h3><span class="pt">Como as camadas se conectam na prática</span><span class="en">How the layers connect in practice</span></h3>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Cenário</span><span class="en">Scenario</span></th><th><span class="pt">O que acontece</span><span class="en">What happens</span></th></tr></thead><tbody><tr><td><span class="pt">Você digita <code>psql</code> sem argumentos</span><span class="en">You type <code>psql</code> with no arguments</span></td><td><span class="pt">tenta conectar como uma role do Postgres com o MESMO NOME do seu usuário do SO, no database de mesmo nome — coincidência de nome, não de identidade</span><span class="en">tries to connect as a Postgres role with the SAME NAME as your OS user, to a database of the same name — a name coincidence, not an identity one</span></td></tr><tr><td><span class="pt">Instalação padrão cria o usuário do SO "postgres" e a role "postgres"</span><span class="en">A default install creates the OS user "postgres" and the role "postgres"</span></td><td><span class="pt"><code>sudo -u postgres psql</code> funciona porque o SO deixa o usuário "postgres" rodar o psql, que conecta à role "postgres" (super-usuária DO BANCO, não do SO)</span><span class="en"><code>sudo -u postgres psql</code> works because the OS lets the "postgres" OS user run psql, which connects as the "postgres" role (a DATABASE superuser, not an OS one)</span></td></tr><tr><td><span class="pt">Sua aplicação conecta com <code>DATABASE_URL</code></span><span class="en">Your app connects with <code>DATABASE_URL</code></span></td><td><span class="pt">usa uma role do Postgres (ex.: <code>app_user</code>) e SUA senha; não tem nenhuma relação com o usuário do SO onde o app roda</span><span class="en">uses a Postgres role (e.g. <code>app_user</code>) with ITS password; has no relation to the OS user the app runs as</span></td></tr><tr><td><span class="pt">Um cliente faz login no seu site</span><span class="en">A customer logs into your site</span></td><td><span class="pt">sua aplicação confere a senha na SUA tabela de usuários; o Postgres só vê a role da aplicação executando a consulta</span><span class="en">your application checks the password against YOUR users table; Postgres only sees the application's role running the query</span></td></tr></tbody></table></div>
@@ -266,22 +254,23 @@ PGPASSWORD=s3nha psql -h localhost -U ana loja        <span class="tok-c"># senh
 <h2 id="access-security"><span class="pt">Segurança de acesso: pg_hba, TLS e privilégio mínimo</span><span class="en">Access security: pg_hba, TLS and least privilege</span></h2>
 
 <p><span class="pt">Quem pode se conectar, de onde, e como ela precisa provar quem é — tudo isso é decidido por um arquivo: <code>pg_hba.conf</code> (host-based authentication). É o "firewall de identidade" do Postgres, separado do firewall de rede (nftables/ufw) e separado das permissões SQL (<code>GRANT</code>).</span><span class="en">Who may connect, from where, and how they must prove who they are — all of that is decided by one file: <code>pg_hba.conf</code> (host-based authentication). It is Postgres's "identity firewall", separate from the network firewall (nftables/ufw) and separate from SQL permissions (<code>GRANT</code>).</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 120" role="img" aria-label="Os três portões / The three gates" style="min-width:600px">
-<rect x="10" y="10" width="95" height="60" rx="4" class="ln fillsoft"/>
-<text x="57.5" y="44.0" class="pt " text-anchor="middle">cliente</text><text x="57.5" y="44.0" class="en " text-anchor="middle">client</text>
-<rect x="140" y="10" width="150" height="60" rx="4" class="ln"/>
-<text x="215.0" y="37.0" class="" text-anchor="middle">firewall</text>
-<text x="215.0" y="53.0" class="pt mut mono" text-anchor="middle">porta aberta?</text><text x="215.0" y="53.0" class="en mut mono" text-anchor="middle">port open?</text>
-<rect x="325" y="10" width="165" height="60" rx="4" class="ln fillsoft"/>
-<text x="407.5" y="37.0" class="mono" text-anchor="middle">pg_hba.conf</text>
-<text x="407.5" y="53.0" class="pt mut mono" text-anchor="middle">pode entrar?</text><text x="407.5" y="53.0" class="en mut mono" text-anchor="middle">may enter?</text>
-<rect x="525" y="10" width="125" height="60" rx="4" class="ln"/>
-<text x="587.5" y="37.0" class="" text-anchor="middle">GRANT</text>
-<text x="587.5" y="53.0" class="pt mut mono" text-anchor="middle">pode fazer o quê?</text><text x="587.5" y="53.0" class="en mut mono" text-anchor="middle">may do what?</text>
-<path d="M105 40L140 40" class="ln"/><path d="M132.8 43.5L140 40L132.8 36.5" class="ln"/>
-<path d="M290 40L325 40" class="ln"/><path d="M317.8 43.5L325 40L317.8 36.5" class="ln"/>
-<path d="M490 40L525 40" class="ln"/><path d="M517.8 43.5L525 40L517.8 36.5" class="ln"/>
-<text x="10" y="100" class="pt mut">Três portões independentes: rede, identidade (quem pode entrar) e permissão (o que pode fazer depois de dentro).</text><text x="10" y="100" class="en mut">Three independent gates: network, identity (who may enter) and permission (what it may do once inside).</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 670 130" role="img" aria-label="Os três portões / The three gates" style="min-width:600px">
+<rect x="10" y="10" width="140" height="56" rx="4" class="ln fillsoft"/>
+<text x="80" y="43" class="pt" text-anchor="middle">cliente</text><text x="80" y="43" class="en" text-anchor="middle">client</text>
+<rect x="180" y="10" width="140" height="56" rx="4" class="ln"/>
+<text x="250" y="34" class="" text-anchor="middle">firewall</text>
+<text x="250" y="53" class="pt mut mono" text-anchor="middle">porta aberta?</text><text x="250" y="53" class="en mut mono" text-anchor="middle">port open?</text>
+<rect x="350" y="10" width="140" height="56" rx="4" class="ln fillsoft"/>
+<text x="420" y="34" class="" text-anchor="middle">pg_hba.conf</text>
+<text x="420" y="53" class="pt mut mono" text-anchor="middle">pode entrar?</text><text x="420" y="53" class="en mut mono" text-anchor="middle">may enter?</text>
+<rect x="520" y="10" width="140" height="56" rx="4" class="ln"/>
+<text x="590" y="34" class="" text-anchor="middle">GRANT</text>
+<text x="590" y="53" class="pt mut mono" text-anchor="middle">pode fazer o quê?</text><text x="590" y="53" class="en mut mono" text-anchor="middle">may do what?</text>
+<path d="M150 38L180 38" class="ln"/><path d="M173.2 34.7L180 38L173.2 41.3" class="ln"/>
+<path d="M320 38L350 38" class="ln"/><path d="M343.2 34.7L350 38L343.2 41.3" class="ln"/>
+<path d="M490 38L520 38" class="ln"/><path d="M513.2 34.7L520 38L513.2 41.3" class="ln"/>
+<text x="10" y="96" class="pt mut" text-anchor="start">Três portões independentes: rede, identidade (quem pode entrar)</text><text x="10" y="96" class="en mut" text-anchor="start">Three independent gates: network, identity (who may enter)</text>
+<text x="10" y="114" class="pt mut" text-anchor="start">e permissão (o que pode fazer depois de dentro).</text><text x="10" y="114" class="en mut" text-anchor="start">and permission (what it may do once inside).</text>
 </svg></div><figcaption><span class="pt">A conexão só acontece se passar pelos três.</span><span class="en">The connection only happens if it passes all three.</span></figcaption></figure>
 <h3><span class="pt">Lendo o pg_hba.conf</span><span class="en">Reading pg_hba.conf</span></h3>
 <pre><code># TYPE  DATABASE  USER   ADDRESS          METHOD
@@ -488,19 +477,19 @@ psql -U postgres -d loja_nova &lt; loja.sql                            <span cla
 <h3><span class="pt">Point-in-time recovery (PITR), em uma frase</span><span class="en">Point-in-time recovery (PITR), in one sentence</span></h3>
 <p><span class="pt">Com <code>pg_basebackup</code> (uma foto dos arquivos) mais o <em>WAL</em> (write-ahead log: todo write é gravado ali antes de ir para a tabela) arquivado continuamente, dá para reconstruir o banco exatamente como estava um segundo antes de alguém rodar um <code>DELETE</code> sem <code>WHERE</code> — não só "como estava no backup de ontem à noite".</span><span class="en">With <code>pg_basebackup</code> (a snapshot of the files) plus the continuously archived <em>WAL</em> (write-ahead log: every write is recorded there before it reaches the table), you can rebuild the database exactly as it was one second before someone ran a <code>DELETE</code> with no <code>WHERE</code> — not just "as it was in last night's backup".</span></p>
 <h3><span class="pt">A regra 3-2-1</span><span class="en">The 3-2-1 rule</span></h3>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 160" role="img" aria-label="A regra 3-2-1 / The 3-2-1 rule" style="min-width:600px">
-<rect x="10" y="10" width="170" height="50" rx="4" class="brandfill"/>
-<text x="95.0" y="32.0" class="pt " text-anchor="middle">3 cópias</text><text x="95.0" y="32.0" class="en " text-anchor="middle">3 copies</text>
-<text x="95.0" y="48.0" class="pt mut mono" text-anchor="middle">o original + 2 backups</text><text x="95.0" y="48.0" class="en mut mono" text-anchor="middle">the original + 2 backups</text>
-<rect x="220" y="10" width="170" height="50" rx="4" class="ln fillsoft"/>
-<text x="305.0" y="32.0" class="pt " text-anchor="middle">2 mídias diferentes</text><text x="305.0" y="32.0" class="en " text-anchor="middle">2 different media</text>
-<text x="305.0" y="48.0" class="pt mut mono" text-anchor="middle">ex.: disco local + nuvem</text><text x="305.0" y="48.0" class="en mut mono" text-anchor="middle">e.g. local disk + cloud</text>
-<rect x="430" y="10" width="170" height="50" rx="4" class="ln fillsoft"/>
-<text x="515.0" y="32.0" class="pt " text-anchor="middle">1 fora do local</text><text x="515.0" y="32.0" class="en " text-anchor="middle">1 off-site</text>
-<text x="515.0" y="48.0" class="pt mut mono" text-anchor="middle">outra região/provedor</text><text x="515.0" y="48.0" class="en mut mono" text-anchor="middle">another region/provider</text>
-<text x="10" y="95" class="pt mut">Se as 3 cópias estiverem no mesmo disco: um disco falho apaga tudo.</text><text x="10" y="95" class="en mut">If all 3 copies are on the same disk: one failed disk wipes everything.</text>
-<text x="10" y="115" class="pt mut">Se as 2 mídias estiverem na mesma sala: um incêndio/roubo apaga tudo.</text><text x="10" y="115" class="en mut">If the 2 media are in the same room: one fire/theft wipes everything.</text>
-<text x="10" y="135" class="pt mut">A cópia fora do local sobrevive a um desastre na região inteira.</text><text x="10" y="135" class="en mut">The off-site copy survives a disaster affecting the whole region.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 150" role="img" aria-label="A regra 3-2-1 / The 3-2-1 rule" style="min-width:600px">
+<rect x="10" y="10" width="200" height="56" rx="4" class="brandfill"/>
+<text x="110" y="34" class="pt" text-anchor="middle">3 cópias</text><text x="110" y="34" class="en" text-anchor="middle">3 copies</text>
+<text x="110" y="53" class="pt mut mono" text-anchor="middle">o original + 2 backups</text><text x="110" y="53" class="en mut mono" text-anchor="middle">the original + 2 backups</text>
+<rect x="230" y="10" width="200" height="56" rx="4" class="ln fillsoft"/>
+<text x="330" y="34" class="pt" text-anchor="middle">2 mídias diferentes</text><text x="330" y="34" class="en" text-anchor="middle">2 different media</text>
+<text x="330" y="53" class="pt mut mono" text-anchor="middle">ex.: disco local + nuvem</text><text x="330" y="53" class="en mut mono" text-anchor="middle">e.g. local disk + cloud</text>
+<rect x="450" y="10" width="200" height="56" rx="4" class="ln fillsoft"/>
+<text x="550" y="34" class="pt" text-anchor="middle">1 fora do local</text><text x="550" y="34" class="en" text-anchor="middle">1 off-site</text>
+<text x="550" y="53" class="pt mut mono" text-anchor="middle">outra região/provedor</text><text x="550" y="53" class="en mut mono" text-anchor="middle">another region/provider</text>
+<text x="10" y="96" class="pt mut" text-anchor="start">Se as 3 cópias estiverem no mesmo disco: um disco falho apaga tudo.</text><text x="10" y="96" class="en mut" text-anchor="start">If all 3 copies are on the same disk: one failed disk wipes everything.</text>
+<text x="10" y="116" class="pt mut" text-anchor="start">Se as 2 mídias estiverem na mesma sala: um incêndio/roubo apaga tudo.</text><text x="10" y="116" class="en mut" text-anchor="start">If the 2 media are in the same room: one fire/theft wipes everything.</text>
+<text x="10" y="136" class="pt mut" text-anchor="start">A cópia fora do local sobrevive a um desastre na região inteira.</text><text x="10" y="136" class="en mut" text-anchor="start">The off-site copy survives a disaster affecting the whole region.</text>
 </svg></div><figcaption><span class="pt">3 cópias dos dados, em 2 tipos de mídia diferentes, com 1 delas fora do local — não é regra de banco de dados, é regra de qualquer backup que importa.</span><span class="en">3 copies of the data, on 2 different kinds of media, with 1 kept off-site — not a database-specific rule, it is the rule for any backup that matters.</span></figcaption></figure>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Exemplo no mundo Postgres</span><span class="en">Example in the Postgres world</span></th></tr></thead><tbody><tr><td><span class="pt">Cópia 1</span><span class="en">Copy 1</span></td><td><span class="pt">o banco em produção</span><span class="en">the production database</span></td></tr><tr><td><span class="pt">Cópia 2</span><span class="en">Copy 2</span></td><td><span class="pt"><code>pg_dump</code> diário num disco/volume separado da mesma máquina</span><span class="en">a daily <code>pg_dump</code> on a disk/volume separate from the same machine</span></td></tr><tr><td><span class="pt">Cópia 3 (fora do local)</span><span class="en">Copy 3 (off-site)</span></td><td><span class="pt">o dump enviado para outro provedor/região (S3 em outra região, outra nuvem)</span><span class="en">the dump shipped to another provider/region (S3 in another region, another cloud)</span></td></tr><tr><td><span class="pt">Em serviços gerenciados</span><span class="en">On managed services</span></td><td><span class="pt">RDS já faz backups automáticos com retenção e cópia entre zonas; confirme se ela cobre outra REGIÃO também</span><span class="en">RDS already does automatic backups with retention and cross-zone copies; confirm it also covers another REGION</span></td></tr></tbody></table></div>
 <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Um backup que nunca foi restaurado é uma hipótese, não um backup. Agende um teste de restauração periódico — mensal é um bom começo — e meça quanto tempo leva (seu RTO, <em>recovery time objective</em>).</span><span class="en">A backup that has never been restored is a hypothesis, not a backup. Schedule a periodic restore test — monthly is a good start — and measure how long it takes (your RTO, <em>recovery time objective</em>).</span></div>
@@ -515,23 +504,23 @@ psql -U postgres -d loja_nova &lt; loja.sql                            <span cla
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Padrão</span><span class="en">Pattern</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Risco principal</span><span class="en">Main risk</span></th></tr></thead><tbody><tr><td><span class="pt">Cache-aside (lazy loading)</span><span class="en">Cache-aside (lazy loading)</span></td><td><span class="pt">a aplicação lê o cache; se faltar, lê o banco e GRAVA no cache</span><span class="en">the application reads the cache; on a miss, it reads the database and WRITES to the cache</span></td><td><span class="pt">dado desatualizado até expirar ou ser invalidado</span><span class="en">stale data until it expires or is invalidated</span></td></tr><tr><td><span class="pt">Write-through</span><span class="en">Write-through</span></td><td><span class="pt">toda escrita vai para o banco E o cache, juntas</span><span class="en">every write goes to the database AND the cache, together</span></td><td><span class="pt">escrita fica mais lenta (duas gravações)</span><span class="en">writes get slower (two writes)</span></td></tr><tr><td><span class="pt">TTL (time to live)</span><span class="en">TTL (time to live)</span></td><td><span class="pt">cada entrada expira sozinha depois de N segundos</span><span class="en">each entry expires on its own after N seconds</span></td><td><span class="pt">escolher N é um equilíbrio entre "atual" e "rápido"</span><span class="en">choosing N is a trade-off between "fresh" and "fast"</span></td></tr><tr><td><span class="pt">Invalidação explícita</span><span class="en">Explicit invalidation</span></td><td><span class="pt">ao escrever, apaga/atualiza a entrada do cache na hora</span><span class="en">on write, delete/update the cache entry right away</span></td><td><span class="pt">é fácil esquecer um caminho de escrita e deixar cache "furado"</span><span class="en">easy to forget a write path and leave the cache "stale"</span></td></tr></tbody></table></div>
 <div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">"Existem só duas coisas difíceis em ciência da computação: invalidação de cache e nomear coisas." A piada clássica de Phil Karlton é clássica porque é verdade: prefira TTLs curtos e caches simples a esquemas de invalidação espertos demais.</span><span class="en">"There are only two hard things in computer science: cache invalidation and naming things." Phil Karlton's classic joke is classic because it is true: prefer short TTLs and simple caches over overly clever invalidation schemes.</span></div>
 <h3><span class="pt">Onde colocar o cache</span><span class="en">Where to put the cache</span></h3>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 160" role="img" aria-label="Onde cachear / Where to cache" style="min-width:620px">
-<rect x="10" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
-<text x="70.0" y="82.0" class="pt " text-anchor="middle">navegador</text><text x="70.0" y="82.0" class="en " text-anchor="middle">browser</text>
-<text x="70.0" y="98.0" class="pt mut mono" text-anchor="middle">cache HTTP</text><text x="70.0" y="98.0" class="en mut mono" text-anchor="middle">HTTP cache</text>
-<rect x="180" y="60" width="120" height="50" rx="4" class="ln fillsoft"/>
-<text x="240.0" y="82.0" class="" text-anchor="middle">CDN</text>
-<text x="240.0" y="98.0" class="pt mut mono" text-anchor="middle">respostas inteiras</text><text x="240.0" y="98.0" class="en mut mono" text-anchor="middle">whole responses</text>
-<rect x="350" y="60" width="140" height="50" rx="4" class="ln"/>
-<text x="420.0" y="82.0" class="" text-anchor="middle">app / Redis</text>
-<text x="420.0" y="98.0" class="pt mut mono" text-anchor="middle">objetos, sessões</text><text x="420.0" y="98.0" class="en mut mono" text-anchor="middle">objects, sessions</text>
-<rect x="540" y="60" width="140" height="50" rx="4" class="ln fillsoft"/>
-<text x="610.0" y="82.0" class="" text-anchor="middle">Postgres</text>
-<text x="610.0" y="98.0" class="mut mono" text-anchor="middle">shared_buffers</text>
-<path d="M130 85L180 85" class="ln"/><path d="M172.8 88.5L180 85L172.8 81.5" class="ln"/>
-<path d="M300 85L350 85" class="ln"/><path d="M342.8 88.5L350 85L342.8 81.5" class="ln"/>
-<path d="M490 85L540 85" class="ln"/><path d="M532.8 88.5L540 85L532.8 81.5" class="ln"/>
-<text x="10" y="140" class="pt mut">Quanto mais perto do usuário, mais rápido — e mais fácil de servir dado velho sem perceber.</text><text x="10" y="140" class="en mut">The closer to the user, the faster — and the easier to serve stale data without noticing.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 710 112" role="img" aria-label="Onde cachear / Where to cache" style="min-width:640px">
+<rect x="10" y="10" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="85" y="34" class="pt" text-anchor="middle">navegador</text><text x="85" y="34" class="en" text-anchor="middle">browser</text>
+<text x="85" y="53" class="pt mut mono" text-anchor="middle">cache HTTP</text><text x="85" y="53" class="en mut mono" text-anchor="middle">HTTP cache</text>
+<rect x="190" y="10" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="265" y="34" class="" text-anchor="middle">CDN</text>
+<text x="265" y="53" class="pt mut mono" text-anchor="middle">respostas inteiras</text><text x="265" y="53" class="en mut mono" text-anchor="middle">whole responses</text>
+<rect x="370" y="10" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="445" y="34" class="" text-anchor="middle">app / Redis</text>
+<text x="445" y="53" class="pt mut mono" text-anchor="middle">objetos, sessões</text><text x="445" y="53" class="en mut mono" text-anchor="middle">objects, sessions</text>
+<rect x="550" y="10" width="150" height="56" rx="4" class="ln fillsoft"/>
+<text x="625" y="34" class="" text-anchor="middle">Postgres</text>
+<text x="625" y="53" class="mut mono" text-anchor="middle">shared_buffers</text>
+<path d="M160 38L190 38" class="ln"/><path d="M183.2 34.7L190 38L183.2 41.3" class="ln"/>
+<path d="M340 38L370 38" class="ln"/><path d="M363.2 34.7L370 38L363.2 41.3" class="ln"/>
+<path d="M520 38L550 38" class="ln"/><path d="M543.2 34.7L550 38L543.2 41.3" class="ln"/>
+<text x="10" y="96" class="pt mut" text-anchor="start">Quanto mais perto do usuário, mais rápido — e mais fácil servir dado velho sem perceber.</text><text x="10" y="96" class="en mut" text-anchor="start">The closer to the user, the faster — and the easier to serve stale data without noticing.</text>
 </svg></div><figcaption><span class="pt">Camadas de cache de um pedido típico, da borda até o banco.</span><span class="en">Cache layers of a typical request, from the edge down to the database.</span></figcaption></figure>
 <h3><span class="pt">O problema N+1: o "cache que você nem precisava"</span><span class="en">The N+1 problem: the "cache you did not even need"</span></h3>
 <pre><code><span class="tok-c">-- N+1: 1 consulta para os pedidos + N consultas, uma por pedido, para o cliente</span>
