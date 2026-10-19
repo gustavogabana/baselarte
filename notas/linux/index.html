@@ -209,26 +209,26 @@
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo</span><span class="en">File</span></th><th><span class="pt">Guarda</span><span class="en">Holds</span></th><th><span class="pt">Quem lê</span><span class="en">Who can read</span></th></tr></thead><tbody><tr><td><code>/etc/passwd</code></td><td><span class="pt">contas: nome, UID, GID, home, shell</span><span class="en">accounts: name, UID, GID, home, shell</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/shadow</code></td><td><span class="pt">hash da senha, validade, bloqueio</span><span class="en">password hash, expiry, lock</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr><tr><td><code>/etc/group</code></td><td><span class="pt">grupos e seus membros</span><span class="en">groups and their members</span></td><td><span class="pt">todos</span><span class="en">everyone</span></td></tr><tr><td><code>/etc/sudoers</code> e <code>/etc/sudoers.d/</code></td><td><span class="pt">quem pode virar quem (editar só com <code>visudo</code>)</span><span class="en">who may become whom (edit only with <code>visudo</code>)</span></td><td><span class="pt">só root</span><span class="en">root only</span></td></tr></tbody></table></div>
 <h3><span class="pt">O superusuário (root)</span><span class="en">The superuser (root)</span></h3>
 <p><span class="pt">O superusuário é quem tem <em>UID 0</em>, não quem se chama “root”. Para o kernel, UID 0 ignora as checagens de permissão de arquivos e pode, por exemplo, ler qualquer arquivo, matar qualquer processo e abrir portas abaixo de 1024. No Linux moderno esse poder é dividido em <em>capabilities</em> (ex.: <code>CAP_NET_BIND_SERVICE</code> só para abrir portas baixas), mas o root tradicional tem todas. Por isso a regra de ouro é: <em>use root só no instante em que precisar</em>.</span><span class="en">The superuser is whoever has <em>UID 0</em>, not whoever is named “root”. To the kernel, UID 0 skips file permission checks and can, for example, read any file, kill any process and bind ports below 1024. Modern Linux splits that power into <em>capabilities</em> (e.g. <code>CAP_NET_BIND_SERVICE</code> just for low ports), but the traditional root has them all. Hence the golden rule: <em>use root only at the moment you need it</em>.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 164" role="img" aria-label="Fluxo do sudo / sudo flow" style="min-width:560px">
-<rect x="10" y="40" width="120" height="56" rx="4" class="ln fillsoft"/>
-<text x="70.0" y="65.0" class="" text-anchor="middle">ana (UID 1000)</text>
-<text x="70.0" y="81.0" class="pt mut mono" text-anchor="middle">usuário comum</text><text x="70.0" y="81.0" class="en mut mono" text-anchor="middle">regular user</text>
-<rect x="180" y="20" width="150" height="96" rx="4" class="ln"/>
-<text x="255.0" y="72.0" class="mono" text-anchor="middle">sudo apt update</text>
-<text x="255" y="98" class="pt mut" text-anchor="middle">pede ao sudo</text><text x="255" y="98" class="en mut" text-anchor="middle">asks sudo</text>
-<rect x="380" y="20" width="120" height="40" rx="4" class="ln"/>
-<text x="440.0" y="44.0" class="" text-anchor="middle">sudoers?</text>
-<rect x="380" y="76" width="120" height="40" rx="4" class="ln"/>
-<text x="440.0" y="100.0" class="pt " text-anchor="middle">pede senha de ana</text><text x="440.0" y="100.0" class="en " text-anchor="middle">asks ana’s password</text>
-<rect x="530" y="40" width="105" height="56" rx="4" class="ln fillsoft"/>
-<text x="582.5" y="65.0" class="" text-anchor="middle">root (UID 0)</text>
-<text x="582.5" y="81.0" class="pt mut mono" text-anchor="middle">1 comando</text><text x="582.5" y="81.0" class="en mut mono" text-anchor="middle">1 command</text>
-<path d="M130 68L180 68" class="ln"/><path d="M172.8 71.5L180 68L172.8 64.5" class="ln"/>
-<path d="M330 50L380 40" class="ln"/><path d="M373.6 44.8L380 40L372.3 38.0" class="ln"/>
-<path d="M330 90L380 96" class="ln"/><path d="M372.4 98.6L380 96L373.3 91.7" class="ln"/>
-<path d="M500 60L530 60" class="ln"/><path d="M522.8 63.5L530 60L522.8 56.5" class="ln"/>
-<path d="M500 96L530 80" class="ln"/><path d="M525.3 86.5L530 80L522.0 80.3" class="ln"/>
-<text x="20" y="150" class="pt mut">Tudo fica registrado: /var/log/auth.log (Debian/Ubuntu) ou journalctl _COMM=sudo.</text><text x="20" y="150" class="en mut">Everything is logged: /var/log/auth.log (Debian/Ubuntu) or journalctl _COMM=sudo.</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 164" role="img" aria-label="Fluxo do sudo / sudo flow" style="min-width:700px">
+<rect x="10" y="40" width="130" height="56" rx="4" class="ln fillsoft"/>
+<text x="75" y="65" class="" text-anchor="middle">ana (UID 1000)</text>
+<text x="75" y="83" class="pt mut mono" text-anchor="middle">usuário comum</text><text x="75" y="83" class="en mut mono" text-anchor="middle">regular user</text>
+<rect x="190" y="20" width="140" height="96" rx="4" class="ln"/>
+<text x="260" y="64" class="mono" text-anchor="middle">sudo apt update</text>
+<text x="260" y="90" class="pt mut" text-anchor="middle">pede ao sudo</text><text x="260" y="90" class="en mut" text-anchor="middle">asks sudo</text>
+<rect x="390" y="20" width="190" height="40" rx="4" class="ln"/>
+<text x="485" y="44" class="pt" text-anchor="middle">está no sudoers?</text><text x="485" y="44" class="en" text-anchor="middle">in sudoers?</text>
+<rect x="390" y="76" width="190" height="40" rx="4" class="ln"/>
+<text x="485" y="100" class="pt" text-anchor="middle">pede a senha de ana</text><text x="485" y="100" class="en" text-anchor="middle">asks ana’s password</text>
+<rect x="640" y="40" width="130" height="56" rx="4" class="ln fillsoft"/>
+<text x="705" y="65" class="" text-anchor="middle">root (UID 0)</text>
+<text x="705" y="83" class="pt mut mono" text-anchor="middle">1 comando</text><text x="705" y="83" class="en mut mono" text-anchor="middle">1 command</text>
+<path d="M140 68L190 68" class="ln"/><path d="M183.2 64.7L190 68L183.2 71.3" class="ln"/>
+<path d="M330 50L390 40" class="ln"/><path d="M382.8 37.9L390 40L383.9 44.3" class="ln"/>
+<path d="M330 86L390 96" class="ln"/><path d="M383.9 91.7L390 96L382.8 98.1" class="ln"/>
+<path d="M580 40L640 58" class="ln"/><path d="M634.5 52.9L640 58L632.6 59.2" class="ln"/>
+<path d="M580 96L640 78" class="ln"/><path d="M632.6 76.8L640 78L634.5 83.1" class="ln"/>
+<text x="20" y="150" class="pt mut" text-anchor="start">Tudo fica registrado: /var/log/auth.log (Debian/Ubuntu) ou journalctl _COMM=sudo.</text><text x="20" y="150" class="en mut" text-anchor="start">Everything is logged: /var/log/auth.log (Debian/Ubuntu) or journalctl _COMM=sudo.</text>
 </svg></div><figcaption><span class="pt">O fluxo do sudo: a pessoa continua sendo ela mesma, e só aquele comando roda como root. Isso deixa um rastro de auditoria, ao contrário de um shell root permanente.</span><span class="en">The sudo flow: the person stays themselves, and only that command runs as root. That leaves an audit trail, unlike a permanent root shell.</span></figcaption></figure>
 <pre><code>id                         # uid=1000(ana) gid=1000(ana) groups=1000(ana),27(sudo),1001(dev)
 whoami                     # ana
@@ -254,7 +254,7 @@ sudo visudo                # edita o sudoers com validação de sintaxe</code></
 <h2 id="perms"><span class="pt">Arquivos e permissões</span><span class="en">Files and permissions</span></h2>
 
 <p><span class="pt">Todo arquivo tem um <em>dono</em> (usuário), um <em>grupo</em> e nove bits de permissão: leitura (<code>r</code>), escrita (<code>w</code>) e execução (<code>x</code>) para três públicos: o dono (<code>u</code>), o grupo (<code>g</code>) e todo o resto (<code>o</code>). O kernel escolhe <em>um</em> público, nesta ordem: se você é o dono, vale só a regra do dono; senão, se está no grupo, vale a do grupo; senão, a de outros.</span><span class="en">Every file has an <em>owner</em> (user), a <em>group</em> and nine permission bits: read (<code>r</code>), write (<code>w</code>) and execute (<code>x</code>) for three audiences: the owner (<code>u</code>), the group (<code>g</code>) and everybody else (<code>o</code>). The kernel picks <em>one</em> audience, in this order: if you are the owner, only the owner rule applies; otherwise, if you are in the group, the group rule; otherwise, the others rule.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 178" role="img" aria-label="Anatomia das permissões / Permission anatomy" style="min-width:640px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 780 178" role="img" aria-label="Anatomia das permissões / Permission anatomy" style="min-width:700px">
 <text x="20" y="40" class="mut mono">ls -l:</text>
 <rect x="130" y="20" width="42" height="34" rx="4" class="ln"/>
 <text x="151" y="43" class="mono" text-anchor="middle">-</text>
@@ -479,7 +479,7 @@ journalctl -p err -b           # só erros desde o último boot</code></pre>
 </svg></div><figcaption><span class="pt">Uma sessão SSH vista como árvore: o <code>systemd</code> iniciou o <code>sshd</code>, que criou um processo para ana, que criou o <code>bash</code>, que criou <code>vim</code> e <code>ls</code>. Veja a sua com <code>pstree -p</code>.</span><span class="en">An SSH session seen as a tree: <code>systemd</code> started <code>sshd</code>, which created a process for ana, which created <code>bash</code>, which created <code>vim</code> and <code>ls</code>. See yours with <code>pstree -p</code>.</span></figcaption></figure>
 <h3><span class="pt">Como um processo nasce: fork, exec e wait</span><span class="en">How a process is born: fork, exec and wait</span></h3>
 <p><span class="pt">Linux cria processos em duas etapas (Kerrisk, cap. 24–27). <code>fork()</code> <em>clona</em> o processo atual: nasce um filho idêntico, com PID novo. Em seguida o filho chama <code>exec()</code>, que <em>troca o programa</em> dentro dele (o PID continua). O pai chama <code>wait()</code> para esperar o filho terminar e ler o código de saída. É exatamente isso que o bash faz quando você digita <code>ls</code>.</span><span class="en">Linux creates processes in two steps (Kerrisk, ch. 24–27). <code>fork()</code> <em>clones</em> the current process: an identical child is born with a new PID. Then the child calls <code>exec()</code>, which <em>swaps the program</em> inside it (the PID stays). The parent calls <code>wait()</code> to wait for the child to finish and read its exit code. This is exactly what bash does when you type <code>ls</code>.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 254" role="img" aria-label="fork exec wait" style="min-width:560px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 254" role="img" aria-label="fork exec wait" style="min-width:620px">
 <rect x="70" y="8" width="160" height="34" rx="4" class="ln fillsoft"/>
 <text x="150.0" y="29.0" class="pt " text-anchor="middle">bash (pai)</text><text x="150.0" y="29.0" class="en " text-anchor="middle">bash (parent)</text>
 <rect x="400" y="8" width="190" height="34" rx="4" class="ln fillsoft"/>
@@ -582,35 +582,35 @@ renice 5 -p 2301</code></pre>
 <h2 id="network"><span class="pt">Redes: ver, entender e interagir</span><span class="en">Networking: see, understand and interact</span></h2>
 
 <p><span class="pt">Para a rede, o Linux usa a pilha TCP/IP no kernel. Quem fala com ela são os <em>sockets</em> (Kerrisk, cap. 56–61): um programa pede ao kernel um socket, liga-o a um IP e uma <em>porta</em> e passa a enviar e receber bytes. Uma conexão é identificada por quatro valores: IP e porta de origem, IP e porta de destino.</span><span class="en">For networking, Linux uses the TCP/IP stack inside the kernel. Programs talk to it through <em>sockets</em> (Kerrisk, ch. 56–61): a program asks the kernel for a socket, binds it to an IP and a <em>port</em>, and sends and receives bytes. A connection is identified by four values: source IP and port, destination IP and port.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 288" role="img" aria-label="Camadas de rede / Network layers" style="min-width:560px">
-<text x="20" y="20" class="pt mut">camada</text><text x="20" y="20" class="en mut">layer</text>
-<text x="160" y="20" class="pt mut">protocolos</text><text x="160" y="20" class="en mut">protocols</text>
-<text x="370" y="20" class="pt mut">ferramentas para ver e interagir</text><text x="370" y="20" class="en mut">tools to inspect and interact</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 660 288" role="img" aria-label="Camadas de rede / Network layers" style="min-width:600px">
+<text x="20" y="20" class="pt mut" text-anchor="start">camada</text><text x="20" y="20" class="en mut" text-anchor="start">layer</text>
+<text x="160" y="20" class="pt mut" text-anchor="start">protocolos</text><text x="160" y="20" class="en mut" text-anchor="start">protocols</text>
+<text x="400" y="20" class="pt mut" text-anchor="start">ferramentas para ver e interagir</text><text x="400" y="20" class="en mut" text-anchor="start">tools to inspect and interact</text>
 <rect x="10" y="32" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="60" class="pt " text-anchor="middle">Aplicação</text><text x="75" y="60" class="en " text-anchor="middle">Application</text>
-<rect x="150" y="32" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="60" class="mono">HTTP · SSH · DNS · SMTP</text>
-<rect x="360" y="32" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="60" class="mono">curl · ssh · dig · wget</text>
+<text x="75" y="60" class="pt" text-anchor="middle">Aplicação</text><text x="75" y="60" class="en" text-anchor="middle">Application</text>
+<rect x="150" y="32" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="60" class="mono" text-anchor="start">HTTP · SSH · DNS · SMTP</text>
+<rect x="390" y="32" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="60" class="mono" text-anchor="start">curl · ssh · dig · wget</text>
 <rect x="10" y="88" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="116" class="pt " text-anchor="middle">Transporte</text><text x="75" y="116" class="en " text-anchor="middle">Transport</text>
-<rect x="150" y="88" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="116" class="mono">TCP · UDP · portas</text>
-<rect x="360" y="88" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="116" class="mono">ss · nc · nmap · lsof -i</text>
+<text x="75" y="116" class="pt" text-anchor="middle">Transporte</text><text x="75" y="116" class="en" text-anchor="middle">Transport</text>
+<rect x="150" y="88" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="116" class="pt mono" text-anchor="start">TCP · UDP · portas</text><text x="160" y="116" class="en mono" text-anchor="start">TCP · UDP · ports</text>
+<rect x="390" y="88" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="116" class="mono" text-anchor="start">ss · nc · nmap · lsof -i</text>
 <rect x="10" y="144" width="130" height="46" rx="4" class="ln fillsoft"/>
 <text x="75" y="172" class="" text-anchor="middle">Internet</text>
-<rect x="150" y="144" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="172" class="mono">IP · ICMP · rotas</text>
-<rect x="360" y="144" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="172" class="mono">ip addr · ip route · ping · mtr</text>
+<rect x="150" y="144" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="172" class="pt mono" text-anchor="start">IP · ICMP · rotas</text><text x="160" y="172" class="en mono" text-anchor="start">IP · ICMP · routes</text>
+<rect x="390" y="144" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="172" class="mono" text-anchor="start">ip addr · ip route · ping · mtr</text>
 <rect x="10" y="200" width="130" height="46" rx="4" class="ln fillsoft"/>
-<text x="75" y="228" class="pt " text-anchor="middle">Enlace</text><text x="75" y="228" class="en " text-anchor="middle">Link</text>
-<rect x="150" y="200" width="200" height="46" rx="4" class="ln"/>
-<text x="160" y="228" class="mono">Ethernet · Wi-Fi · MAC · ARP</text>
-<rect x="360" y="200" width="270" height="46" rx="4" class="ln"/>
-<text x="370" y="228" class="mono">ip link · ip neigh · iw · ethtool</text>
-<text x="10" y="276" class="pt mut">tcpdump e Wireshark capturam pacotes de todas as camadas ao mesmo tempo.</text><text x="10" y="276" class="en mut">tcpdump and Wireshark capture packets of all layers at once.</text>
+<text x="75" y="228" class="pt" text-anchor="middle">Enlace</text><text x="75" y="228" class="en" text-anchor="middle">Link</text>
+<rect x="150" y="200" width="230" height="46" rx="4" class="ln"/>
+<text x="160" y="228" class="mono" text-anchor="start">Ethernet · Wi-Fi · MAC · ARP</text>
+<rect x="390" y="200" width="260" height="46" rx="4" class="ln"/>
+<text x="400" y="228" class="mono" text-anchor="start">ip link · ip neigh · iw · ethtool</text>
+<text x="10" y="276" class="pt mut" text-anchor="start">tcpdump e Wireshark capturam pacotes de todas as camadas ao mesmo tempo.</text><text x="10" y="276" class="en mut" text-anchor="start">tcpdump and Wireshark capture packets of all layers at once.</text>
 </svg></div><figcaption><span class="pt">As quatro camadas do TCP/IP e a ferramenta certa para cada uma. Diagnostique de baixo para cima: cabo/Wi-Fi, IP, rota, DNS, porta, aplicação.</span><span class="en">The four TCP/IP layers and the right tool for each. Troubleshoot bottom-up: cable/Wi-Fi, IP, route, DNS, port, application.</span></figcaption></figure>
 <h3><span class="pt">Ver o que existe: interfaces, rotas e DNS</span><span class="en">See what exists: interfaces, routes and DNS</span></h3>
 <pre><code>ip -br addr                     # interfaces e IPs, uma linha cada (-br = brief)
