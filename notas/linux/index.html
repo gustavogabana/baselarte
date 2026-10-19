@@ -149,7 +149,7 @@
 <text x="166" y="97" class="mut mono">bash · zsh · ls · cp · grep · systemctl</text>
 <rect x="150" y="116" width="470" height="44" rx="4" class="ln fillsoft"/>
 <text x="166" y="135" class="pt ">Bibliotecas</text><text x="166" y="135" class="en ">Libraries</text>
-<text x="166" y="151" class="mut mono">glibc (libc): traduz funções em chamadas ao kernel</text>
+<text x="166" y="151" class="pt mut mono">glibc (libc): traduz funções em chamadas ao kernel</text><text x="166" y="151" class="en mut mono">glibc (libc): turns functions into kernel calls</text>
 <text x="20" y="34" class="pt mut">espaço do</text><text x="20" y="34" class="en mut">user</text>
 <text x="20" y="48" class="pt mut">usuário</text><text x="20" y="48" class="en mut">space</text>
 <path d="M138 8V160" class="ln"/>
@@ -651,7 +651,7 @@ nc -l 9000                      # abre um "servidor" simples na porta 9000</code
 <h2 id="ssh"><span class="pt">SSH: entrar, acompanhar e proteger</span><span class="en">SSH: log in, watch and protect</span></h2>
 
 <p><span class="pt">O <em>SSH</em> abre um terminal remoto cifrado (porta 22). É a porta de entrada de quase todo servidor Linux, então vale entender como funciona e como acompanhá-lo. O servidor prova quem é com uma <em>chave de host</em>; você prova quem é com senha ou, melhor, com um <em>par de chaves</em>: a privada nunca sai da sua máquina, a pública vai para o servidor.</span><span class="en"><em>SSH</em> opens an encrypted remote terminal (port 22). It is the front door of almost every Linux server, so it is worth understanding how it works and how to watch it. The server proves who it is with a <em>host key</em>; you prove who you are with a password or, better, a <em>key pair</em>: the private key never leaves your machine, the public one goes to the server.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 212" role="img" aria-label="Como o SSH funciona / How SSH works" style="min-width:560px">
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 212" role="img" aria-label="Como o SSH funciona / How SSH works" style="min-width:600px">
 <rect x="10" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
 <text x="135" y="32" class="pt " text-anchor="middle">Cliente (seu PC)</text><text x="135" y="32" class="en " text-anchor="middle">Client (your PC)</text>
 <text x="24" y="62" class="mono">~/.ssh/id_ed25519</text>
@@ -660,21 +660,22 @@ nc -l 9000                      # abre um "servidor" simples na porta 9000</code
 <text x="24" y="126" class="pt mut">chaves de servidores já vistos</text><text x="24" y="126" class="en mut">keys of servers already seen</text>
 <text x="24" y="154" class="mono">~/.ssh/config</text>
 <text x="24" y="172" class="pt mut">apelidos: “ssh meuserver”</text><text x="24" y="172" class="en mut">aliases: “ssh myserver”</text>
-<rect x="380" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
-<text x="505" y="32" class="pt " text-anchor="middle">Servidor</text><text x="505" y="32" class="en " text-anchor="middle">Server</text>
-<text x="394" y="62" class="mono">/etc/ssh/sshd_config</text>
-<text x="394" y="80" class="pt mut">regras do servidor</text><text x="394" y="80" class="en mut">server rules</text>
-<text x="394" y="108" class="mono">~/.ssh/authorized_keys</text>
-<text x="394" y="126" class="pt mut">chaves PÚBLICAS aceitas</text><text x="394" y="126" class="en mut">accepted PUBLIC keys</text>
-<text x="394" y="154" class="mono">/etc/ssh/ssh_host_*_key</text>
-<text x="394" y="172" class="pt mut">identidade do servidor</text><text x="394" y="172" class="en mut">server identity</text>
-<path d="M260 60L380 60" class="ln"/><path d="M372.8 63.5L380 60L372.8 56.5" class="ln"/>
-<path d="M380 90L260 90" class="ln"/><path d="M267.2 86.5L260 90L267.2 93.5" class="ln"/>
-<path d="M260 130L380 130" class="ln"/><path d="M372.8 133.5L380 130L372.8 126.5" class="ln"/>
-<text x="320" y="52" class="mono" text-anchor="middle">TCP :22</text>
-<text x="320" y="82" class="pt mut" text-anchor="middle">1 chave do host</text><text x="320" y="82" class="en mut" text-anchor="middle">1 host key</text>
-<text x="320" y="122" class="pt mut" text-anchor="middle">2 prova (assina)</text><text x="320" y="122" class="en mut" text-anchor="middle">2 proof (signs)</text>
-<text x="320" y="190" class="pt mut" text-anchor="middle">3 canal cifrado</text><text x="320" y="190" class="en mut" text-anchor="middle">3 encrypted channel</text>
+<rect x="440" y="10" width="250" height="190" rx="4" class="ln fillsoft"/>
+<text x="565" y="32" class="pt " text-anchor="middle">Servidor</text><text x="565" y="32" class="en " text-anchor="middle">Server</text>
+<text x="454" y="62" class="mono">/etc/ssh/sshd_config</text>
+<text x="454" y="80" class="pt mut">regras do servidor</text><text x="454" y="80" class="en mut">server rules</text>
+<text x="454" y="108" class="mono">~/.ssh/authorized_keys</text>
+<text x="454" y="126" class="pt mut">chaves PÚBLICAS aceitas</text><text x="454" y="126" class="en mut">accepted PUBLIC keys</text>
+<text x="454" y="154" class="mono">/etc/ssh/ssh_host_*_key</text>
+<text x="454" y="172" class="pt mut">identidade do servidor</text><text x="454" y="172" class="en mut">server identity</text>
+
+
+
+<text x="350" y="52" class="mono" text-anchor="middle">TCP :22</text>
+<text x="350" y="82" class="pt mut" text-anchor="middle">1 chave do host</text><text x="350" y="82" class="en mut" text-anchor="middle">1 host key</text>
+<text x="350" y="122" class="pt mut" text-anchor="middle">2 prova (assina)</text><text x="350" y="122" class="en mut" text-anchor="middle">2 proof (signs)</text>
+<text x="350" y="150" class="pt mut" text-anchor="middle">3 canal cifrado</text><text x="350" y="150" class="en mut" text-anchor="middle">3 encrypted channel</text>
+<path d="M260 60L440 60" class="ln"/><path d="M433.2 56.7L440 60L433.2 63.3" class="ln"/><path d="M440 90L260 90" class="ln"/><path d="M266.8 93.3L260 90L266.8 86.7" class="ln"/><path d="M260 130L440 130" class="ln"/><path d="M433.2 126.7L440 130L433.2 133.3" class="ln"/>
 </svg></div><figcaption><span class="pt">Os arquivos de cada lado. Na primeira conexão o cliente pergunta se confia na chave do host e a grava em <code>known_hosts</code>; se ela mudar depois, o SSH avisa (pode ser ataque).</span><span class="en">The files on each side. On first connection the client asks whether to trust the host key and stores it in <code>known_hosts</code>; if it changes later, SSH warns you (it may be an attack).</span></figcaption></figure>
 <pre><code>ssh-keygen -t ed25519 -C "ana@notebook"   # cria o par de chaves (defina uma passphrase)
 ssh-copy-id ana@servidor                  # instala a pública no servidor
@@ -787,19 +788,19 @@ sudo systemctl enable --now nftables      # carrega no boot</code></pre>
 <h2 id="hardening"><span class="pt">Proteger o computador e como saber</span><span class="en">Protecting the computer and how to know</span></h2>
 
 <p><span class="pt">Firewall é uma camada, não a defesa inteira. Segurança é <em>defesa em profundidade</em>: se uma camada falha, a próxima segura. A ordem prática é: reduzir o que está exposto, atualizar, limitar quem entra, vigiar e ter cópia de segurança.</span><span class="en">A firewall is one layer, not the whole defence. Security is <em>defence in depth</em>: if one layer fails, the next holds. The practical order is: reduce what is exposed, update, limit who gets in, watch, and keep backups.</span></p>
-<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 640 244" role="img" aria-label="Defesa em profundidade / Defence in depth" style="min-width:560px">
-<rect x="10.0" y="10" width="620" height="220" rx="4" class="ln"/>
-<rect x="40.0" y="46" width="560" height="168" rx="4" class="ln"/>
-<rect x="70.0" y="82" width="500" height="116" rx="4" class="ln"/>
-<rect x="100.0" y="118" width="440" height="64" rx="4" class="ln"/>
-<text x="22.0" y="28" class="pt ">Rede</text><text x="22.0" y="28" class="en ">Network</text>
-<text x="22.0" y="43" class="mut">firewall · só portas necessárias · Wi-Fi/roteador seguros</text>
-<text x="52.0" y="64" class="pt ">Sistema</text><text x="52.0" y="64" class="en ">System</text>
-<text x="52.0" y="79" class="mut">atualizações · usuários e sudo · SSH só com chave · fail2ban</text>
-<text x="82.0" y="100" class="pt ">Serviços</text><text x="82.0" y="100" class="en ">Services</text>
-<text x="82.0" y="115" class="mut">desligue o que não usa · ss -tulpn · sem root em serviços</text>
-<text x="112.0" y="136" class="pt ">Dados</text><text x="112.0" y="136" class="en ">Data</text>
-<text x="112.0" y="151" class="mut">backup 3-2-1 · disco cifrado (LUKS) · permissões justas</text>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 270" role="img" aria-label="Defesa em profundidade / Defence in depth" style="min-width:620px">
+<rect x="10" y="10" width="680" height="250" rx="4" class="ln"/>
+<text x="24" y="30" class="pt" text-anchor="start">Rede</text><text x="24" y="30" class="en" text-anchor="start">Network</text>
+<text x="24" y="48" class="pt mut" text-anchor="start">firewall · só portas necessárias · Wi-Fi/roteador seguros</text><text x="24" y="48" class="en mut" text-anchor="start">firewall · only needed ports · secure Wi-Fi/router</text>
+<rect x="40" y="64" width="620" height="196" rx="4" class="ln"/>
+<text x="54" y="84" class="pt" text-anchor="start">Sistema</text><text x="54" y="84" class="en" text-anchor="start">System</text>
+<text x="54" y="102" class="pt mut" text-anchor="start">atualizações · usuários e sudo · SSH só com chave · fail2ban</text><text x="54" y="102" class="en mut" text-anchor="start">updates · users and sudo · key-only SSH · fail2ban</text>
+<rect x="70" y="118" width="560" height="142" rx="4" class="ln"/>
+<text x="84" y="138" class="pt" text-anchor="start">Serviços</text><text x="84" y="138" class="en" text-anchor="start">Services</text>
+<text x="84" y="156" class="pt mut" text-anchor="start">desligue o que não usa · ss -tulpn · sem root em serviços</text><text x="84" y="156" class="en mut" text-anchor="start">turn off what you do not use · ss -tulpn · no root services</text>
+<rect x="100" y="172" width="500" height="88" rx="4" class="ln"/>
+<text x="114" y="192" class="pt" text-anchor="start">Dados</text><text x="114" y="192" class="en" text-anchor="start">Data</text>
+<text x="114" y="210" class="pt mut" text-anchor="start">backup 3-2-1 · disco cifrado (LUKS) · permissões justas</text><text x="114" y="210" class="en mut" text-anchor="start">3-2-1 backup · encrypted disk (LUKS) · tight permissions</text>
 </svg></div><figcaption><span class="pt">Defesa em profundidade, de fora para dentro. O atacante precisa vencer todas as camadas; você só precisa que uma segure.</span><span class="en">Defence in depth, from the outside in. The attacker must beat every layer; you only need one to hold.</span></figcaption></figure>
 <h3><span class="pt">Como saber se o seu computador está protegido</span><span class="en">How to know whether your computer is protected</span></h3>
 <div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Resultado saudável</span><span class="en">Healthy result</span></th></tr></thead><tbody><tr><td><span class="pt">O que está escutando?</span><span class="en">What is listening?</span></td><td><code>ss -tulpn</code></td><td><span class="pt">só o que você reconhece; o resto em <code>127.0.0.1</code></span><span class="en">only what you recognise; the rest on <code>127.0.0.1</code></span></td></tr><tr><td><span class="pt">O firewall está ativo?</span><span class="en">Is the firewall on?</span></td><td><code>sudo ufw status verbose</code> · <code>sudo nft list ruleset</code></td><td><span class="pt"><em>Status: active</em>, política <em>deny (incoming)</em></span><span class="en"><em>Status: active</em>, policy <em>deny (incoming)</em></span></td></tr><tr><td><span class="pt">Como me veem de fora?</span><span class="en">How do others see me?</span></td><td><code>nmap -sV IP-DA-MAQUINA</code> (de OUTRO computador seu)</td><td><span class="pt">só as portas que você liberou</span><span class="en">only the ports you opened</span></td></tr><tr><td><span class="pt">Há atualizações pendentes?</span><span class="en">Any pending updates?</span></td><td><code>apt list --upgradable</code> · <code>dnf check-update</code></td><td><span class="pt">vazio, ou só itens recentes</span><span class="en">empty, or only recent items</span></td></tr><tr><td><span class="pt">Alguém tentou entrar?</span><span class="en">Did anyone try to get in?</span></td><td><code>sudo lastb | head</code> · <code>journalctl -u ssh -p warning</code></td><td><span class="pt">poucas falhas; sem sucesso desconhecido em <code>last</code></span><span class="en">few failures; no unknown success in <code>last</code></span></td></tr><tr><td><span class="pt">Quem tem poder de root?</span><span class="en">Who has root power?</span></td><td><code>getent group sudo</code> · <code>awk -F: '$3==0' /etc/passwd</code></td><td><span class="pt">só quem deveria; só <code>root</code> com UID 0</span><span class="en">only who should; only <code>root</code> with UID 0</span></td></tr><tr><td><span class="pt">Há contas sem senha?</span><span class="en">Any accounts without a password?</span></td><td><code>sudo awk -F: '$2==""' /etc/shadow</code></td><td><span class="pt">sem saída</span><span class="en">no output</span></td></tr><tr><td><span class="pt">Existe uma auditoria pronta?</span><span class="en">Is there a ready-made audit?</span></td><td><code>sudo lynis audit system</code></td><td><span class="pt">lista de avisos e sugestões, com nota final</span><span class="en">list of warnings and suggestions with a final score</span></td></tr></tbody></table></div>
