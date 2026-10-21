@@ -288,7 +288,7 @@
   <ul>
     <li><span class="pt">No console, entre como root ou como um admin da management account e abra <b>AWS Organizations → Create an organization</b>.</span><span class="en">In the console, sign in as root or as an admin of the management account and open <b>AWS Organizations → Create an organization</b>.</span></li>
     <li><span class="pt">Isso cria a <b>Root</b> (a raiz da árvore) e deixa a conta atual como management. O modo padrão é <b>all features</b>, o que habilita SCPs; deixe assim.</span><span class="en">This creates the <b>Root</b> (the top of the tree) and leaves the current account as the management account. The default mode is <b>all features</b>, which enables SCPs; keep it.</span></li>
-    <li><span class="pt">Confirme o e-mail de verificação que a AWS envia. Sem isso, a criação de novas contas pode ser bloqueada.</span><span class="en">Confirm the verification email AWS sends. Without it, creating new accounts may be blocked.</span></li>
+    <li><span class="pt">Confirme o e-mail de verificação que a AWS envia (pode demorar a chegar) <b>em até 24 horas</b>; passado esse prazo, é preciso pedir o reenvio. A verificação é exigida antes de convidar contas.</span><span class="en">Confirm the verification email AWS sends (it may be delayed) <b>within 24 hours</b>; after that you must request a resend. Verification is required before inviting accounts.</span></li>
   </ul>
 
   <h4><span class="pt">Passo 3 · Criar as OUs</span><span class="en">Step 3 · Create the OUs</span></h4>
@@ -297,23 +297,117 @@
   </ul>
 
   <h4><span class="pt">Passo 4 · Criar as contas dev e prod</span><span class="en">Step 4 · Create the dev and prod accounts</span></h4>
+  <p><span class="pt">Antes, separe <b>dois e-mails diferentes</b> que nunca tenham sido usados em outra conta AWS (incluindo a management). Um alias como <code>nome+dev@dominio.com</code> costuma ser aceito e cai na mesma caixa de entrada, mas escolha uma caixa que a sua equipe também monitore: é por ela que se recupera o root da conta.</span><span class="en">First, set aside <b>two different emails</b> that have never been used for another AWS account (including the management account). An alias such as <code>name+dev@domain.com</code> is usually accepted and lands in the same inbox, but pick a mailbox your team also monitors: it is how the account’s root is recovered.</span></p>
+  <ol>
+    <li><span class="pt">Na management account: <b>AWS Organizations → AWS accounts → Add an AWS account → Create an AWS account</b>.</span><span class="en">In the management account: <b>AWS Organizations → AWS accounts → Add an AWS account → Create an AWS account</b>.</span></li>
+    <li><span class="pt"><b>AWS account name</b>: <code>dev</code>. <b>Email address of the account’s root user</b>: o e-mail exclusivo desta conta (global e único: duas contas não podem ter o mesmo). Regras da API: de 6 a 64 caracteres, só ASCII de 7 bits, um único <code>@</code>. Um e-mail inválido impede acessar o root e remover a conta depois.</span><span class="en"><b>AWS account name</b>: <code>dev</code>. <b>Email address of the account’s root user</b>: the email exclusive to this account (globally unique: two accounts cannot share one). API rules: 6 to 64 characters, 7-bit ASCII only, a single <code>@</code>. An invalid email makes it impossible to reach the root and to remove the account later.</span></li>
+    <li><span class="pt"><b>IAM role name</b>: deixe em branco para usar <code>OrganizationAccountAccessRole</code>. Essa role é criada <i>dentro</i> da conta nova, confia na management account e dá permissões de administrador. O nome não pode começar com <code>AWSServiceRoleFor</code>.</span><span class="en"><b>IAM role name</b>: leave blank to use <code>OrganizationAccountAccessRole</code>. This role is created <i>inside</i> the new account, trusts the management account and grants administrator permissions. The name cannot start with <code>AWSServiceRoleFor</code>.</span></li>
+    <li><span class="pt"><b>Tags</b> (opcional, mas útil): por exemplo <code>Environment=dev</code>. Se uma tag for inválida, a requisição inteira falha e a conta não é criada.</span><span class="en"><b>Tags</b> (optional, but useful): for example <code>Environment=dev</code>. If any tag is invalid, the whole request fails and the account is not created.</span></li>
+    <li><span class="pt">Clique em <b>Create AWS account</b>. A criação é <b>assíncrona</b>: a conta aparece na lista como pendente e pode levar alguns minutos até ficar utilizável. Atualize a página.</span><span class="en">Click <b>Create AWS account</b>. Creation is <b>asynchronous</b>: the account shows up as pending and can take a few minutes to become usable. Refresh the page.</span></li>
+    <li><span class="pt">Repita tudo para <code>prod</code>, com outro e-mail.</span><span class="en">Repeat everything for <code>prod</code>, with a different email.</span></li>
+    <li><span class="pt">Anote o <b>ID de 12 dígitos</b> de cada conta (<code>&lt;ID_CONTA_DEV&gt;</code> e <code>&lt;ID_CONTA_PROD&gt;</code>). Você vai usá-los em ARNs, em trust policies e nos perfis da CLI.</span><span class="en">Write down each account’s <b>12-digit ID</b> (<code>&lt;ID_CONTA_DEV&gt;</code> and <code>&lt;ID_CONTA_PROD&gt;</code>). You will use them in ARNs, trust policies and CLI profiles.</span></li>
+    <li><span class="pt">Mova cada conta para a OU certa: marque <code>dev</code> (a caixa de seleção, não o nome) → <b>Actions → AWS account → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. Contas novas nascem na Root.</span><span class="en">Move each account to the right OU: select <code>dev</code> (the checkbox, not the name) → <b>Actions → AWS account → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. New accounts are born in the Root.</span></li>
+  </ol>
+  <div class="callout warn"><strong><span class="pt">Pegadinhas ao criar contas</span><span class="en">Gotchas when creating accounts</span></strong>
+    <ul>
+      <li><span class="pt"><b>“Organization still initializing” ou limite excedido logo após criar a organização:</b> espere cerca de uma hora e tente de novo; se persistir, fale com o AWS Support. Contas fechadas ou excluídas continuam contando para o limite de contas.</span><span class="en"><b>“Organization still initializing” or limit exceeded right after creating the organization:</b> wait about an hour and try again; if it persists, contact AWS Support. Closed or deleted accounts still count toward the account limit.</span></li>
+      <li><span class="pt"><b>Forma de pagamento:</b> conta criada pelo Organizations <b>não</b> coleta sozinha os dados para operar como conta avulsa (por exemplo, meio de pagamento). Quem paga é a management (fatura consolidada), mas se um dia você precisar <i>remover</i> a conta da organização, terá de informar esses dados antes.</span><span class="en"><b>Payment method:</b> an account created through Organizations does <b>not</b> collect on its own the information needed to run as a standalone account (for example, a payment method). The management account pays (consolidated billing), but if you ever need to <i>remove</i> the account from the organization, you must provide that information first.</span></li>
+      <li><span class="pt"><b>Root da conta nova:</b> não há senha de root definida. Se um dia precisar dele, use “Forgot password” com o e-mail da conta e ative MFA. No dia a dia você não usa o root.</span><span class="en"><b>Root of the new account:</b> no root password is set. If you ever need it, use “Forgot password” with the account email and enable MFA. Day to day you do not use root.</span></li>
+      <li><span class="pt"><b>Acesso do IAM ao billing:</b> a API tem o parâmetro <code>IamUserAccessToBilling</code> (padrão <code>ALLOW</code>: usuários e roles com a permissão adequada podem ver o billing da conta). Com <code>DENY</code>, só o root vê.</span><span class="en"><b>IAM access to billing:</b> the API has the <code>IamUserAccessToBilling</code> parameter (default <code>ALLOW</code>: users and roles with the right permission can see the account’s billing). With <code>DENY</code>, only root can.</span></li>
+    </ul>
+  </div>
+
+  <h4><span class="pt">Passo 5 · Dar acesso às pessoas (IAM Identity Center)</span><span class="en">Step 5 · Give people access (IAM Identity Center)</span></h4>
+  <p><span class="pt">Para testar rápido, basta o <b>Switch role</b> com a <code>OrganizationAccountAccessRole</code> (ao fim deste passo). Para o dia a dia, a AWS recomenda o <a href="#identity-center">IAM Identity Center</a>: uma pessoa entra uma vez no portal e escolhe a conta e o nível de acesso, com credenciais temporárias. Tudo abaixo é feito na <b>management account</b>.</span><span class="en">To test quickly, <b>Switch role</b> with <code>OrganizationAccountAccessRole</code> is enough (at the end of this step). For daily use, AWS recommends <a href="#identity-center">IAM Identity Center</a>: a person signs in once to the portal and picks the account and the level of access, with temporary credentials. Everything below is done in the <b>management account</b>.</span></p>
+  <ol>
+    <li><span class="pt"><b>Habilitar.</b> Abra o <a href="https://console.aws.amazon.com/singlesignon" rel="noopener">console do IAM Identity Center</a> e habilite-o com uma <b>instância da organização</b> (a recomendada; só ela gerencia acesso a várias contas). Escolha a região com cuidado: é nela que o serviço vive, e ela aparece depois como <code>sso_region</code> na CLI. Ao habilitar pela primeira vez, o diretório do próprio Identity Center já vem como fonte de identidade padrão.</span><span class="en"><b>Enable.</b> Open the <a href="https://console.aws.amazon.com/singlesignon" rel="noopener">IAM Identity Center console</a> and enable it with an <b>organization instance</b> (the recommended one; only it manages access to many accounts). Choose the Region carefully: that is where the service lives, and it later shows up as <code>sso_region</code> in the CLI. When you enable it for the first time, the Identity Center directory is already the default identity source.</span></li>
+    <li><span class="pt"><b>Criar grupos.</b> <b>Groups → Create group</b>: por exemplo <code>admins</code> e <code>devs</code>. Dê permissões a grupos, não a pessoas: quem entra ou sai do time muda só a associação.</span><span class="en"><b>Create groups.</b> <b>Groups → Create group</b>: for example <code>admins</code> and <code>devs</code>. Give permissions to groups, not people: someone joining or leaving the team only changes membership.</span></li>
+    <li><span class="pt"><b>Criar o usuário.</b> <b>Users → Add user</b>: informe o <i>username</i> (fácil de lembrar, <b>não pode ser mudado depois</b>), deixe marcada a opção de enviar um e-mail com as instruções de senha, informe um e-mail único, nome e sobrenome e, na tela seguinte, adicione a pessoa ao grupo. Confirme em <b>Add user</b>.</span><span class="en"><b>Create the user.</b> <b>Users → Add user</b>: enter the <i>username</i> (easy to remember, <b>cannot be changed later</b>), keep the option to email password-setup instructions, enter a unique email, first and last name, and on the next screen add the person to the group. Confirm with <b>Add user</b>.</span></li>
+    <li><span class="pt"><b>Criar os permission sets.</b> <b>Permission sets → Create permission set → Predefined permission set</b>. Sugestão: <code>AdministratorAccess</code>, <code>PowerUserAccess</code> e <code>ReadOnlyAccess</code>. A duração padrão da sessão é de 1 hora. <code>PowerUserAccess</code> não gerencia usuários e grupos IAM, ao contrário do administrador.</span><span class="en"><b>Create the permission sets.</b> <b>Permission sets → Create permission set → Predefined permission set</b>. Suggestion: <code>AdministratorAccess</code>, <code>PowerUserAccess</code> and <code>ReadOnlyAccess</code>. The default session duration is 1 hour. <code>PowerUserAccess</code> cannot manage IAM users and groups, unlike administrator.</span></li>
+    <li><span class="pt"><b>Atribuir por conta.</b> <b>AWS accounts</b> (em <i>Multi-account permissions</i>) → marque a conta → <b>Assign users or groups</b> → escolha o grupo → escolha o permission set → <b>Submit</b>. O Identity Center cria dentro da conta uma role IAM gerenciada por ele. Aguarde a mensagem de que a conta foi reprovisionada.</span><span class="en"><b>Assign per account.</b> <b>AWS accounts</b> (under <i>Multi-account permissions</i>) → select the account → <b>Assign users or groups</b> → pick the group → pick the permission set → <b>Submit</b>. Identity Center creates an IAM role it manages inside the account. Wait for the message that the account was reprovisioned.</span></li>
+    <li><span class="pt"><b>A pessoa ativa o acesso.</b> Ela recebe o e-mail “Invitation to join IAM Identity Center” (de <code>no-reply@signin.aws</code> ou <code>no-reply@login.awsapps.com</code>: libere esses remetentes), aceita o convite, define a senha e registra o MFA. Depois entra no <b>AWS access portal</b>, expande a organização, escolhe a conta e a role. “Role” abre o console; “Access keys” dá credenciais temporárias para CLI e SDK.</span><span class="en"><b>The person activates access.</b> They receive the “Invitation to join IAM Identity Center” email (from <code>no-reply@signin.aws</code> or <code>no-reply@login.awsapps.com</code>: allow those senders), accept the invitation, set a password and register MFA. Then they sign in to the <b>AWS access portal</b>, expand the organization, and pick the account and role. “Role” opens the console; “Access keys” gives temporary credentials for the CLI and SDKs.</span></li>
+  </ol>
+  <p><span class="pt">Uma divisão razoável para começar (adapte à sua equipe):</span><span class="en">A reasonable split to start with (adapt it to your team):</span></p>
+  <div class="scroll-x">
+    <table>
+      <thead><tr><th><span class="pt">Grupo</span><span class="en">Group</span></th><th><code>dev</code></th><th><code>prod</code></th><th><span class="pt">Management</span><span class="en">Management</span></th></tr></thead>
+      <tbody>
+        <tr><td><code>admins</code></td><td>AdministratorAccess</td><td>AdministratorAccess</td><td>AdministratorAccess</td></tr>
+        <tr><td><code>devs</code></td><td>PowerUserAccess</td><td>ReadOnlyAccess</td><td><span class="pt">(nada)</span><span class="en">(none)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h4><span class="pt">Passo 5b · Usar as contas no terminal</span><span class="en">Step 5b · Use the accounts from the terminal</span></h4>
+  <p><span class="pt">Crie um perfil para cada conta. Pegue a <i>SSO start URL</i> e a região no portal (<b>Access keys → IAM Identity Center credentials</b>) ou a Issuer URL no painel do Identity Center. Com a CLI v2:</span><span class="en">Create a profile for each account. Get the <i>SSO start URL</i> and Region from the portal (<b>Access keys → IAM Identity Center credentials</b>) or the Issuer URL from the Identity Center dashboard. With CLI v2:</span></p>
+<pre><code>aws configure sso
+# SSO session name:      baselarte
+# SSO start URL:         https://&lt;seu-portal&gt;.awsapps.com/start
+# SSO region:            us-east-1
+# SSO registration scopes: sso:account:access
+# (choose the dev account and role, then name the profile: dev)
+
+aws configure sso      # repeat: choose the prod account, profile name: prod
+
+aws sso login --profile dev
+aws sts get-caller-identity --profile dev     # Account = &lt;ID_CONTA_DEV&gt;
+aws sts get-caller-identity --profile prod    # Account = &lt;ID_CONTA_PROD&gt;</code></pre>
+  <p><span class="pt">O resultado em <code>~/.aws/config</code>: os dois perfis compartilham a mesma <code>sso-session</code>, então um único login vale para ambos.</span><span class="en">The result in <code>~/.aws/config</code>: both profiles share the same <code>sso-session</code>, so a single login covers both.</span></p>
+<pre><code>[profile dev]
+sso_session = baselarte
+sso_account_id = &lt;ID_CONTA_DEV&gt;
+sso_role_name = PowerUserAccess
+region = sa-east-1
+
+[profile prod]
+sso_session = baselarte
+sso_account_id = &lt;ID_CONTA_PROD&gt;
+sso_role_name = ReadOnlyAccess
+region = sa-east-1
+
+[sso-session baselarte]
+sso_region = us-east-1
+sso_start_url = https://&lt;seu-portal&gt;.awsapps.com/start
+sso_registration_scopes = sso:account:access</code></pre>
   <ul>
-    <li><span class="pt">Em <b>AWS accounts → Add an AWS account → Create an AWS account</b>, informe o nome (<code>dev</code>), um <b>e-mail único</b> e o nome da role de acesso. Repita para <code>prod</code>.</span><span class="en">Under <b>AWS accounts → Add an AWS account → Create an AWS account</b>, enter the name (<code>dev</code>), a <b>unique email</b> and the access role name. Repeat for <code>prod</code>.</span></li>
-    <li><span class="pt">Cada conta precisa de um e-mail diferente, que nunca tenha sido usado em outra conta AWS. Um endereço com alias, como <code>nome+dev@dominio.com</code>, costuma ser aceito e cai na mesma caixa de entrada.</span><span class="en">Each account needs a different email that has never been used for another AWS account. An alias address such as <code>name+dev@domain.com</code> is usually accepted and lands in the same inbox.</span></li>
-    <li><span class="pt">A role de acesso criada dentro da conta nova tem como padrão o nome <code>OrganizationAccountAccessRole</code>. Ela confia na management account e dá acesso de administrador a quem a assumir.</span><span class="en">The access role created inside the new account is named <code>OrganizationAccountAccessRole</code> by default. It trusts the management account and gives administrator access to whoever assumes it.</span></li>
-    <li><span class="pt">A conta nova não tem senha de root definida. Para usar o root dela (raramente), use “Forgot password” com o e-mail da conta e ative MFA; no dia a dia você não precisa dele.</span><span class="en">The new account has no root password set. To use its root (rarely), use “Forgot password” with the account email and enable MFA; day to day you do not need it.</span></li>
-    <li><span class="pt">Mova cada conta para a OU certa: marque <code>dev</code> → <b>Actions → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. Contas novas nascem na Root.</span><span class="en">Move each account to the right OU: select <code>dev</code> → <b>Actions → Move</b> → <code>Non-prod</code>; <code>prod</code> → <code>Prod</code>. New accounts are born in the Root.</span></li>
+    <li><span class="pt"><b>Alternativa rápida, sem Identity Center:</b> na management, use <b>Switch role</b> no console com o ID da conta e a role <code>OrganizationAccountAccessRole</code>. Serve para testar, mas dá administrador total e não escala para uma equipe.</span><span class="en"><b>Quick alternative, without Identity Center:</b> in the management account, use <b>Switch role</b> in the console with the account ID and the <code>OrganizationAccountAccessRole</code> role. Fine for testing, but it grants full administrator and does not scale to a team.</span></li>
+    <li><span class="pt">Quando as credenciais expiram, rode <code>aws sso login --profile dev</code> de novo; <code>aws sso logout</code> apaga as credenciais em cache.</span><span class="en">When credentials expire, run <code>aws sso login --profile dev</code> again; <code>aws sso logout</code> deletes the cached credentials.</span></li>
   </ul>
 
-  <h4><span class="pt">Passo 5 · Entrar nas contas</span><span class="en">Step 5 · Get into the accounts</span></h4>
+  <h4><span class="pt">Passo 6 · Preparar cada conta (o que se repete em dev e prod)</span><span class="en">Step 6 · Prepare each account (what repeats in dev and prod)</span></h4>
+  <p><span class="pt">Cada conta nasce vazia. Para receber o deploy automático do GitHub, faça o mesmo checklist nas duas, com os perfis <code>dev</code> e <code>prod</code> (as permissões de administrador só são necessárias nesta preparação inicial):</span><span class="en">Each account is born empty. To receive automatic deploys from GitHub, run the same checklist in both, with the <code>dev</code> and <code>prod</code> profiles (administrator permissions are only needed for this initial setup):</span></p>
+  <div class="scroll-x">
+    <table>
+      <thead><tr><th>#</th><th><span class="pt">O que fazer, em cada conta</span><span class="en">What to do, in each account</span></th><th><span class="pt">Onde está o passo a passo</span><span class="en">Where the how-to is</span></th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><span class="pt">Escolher a região de trabalho (a mesma nas duas, para o código não mudar).</span><span class="en">Pick the working Region (the same in both, so the code does not change).</span></td><td>—</td></tr>
+        <tr><td>2</td><td><span class="pt">Criar um orçamento com alerta.</span><span class="en">Create a budget with an alert.</span></td><td><a href="#budget"><span class="pt">Orçamento e cobrança</span><span class="en">Budget &amp; billing</span></a></td></tr>
+        <tr><td>3</td><td><span class="pt">Criar rede, repositório <a href="#ecr">ECR</a>, cluster e serviço <a href="#ecs">ECS</a> (um conjunto por conta).</span><span class="en">Create the network, the <a href="#ecr">ECR</a> repository, the <a href="#ecs">ECS</a> cluster and service (one set per account).</span></td><td><a href="#vpc">VPC</a>, <a href="#ecr">ECR</a>, <a href="#ecs">ECS</a></td></tr>
+        <tr><td>4</td><td><span class="pt">Criar os segredos da aplicação (cada conta com os seus valores).</span><span class="en">Create the application secrets (each account with its own values).</span></td><td><a href="#secrets">Secrets Manager</a></td></tr>
+        <tr><td>5</td><td><span class="pt">Criar o provedor <a href="#oidc">OIDC</a> do GitHub e a role de deploy da conta.</span><span class="en">Create the GitHub <a href="#oidc">OIDC</a> provider and the account’s deploy role.</span></td><td><a href="../github-aws-oidc/index.html"><span class="pt">Nota GitHub para AWS com OIDC</span><span class="en">GitHub to AWS with OIDC note</span></a></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="muted"><span class="pt">Se preferir um repositório ECR único para todos os ambientes, use a conta de <i>tooling</i> e libere as outras por repository policy. Para começar com duas contas, um ECR por conta é mais simples e mantém o isolamento total.</span><span class="en">If you prefer a single ECR repository for all environments, use the <i>tooling</i> account and allow the others through a repository policy. To start with two accounts, one ECR per account is simpler and keeps isolation complete.</span></p>
+
+  <h4><span class="pt">Passo 7 · Conferir se ficou certo</span><span class="en">Step 7 · Check that it is right</span></h4>
+<pre><code># from the management account (profile with access to it)
+aws organizations describe-organization --query 'Organization.FeatureSet'   # "ALL"
+aws organizations list-accounts --query 'Accounts[].[Name,Id,Status]' --output table
+aws organizations list-organizational-units-for-parent --parent-id r-abcd
+
+# each profile must land in a DIFFERENT account
+aws sts get-caller-identity --profile dev
+aws sts get-caller-identity --profile prod</code></pre>
   <ul>
-    <li><span class="pt"><b>Rápido, para testar:</b> na management, use <b>Switch role</b> no console com o ID da conta e a role <code>OrganizationAccountAccessRole</code>.</span><span class="en"><b>Quick, for testing:</b> from the management account, use <b>Switch role</b> in the console with the account ID and the <code>OrganizationAccountAccessRole</code> role.</span></li>
-    <li><span class="pt"><b>Recomendado para o dia a dia:</b> configure o <a href="#identity-center">IAM Identity Center</a> e atribua <i>permission sets</i> por conta (por exemplo, admin em dev e somente leitura em prod). Assim ninguém precisa de usuário IAM em cada conta.</span><span class="en"><b>Recommended for daily use:</b> set up <a href="#identity-center">IAM Identity Center</a> and assign <i>permission sets</i> per account (for example, admin in dev and read-only in prod). That way nobody needs an IAM user in every account.</span></li>
+    <li><span class="pt">Esperado: <code>FeatureSet</code> igual a <code>ALL</code>; as contas <code>dev</code> e <code>prod</code> com status <code>ACTIVE</code> e IDs diferentes; cada perfil devolvendo o ID da sua própria conta.</span><span class="en">Expected: <code>FeatureSet</code> equal to <code>ALL</code>; the <code>dev</code> and <code>prod</code> accounts <code>ACTIVE</code> with different IDs; each profile returning its own account ID.</span></li>
+    <li><span class="pt">Se um perfil devolver o ID errado, o <code>sso_account_id</code> do perfil está trocado: é o erro mais comum, e o mais perigoso, porque o deploy de dev iria para a produção.</span><span class="en">If a profile returns the wrong ID, the profile’s <code>sso_account_id</code> is swapped: the most common mistake and the most dangerous, because a dev deploy would land in production.</span></li>
   </ul>
 
-  <h4><span class="pt">Passo 6 · Aplicar guardrails (opcional, mas vale a pena)</span><span class="en">Step 6 · Apply guardrails (optional, but worth it)</span></h4>
+  <h4><span class="pt">Passo 8 · Aplicar guardrails (opcional, mas vale a pena)</span><span class="en">Step 8 · Apply guardrails (optional, but worth it)</span></h4>
   <ul>
-    <li><span class="pt">Teste uma SCP primeiro na OU <code>Non-prod</code> (veja o exemplo mais abaixo) e só depois leve para <code>Prod</code>. Nunca comece pela Root.</span><span class="en">Try an SCP first on the <code>Non-prod</code> OU (see the example below) and only then take it to <code>Prod</code>. Never start at the Root.</span></li>
+    <li><span class="pt">Habilite o tipo de política em <b>Policies → Service control policies → Enable service control policies</b>. Teste uma SCP primeiro na OU <code>Non-prod</code> (veja o exemplo mais abaixo) e só depois leve para <code>Prod</code>. Nunca comece pela Root.</span><span class="en">Enable the policy type under <b>Policies → Service control policies → Enable service control policies</b>. Try an SCP first on the <code>Non-prod</code> OU (see the example below) and only then take it to <code>Prod</code>. Never start at the Root.</span></li>
+    <li><span class="pt">Para anexar: abra a OU (clique no nome) → aba <b>Policies</b> → <b>Attach</b>. A <code>FullAWSAccess</code> padrão continua anexada; só a remova se tiver uma lista de permissões (allow list) que a substitua.</span><span class="en">To attach: open the OU (click its name) → <b>Policies</b> tab → <b>Attach</b>. The default <code>FullAWSAccess</code> stays attached; only remove it if you have an allow list replacing it.</span></li>
   </ul>
 
   <h4><span class="pt">O mesmo pelo terminal</span><span class="en">The same from the terminal</span></h4>
@@ -329,7 +423,8 @@ aws organizations create-organizational-unit --parent-id r-abcd --name Non-prod
 # 3 · create the dev account (asynchronous: follow the status)
 aws organizations create-account \
   --account-name dev --email nome+dev@dominio.com \
-  --role-name OrganizationAccountAccessRole
+  --role-name OrganizationAccountAccessRole \
+  --tags Key=Environment,Value=dev
 aws organizations describe-create-account-status --create-account-request-id car-xxxxxxxx
 
 # 4 · move the account to its OU (the account ID comes from the status above)
@@ -417,6 +512,10 @@ aws organizations move-account --account-id 111111111111 \
       <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_introduction.html" rel="noopener">What is AWS Organizations?</a></li>
       <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_tutorials_basic.html" rel="noopener">Tutorial: Creating and configuring an organization</a></li>
       <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_create-cross.html" rel="noopener">Creating a member account in your organization</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/APIReference/API_CreateAccount.html" rel="noopener">Organizations API: CreateAccount</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/about-email-verification.html" rel="noopener">Email address verification with AWS Organizations</a></li>
+      <li><a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/getting-started.html" rel="noopener">Getting started with IAM Identity Center</a> · <a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/quick-start-default-idc.html" rel="noopener">Configure user access with the default directory</a></li>
+      <li><a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-sso.html" rel="noopener">Configuring IAM Identity Center authentication with the AWS CLI</a></li>
       <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_policies_scps.html" rel="noopener">Service control policies (SCPs)</a></li>
       <li><a href="https://docs.aws.amazon.com/whitepapers/latest/organizing-your-aws-environment/organizing-your-aws-environment.html" rel="noopener">Organizing Your AWS Environment Using Multiple Accounts</a></li>
       <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" rel="noopener">IAM: Policy evaluation logic</a></li>
