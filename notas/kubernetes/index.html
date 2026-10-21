@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="k8s.metaTitle">Kubernetes from zero: concepts, security and AWS | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:k8s.metaDescription" content="Kubernetes explained from zero: what it is and the problem it solves, the core objects (Pod, Deployment, Service), the YAML files and their security options (securityContext, Pod Security, RBAC, NetworkPolicy, Secrets), nine small hands-on labs with Docker and kind, and a secure production setup on AWS EKS.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/kubernetes/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/kubernetes/">
+  <meta property="og:title" data-i18n-attributes="content:k8s.metaTitle" content="Kubernetes from zero: concepts, security and AWS | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:k8s.metaDescription" content="Kubernetes explained from zero: what it is and the problem it solves, the core objects (Pod, Deployment, Service), the YAML files and their security options (securityContext, Pod Security, RBAC, NetworkPolicy, Secrets), nine small hands-on labs with Docker and kind, and a secure production setup on AWS EKS.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:k8s.metaTitle" content="Kubernetes from zero: concepts, security and AWS | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:k8s.metaDescription" content="Kubernetes explained from zero: what it is and the problem it solves, the core objects (Pod, Deployment, Service), the YAML files and their security options (securityContext, Pod Security, RBAC, NetworkPolicy, Secrets), nine small hands-on labs with Docker and kind, and a secure production setup on AWS EKS.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=3" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=3" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html" aria-current="page"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é e o problema</span><span class="en">What it is and the problem</span></a></li>
+<li><a href="#inside"><span class="pt">Como funciona por dentro</span><span class="en">How it works inside</span></a></li>
+<li><a href="#objects"><span class="pt">Os objetos principais</span><span class="en">The main objects</span></a></li>
+<li><a href="#files"><span class="pt">Os arquivos de configuração</span><span class="en">The configuration files</span></a></li>
+<li><a href="#security"><span class="pt">Segurança nos arquivos</span><span class="en">Security in the files</span></a></li>
+<li><a href="#lab"><span class="pt">Praticar com Docker (kind)</span><span class="en">Practise with Docker (kind)</span></a></li>
+<li><a href="#aws"><span class="pt">Produção segura na AWS (EKS)</span><span class="en">Secure production on AWS (EKS)</span></a></li>
+<li><a href="#cheat-k8s"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="k8s.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="k8s.heroTitle">Kubernetes, <em>from zero to production.</em></h1>
+  <p class="hero-lede" data-i18n="k8s.heroLede">What Kubernetes is, the problem it solves, the configuration files and their security options, small hands-on labs with Docker on your machine, and how to run it securely on AWS.</p>
+</section>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é o Kubernetes e que problema ele resolve</span><span class="en">What Kubernetes is and the problem it solves</span></h2>
+<p><span class="pt"><strong>Kubernetes</strong> (K8s: o 8 são as letras entre K e s) é um sistema open source, criado no Google e hoje mantido pela CNCF, que <strong>roda e cuida de contêineres em várias máquinas</strong> como se fossem uma só. O nome vem do grego e significa “timoneiro”: quem conduz o navio. Pense num <em>maestro</em>: cada músico (contêiner) sabe tocar o seu trecho, mas alguém precisa dizer quem toca, quando, e substituir quem faltar.</span><span class="en"><strong>Kubernetes</strong> (K8s: the 8 stands for the letters between K and s) is an open source system, created at Google and now maintained by the CNCF, that <strong>runs and looks after containers across many machines</strong> as if they were one. The name is Greek for “helmsman”: the one who steers the ship. Think of a <em>conductor</em>: each musician (container) knows their part, but someone has to say who plays, when, and replace whoever is missing.</span></p>
+<p><span class="pt">Pré-requisito: saber o que é um <strong>contêiner</strong>. Uma <em>imagem</em> é o pacote pronto (programa + bibliotecas); um <em>contêiner</em> é essa imagem em execução, isolada do resto da máquina. O Docker constrói e roda contêineres em <em>uma</em> máquina. O Kubernetes entra quando são muitos contêineres em muitas máquinas.</span><span class="en">Prerequisite: knowing what a <strong>container</strong> is. An <em>image</em> is the ready-made package (program + libraries); a <em>container</em> is that image running, isolated from the rest of the machine. Docker builds and runs containers on <em>one</em> machine. Kubernetes enters when there are many containers on many machines.</span></p>
+<h3><span class="pt">O problema</span><span class="en">The problem</span></h3>
+<p><span class="pt">Rodar um contêiner com <code>docker run</code> é fácil. Operar dezenas deles em produção traz perguntas que o Docker sozinho não responde:</span><span class="en">Running one container with <code>docker run</code> is easy. Operating dozens in production raises questions Docker alone does not answer:</span></p>
+<ul><li><span class="pt"><strong>O contêiner caiu às 3h da manhã.</strong> Quem sobe de novo?</span><span class="en"><strong>The container died at 3 a.m.</strong> Who starts it again?</span></li><li><span class="pt"><strong>A máquina inteira morreu.</strong> Quem move os contêineres para outra?</span><span class="en"><strong>The whole machine died.</strong> Who moves the containers to another one?</span></li><li><span class="pt"><strong>Chegou mais tráfego.</strong> Como ter 10 cópias em vez de 2, e dividir os acessos entre elas?</span><span class="en"><strong>More traffic arrived.</strong> How do you get 10 copies instead of 2, and split the requests among them?</span></li><li><span class="pt"><strong>Versão nova.</strong> Como trocar sem derrubar o site, e voltar atrás se der errado?</span><span class="en"><strong>New version.</strong> How do you swap without downtime, and go back if it fails?</span></li><li><span class="pt"><strong>Configuração e segredos.</strong> Como entregar senhas e variáveis sem colocá-las na imagem?</span><span class="en"><strong>Configuration and secrets.</strong> How do you deliver passwords and variables without baking them into the image?</span></li><li><span class="pt"><strong>Quem pode fazer o quê?</strong> E quem pode falar com quem dentro do sistema?</span><span class="en"><strong>Who may do what?</strong> And who may talk to whom inside the system?</span></li></ul>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 255" role="img" aria-label="Você declara 3 cópias e o cluster mantém / You declare 3 copies and the cluster keeps them" style="min-width:620px">
+<rect x="10" y="90" width="120" height="60" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="124.0" class="pt" text-anchor="middle">você + YAML</text><text x="70.0" y="124.0" class="en" text-anchor="middle">you + YAML</text>
+<path d="M130 120L225 120" class="ln"/><path d="M218.0 123.4L225 120L218.0 116.6" class="ln"/>
+<text x="177" y="108" class="pt mut" text-anchor="middle">3 cópias</text><text x="177" y="108" class="en mut" text-anchor="middle">3 copies</text>
+<rect x="230" y="10" width="460" height="235" rx="4" class="ln dash"/>
+<text x="245" y="32" class="pt mut" text-anchor="start">cluster Kubernetes</text><text x="245" y="32" class="en mut" text-anchor="start">Kubernetes cluster</text>
+<rect x="245" y="48" width="120" height="150" rx="4" class="ln"/>
+<text x="305" y="68" class="pt mut" text-anchor="middle">nó 1</text><text x="305" y="68" class="en mut" text-anchor="middle">node 1</text>
+<rect x="260" y="80" width="90" height="32" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="100.0" text-anchor="middle">app</text>
+<rect x="260" y="124" width="90" height="32" rx="4" class="ln fillsoft"/>
+<text x="305.0" y="144.0" text-anchor="middle">app</text>
+<rect x="375" y="48" width="120" height="150" rx="4" class="ln"/>
+<text x="435" y="68" class="pt mut" text-anchor="middle">nó 2</text><text x="435" y="68" class="en mut" text-anchor="middle">node 2</text>
+<rect x="390" y="80" width="90" height="32" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="100.0" text-anchor="middle">app</text>
+<rect x="390" y="124" width="90" height="32" rx="4" class="ln dash"/>
+<text x="435.0" y="144.0" class="pt" text-anchor="middle">✗ caiu</text><text x="435.0" y="144.0" class="en" text-anchor="middle">✗ died</text>
+<rect x="505" y="48" width="120" height="150" rx="4" class="ln"/>
+<text x="565" y="68" class="pt mut" text-anchor="middle">nó 3</text><text x="565" y="68" class="en mut" text-anchor="middle">node 3</text>
+<rect x="520" y="80" width="90" height="32" rx="4" class="ln fillsoft"/>
+<text x="565.0" y="100.0" text-anchor="middle">app</text>
+<rect x="520" y="124" width="90" height="32" rx="4" class="brandfill"/>
+<text x="565.0" y="144.0" class="pt" text-anchor="middle">recriado</text><text x="565.0" y="144.0" class="en" text-anchor="middle">recreated</text>
+<text x="460" y="224" class="pt mut" text-anchor="middle">O Kubernetes recria o que caiu e mantém 3 cópias no ar</text><text x="460" y="224" class="en mut" text-anchor="middle">Kubernetes recreates what died and keeps 3 copies running</text>
+</svg></div><figcaption><span class="pt">Você descreve o resultado (3 cópias); o cluster distribui entre os nós e recria o que cair.</span><span class="en">You describe the result (3 copies); the cluster spreads them across nodes and recreates whatever dies.</span></figcaption></figure>
+<h3><span class="pt">A ideia central: declarativo</span><span class="en">The core idea: declarative</span></h3>
+<p><span class="pt">Você não manda “suba o contêiner A na máquina 2”. Você escreve um arquivo YAML dizendo <em>como quer que fique</em> (“3 cópias do app A, na versão 1.27”) e o Kubernetes trabalha sem parar para que a realidade fique igual ao arquivo. É a mesma ideia do <a href="../terraform/index.html">Terraform</a>, só que para aplicações em execução.</span><span class="en">You do not say “start container A on machine 2”. You write a YAML file saying <em>how you want things to be</em> (“3 copies of app A, version 1.27”) and Kubernetes works non-stop to make reality match the file. It is the same idea as <a href="../terraform/index.html">Terraform</a>, but for running applications.</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Quando usar, e quando não.</strong> Kubernetes vale quando você tem vários serviços, precisa de alta disponibilidade e de deploys frequentes. Para um site simples ou um único app, uma VM, o ECS/Fargate ou um PaaS custam muito menos esforço. K8s tem curva de aprendizado e custo operacional reais.</span><span class="en"><strong>When to use it, and when not.</strong> Kubernetes pays off when you have several services, need high availability and deploy often. For a simple site or a single app, a VM, ECS/Fargate or a PaaS take far less effort. K8s has a real learning curve and operating cost.</span></div>
+</section>
+<section class="content-section" aria-labelledby="inside">
+<h2 id="inside"><span class="pt">Como funciona por dentro</span><span class="en">How it works inside</span></h2>
+<p><span class="pt">Um <strong>cluster</strong> é um conjunto de máquinas (chamadas <strong>nós</strong>). Um grupo delas, o <strong>control plane</strong>, decide; as outras, os <strong>workers</strong>, executam. Você só conversa com o control plane, pelo <code>kubectl</code> (a linha de comando) que chama o <strong>API server</strong>.</span><span class="en">A <strong>cluster</strong> is a set of machines (called <strong>nodes</strong>). Some of them, the <strong>control plane</strong>, decide; the others, the <strong>workers</strong>, execute. You only talk to the control plane, through <code>kubectl</code> (the command line) calling the <strong>API server</strong>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 398" role="img" aria-label="Arquitetura do cluster / Cluster architecture" style="min-width:620px">
+<rect x="10" y="45" width="90" height="40" rx="4" class="ln fillsoft"/>
+<text x="55.0" y="69.0" class="mono" text-anchor="middle">kubectl</text>
+<path d="M100 65L165 65" class="ln"/><path d="M158.0 68.4L165 65L158.0 61.6" class="ln"/>
+<rect x="140" y="8" width="550" height="172" rx="4" class="ln dash"/>
+<text x="155" y="28" class="pt mut" text-anchor="start">control plane (o cérebro)</text><text x="155" y="28" class="en mut" text-anchor="start">control plane (the brain)</text>
+<rect x="165" y="45" width="170" height="60" rx="4" class="brandfill"/>
+<text x="250.0" y="73.0" text-anchor="middle">API server</text>
+<text x="250.0" y="89.0" class="pt mut" text-anchor="middle">porta de entrada</text><text x="250.0" y="89.0" class="en mut" text-anchor="middle">front door</text>
+<rect x="165" y="118" width="170" height="50" rx="4" class="ln"/>
+<text x="250.0" y="141.0" text-anchor="middle">etcd</text>
+<text x="250.0" y="157.0" class="pt mut" text-anchor="middle">estado do cluster</text><text x="250.0" y="157.0" class="en mut" text-anchor="middle">cluster state</text>
+<path d="M250 105L250 118" class="ln"/><path d="M246.6 111.0L250 118L253.4 111.0" class="ln"/>
+<rect x="405" y="38" width="270" height="48" rx="4" class="ln"/>
+<text x="540.0" y="60.0" text-anchor="middle">scheduler</text>
+<text x="540.0" y="76.0" class="pt mut" text-anchor="middle">escolhe o nó de cada Pod</text><text x="540.0" y="76.0" class="en mut" text-anchor="middle">picks a node for each Pod</text>
+<rect x="405" y="100" width="270" height="48" rx="4" class="ln"/>
+<text x="540.0" y="122.0" text-anchor="middle">controller manager</text>
+<text x="540.0" y="138.0" class="pt mut" text-anchor="middle">compara desejado × atual</text><text x="540.0" y="138.0" class="en mut" text-anchor="middle">compares desired × actual</text>
+<path d="M335 65L405 62" class="ln"/><path d="M398.2 65.7L405 62L397.9 58.9" class="ln"/>
+<path d="M335 90L405 124" class="ln"/><path d="M397.2 124.0L405 124L400.2 117.9" class="ln"/>
+<path d="M185 180L185 218" class="ln"/><path d="M181.6 211.0L185 218L188.4 211.0" class="ln"/>
+<rect x="30" y="218" width="310" height="170" rx="4" class="ln"/>
+<text x="44" y="240" class="pt mut" text-anchor="start">nó (worker)</text><text x="44" y="240" class="en mut" text-anchor="start">node (worker)</text>
+<rect x="40" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="275.0" class="mono" text-anchor="middle">kubelet</text>
+<rect x="140" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="185.0" y="275.0" class="mono" text-anchor="middle">kube-proxy</text>
+<rect x="240" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="285.0" y="275.0" class="mono" text-anchor="middle">containerd</text>
+<rect x="45" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="85.0" y="344.0" text-anchor="middle">Pod</text>
+<rect x="140" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="180.0" y="344.0" text-anchor="middle">Pod</text>
+<rect x="235" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="275.0" y="344.0" text-anchor="middle">Pod</text>
+<text x="185" y="308" class="pt mut" text-anchor="middle">contêineres rodam dentro de Pods</text><text x="185" y="308" class="en mut" text-anchor="middle">containers run inside Pods</text>
+<path d="M515 180L515 218" class="ln"/><path d="M511.6 211.0L515 218L518.4 211.0" class="ln"/>
+<rect x="360" y="218" width="310" height="170" rx="4" class="ln"/>
+<text x="374" y="240" class="pt mut" text-anchor="start">nó (worker)</text><text x="374" y="240" class="en mut" text-anchor="start">node (worker)</text>
+<rect x="370" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="415.0" y="275.0" class="mono" text-anchor="middle">kubelet</text>
+<rect x="470" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="515.0" y="275.0" class="mono" text-anchor="middle">kube-proxy</text>
+<rect x="570" y="252" width="90" height="38" rx="4" class="ln fillsoft"/>
+<text x="615.0" y="275.0" class="mono" text-anchor="middle">containerd</text>
+<rect x="375" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="415.0" y="344.0" text-anchor="middle">Pod</text>
+<rect x="470" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="510.0" y="344.0" text-anchor="middle">Pod</text>
+<rect x="565" y="320" width="80" height="40" rx="4" class="brandfill"/>
+<text x="605.0" y="344.0" text-anchor="middle">Pod</text>
+<text x="515" y="308" class="pt mut" text-anchor="middle">contêineres rodam dentro de Pods</text><text x="515" y="308" class="en mut" text-anchor="middle">containers run inside Pods</text>
+<text x="350" y="203" class="pt mut" text-anchor="middle">API server ⇄ kubelet de cada nó</text><text x="350" y="203" class="en mut" text-anchor="middle">API server ⇄ each node's kubelet</text>
+</svg></div><figcaption><span class="pt">O control plane decide e guarda o estado; os nós executam. Tudo passa pelo API server.</span><span class="en">The control plane decides and stores state; the nodes execute. Everything goes through the API server.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Peça</span><span class="en">Piece</span></th><th><span class="pt">Onde</span><span class="en">Where</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody><tr><td><span class="pt">API server</span><span class="en">API server</span></td><td><span class="pt">control plane</span><span class="en">control plane</span></td><td><span class="pt">Única porta de entrada: autentica, autoriza, valida e grava. <code>kubectl</code>, nós e controllers só falam com ele.</span><span class="en">The only entry point: authenticates, authorizes, validates and stores. <code>kubectl</code>, nodes and controllers only talk to it.</span></td></tr><tr><td><span class="pt">etcd</span><span class="en">etcd</span></td><td><span class="pt">control plane</span><span class="en">control plane</span></td><td><span class="pt">Banco chave-valor com todo o estado do cluster, <em>inclusive os Secrets</em>. Perdeu o etcd, perdeu o cluster.</span><span class="en">Key-value database with all cluster state, <em>including Secrets</em>. Lose etcd, lose the cluster.</span></td></tr><tr><td><span class="pt">scheduler</span><span class="en">scheduler</span></td><td><span class="pt">control plane</span><span class="en">control plane</span></td><td><span class="pt">Para cada Pod novo, escolhe o nó que tem espaço (CPU, memória, regras).</span><span class="en">For each new Pod, picks the node with room (CPU, memory, rules).</span></td></tr><tr><td><span class="pt">controller manager</span><span class="en">controller manager</span></td><td><span class="pt">control plane</span><span class="en">control plane</span></td><td><span class="pt">Conjunto de “vigias”: cada um compara o estado desejado com o real e corrige.</span><span class="en">A set of “watchers”: each compares desired state with actual state and fixes it.</span></td></tr><tr><td><span class="pt">kubelet</span><span class="en">kubelet</span></td><td><span class="pt">cada worker</span><span class="en">each worker</span></td><td><span class="pt">Agente no nó: recebe a lista de Pods do API server e manda o runtime executá-los; reporta a saúde.</span><span class="en">Agent on the node: receives the Pod list from the API server and tells the runtime to run them; reports health.</span></td></tr><tr><td><span class="pt">kube-proxy</span><span class="en">kube-proxy</span></td><td><span class="pt">cada worker</span><span class="en">each worker</span></td><td><span class="pt">Programa as regras de rede para que um Service chegue aos Pods certos.</span><span class="en">Programs the network rules so a Service reaches the right Pods.</span></td></tr><tr><td><span class="pt">container runtime</span><span class="en">container runtime</span></td><td><span class="pt">cada worker</span><span class="en">each worker</span></td><td><span class="pt">Quem de fato roda os contêineres (<code>containerd</code> ou CRI-O).</span><span class="en">What actually runs the containers (<code>containerd</code> or CRI-O).</span></td></tr></tbody></table></div>
+<h3><span class="pt">O laço de reconciliação</span><span class="en">The reconciliation loop</span></h3>
+<p><span class="pt">Tudo no Kubernetes segue o mesmo padrão: cada controller olha o <em>estado desejado</em> (o que você escreveu) e o <em>estado atual</em> (o que existe) e age sobre a diferença, para sempre. Por isso um Pod apagado volta, e por isso você nunca “inicia” coisas à mão.</span><span class="en">Everything in Kubernetes follows the same pattern: each controller looks at the <em>desired state</em> (what you wrote) and the <em>current state</em> (what exists) and acts on the difference, forever. That is why a deleted Pod comes back, and why you never “start” things by hand.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 172" role="img" aria-label="Loop de reconciliação / Reconciliation loop" style="min-width:620px">
+<rect x="10" y="30" width="150" height="62" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="59.0" class="pt" text-anchor="middle">1. Você declara</text><text x="85.0" y="59.0" class="en" text-anchor="middle">1. You declare</text>
+<text x="85.0" y="75.0" class="mut" text-anchor="middle">replicas: 3</text>
+<path d="M160 61L185 61" class="ln"/><path d="M178.0 64.4L185 61L178.0 57.6" class="ln"/>
+<rect x="185" y="30" width="150" height="62" rx="4" class="ln fillsoft"/>
+<text x="260.0" y="59.0" class="pt" text-anchor="middle">2. API grava</text><text x="260.0" y="59.0" class="en" text-anchor="middle">2. API stores</text>
+<text x="260.0" y="75.0" class="pt mut" text-anchor="middle">no etcd</text><text x="260.0" y="75.0" class="en mut" text-anchor="middle">in etcd</text>
+<path d="M335 61L360 61" class="ln"/><path d="M353.0 64.4L360 61L353.0 57.6" class="ln"/>
+<rect x="360" y="30" width="150" height="62" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="59.0" class="pt" text-anchor="middle">3. Controller vê</text><text x="435.0" y="59.0" class="en" text-anchor="middle">3. Controller sees</text>
+<text x="435.0" y="75.0" class="pt mut" text-anchor="middle">tem 2, quer 3</text><text x="435.0" y="75.0" class="en mut" text-anchor="middle">has 2, wants 3</text>
+<path d="M510 61L535 61" class="ln"/><path d="M528.0 64.4L535 61L528.0 57.6" class="ln"/>
+<rect x="535" y="30" width="150" height="62" rx="4" class="brandfill"/>
+<text x="610.0" y="59.0" class="pt" text-anchor="middle">4. Cria 1 Pod</text><text x="610.0" y="59.0" class="en" text-anchor="middle">4. Creates 1 Pod</text>
+<text x="610.0" y="75.0" class="pt mut" text-anchor="middle">e volta ao passo 3</text><text x="610.0" y="75.0" class="en mut" text-anchor="middle">then back to step 3</text>
+<path d="M610 92L610 135L435 135L435 99" class="ln dash"/><path d="M431.6 106L435 99L438.4 106" class="ln"/>
+<text x="522" y="156" class="pt mut" text-anchor="middle">repete para sempre: é isso que “autocura” significa</text><text x="522" y="156" class="en mut" text-anchor="middle">repeats forever: this is what “self-healing” means</text>
+</svg></div><figcaption><span class="pt">O coração do Kubernetes: um laço que compara o estado desejado com o real e corrige a diferença.</span><span class="en">The heart of Kubernetes: a loop that compares desired state with actual state and fixes the difference.</span></figcaption></figure>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Em nuvem gerenciada (EKS, GKE, AKS) o control plane é da empresa de nuvem: você cuida só dos workers e do que roda neles. É o caminho recomendado para produção.</span><span class="en">On a managed cloud (EKS, GKE, AKS) the control plane belongs to the cloud provider: you only look after the workers and what runs on them. This is the recommended path for production.</span></div>
+</section>
+<section class="content-section" aria-labelledby="objects">
+<h2 id="objects"><span class="pt">Os objetos que você vai usar</span><span class="en">The objects you will use</span></h2>
+<p><span class="pt">Tudo que você cria é um <strong>objeto</strong> descrito em YAML. Estes são os que cobrem 80% do dia a dia:</span><span class="en">Everything you create is an <strong>object</strong> described in YAML. These cover 80% of daily work:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 300" role="img" aria-label="Objetos principais / Main objects" style="min-width:620px">
+<rect x="10" y="100" width="80" height="40" rx="4" class="ln fillsoft"/>
+<text x="50.0" y="124.0" text-anchor="middle">Internet</text>
+<path d="M90 120L125 120" class="ln"/><path d="M118.0 123.4L125 120L118.0 116.6" class="ln"/>
+<rect x="125" y="100" width="95" height="40" rx="4" class="ln"/>
+<text x="172.5" y="124.0" text-anchor="middle">Ingress</text>
+<text x="172" y="160" class="pt mut" text-anchor="middle">HTTP(S) de fora</text><text x="172" y="160" class="en mut" text-anchor="middle">HTTP(S) from outside</text>
+<path d="M220 120L255 120" class="ln"/><path d="M248.0 123.4L255 120L248.0 116.6" class="ln"/>
+<rect x="255" y="100" width="90" height="40" rx="4" class="ln"/>
+<text x="300.0" y="124.0" text-anchor="middle">Service</text>
+<text x="300" y="178" class="pt mut" text-anchor="middle">IP/DNS fixo</text><text x="300" y="178" class="en mut" text-anchor="middle">fixed IP/DNS</text>
+<path d="M345 120L385 120" class="ln"/><path d="M378.0 123.4L385 120L378.0 116.6" class="ln"/>
+<rect x="385" y="25" width="305" height="185" rx="4" class="ln dash"/>
+<text x="400" y="47" class="mut" text-anchor="start">Deployment → ReplicaSet → Pods</text>
+<rect x="397" y="70" width="86" height="56" rx="4" class="brandfill"/>
+<text x="440.0" y="96.0" text-anchor="middle">Pod</text>
+<text x="440.0" y="112.0" class="mut" text-anchor="middle">app: web</text>
+<rect x="493" y="70" width="86" height="56" rx="4" class="brandfill"/>
+<text x="536.0" y="96.0" text-anchor="middle">Pod</text>
+<text x="536.0" y="112.0" class="mut" text-anchor="middle">app: web</text>
+<rect x="589" y="70" width="86" height="56" rx="4" class="brandfill"/>
+<text x="632.0" y="96.0" text-anchor="middle">Pod</text>
+<text x="632.0" y="112.0" class="mut" text-anchor="middle">app: web</text>
+<text x="537" y="160" class="pt mut" text-anchor="middle">o Deployment mantém N cópias iguais</text><text x="537" y="160" class="en mut" text-anchor="middle">the Deployment keeps N identical copies</text>
+<text x="537" y="182" class="pt mut" text-anchor="middle">e troca versões aos poucos</text><text x="537" y="182" class="en mut" text-anchor="middle">and swaps versions gradually</text>
+<rect x="400" y="235" width="130" height="36" rx="4" class="ln fillsoft"/>
+<text x="465.0" y="257.0" text-anchor="middle">ConfigMap</text>
+<rect x="550" y="235" width="130" height="36" rx="4" class="ln fillsoft"/>
+<text x="615.0" y="257.0" text-anchor="middle">Secret</text>
+<path d="M465 235L465 210" class="ln"/><path d="M468.4 217.0L465 210L461.6 217.0" class="ln"/>
+<path d="M615 235L615 210" class="ln"/><path d="M618.4 217.0L615 210L611.6 217.0" class="ln"/>
+<text x="465" y="290" class="pt mut" text-anchor="middle">configuração</text><text x="465" y="290" class="en mut" text-anchor="middle">configuration</text>
+<text x="615" y="290" class="pt mut" text-anchor="middle">senhas e tokens</text><text x="615" y="290" class="en mut" text-anchor="middle">passwords and tokens</text>
+</svg></div><figcaption><span class="pt">O caminho de uma requisição (Internet → Ingress → Service → Pods) e o que alimenta os Pods.</span><span class="en">A request's path (Internet → Ingress → Service → Pods) and what feeds the Pods.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Objeto</span><span class="en">Object</span></th><th><span class="pt">Em uma frase</span><span class="en">In one sentence</span></th><th><span class="pt">Analogia</span><span class="en">Analogy</span></th></tr></thead><tbody><tr><td><span class="pt">Pod</span><span class="en">Pod</span></td><td><span class="pt">A menor unidade: 1 ou mais contêineres que dividem rede e disco. É descartável: morreu, é substituído por outro (com IP novo).</span><span class="en">The smallest unit: 1 or more containers sharing network and disk. Disposable: when it dies it is replaced by another (with a new IP).</span></td><td><span class="pt">um funcionário</span><span class="en">one employee</span></td></tr><tr><td><span class="pt">ReplicaSet</span><span class="en">ReplicaSet</span></td><td><span class="pt">Garante que existam N Pods iguais. Raramente você o cria; o Deployment o faz.</span><span class="en">Ensures N identical Pods exist. You rarely create it; the Deployment does.</span></td><td><span class="pt">o RH que mantém o quadro</span><span class="en">HR keeping headcount</span></td></tr><tr><td><span class="pt">Deployment</span><span class="en">Deployment</span></td><td><span class="pt">Descreve o app: imagem, cópias, atualização gradual e rollback. É o objeto mais usado.</span><span class="en">Describes the app: image, copies, gradual update and rollback. The most-used object.</span></td><td><span class="pt">o gerente do time</span><span class="en">the team manager</span></td></tr><tr><td><span class="pt">Service</span><span class="en">Service</span></td><td><span class="pt">Dá um nome e IP fixos a um grupo de Pods e divide o tráfego entre eles. Os Pods mudam; o Service não.</span><span class="en">Gives a fixed name and IP to a group of Pods and splits traffic among them. Pods change; the Service does not.</span></td><td><span class="pt">o telefone da empresa</span><span class="en">the company phone number</span></td></tr><tr><td><span class="pt">Ingress / Gateway</span><span class="en">Ingress / Gateway</span></td><td><span class="pt">Regras HTTP(S) de entrada: domínio e caminho para qual Service, com TLS.</span><span class="en">Inbound HTTP(S) rules: domain and path to which Service, with TLS.</span></td><td><span class="pt">a recepção</span><span class="en">the front desk</span></td></tr><tr><td><span class="pt">ConfigMap / Secret</span><span class="en">ConfigMap / Secret</span></td><td><span class="pt">Configuração e dados sensíveis, fora da imagem. O Secret é “aviso de cuidado”, não cofre (veja segurança).</span><span class="en">Configuration and sensitive data, outside the image. A Secret is a “handle with care” label, not a vault (see security).</span></td><td><span class="pt">o manual / o cofre</span><span class="en">the manual / the safe</span></td></tr><tr><td><span class="pt">Namespace</span><span class="en">Namespace</span></td><td><span class="pt">Divide o cluster em “pastas” isoladas (dev, prod, times), com regras e cotas próprias.</span><span class="en">Splits the cluster into isolated “folders” (dev, prod, teams), with their own rules and quotas.</span></td><td><span class="pt">departamentos</span><span class="en">departments</span></td></tr><tr><td><span class="pt">PersistentVolumeClaim</span><span class="en">PersistentVolumeClaim</span></td><td><span class="pt">Pedido de disco que sobrevive ao Pod (bancos de dados, uploads).</span><span class="en">A request for disk that outlives the Pod (databases, uploads).</span></td><td><span class="pt">um armário trancado</span><span class="en">a locker</span></td></tr><tr><td><span class="pt">Job / CronJob</span><span class="en">Job / CronJob</span></td><td><span class="pt">Tarefa que roda até terminar (uma vez ou agendada).</span><span class="en">A task that runs to completion (once or scheduled).</span></td><td><span class="pt">uma tarefa avulsa</span><span class="en">a one-off task</span></td></tr><tr><td><span class="pt">ServiceAccount, Role, RoleBinding</span><span class="en">ServiceAccount, Role, RoleBinding</span></td><td><span class="pt">Identidade e permissões (RBAC) de Pods e pessoas dentro do cluster.</span><span class="en">Identity and permissions (RBAC) for Pods and people inside the cluster.</span></td><td><span class="pt">crachá e catraca</span><span class="en">badge and turnstile</span></td></tr><tr><td><span class="pt">NetworkPolicy</span><span class="en">NetworkPolicy</span></td><td><span class="pt">Firewall entre Pods: quem pode falar com quem.</span><span class="en">Firewall between Pods: who may talk to whom.</span></td><td><span class="pt">portas internas trancadas</span><span class="en">locked internal doors</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O elo entre os objetos são os <strong>rótulos (labels)</strong>. O Service acha seus Pods por <code>selector: {app: web}</code>; o Deployment acha os dele pelo mesmo mecanismo. Rótulo diferente entre os dois é o erro nº 1 de iniciante: o Service existe, mas aponta para ninguém.</span><span class="en">The glue between objects is <strong>labels</strong>. A Service finds its Pods by <code>selector: {app: web}</code>; the Deployment finds its own the same way. A label mismatch between the two is the #1 beginner error: the Service exists but points at nobody.</span></div>
+</section>
+<section class="content-section" aria-labelledby="files">
+<h2 id="files"><span class="pt">Os arquivos de configuração</span><span class="en">The configuration files</span></h2>
+<p><span class="pt">Você trabalha com <strong>manifestos</strong>: arquivos YAML, um ou vários objetos por arquivo (separados por <code>---</code>), que vão no Git como código. O comando é sempre <code>kubectl apply -f arquivo.yaml</code>.</span><span class="en">You work with <strong>manifests</strong>: YAML files, one or several objects per file (separated by <code>---</code>), kept in Git as code. The command is always <code>kubectl apply -f file.yaml</code>.</span></p>
+<h3><span class="pt">Anatomia: quatro campos em todo objeto</span><span class="en">Anatomy: four fields in every object</span></h3>
+<pre><code>apiVersion: apps/v1        # which API group/version defines this kind
+kind: Deployment           # the type of object
+metadata:                  # identity
+  name: web                #   unique name inside the namespace
+  namespace: default       #   optional; defaults to "default"
+  labels:                  #   free key/values other objects use to find this one
+    app: web
+spec:                      # the DESIRED state: this is what you write
+  replicas: 3
+  # ...
+# status:                  # the ACTUAL state: filled in by the cluster, never by you</code></pre>
+<p><span class="pt">Não decore os campos: pergunte ao próprio cluster. <code>kubectl explain deployment.spec.template.spec.securityContext</code> mostra a documentação oficial de qualquer campo, e <code>kubectl get deploy web -o yaml</code> mostra o objeto completo como o cluster o enxerga.</span><span class="en">Do not memorise fields: ask the cluster itself. <code>kubectl explain deployment.spec.template.spec.securityContext</code> shows the official documentation of any field, and <code>kubectl get deploy web -o yaml</code> shows the whole object as the cluster sees it.</span></p>
+<h3><span class="pt">Mapa dos arquivos</span><span class="en">File map</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo (kind)</span><span class="en">File (kind)</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th><th><span class="pt">Campos de segurança que importam</span><span class="en">Security fields that matter</span></th></tr></thead><tbody><tr><td><span class="pt"><code>Deployment</code></span><span class="en"><code>Deployment</code></span></td><td><span class="pt">o app: imagem, cópias, atualização</span><span class="en">the app: image, copies, rollout</span></td><td><span class="pt"><code>securityContext</code>, <code>resources</code>, <code>image</code> (tag/digest), <code>serviceAccountName</code>, <code>automountServiceAccountToken</code></span><span class="en"><code>securityContext</code>, <code>resources</code>, <code>image</code> (tag/digest), <code>serviceAccountName</code>, <code>automountServiceAccountToken</code></span></td></tr><tr><td><span class="pt"><code>Service</code></span><span class="en"><code>Service</code></span></td><td><span class="pt">endereço estável para os Pods</span><span class="en">stable address for the Pods</span></td><td><span class="pt"><code>type</code>: prefira <code>ClusterIP</code>; <code>NodePort</code>/<code>LoadBalancer</code> expõem ao mundo</span><span class="en"><code>type</code>: prefer <code>ClusterIP</code>; <code>NodePort</code>/<code>LoadBalancer</code> expose to the world</span></td></tr><tr><td><span class="pt"><code>Ingress</code></span><span class="en"><code>Ingress</code></span></td><td><span class="pt">entrada HTTP(S) por domínio/caminho</span><span class="en">HTTP(S) entry by domain/path</span></td><td><span class="pt"><code>spec.tls</code> (HTTPS), anotações do controller (WAF, restrição de IP)</span><span class="en"><code>spec.tls</code> (HTTPS), controller annotations (WAF, IP restriction)</span></td></tr><tr><td><span class="pt"><code>ConfigMap</code></span><span class="en"><code>ConfigMap</code></span></td><td><span class="pt">configuração não sensível</span><span class="en">non-sensitive configuration</span></td><td><span class="pt">nada de senha aqui</span><span class="en">no passwords here</span></td></tr><tr><td><span class="pt"><code>Secret</code></span><span class="en"><code>Secret</code></span></td><td><span class="pt">dados sensíveis</span><span class="en">sensitive data</span></td><td><span class="pt">só base64 (não cifrado); nunca no Git; RBAC restrito</span><span class="en">base64 only (not encrypted); never in Git; tight RBAC</span></td></tr><tr><td><span class="pt"><code>Namespace</code></span><span class="en"><code>Namespace</code></span></td><td><span class="pt">isolamento lógico</span><span class="en">logical isolation</span></td><td><span class="pt">rótulos <code>pod-security.kubernetes.io/*</code></span><span class="en"><code>pod-security.kubernetes.io/*</code> labels</span></td></tr><tr><td><span class="pt"><code>ServiceAccount</code></span><span class="en"><code>ServiceAccount</code></span></td><td><span class="pt">identidade do Pod</span><span class="en">the Pod's identity</span></td><td><span class="pt"><code>automountServiceAccountToken: false</code></span><span class="en"><code>automountServiceAccountToken: false</code></span></td></tr><tr><td><span class="pt"><code>Role</code> / <code>ClusterRole</code> + <code>RoleBinding</code></span><span class="en"><code>Role</code> / <code>ClusterRole</code> + <code>RoleBinding</code></span></td><td><span class="pt">permissões (RBAC)</span><span class="en">permissions (RBAC)</span></td><td><span class="pt"><code>verbs</code>, <code>resources</code>: mínimo necessário, sem <code>*</code></span><span class="en"><code>verbs</code>, <code>resources</code>: the bare minimum, no <code>*</code></span></td></tr><tr><td><span class="pt"><code>NetworkPolicy</code></span><span class="en"><code>NetworkPolicy</code></span></td><td><span class="pt">firewall entre Pods</span><span class="en">firewall between Pods</span></td><td><span class="pt"><code>podSelector</code>, <code>ingress</code>, <code>egress</code></span><span class="en"><code>podSelector</code>, <code>ingress</code>, <code>egress</code></span></td></tr><tr><td><span class="pt"><code>ResourceQuota</code> / <code>LimitRange</code></span><span class="en"><code>ResourceQuota</code> / <code>LimitRange</code></span></td><td><span class="pt">tetos por namespace e por contêiner</span><span class="en">caps per namespace and per container</span></td><td><span class="pt">impedem um time ou um invasor de consumir o cluster todo</span><span class="en">stop a team or an intruder from eating the whole cluster</span></td></tr><tr><td><span class="pt"><code>PodDisruptionBudget</code>, <code>HorizontalPodAutoscaler</code></span><span class="en"><code>PodDisruptionBudget</code>, <code>HorizontalPodAutoscaler</code></span></td><td><span class="pt">disponibilidade e escala</span><span class="en">availability and scaling</span></td><td><span class="pt">disponibilidade também é segurança</span><span class="en">availability is security too</span></td></tr><tr><td><span class="pt"><code>kubeconfig</code> (<code>~/.kube/config</code>)</span><span class="en"><code>kubeconfig</code> (<code>~/.kube/config</code>)</span></td><td><span class="pt"><em>seu</em> acesso: clusters, usuários, contextos</span><span class="en"><em>your</em> access: clusters, users, contexts</span></td><td><span class="pt">equivale a uma senha de administrador; não vai no Git</span><span class="en">equals an admin password; never goes in Git</span></td></tr><tr><td><span class="pt"><code>kustomization.yaml</code> / Helm <code>values.yaml</code></span><span class="en"><code>kustomization.yaml</code> / Helm <code>values.yaml</code></span></td><td><span class="pt">reaproveitar manifestos entre ambientes</span><span class="en">reuse manifests across environments</span></td><td><span class="pt">valores sensíveis fora do Git</span><span class="en">keep sensitive values out of Git</span></td></tr></tbody></table></div>
+<h3><span class="pt">Kustomize e Helm: o mesmo app em dev e prod</span><span class="en">Kustomize and Helm: the same app in dev and prod</span></h3>
+<p><span class="pt">Copiar YAML de ambiente em ambiente vira bagunça. O <strong>Kustomize</strong> (já dentro do <code>kubectl</code>) parte de uma base e aplica <em>remendos</em> por ambiente. O <strong>Helm</strong> usa modelos com <code>values.yaml</code> e é o formato da maioria dos pacotes prontos (Argo CD, ingress, cert-manager).</span><span class="en">Copying YAML from environment to environment gets messy. <strong>Kustomize</strong> (built into <code>kubectl</code>) starts from a base and applies per-environment <em>patches</em>. <strong>Helm</strong> uses templates with <code>values.yaml</code> and is the format of most ready-made packages (Argo CD, ingress, cert-manager).</span></p>
+<pre><code># overlays/prod/kustomization.yaml
+resources:
+  - ../../base              # the shared Deployment + Service
+replicas:
+  - name: web
+    count: 5                # prod runs 5 copies; dev keeps the base value
+images:
+  - name: nginxinc/nginx-unprivileged
+    newTag: "1.27"          # change the version in ONE place
+
+# kubectl apply -k overlays/prod</code></pre>
+<h3><span class="pt">kubeconfig: sua chave de acesso</span><span class="en">kubeconfig: your access key</span></h3>
+<pre><code>kubectl config get-contexts            # which clusters you can reach (* = current)
+kubectl config use-context kind-lab    # switch cluster
+kubectl config current-context         # ALWAYS check before apply/delete: wrong cluster = incident</code></pre>
+</section>
+<section class="content-section" aria-labelledby="security">
+<h2 id="security"><span class="pt">Segurança nos arquivos</span><span class="en">Security in the files</span></h2>
+<p><span class="pt">O Kubernetes vem <strong>aberto por padrão</strong>: um Pod roda como root se você não disser o contrário, fala com qualquer outro Pod, e recebe um token para falar com o API server. A boa notícia: quase toda proteção é uma linha de YAML. Pense em camadas:</span><span class="en">Kubernetes is <strong>open by default</strong>: a Pod runs as root unless you say otherwise, talks to any other Pod, and gets a token to talk to the API server. The good news: almost every protection is one line of YAML. Think in layers:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 328" role="img" aria-label="Camadas de segurança / Security layers" style="min-width:620px">
+<rect x="10" y="8" width="680" height="312" rx="4" class="ln"/>
+<text x="26" y="30" class="pt" text-anchor="start">1. Nuvem e cluster</text><text x="26" y="30" class="en" text-anchor="start">1. Cloud and cluster</text>
+<text x="26" y="48" class="pt mut" text-anchor="start">IAM · endpoint da API · criptografia do etcd · nós atualizados</text><text x="26" y="48" class="en mut" text-anchor="start">IAM · API endpoint · etcd encryption · patched nodes</text>
+<rect x="30" y="66" width="640" height="242" rx="4" class="ln fillsoft"/>
+<text x="46" y="88" text-anchor="start">2. Namespace</text>
+<text x="46" y="106" class="mut" text-anchor="start">Pod Security · RBAC · quotas · NetworkPolicy</text>
+<rect x="50" y="124" width="600" height="172" rx="4" class="ln"/>
+<text x="66" y="146" text-anchor="start">3. Pod</text>
+<text x="66" y="164" class="pt mut" text-anchor="start">ServiceAccount sem token · securityContext do Pod · seccomp</text><text x="66" y="164" class="en mut" text-anchor="start">tokenless ServiceAccount · Pod securityContext · seccomp</text>
+<rect x="70" y="180" width="560" height="104" rx="4" class="brandfill"/>
+<text x="86" y="204" class="pt" text-anchor="start">4. Contêiner</text><text x="86" y="204" class="en" text-anchor="start">4. Container</text>
+<text x="86" y="222" class="pt mut" text-anchor="start">imagem mínima e fixa · non-root · FS somente leitura</text><text x="86" y="222" class="en mut" text-anchor="start">minimal pinned image · non-root · read-only FS</text>
+<text x="86" y="240" class="pt mut" text-anchor="start">sem capabilities · sem escalada de privilégio · limites de CPU/memória</text><text x="86" y="240" class="en mut" text-anchor="start">no capabilities · no privilege escalation · CPU/memory limits</text>
+<text x="86" y="262" class="pt mut" text-anchor="start">← o que você escreve no YAML do app</text><text x="86" y="262" class="en mut" text-anchor="start">← what you write in the app's YAML</text>
+</svg></div><figcaption><span class="pt">Defesa em profundidade: se uma camada falha, a de dentro ainda limita o estrago.</span><span class="en">Defence in depth: if one layer fails, the inner one still limits the damage.</span></figcaption></figure>
+<h3><span class="pt">Camada 4 e 3: o securityContext e o Pod</span><span class="en">Layers 4 and 3: the securityContext and the Pod</span></h3>
+<pre><code>spec:
+  serviceAccountName: web
+  automountServiceAccountToken: false   # the app does not call the K8s API: give it no token
+  securityContext:                      # Pod level
+    runAsNonRoot: true                  # refuses to start if the image wants root
+    runAsUser: 101
+    seccompProfile:
+      type: RuntimeDefault              # blocks dangerous system calls
+  containers:
+    - name: web
+      image: nginxinc/nginx-unprivileged:1.27   # fixed tag (better: @sha256:digest)
+      securityContext:                  # container level
+        allowPrivilegeEscalation: false # no setuid tricks to become root
+        readOnlyRootFilesystem: true    # attacker cannot write or drop tools
+        capabilities:
+          drop: ["ALL"]                 # no special Linux powers
+      resources:
+        requests: { cpu: 50m, memory: 64Mi }
+        limits:   { cpu: 200m, memory: 128Mi }   # a crypto-miner or a leak cannot eat the node</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Campo</span><span class="en">Field</span></th><th><span class="pt">O que impede</span><span class="en">What it stops</span></th></tr></thead><tbody><tr><td><span class="pt"><code>runAsNonRoot: true</code></span><span class="en"><code>runAsNonRoot: true</code></span></td><td><span class="pt">Se o invasor sair do app, ele não é root dentro do contêiner; fugir para o nó fica bem mais difícil.</span><span class="en">If the attacker breaks out of the app, they are not root inside the container; escaping to the node gets much harder.</span></td></tr><tr><td><span class="pt"><code>allowPrivilegeEscalation: false</code></span><span class="en"><code>allowPrivilegeEscalation: false</code></span></td><td><span class="pt">Programas com setuid ganhando mais privilégio do que o processo pai.</span><span class="en">setuid programs gaining more privilege than their parent process.</span></td></tr><tr><td><span class="pt"><code>readOnlyRootFilesystem: true</code></span><span class="en"><code>readOnlyRootFilesystem: true</code></span></td><td><span class="pt">Gravar malware ou editar arquivos do sistema. Dê um <code>emptyDir</code> só para as pastas que precisam de escrita (<code>/tmp</code>).</span><span class="en">Writing malware or editing system files. Give an <code>emptyDir</code> only to folders that need writes (<code>/tmp</code>).</span></td></tr><tr><td><span class="pt"><code>capabilities.drop: [ALL]</code></span><span class="en"><code>capabilities.drop: [ALL]</code></span></td><td><span class="pt">Poderes de root fatiados do Linux (abrir portas baixas, mudar rede, montar discos). Adicione de volta só o indispensável.</span><span class="en">Root powers sliced up by Linux (low ports, network changes, mounting disks). Add back only what is indispensable.</span></td></tr><tr><td><span class="pt"><code>seccompProfile: RuntimeDefault</code></span><span class="en"><code>seccompProfile: RuntimeDefault</code></span></td><td><span class="pt">Chamadas de sistema perigosas usadas em exploits de kernel.</span><span class="en">Dangerous system calls used in kernel exploits.</span></td></tr><tr><td><span class="pt"><code>resources.limits</code></span><span class="en"><code>resources.limits</code></span></td><td><span class="pt">Um Pod comprometido (ou com bug) esgotar CPU/memória do nó e derrubar os vizinhos.</span><span class="en">A compromised (or buggy) Pod exhausting the node's CPU/memory and taking neighbours down.</span></td></tr><tr><td><span class="pt"><code>automountServiceAccountToken: false</code></span><span class="en"><code>automountServiceAccountToken: false</code></span></td><td><span class="pt">O token em <code>/var/run/secrets/…</code> ser roubado e usado contra o API server.</span><span class="en">The token in <code>/var/run/secrets/…</code> being stolen and used against the API server.</span></td></tr><tr><td><span class="pt"><code>image: repo:1.27</code> ou <code>@sha256:…</code></span><span class="en"><code>image: repo:1.27</code> or <code>@sha256:…</code></span></td><td><span class="pt"><code>:latest</code> muda sem aviso. O digest garante os mesmos bytes que você escaneou. Use registro privado e <code>imagePullSecrets</code>.</span><span class="en"><code>:latest</code> changes silently. A digest guarantees the same bytes you scanned. Use a private registry and <code>imagePullSecrets</code>.</span></td></tr><tr><td><span class="pt"><code>privileged: true</code>, <code>hostNetwork</code>, <code>hostPID</code>, <code>hostPath</code></span><span class="en"><code>privileged: true</code>, <code>hostNetwork</code>, <code>hostPID</code>, <code>hostPath</code></span></td><td><span class="pt"><strong>Evite.</strong> Cada um derruba o isolamento entre o contêiner e o nó. É o primeiro item de qualquer auditoria.</span><span class="en"><strong>Avoid.</strong> Each one tears down the isolation between container and node. The first item of any audit.</span></td></tr></tbody></table></div>
+<h3><span class="pt">Camada 2: o namespace diz o que é permitido (Pod Security)</span><span class="en">Layer 2: the namespace says what is allowed (Pod Security)</span></h3>
+<p><span class="pt">O <strong>Pod Security Admission</strong> vem ligado no cluster e é controlado por rótulos no Namespace. Há três perfis: <code>privileged</code> (sem limites), <code>baseline</code> (bloqueia o pior) e <code>restricted</code> (as boas práticas acima, obrigatórias). Três modos: <code>enforce</code> (recusa), <code>audit</code> (registra) e <code>warn</code> (avisa o usuário). Ele substituiu o antigo PodSecurityPolicy, removido no Kubernetes 1.25.</span><span class="en"><strong>Pod Security Admission</strong> is built into the cluster and controlled by labels on the Namespace. There are three profiles: <code>privileged</code> (no limits), <code>baseline</code> (blocks the worst) and <code>restricted</code> (the best practices above, mandatory). Three modes: <code>enforce</code> (rejects), <code>audit</code> (logs) and <code>warn</code> (warns the user). It replaced the old PodSecurityPolicy, removed in Kubernetes 1.25.</span></p>
+<pre><code>apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest</code></pre>
+<h3><span class="pt">Camada 2: RBAC, o mínimo de permissão</span><span class="en">Layer 2: RBAC, least privilege</span></h3>
+<p><span class="pt">RBAC liga <em>quem</em> (ServiceAccount, usuário, grupo) a <em>o que pode fazer</em> (verbos sobre recursos). Um <strong>Role</strong> vale em um namespace; um <strong>ClusterRole</strong> no cluster todo. Regras de ouro: nada de <code>cluster-admin</code> para apps, nada de <code>verbs: ["*"]</code>, e <code>secrets</code> só para quem realmente precisa.</span><span class="en">RBAC ties <em>who</em> (ServiceAccount, user, group) to <em>what they may do</em> (verbs on resources). A <strong>Role</strong> applies in one namespace; a <strong>ClusterRole</strong> cluster-wide. Golden rules: no <code>cluster-admin</code> for apps, no <code>verbs: ["*"]</code>, and <code>secrets</code> only for those who truly need them.</span></p>
+<pre><code>kind: Role
+metadata: { name: pod-reader, namespace: secure }
+rules:
+  - apiGroups: [""]               # "" = the core API group
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]   # read only
+---
+kind: RoleBinding                 # ties the Role to a subject
+metadata: { name: pod-reader, namespace: secure }
+subjects:
+  - { kind: ServiceAccount, name: pod-reader, namespace: secure }
+roleRef: { kind: Role, name: pod-reader, apiGroup: rbac.authorization.k8s.io }</code></pre>
+<h3><span class="pt">Camada 2: NetworkPolicy, o firewall interno</span><span class="en">Layer 2: NetworkPolicy, the internal firewall</span></h3>
+<p><span class="pt">Sem nenhuma política, <strong>todo Pod fala com todo Pod</strong>, de qualquer namespace. Um invasor que entra em um Pod passeia pelo cluster inteiro. O padrão seguro é negar tudo e liberar só o necessário. (O plugin de rede precisa suportar NetworkPolicy; o do EKS, o Calico e o Cilium suportam.)</span><span class="en">With no policy, <strong>every Pod talks to every Pod</strong>, from any namespace. An intruder who gets into one Pod roams the whole cluster. The safe default is to deny everything and allow only what is needed. (The network plugin must support NetworkPolicy; EKS's, Calico and Cilium do.)</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 222" role="img" aria-label="NetworkPolicy / NetworkPolicy" style="min-width:620px">
+<rect x="10" y="25" width="150" height="54" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="50.0" class="mono" text-anchor="middle">client</text>
+<text x="85.0" y="66.0" class="mut" text-anchor="middle">role=client</text>
+<rect x="10" y="135" width="150" height="54" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="160.0" class="mono" text-anchor="middle">other</text>
+<text x="85.0" y="176.0" class="pt mut" text-anchor="middle">sem o rótulo</text><text x="85.0" y="176.0" class="en mut" text-anchor="middle">without the label</text>
+<rect x="290" y="40" width="140" height="140" rx="4" class="ln dash"/>
+<text x="360" y="64" text-anchor="middle">NetworkPolicy</text>
+<text x="360" y="84" class="pt mut" text-anchor="middle">só role=client</text><text x="360" y="84" class="en mut" text-anchor="middle">only role=client</text>
+<text x="360" y="100" class="pt mut" text-anchor="middle">entra na porta 8080</text><text x="360" y="100" class="en mut" text-anchor="middle">gets in on port 8080</text>
+<rect x="520" y="85" width="170" height="54" rx="4" class="brandfill"/>
+<text x="605.0" y="110.0" class="mono" text-anchor="middle">web</text>
+<text x="605.0" y="126.0" class="mut" text-anchor="middle">app=web · :8080</text>
+<path d="M160 52L290 80" class="ln"/><path d="M282.4 81.8L290 80L283.9 75.2" class="ln"/>
+<path d="M430 100L520 108" class="ln"/><path d="M512.7 110.8L520 108L513.3 104.0" class="ln"/>
+<text x="225" y="56" class="pt mut" text-anchor="middle">✓ passa</text><text x="225" y="56" class="en mut" text-anchor="middle">✓ allowed</text>
+<path d="M160 162L285 138" class="ln"/><path d="M278.8 142.7L285 138L277.5 136.0" class="ln"/>
+<text x="225" y="172" class="pt mut" text-anchor="middle">✗ bloqueado</text><text x="225" y="172" class="en mut" text-anchor="middle">✗ blocked</text>
+<text x="360" y="208" class="pt mut" text-anchor="middle">sem NetworkPolicy: todo Pod fala com todo Pod</text><text x="360" y="208" class="en mut" text-anchor="middle">without a NetworkPolicy: every Pod talks to every Pod</text>
+</svg></div><figcaption><span class="pt">Com a política, só quem tem o rótulo certo chega ao web; o resto é descartado.</span><span class="en">With the policy, only whoever has the right label reaches web; the rest is dropped.</span></figcaption></figure>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny, namespace: secure }
+spec:
+  podSelector: {}                   # {} = every Pod in the namespace
+  policyTypes: ["Ingress"]          # no ingress rules listed = nothing may enter
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-client-to-web, namespace: secure }
+spec:
+  podSelector: { matchLabels: { app: web } }   # applies to the web Pods
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { role: client } }
+      ports:
+        - port: 8080</code></pre>
+<h3><span class="pt">Secrets: o que o base64 não faz</span><span class="en">Secrets: what base64 does not do</span></h3>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Um <code>Secret</code> guarda o valor em <strong>base64, que é só codificação, não criptografia</strong>: <code>echo czNjcjN0 | base64 -d</code> devolve a senha. Quem pode ler o Secret via API (ou ler o etcd) lê a senha. O que realmente protege: RBAC apertado, criptografia do etcd em repouso, e nunca versionar o YAML com o valor.</span><span class="en">A <code>Secret</code> stores the value in <strong>base64, which is just encoding, not encryption</strong>: <code>echo czNjcjN0 | base64 -d</code> returns the password. Whoever can read the Secret via the API (or read etcd) reads the password. What really protects it: tight RBAC, etcd encryption at rest, and never committing the YAML with the value.</span></div>
+<ul><li><span class="pt"><strong>Monte como arquivo</strong> (<code>volumeMounts</code> com <code>readOnly: true</code>) em vez de variável de ambiente: variáveis aparecem em dumps de erro, em <code>/proc</code> e em logs de depuração.</span><span class="en"><strong>Mount as a file</strong> (<code>volumeMounts</code> with <code>readOnly: true</code>) instead of an environment variable: variables show up in crash dumps, in <code>/proc</code> and in debug logs.</span></li><li><span class="pt"><strong>Em produção, mantenha o segredo fora do cluster</strong> (AWS Secrets Manager, Vault) e sincronize com o External Secrets Operator ou o Secrets Store CSI Driver. No Git, use Sealed Secrets ou SOPS (o valor vai cifrado).</span><span class="en"><strong>In production, keep the secret outside the cluster</strong> (AWS Secrets Manager, Vault) and sync it with the External Secrets Operator or the Secrets Store CSI Driver. In Git, use Sealed Secrets or SOPS (the value goes encrypted).</span></li><li><span class="pt"><strong>Rotacione</strong>: um segredo que muda é um segredo que, se vazar, expira.</span><span class="en"><strong>Rotate</strong>: a secret that changes is one that, if leaked, expires.</span></li></ul>
+<h3><span class="pt">Camada 1: o cluster em si</span><span class="en">Layer 1: the cluster itself</span></h3>
+<ul><li><span class="pt">API server <strong>não exposto</strong> à internet (ou restrito por IP), autenticação por identidade da nuvem, nada de usuário com senha estática.</span><span class="en">API server <strong>not exposed</strong> to the internet (or restricted by IP), authentication through cloud identity, no static-password users.</span></li><li><span class="pt"><strong>Logs de auditoria</strong> ligados: quem fez o quê, quando.</span><span class="en"><strong>Audit logs</strong> on: who did what, when.</span></li><li><span class="pt">Nós e Kubernetes <strong>atualizados</strong>: o projeto lança uma versão menor a cada ~4 meses e dá correções por cerca de 14 meses.</span><span class="en">Nodes and Kubernetes <strong>up to date</strong>: the project ships a minor version about every 4 months and backports fixes for roughly 14 months.</span></li><li><span class="pt">Imagens escaneadas (Trivy, ECR scan) e, idealmente, assinadas (cosign); políticas de admissão (Kyverno, OPA Gatekeeper ou <code>ValidatingAdmissionPolicy</code>) para barrar manifestos fora do padrão.</span><span class="en">Images scanned (Trivy, ECR scan) and ideally signed (cosign); admission policies (Kyverno, OPA Gatekeeper or <code>ValidatingAdmissionPolicy</code>) to reject manifests that break the standard.</span></li></ul>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Ferramentas para auditar o que você escreveu: <code>kubescape scan</code> e <code>trivy config .</code> (manifestos), <code>kube-bench</code> (CIS Benchmark do cluster) e <code>kubeconform</code> (valida o YAML). Rode no CI, como o <code>plan</code> do Terraform.</span><span class="en">Tools to audit what you wrote: <code>kubescape scan</code> and <code>trivy config .</code> (manifests), <code>kube-bench</code> (the cluster's CIS Benchmark) and <code>kubeconform</code> (validates the YAML). Run them in CI, like Terraform's <code>plan</code>.</span></div>
+</section>
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">Praticar na sua máquina com Docker</span><span class="en">Practise on your machine with Docker</span></h2>
+<p><span class="pt">Você vai usar o <strong>kind</strong> (“Kubernetes IN Docker”): ele cria um cluster real em que cada nó é um contêiner Docker. Sem nuvem, sem custo, e se quebrar basta apagar e criar de novo. As atividades são pequenas e cada uma se apoia na anterior. Todos os comandos desta seção foram executados de ponta a ponta num cluster kind.</span><span class="en">You will use <strong>kind</strong> (“Kubernetes IN Docker”): it creates a real cluster in which every node is a Docker container. No cloud, no cost, and if it breaks you just delete and recreate it. The activities are small and each builds on the previous one. Every command in this section was run end to end on a kind cluster.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">#</span><span class="en">#</span></th><th><span class="pt">Atividade</span><span class="en">Activity</span></th><th><span class="pt">Você aprende</span><span class="en">You learn</span></th></tr></thead><tbody><tr><td><span class="pt">0</span><span class="en">0</span></td><td><span class="pt">Instalar e criar o cluster</span><span class="en">Install and create the cluster</span></td><td><span class="pt">nós, kubectl, contexto</span><span class="en">nodes, kubectl, context</span></td></tr><tr><td><span class="pt">1</span><span class="en">1</span></td><td><span class="pt">Seu primeiro Pod</span><span class="en">Your first Pod</span></td><td><span class="pt">Pod, logs, exec, e por que Pod solto não se cura</span><span class="en">Pod, logs, exec, and why a bare Pod does not heal</span></td></tr><tr><td><span class="pt">2</span><span class="en">2</span></td><td><span class="pt">Deployment e Service</span><span class="en">Deployment and Service</span></td><td><span class="pt">cópias, autocura, escala, acesso pelo navegador</span><span class="en">copies, self-healing, scaling, browser access</span></td></tr><tr><td><span class="pt">3</span><span class="en">3</span></td><td><span class="pt">ConfigMap e Secret</span><span class="en">ConfigMap and Secret</span></td><td><span class="pt">configuração fora da imagem; base64 não é cifra</span><span class="en">configuration outside the image; base64 is not encryption</span></td></tr><tr><td><span class="pt">4</span><span class="en">4</span></td><td><span class="pt">Atualização gradual e rollback</span><span class="en">Rolling update and rollback</span></td><td><span class="pt">trocar versão sem parar; voltar quando erra</span><span class="en">swap versions without stopping; go back when it fails</span></td></tr><tr><td><span class="pt">5</span><span class="en">5</span></td><td><span class="pt">Endurecer o Pod</span><span class="en">Harden the Pod</span></td><td><span class="pt">Pod Security, securityContext, limites, probes</span><span class="en">Pod Security, securityContext, limits, probes</span></td></tr><tr><td><span class="pt">6</span><span class="en">6</span></td><td><span class="pt">RBAC</span><span class="en">RBAC</span></td><td><span class="pt">permissão mínima e <code>can-i</code></span><span class="en">least privilege and <code>can-i</code></span></td></tr><tr><td><span class="pt">7</span><span class="en">7</span></td><td><span class="pt">NetworkPolicy</span><span class="en">NetworkPolicy</span></td><td><span class="pt">negar tudo e liberar só o necessário</span><span class="en">deny everything and allow only what is needed</span></td></tr><tr><td><span class="pt">8</span><span class="en">8</span></td><td><span class="pt">Limpar</span><span class="en">Clean up</span></td><td><span class="pt">apagar tudo</span><span class="en">delete everything</span></td></tr></tbody></table></div>
+<h3><span class="pt">Atividade 0: instalar e criar o cluster</span><span class="en">Activity 0: install and create the cluster</span></h3>
+<p><span class="pt">Pré-requisito: Docker funcionando (<code>docker ps</code> responde). Instale o <code>kind</code> e o <code>kubectl</code> (no macOS: <code>brew install kind kubectl</code>; Linux, abaixo; Windows: <code>winget</code> ou use o WSL2).</span><span class="en">Prerequisite: Docker working (<code>docker ps</code> answers). Install <code>kind</code> and <code>kubectl</code> (on macOS: <code>brew install kind kubectl</code>; Linux below; Windows: <code>winget</code> or use WSL2).</span></p>
+<pre><code># Linux (amd64)
+curl -Lo kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+curl -LO "https://dl.k8s.io/release/$(curl -Ls https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+chmod +x kind kubectl &amp;&amp; sudo mv kind kubectl /usr/local/bin/
+
+mkdir k8s-lab &amp;&amp; cd k8s-lab</code></pre>
+<p><span class="pt">Crie o arquivo <code>kind.yaml</code>: um nó de control plane e dois workers, e uma porta do seu computador (<code>8088</code>) ligada à porta <code>30080</code> do cluster, para abrir o app no navegador.</span><span class="en">Create the file <code>kind.yaml</code>: one control-plane node and two workers, and one port of your computer (<code>8088</code>) wired to the cluster's port <code>30080</code>, so you can open the app in the browser.</span></p>
+<pre><code># kind.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: lab
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      - containerPort: 30080
+        hostPort: 8088
+        listenAddress: "127.0.0.1"    # only your machine, not the whole network
+  - role: worker
+  - role: worker</code></pre>
+<pre><code>kind create cluster --config kind.yaml
+kubectl get nodes</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> três nós <code>Ready</code> (a versão depende do kind instalado).</span><span class="en"><strong>Expected result:</strong> three <code>Ready</code> nodes (the version depends on your kind).</span></p>
+<pre><code>NAME                STATUS   ROLES           AGE   VERSION
+lab-control-plane   Ready    control-plane   34s   v1.37.0
+lab-worker          Ready    &lt;none&gt;          19s   v1.37.0
+lab-worker2         Ready    &lt;none&gt;          20s   v1.37.0</code></pre>
+<p><span class="pt">Curiosidade: <code>docker ps</code> mostra três contêineres, um por nó, e <code>kubectl get pods -n kube-system</code> mostra as peças da seção “Como funciona por dentro” rodando como Pods (<code>etcd</code>, <code>kube-apiserver</code>, <code>kube-scheduler</code>…).</span><span class="en">Curiosity: <code>docker ps</code> shows three containers, one per node, and <code>kubectl get pods -n kube-system</code> shows the pieces from “How it works inside” running as Pods (<code>etcd</code>, <code>kube-apiserver</code>, <code>kube-scheduler</code>…).</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Se a porta <code>8088</code> já estiver em uso, o kind falha com “port is already allocated”. Troque o <code>hostPort</code> por outro número e use o mesmo nas atividades seguintes.</span><span class="en">If port <code>8088</code> is already in use, kind fails with “port is already allocated”. Change <code>hostPort</code> to another number and use it in the following activities.</span></div>
+<h3><span class="pt">Atividade 1: seu primeiro Pod</span><span class="en">Activity 1: your first Pod</span></h3>
+<pre><code>kubectl run hello --image=nginx:1.27
+kubectl get pods -o wide                    # which node it landed on, and its IP
+kubectl logs hello                          # the container's output
+kubectl exec hello -- nginx -v              # run a command inside it
+kubectl delete pod hello
+kubectl get pods                            # gone for good</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o Pod passa a <code>Running</code>, o <code>exec</code> mostra a versão do nginx, e depois de apagado <strong>ele não volta</strong>.</span><span class="en"><strong>Expected result:</strong> the Pod becomes <code>Running</code>, <code>exec</code> prints the nginx version, and once deleted <strong>it does not come back</strong>.</span></p>
+<pre><code>NAME    READY   STATUS    RESTARTS   AGE   IP           NODE
+hello   1/1     Running   0          32s   10.244.2.2   lab-worker
+nginx version: nginx/1.27.5
+pod "hello" deleted from default namespace
+No resources found in default namespace.</code></pre>
+<p><span class="pt">Lição: um Pod solto não tem ninguém cuidando dele. Para a autocura você precisa de um controller, o Deployment.</span><span class="en">Lesson: a bare Pod has nobody looking after it. For self-healing you need a controller, the Deployment.</span></p>
+<h3><span class="pt">Atividade 2: Deployment e Service</span><span class="en">Activity 2: Deployment and Service</span></h3>
+<p><span class="pt">Usaremos a imagem <code>nginxinc/nginx-unprivileged</code>, que já roda sem root e escuta na porta <code>8080</code> (a atividade 5 depende disso). Crie <code>web.yaml</code>:</span><span class="en">We will use the <code>nginxinc/nginx-unprivileged</code> image, which already runs without root and listens on port <code>8080</code> (activity 5 depends on that). Create <code>web.yaml</code>:</span></p>
+<pre><code># web.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 3                          # desired state: 3 copies
+  selector:
+    matchLabels:
+      app: web                         # "my Pods are the ones labelled app=web"
+  template:                            # the Pod template
+    metadata:
+      labels:
+        app: web                       # MUST match the selector above
+    spec:
+      containers:
+        - name: web
+          image: nginxinc/nginx-unprivileged:1.27
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  type: NodePort                       # lab only: opens a port on the nodes
+  selector:
+    app: web                           # sends traffic to Pods labelled app=web
+  ports:
+    - port: 80                         # the Service's port
+      targetPort: 8080                 # the container's port
+      nodePort: 30080                  # the port kind forwards to localhost:8088</code></pre>
+<pre><code>kubectl apply -f web.yaml
+kubectl rollout status deploy/web
+kubectl get deploy,rs,pods
+curl -s -o /dev/null -w "%{http_code}\n" localhost:8088      # or open http://localhost:8088</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> <code>3/3</code> prontos, um ReplicaSet e três Pods, e <code>200</code> do curl.</span><span class="en"><strong>Expected result:</strong> <code>3/3</code> ready, one ReplicaSet and three Pods, and <code>200</code> from curl.</span></p>
+<pre><code>NAME                  READY   UP-TO-DATE   AVAILABLE
+deployment.apps/web   3/3     3            3
+
+NAME                       READY   STATUS    RESTARTS   AGE
+pod/web-7bf55664b5-6qznz   1/1     Running   0          39s
+pod/web-7bf55664b5-mcxwf   1/1     Running   0          39s
+pod/web-7bf55664b5-vp2ws   1/1     Running   0          39s
+200</code></pre>
+<p><span class="pt">Agora a <strong>autocura</strong>. Apague um Pod (use um nome da sua lista) e olhe de novo, rápido:</span><span class="en">Now <strong>self-healing</strong>. Delete a Pod (use a name from your list) and look again, quickly:</span></p>
+<pre><code>kubectl delete pod web-7bf55664b5-6qznz
+kubectl get pods                          # a new Pod is already being created
+
+kubectl scale deploy/web --replicas=5     # scale up
+kubectl get pods                          # 5 Pods
+kubectl scale deploy/web --replicas=3</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> assim que um Pod entra em <code>Terminating</code>, outro nasce em <code>ContainerCreating</code>: o laço de reconciliação em ação.</span><span class="en"><strong>Expected result:</strong> as soon as one Pod goes <code>Terminating</code>, another is born in <code>ContainerCreating</code>: the reconciliation loop in action.</span></p>
+<pre><code>NAME                   READY   STATUS              RESTARTS   AGE
+web-7bf55664b5-6qznz   1/1     Terminating         0          41s
+web-7bf55664b5-7tq5l   0/1     ContainerCreating   0          1s
+web-7bf55664b5-mcxwf   1/1     Running             0          41s
+web-7bf55664b5-vp2ws   1/1     Running             0          41s</code></pre>
+<p><span class="pt">Desafio: troque o rótulo do Service para <code>app: errado</code>, aplique e rode <code>kubectl get endpoints web</code>. A lista fica vazia e o curl falha: é o erro nº 1 de rótulos que vimos antes. Desfaça com <code>kubectl apply -f web.yaml</code>.</span><span class="en">Challenge: change the Service's label to <code>app: wrong</code>, apply and run <code>kubectl get endpoints web</code>. The list is empty and curl fails: the #1 label error we saw earlier. Undo with <code>kubectl apply -f web.yaml</code>.</span></p>
+<h3><span class="pt">Atividade 3: ConfigMap e Secret</span><span class="en">Activity 3: ConfigMap and Secret</span></h3>
+<pre><code>kubectl create configmap web-config --from-literal=GREETING="hello from k8s"
+kubectl create secret generic web-secret --from-literal=API_KEY=s3cr3t
+
+# inject both as environment variables in the Deployment (this triggers a new rollout)
+kubectl set env deploy/web --from=configmap/web-config
+kubectl set env deploy/web --from=secret/web-secret
+kubectl rollout status deploy/web
+
+kubectl exec deploy/web -- printenv GREETING API_KEY
+kubectl get secret web-secret -o jsonpath='{.data.API_KEY}'; echo
+kubectl get secret web-secret -o jsonpath='{.data.API_KEY}' | base64 -d; echo</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o Pod enxerga os dois valores; o Secret guardado é só base64, e qualquer um com acesso de leitura recupera a senha.</span><span class="en"><strong>Expected result:</strong> the Pod sees both values; the stored Secret is just base64, and anyone with read access recovers the password.</span></p>
+<pre><code>hello from k8s
+s3cr3t
+czNjcjN0
+s3cr3t</code></pre>
+<p><span class="pt">Lição: a configuração ficou fora da imagem (a mesma imagem serve a dev e prod), mas o Secret <em>não</em> está protegido por ser Secret. Quem protege é o RBAC (atividade 6) e, em produção, o cofre externo.</span><span class="en">Lesson: the configuration lives outside the image (the same image serves dev and prod), but the Secret is <em>not</em> protected just for being a Secret. RBAC (activity 6) and, in production, an external vault protect it.</span></p>
+<h3><span class="pt">Atividade 4: atualização gradual e rollback</span><span class="en">Activity 4: rolling update and rollback</span></h3>
+<pre><code>kubectl set image deploy/web web=nginxinc/nginx-unprivileged:1.28
+kubectl rollout status deploy/web           # old Pods leave as new ones become ready
+kubectl rollout history deploy/web
+
+# now ship a broken version on purpose
+kubectl set image deploy/web web=nginxinc/nginx-unprivileged:nao-existe
+kubectl get pods                            # one new Pod in ErrImagePull; the 3 old ones still serve
+curl -s -o /dev/null -w "%{http_code}\n" localhost:8088      # still 200
+
+kubectl rollout undo deploy/web             # go back to the last good version
+kubectl rollout status deploy/web</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> a versão quebrada nunca derruba o site, porque o Kubernetes só tira um Pod antigo quando o novo fica pronto. O <code>undo</code> restaura a versão boa.</span><span class="en"><strong>Expected result:</strong> the broken version never takes the site down, because Kubernetes only removes an old Pod once the new one is ready. <code>undo</code> restores the good version.</span></p>
+<pre><code>NAME                   READY   STATUS         RESTARTS   AGE
+web-6b6f99c975-86zgm   0/1     ErrImagePull   0          16s
+web-7db97c8d9-2blnr    1/1     Running        0          65s
+web-7db97c8d9-nn5t6    1/1     Running        0          41s
+web-7db97c8d9-t9256    1/1     Running        0          18s</code></pre>
+<p><span class="pt">Em equipe, o <code>undo</code> manual é o plano B: o normal é reverter o commit no Git e deixar o pipeline reaplicar.</span><span class="en">On a team, the manual <code>undo</code> is plan B: normally you revert the commit in Git and let the pipeline reapply.</span></p>
+<h3><span class="pt">Atividade 5: endurecer o Pod</span><span class="en">Activity 5: harden the Pod</span></h3>
+<p><span class="pt">Crie um namespace que <strong>só aceita Pods que seguem o perfil restricted</strong> e tente subir um Pod comum:</span><span class="en">Create a namespace that <strong>only accepts Pods following the restricted profile</strong> and try to start an ordinary Pod:</span></p>
+<pre><code># secure-ns.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secure
+  labels:
+    pod-security.kubernetes.io/enforce: restricted
+    pod-security.kubernetes.io/enforce-version: latest</code></pre>
+<pre><code>kubectl apply -f secure-ns.yaml
+kubectl run bad --image=nginx:1.27 -n secure</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o cluster recusa e diz exatamente o que faltou, o que é um roteiro do que escrever.</span><span class="en"><strong>Expected result:</strong> the cluster refuses and says exactly what is missing, which is a to-do list of what to write.</span></p>
+<pre><code>Error from server (Forbidden): pods "bad" is forbidden: violates PodSecurity "restricted:latest":
+allowPrivilegeEscalation != false (container "bad" must set securityContext.allowPrivilegeEscalation=false),
+unrestricted capabilities (container "bad" must set securityContext.capabilities.drop=["ALL"]),
+runAsNonRoot != true (pod or container "bad" must set securityContext.runAsNonRoot=true),
+seccompProfile (pod or container "bad" must set securityContext.seccompProfile.type to
+"RuntimeDefault" or "Localhost")</code></pre>
+<p><span class="pt">Agora a versão endurecida, <code>web-secure.yaml</code>, com os campos da seção de segurança mais <em>probes</em> (o Kubernetes só manda tráfego quando o <code>readinessProbe</code> responde, e reinicia o contêiner se o <code>livenessProbe</code> falhar):</span><span class="en">Now the hardened version, <code>web-secure.yaml</code>, with the fields from the security section plus <em>probes</em> (Kubernetes only sends traffic once the <code>readinessProbe</code> answers, and restarts the container if the <code>livenessProbe</code> fails):</span></p>
+<pre><code># web-secure.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web
+automountServiceAccountToken: false
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    app: web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      serviceAccountName: web
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 101
+        runAsGroup: 101
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: web
+          image: nginxinc/nginx-unprivileged:1.27
+          ports:
+            - containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp          # the only writable folder
+      volumes:
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web
+spec:
+  selector:
+    app: web
+  ports:
+    - port: 80
+      targetPort: 8080               # ClusterIP (default): reachable only inside the cluster</code></pre>
+<pre><code>kubectl apply -n secure -f web-secure.yaml
+kubectl rollout status deploy/web -n secure
+kubectl exec -n secure deploy/web -- sh -c 'id; touch /etc/x; touch /tmp/ok &amp;&amp; echo tmp-ok; ls /var/run/secrets'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o Pod passa pelo namespace restricted; roda como usuário 101 (não root); não consegue escrever fora de <code>/tmp</code>; e não tem token do Kubernetes.</span><span class="en"><strong>Expected result:</strong> the Pod passes the restricted namespace; runs as user 101 (not root); cannot write outside <code>/tmp</code>; and has no Kubernetes token.</span></p>
+<pre><code>uid=101(nginx) gid=101(nginx) groups=101(nginx)
+touch: cannot touch '/etc/x': Read-only file system
+tmp-ok
+ls: cannot access '/var/run/secrets': No such file or directory
+command terminated with exit code 2        # the last error is expected: that folder does not exist</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Dica: ao aplicar um <code>Deployment</code> inseguro num namespace restrito, o Deployment é criado, mas os Pods são recusados. Se um Deployment mostra <code>0/3</code>, rode <code>kubectl describe rs</code> ou <code>kubectl get events</code> para ver o motivo.</span><span class="en">Tip: when you apply an insecure <code>Deployment</code> to a restricted namespace, the Deployment is created but its Pods are rejected. If a Deployment shows <code>0/3</code>, run <code>kubectl describe rs</code> or <code>kubectl get events</code> to see why.</span></div>
+<h3><span class="pt">Atividade 6: RBAC</span><span class="en">Activity 6: RBAC</span></h3>
+<pre><code># rbac.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pod-reader
+  namespace: secure
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pod-reader
+  namespace: secure
+rules:
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list", "watch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pod-reader
+  namespace: secure
+subjects:
+  - kind: ServiceAccount
+    name: pod-reader
+    namespace: secure
+roleRef:
+  kind: Role
+  name: pod-reader
+  apiGroup: rbac.authorization.k8s.io</code></pre>
+<pre><code>kubectl apply -f rbac.yaml
+SA=system:serviceaccount:secure:pod-reader
+kubectl auth can-i list pods     -n secure  --as=$SA
+kubectl auth can-i delete pods   -n secure  --as=$SA
+kubectl auth can-i get secrets   -n secure  --as=$SA
+kubectl auth can-i list pods     -n default --as=$SA</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> só a ação liberada, no namespace liberado, responde <code>yes</code>.</span><span class="en"><strong>Expected result:</strong> only the allowed action, in the allowed namespace, answers <code>yes</code>.</span></p>
+<pre><code>yes
+no
+no
+no</code></pre>
+<p><span class="pt"><code>kubectl auth can-i --list --as=$SA -n secure</code> mostra tudo o que uma identidade pode fazer. É o primeiro comando de uma revisão de permissões.</span><span class="en"><code>kubectl auth can-i --list --as=$SA -n secure</code> shows everything an identity can do. It is the first command of a permissions review.</span></p>
+<h3><span class="pt">Atividade 7: NetworkPolicy</span><span class="en">Activity 7: NetworkPolicy</span></h3>
+<p><span class="pt">Suba dois Pods de teste no namespace <code>secure</code>: um com o rótulo <code>role=client</code> e outro sem. Como o namespace é restricted, eles também precisam do <code>securityContext</code>. Crie <code>clients.yaml</code>:</span><span class="en">Start two test Pods in the <code>secure</code> namespace: one with the label <code>role=client</code> and one without. Since the namespace is restricted, they also need the <code>securityContext</code>. Create <code>clients.yaml</code>:</span></p>
+<pre><code># clients.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: client
+  namespace: secure
+  labels:
+    role: client
+spec:
+  securityContext: { runAsNonRoot: true, runAsUser: 1000, seccompProfile: { type: RuntimeDefault } }
+  containers:
+    - name: client
+      image: busybox:1.37
+      command: ["sleep", "3600"]
+      securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: ["ALL"] } }
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: other
+  namespace: secure
+spec:
+  securityContext: { runAsNonRoot: true, runAsUser: 1000, seccompProfile: { type: RuntimeDefault } }
+  containers:
+    - name: other
+      image: busybox:1.37
+      command: ["sleep", "3600"]
+      securityContext: { allowPrivilegeEscalation: false, capabilities: { drop: ["ALL"] } }</code></pre>
+<pre><code>kubectl apply -f clients.yaml
+kubectl wait -n secure --for=condition=Ready pod/client pod/other
+
+# BEFORE any policy: both reach web
+kubectl exec -n secure client -- wget -qO- -T 3 http://web | head -2
+kubectl exec -n secure other  -- wget -qO- -T 3 http://web | head -2</code></pre>
+<p><span class="pt">Salve as duas políticas da seção de segurança em <code>netpol.yaml</code> (a <code>default-deny</code> e a <code>allow-client-to-web</code>) e aplique:</span><span class="en">Save the two policies from the security section as <code>netpol.yaml</code> (<code>default-deny</code> and <code>allow-client-to-web</code>) and apply them:</span></p>
+<pre><code>kubectl apply -f netpol.yaml
+kubectl exec -n secure client -- wget -qO- -T 3 http://web | head -2    # allowed
+kubectl exec -n secure other  -- wget -qO- -T 3 http://web | head -2    # blocked</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> antes, os dois recebem o HTML; depois, só o <code>client</code> recebe, e o <code>other</code> fica sem resposta até o tempo esgotar.</span><span class="en"><strong>Expected result:</strong> before, both get the HTML; after, only <code>client</code> does, and <code>other</code> gets no answer until it times out.</span></p>
+<pre><code># client (allowed)
+&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+# other (blocked)
+wget: download timed out
+command terminated with exit code 1</code></pre>
+<h3><span class="pt">Bônus: fechar também a saída (egress)</span><span class="en">Bonus: also close the outbound side (egress)</span></h3>
+<p><span class="pt">Negar a <em>saída</em> impede um Pod comprometido de “ligar para casa” (exfiltrar dados, baixar ferramentas). Mas ao negar tudo você também bloqueia o <strong>DNS</strong>, e nada mais resolve nomes (o erro é <code>bad address 'web'</code>). Por isso liberamos o DNS e depois cada destino necessário:</span><span class="en">Denying <em>outbound</em> traffic stops a compromised Pod from “phoning home” (exfiltrating data, downloading tools). But denying everything also blocks <strong>DNS</strong>, and nothing resolves names any more (the error is <code>bad address 'web'</code>). So we allow DNS first and then each needed destination:</span></p>
+<pre><code># egress.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny-egress, namespace: secure }
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-dns, namespace: secure }
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels: { kubernetes.io/metadata.name: kube-system }
+          podSelector:
+            matchLabels: { k8s-app: kube-dns }
+      ports:
+        - { port: 53, protocol: UDP }
+        - { port: 53, protocol: TCP }
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: client-egress-to-web, namespace: secure }
+spec:
+  podSelector: { matchLabels: { role: client } }
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - podSelector: { matchLabels: { app: web } }
+      ports:
+        - port: 8080</code></pre>
+<pre><code>kubectl apply -f egress.yaml
+kubectl exec -n secure client -- wget -qO- -T 3 http://web | head -2          # still works
+kubectl exec -n secure client -- wget -qO- -T 3 http://example.com | head -2  # blocked</code></pre>
+<h3><span class="pt">Atividade 8: limpar</span><span class="en">Activity 8: clean up</span></h3>
+<pre><code>kind delete cluster --name lab      # removes the three node containers; nothing else is left behind</code></pre>
+<h3><span class="pt">E depois? Um roteiro de estudo</span><span class="en">What next? A study path</span></h3>
+<ol class="ds-steps"><li><span class="pt">Repita as atividades <em>sem copiar</em>, escrevendo os YAMLs com a ajuda de <code>kubectl explain</code> e <code>kubectl create ... --dry-run=client -o yaml</code>.</span><span class="en">Repeat the activities <em>without copying</em>, writing the YAMLs with the help of <code>kubectl explain</code> and <code>kubectl create ... --dry-run=client -o yaml</code>.</span></li><li><span class="pt">Quebre de propósito: imagem inexistente, rótulo errado, limite de memória baixo demais (<code>OOMKilled</code>), probe errado. Aprenda a ler <code>kubectl describe</code>, <code>logs</code> e <code>get events</code>.</span><span class="en">Break things on purpose: missing image, wrong label, memory limit too low (<code>OOMKilled</code>), wrong probe. Learn to read <code>kubectl describe</code>, <code>logs</code> and <code>get events</code>.</span></li><li><span class="pt">Suba um app seu: um Deployment, Service, ConfigMap e um PersistentVolumeClaim para o banco (use o <a href="../postgres-for-devs/index.html">Postgres</a> da outra nota).</span><span class="en">Deploy an app of your own: a Deployment, Service, ConfigMap and a PersistentVolumeClaim for the database (use the <a href="../postgres-for-devs/index.html">Postgres</a> from the other note).</span></li><li><span class="pt">Instale um Ingress/Gateway e um <code>cert-manager</code>; empacote o app com Kustomize ou Helm.</span><span class="en">Install an Ingress/Gateway and <code>cert-manager</code>; package the app with Kustomize or Helm.</span></li><li><span class="pt">Passe os manifestos por <code>kubescape</code> ou <code>trivy config</code> e corrija os achados.</span><span class="en">Run the manifests through <code>kubescape</code> or <code>trivy config</code> and fix the findings.</span></li><li><span class="pt">Preparação formal: as provas CKA, CKAD e CKS (segurança) da Linux Foundation, e o simulador killer.sh, são o melhor treino prático.</span><span class="en">Formal preparation: the Linux Foundation's CKA, CKAD and CKS (security) exams, and the killer.sh simulator, are the best hands-on practice.</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="aws">
+<h2 id="aws"><span class="pt">Colocar em produção com segurança na AWS (EKS)</span><span class="en">Running it in production, securely, on AWS (EKS)</span></h2>
+<p><span class="pt">O serviço gerenciado da AWS é o <strong>EKS</strong> (Elastic Kubernetes Service): a AWS opera o control plane (alta disponibilidade em várias zonas, atualizações, backup do etcd) e você cuida dos nós e dos apps. O modelo de responsabilidade compartilhada vale aqui: a AWS protege o control plane; <strong>a configuração do seu cluster e dos seus Pods é com você</strong>.</span><span class="en">AWS's managed service is <strong>EKS</strong> (Elastic Kubernetes Service): AWS runs the control plane (multi-zone high availability, upgrades, etcd backups) and you look after the nodes and the apps. The shared-responsibility model applies: AWS protects the control plane; <strong>your cluster's and Pods' configuration is on you</strong>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 428" role="img" aria-label="Arquitetura de referência no EKS / Reference architecture on EKS" style="min-width:620px">
+<rect x="5" y="115" width="75" height="44" rx="4" class="ln fillsoft"/>
+<text x="42.5" y="141.0" text-anchor="middle">Internet</text>
+<path d="M80 137L140 137" class="ln"/><path d="M133.0 140.4L140 137L133.0 133.6" class="ln"/>
+<text x="42" y="104" class="mut" text-anchor="middle">HTTPS</text>
+<rect x="100" y="8" width="590" height="412" rx="4" class="ln dash"/>
+<text x="114" y="28" class="pt mut" text-anchor="start">conta AWS · região</text><text x="114" y="28" class="en mut" text-anchor="start">AWS account · region</text>
+<rect x="115" y="40" width="560" height="262" rx="4" class="ln"/>
+<text x="128" y="60" class="mut" text-anchor="start">VPC</text>
+<rect x="130" y="72" width="150" height="218" rx="4" class="ln fillsoft"/>
+<text x="142" y="92" class="pt mut" text-anchor="start">subnets públicas</text><text x="142" y="92" class="en mut" text-anchor="start">public subnets</text>
+<rect x="140" y="114" width="130" height="46" rx="4" class="brandfill"/>
+<text x="205.0" y="135.0" text-anchor="middle">ALB</text>
+<text x="205.0" y="151.0" class="mut" text-anchor="middle">AWS LB Controller</text>
+<rect x="140" y="180" width="130" height="46" rx="4" class="ln"/>
+<text x="205.0" y="201.0" text-anchor="middle">NAT gateway</text>
+<text x="205.0" y="217.0" class="pt mut" text-anchor="middle">saída para a internet</text><text x="205.0" y="217.0" class="en mut" text-anchor="middle">outbound internet</text>
+<rect x="298" y="72" width="365" height="218" rx="4" class="ln fillsoft"/>
+<text x="310" y="92" class="pt mut" text-anchor="start">subnets privadas (2+ zonas)</text><text x="310" y="92" class="en mut" text-anchor="start">private subnets (2+ zones)</text>
+<rect x="308" y="106" width="168" height="170" rx="4" class="ln"/>
+<text x="392" y="126" class="pt mut" text-anchor="middle">nó · zona a</text><text x="392" y="126" class="en mut" text-anchor="middle">node · zone a</text>
+<rect x="318" y="140" width="70" height="40" rx="4" class="brandfill"/>
+<text x="353.0" y="164.0" text-anchor="middle">Pod</text>
+<rect x="396" y="140" width="70" height="40" rx="4" class="brandfill"/>
+<text x="431.0" y="164.0" text-anchor="middle">Pod</text>
+<text x="392" y="208" class="mut" text-anchor="middle">managed node group</text>
+<text x="392" y="226" class="pt mut" text-anchor="middle">IMDSv2 · SG · disco cifrado</text><text x="392" y="226" class="en mut" text-anchor="middle">IMDSv2 · SG · encrypted disk</text>
+<text x="392" y="244" class="pt mut" text-anchor="middle">sem IP público</text><text x="392" y="244" class="en mut" text-anchor="middle">no public IP</text>
+<rect x="488" y="106" width="168" height="170" rx="4" class="ln"/>
+<text x="572" y="126" class="pt mut" text-anchor="middle">nó · zona b</text><text x="572" y="126" class="en mut" text-anchor="middle">node · zone b</text>
+<rect x="498" y="140" width="70" height="40" rx="4" class="brandfill"/>
+<text x="533.0" y="164.0" text-anchor="middle">Pod</text>
+<rect x="576" y="140" width="70" height="40" rx="4" class="brandfill"/>
+<text x="611.0" y="164.0" text-anchor="middle">Pod</text>
+<text x="572" y="208" class="mut" text-anchor="middle">managed node group</text>
+<text x="572" y="226" class="pt mut" text-anchor="middle">IMDSv2 · SG · disco cifrado</text><text x="572" y="226" class="en mut" text-anchor="middle">IMDSv2 · SG · encrypted disk</text>
+<text x="572" y="244" class="pt mut" text-anchor="middle">sem IP público</text><text x="572" y="244" class="en mut" text-anchor="middle">no public IP</text>
+<path d="M270 137L318 160" class="ln"/><path d="M310.2 160.0L318 160L313.2 153.9" class="ln"/>
+<rect x="115" y="322" width="130" height="50" rx="4" class="ln fillsoft"/>
+<text x="180.0" y="345.0" text-anchor="middle">EKS control plane</text>
+<text x="180.0" y="361.0" class="pt mut" text-anchor="middle">gerenciado pela AWS</text><text x="180.0" y="361.0" class="en mut" text-anchor="middle">managed by AWS</text>
+<rect x="255" y="322" width="85" height="50" rx="4" class="ln fillsoft"/>
+<text x="297.5" y="345.0" text-anchor="middle">ECR</text>
+<text x="297.5" y="361.0" class="pt mut" text-anchor="middle">imagens</text><text x="297.5" y="361.0" class="en mut" text-anchor="middle">images</text>
+<rect x="350" y="322" width="130" height="50" rx="4" class="ln fillsoft"/>
+<text x="415.0" y="345.0" text-anchor="middle">Secrets Manager</text>
+<text x="415.0" y="361.0" class="pt mut" text-anchor="middle">segredos</text><text x="415.0" y="361.0" class="en mut" text-anchor="middle">secrets</text>
+<rect x="490" y="322" width="70" height="50" rx="4" class="ln fillsoft"/>
+<text x="525.0" y="345.0" text-anchor="middle">KMS</text>
+<text x="525.0" y="361.0" class="pt mut" text-anchor="middle">chaves</text><text x="525.0" y="361.0" class="en mut" text-anchor="middle">keys</text>
+<rect x="570" y="322" width="105" height="50" rx="4" class="ln fillsoft"/>
+<text x="622.5" y="345.0" text-anchor="middle">CloudWatch</text>
+<text x="622.5" y="361.0" class="pt mut" text-anchor="middle">logs e alarmes</text><text x="622.5" y="361.0" class="en mut" text-anchor="middle">logs &amp; alarms</text>
+<text x="395" y="392" class="pt mut" text-anchor="middle">Pods acessam a AWS com uma IAM role própria (Pod Identity / IRSA), sem chaves fixas.</text><text x="395" y="392" class="en mut" text-anchor="middle">Pods reach AWS with their own IAM role (Pod Identity / IRSA), with no static keys.</text>
+<text x="395" y="410" class="pt mut" text-anchor="middle">Control plane e nós se falam por ENIs dentro da sua VPC.</text><text x="395" y="410" class="en mut" text-anchor="middle">The control plane and nodes talk through ENIs inside your VPC.</text>
+</svg></div><figcaption><span class="pt">Nós em subnets privadas, só o ALB exposto; o resto da AWS é acessado por IAM, não por senha.</span><span class="en">Nodes in private subnets, only the ALB exposed; the rest of AWS is reached through IAM, not passwords.</span></figcaption></figure>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Custo.</strong> O EKS cobra pelo control plane por hora (cerca de US$ 0,10/h, uns US$ 73 por mês, consulte a tabela de preços atual), mais os nós EC2, o NAT gateway e o ALB. Crie o cluster de estudo, pratique e <strong>apague no mesmo dia</strong> (<code>eksctl delete cluster</code>). Defina um alerta de orçamento (AWS Budgets) antes de começar.</span><span class="en"><strong>Cost.</strong> EKS charges for the control plane by the hour (about US$ 0.10/h, roughly US$ 73 a month, check the current price list), plus the EC2 nodes, the NAT gateway and the ALB. Create the study cluster, practise and <strong>delete it the same day</strong> (<code>eksctl delete cluster</code>). Set a budget alert (AWS Budgets) before you begin.</span></div>
+<h3><span class="pt">Passo 1: o cluster, já com os controles de segurança</span><span class="en">Step 1: the cluster, with security controls from day one</span></h3>
+<p><span class="pt">O jeito mais curto de aprender é o <code>eksctl</code>, que lê um arquivo e cria VPC, control plane e nós. Em produção real, descreva a mesma coisa em <a href="../terraform/index.html">Terraform</a> (módulos <code>terraform-aws-modules/eks</code>). Os comentários mostram o que cada linha protege:</span><span class="en">The shortest way to learn is <code>eksctl</code>, which reads a file and creates the VPC, control plane and nodes. In real production, describe the same thing in <a href="../terraform/index.html">Terraform</a> (the <code>terraform-aws-modules/eks</code> modules). The comments show what each line protects:</span></p>
+<pre><code># cluster.yaml
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+metadata:
+  name: demo
+  region: us-east-1
+  version: "1.35"                      # use a version currently in standard support
+
+accessConfig:
+  authenticationMode: API              # access via IAM "access entries"; no legacy aws-auth ConfigMap
+
+vpc:
+  clusterEndpoints:
+    privateAccess: true
+    publicAccess: true                 # best for production: false + VPN/bastion
+  publicAccessCIDRs: ["203.0.113.10/32"]   # replace with YOUR IP: only it can reach the API server
+
+secretsEncryption:
+  keyARN: arn:aws:kms:us-east-1:111122223333:key/REPLACE-ME   # your own KMS key for Secrets
+
+cloudWatch:
+  clusterLogging:
+    enableTypes: ["api", "audit", "authenticator", "controllerManager", "scheduler"]
+
+iam:
+  withOIDC: true                       # lets Pods assume IAM roles (IRSA)
+
+addons:
+  - name: vpc-cni
+    configurationValues: '{"enableNetworkPolicy": "true"}'   # NetworkPolicy enforcement
+  - name: eks-pod-identity-agent       # IAM roles for Pods (Pod Identity)
+
+managedNodeGroups:
+  - name: ng-private
+    instanceType: t3.medium
+    desiredCapacity: 2
+    minSize: 2
+    maxSize: 4
+    privateNetworking: true            # nodes in private subnets, no public IP
+    volumeEncrypted: true              # encrypted disks</code></pre>
+<pre><code>eksctl create cluster -f cluster.yaml                       # ~15-20 minutes
+aws eks update-kubeconfig --name demo --region us-east-1    # writes your kubeconfig (short-lived tokens via IAM)
+kubectl get nodes</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O <code>kubectl</code> do EKS não usa senha: o <code>kubeconfig</code> chama <code>aws eks get-token</code> e o acesso segue as suas credenciais da AWS (SSO, de preferência). Quem entra no cluster é decidido por <em>access entries</em> do IAM, com políticas como <code>AmazonEKSViewPolicy</code>; evite dar <code>cluster-admin</code> a todo mundo.</span><span class="en">EKS's <code>kubectl</code> uses no password: the <code>kubeconfig</code> calls <code>aws eks get-token</code> and access follows your AWS credentials (SSO, ideally). Who gets into the cluster is decided by IAM <em>access entries</em>, with policies such as <code>AmazonEKSViewPolicy</code>; avoid giving <code>cluster-admin</code> to everyone.</span></div>
+<h3><span class="pt">Passo 2: imagens no ECR</span><span class="en">Step 2: images in ECR</span></h3>
+<pre><code>aws ecr create-repository --repository-name web \
+  --image-scanning-configuration scanOnPush=true \
+  --image-tag-mutability IMMUTABLE \
+  --encryption-configuration encryptionType=KMS
+
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 111122223333.dkr.ecr.us-east-1.amazonaws.com
+docker build -t 111122223333.dkr.ecr.us-east-1.amazonaws.com/web:1.0.0 .
+docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/web:1.0.0</code></pre>
+<p><span class="pt">Tags imutáveis impedem que a <code>1.0.0</code> seja sobrescrita; o scan na publicação aponta CVEs conhecidas. No manifesto, referencie a imagem pelo <strong>digest</strong> (<code>web@sha256:…</code>). Em CI, o próprio pipeline faz o <code>push</code>, com OIDC (veja a nota <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a>), sem chave guardada.</span><span class="en">Immutable tags stop <code>1.0.0</code> from being overwritten; scan-on-push flags known CVEs. In the manifest, reference the image by <strong>digest</strong> (<code>web@sha256:…</code>). In CI, the pipeline itself does the <code>push</code>, with OIDC (see the <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a> note), with no stored key.</span></p>
+<h3><span class="pt">Passo 3: o app com identidade própria na AWS</span><span class="en">Step 3: the app with its own AWS identity</span></h3>
+<p><span class="pt">Um Pod que precisa ler um bucket S3 ou um segredo <strong>não</strong> deve usar as credenciais do nó (que serviriam a todos os Pods) nem chaves fixas. Crie uma IAM role só com o que ele precisa e ligue-a à ServiceAccount:</span><span class="en">A Pod that must read an S3 bucket or a secret should <strong>not</strong> use the node's credentials (which would serve every Pod) nor static keys. Create an IAM role with only what it needs and tie it to the ServiceAccount:</span></p>
+<pre><code># IRSA: the ServiceAccount carries the role to assume
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: web
+  namespace: prod
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::111122223333:role/web-s3-read
+automountServiceAccountToken: true     # IRSA needs the projected token; set false only for Pods with no AWS access</code></pre>
+<p><span class="pt">A alternativa mais nova, o <strong>EKS Pod Identity</strong>, dispensa a anotação: <code>aws eks create-pod-identity-association --cluster-name demo --namespace prod --service-account web --role-arn …</code>. Nos dois casos a role aceita <em>só</em> aquela ServiceAccount daquele namespace.</span><span class="en">The newer alternative, <strong>EKS Pod Identity</strong>, drops the annotation: <code>aws eks create-pod-identity-association --cluster-name demo --namespace prod --service-account web --role-arn …</code>. In both cases the role accepts <em>only</em> that ServiceAccount in that namespace.</span></p>
+<h3><span class="pt">Passo 4: expor com HTTPS</span><span class="en">Step 4: expose it with HTTPS</span></h3>
+<p><span class="pt">Instale o <strong>AWS Load Balancer Controller</strong> (Helm). Ele transforma um <code>Ingress</code> em um ALB. Certificado no ACM, HTTPS e, se quiser, WAF:</span><span class="en">Install the <strong>AWS Load Balancer Controller</strong> (Helm). It turns an <code>Ingress</code> into an ALB. Certificate in ACM, HTTPS and, if you want, WAF:</span></p>
+<pre><code>apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: web
+  namespace: prod
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:us-east-1:111122223333:certificate/REPLACE-ME
+    alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS13-1-2-2021-06
+    # alb.ingress.kubernetes.io/wafv2-acl-arn: arn:aws:wafv2:...   # optional WAF
+spec:
+  ingressClassName: alb
+  rules:
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service: { name: web, port: { number: 80 } }</code></pre>
+<p><span class="pt">Mantenha os Services como <code>ClusterIP</code> e as subnets dos nós privadas: só o ALB fica na internet. Aponte seu domínio para o ALB (Route 53 ou <a href="../cloudflare/index.html">Cloudflare</a>).</span><span class="en">Keep Services as <code>ClusterIP</code> and the node subnets private: only the ALB faces the internet. Point your domain at the ALB (Route 53 or <a href="../cloudflare/index.html">Cloudflare</a>).</span></p>
+<h3><span class="pt">Passo 5: entregar com pipeline</span><span class="en">Step 5: deliver through a pipeline</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 148" role="img" aria-label="Pipeline de entrega / Delivery pipeline" style="min-width:620px">
+<rect x="10" y="30" width="118" height="56" rx="4" class="ln fillsoft"/>
+<text x="69.0" y="56.0" text-anchor="middle">git push</text>
+<text x="69.0" y="72.0" class="pt mut" text-anchor="middle">PR revisado</text><text x="69.0" y="72.0" class="en mut" text-anchor="middle">reviewed PR</text>
+<path d="M128 58L150 58" class="ln"/><path d="M143.0 61.4L150 58L143.0 54.6" class="ln"/>
+<rect x="150" y="30" width="118" height="56" rx="4" class="ln fillsoft"/>
+<text x="209.0" y="56.0" text-anchor="middle">CI</text>
+<text x="209.0" y="72.0" class="pt mut" text-anchor="middle">build+teste+scan</text><text x="209.0" y="72.0" class="en mut" text-anchor="middle">build+test+scan</text>
+<path d="M268 58L290 58" class="ln"/><path d="M283.0 61.4L290 58L283.0 54.6" class="ln"/>
+<rect x="290" y="30" width="118" height="56" rx="4" class="ln fillsoft"/>
+<text x="349.0" y="56.0" text-anchor="middle">ECR</text>
+<text x="349.0" y="72.0" class="pt mut" text-anchor="middle">imagem por digest</text><text x="349.0" y="72.0" class="en mut" text-anchor="middle">image by digest</text>
+<path d="M408 58L430 58" class="ln"/><path d="M423.0 61.4L430 58L423.0 54.6" class="ln"/>
+<rect x="430" y="30" width="118" height="56" rx="4" class="ln fillsoft"/>
+<text x="489.0" y="56.0" text-anchor="middle">GitOps / deploy</text>
+<text x="489.0" y="72.0" class="mut" text-anchor="middle">Argo CD · kubectl</text>
+<path d="M548 58L570 58" class="ln"/><path d="M563.0 61.4L570 58L563.0 54.6" class="ln"/>
+<rect x="570" y="30" width="118" height="56" rx="4" class="brandfill"/>
+<text x="629.0" y="56.0" text-anchor="middle">EKS</text>
+<text x="629.0" y="72.0" class="pt mut" text-anchor="middle">admission barra</text><text x="629.0" y="72.0" class="en mut" text-anchor="middle">admission blocks</text>
+<text x="10" y="116" class="pt mut" text-anchor="start">O CI assume um papel da AWS por OIDC (nenhuma chave guardada no GitHub).</text><text x="10" y="116" class="en mut" text-anchor="start">CI assumes an AWS role through OIDC (no key stored in GitHub).</text>
+<text x="10" y="134" class="pt mut" text-anchor="start">O cluster recusa manifestos inseguros (Pod Security, Kyverno ou Gatekeeper).</text><text x="10" y="134" class="en mut" text-anchor="start">The cluster rejects insecure manifests (Pod Security, Kyverno or Gatekeeper).</text>
+</svg></div><figcaption><span class="pt">Do commit ao cluster: cada etapa checa algo, e o cluster é o último portão.</span><span class="en">From commit to cluster: every stage checks something, and the cluster is the last gate.</span></figcaption></figure>
+<p><span class="pt">O ideal é <strong>GitOps</strong>: o Git é a fonte da verdade e uma ferramenta dentro do cluster (Argo CD ou Flux) aplica o que está lá. Ninguém precisa de <code>kubectl</code> com permissão de escrita em produção, e todo deploy vira um commit auditável.</span><span class="en">The ideal is <strong>GitOps</strong>: Git is the source of truth and a tool inside the cluster (Argo CD or Flux) applies what is there. Nobody needs write-enabled <code>kubectl</code> in production, and every deploy becomes an auditable commit.</span></p>
+<h3><span class="pt">Lista de verificação de produção</span><span class="en">Production checklist</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Área</span><span class="en">Area</span></th><th><span class="pt">O que fazer</span><span class="en">What to do</span></th></tr></thead><tbody><tr><td><span class="pt">Acesso ao cluster</span><span class="en">Cluster access</span></td><td><span class="pt">Endpoint do API server privado ou restrito por IP; access entries do IAM com menor privilégio; SSO; nenhum usuário com chave fixa.</span><span class="en">Private or IP-restricted API server endpoint; least-privilege IAM access entries; SSO; no static-key users.</span></td></tr><tr><td><span class="pt">Rede</span><span class="en">Network</span></td><td><span class="pt">Nós em subnets privadas, em 2+ zonas; só o ALB público; Security Groups mínimos; NetworkPolicy <em>default deny</em> em cada namespace; VPC endpoints para ECR/S3/STS.</span><span class="en">Nodes in private subnets, in 2+ zones; only the ALB public; minimal Security Groups; <em>default deny</em> NetworkPolicy in every namespace; VPC endpoints for ECR/S3/STS.</span></td></tr><tr><td><span class="pt">Nós</span><span class="en">Nodes</span></td><td><span class="pt">Managed node groups com AMI atualizada; IMDSv2 obrigatório e <code>hop limit = 1</code> (Pod não alcança as credenciais do nó); discos cifrados; sem SSH (use SSM).</span><span class="en">Managed node groups with a current AMI; IMDSv2 required and <code>hop limit = 1</code> (Pods cannot reach the node's credentials); encrypted disks; no SSH (use SSM).</span></td></tr><tr><td><span class="pt">Pods</span><span class="en">Pods</span></td><td><span class="pt">Pod Security <code>restricted</code> como <code>enforce</code> nos namespaces de apps; securityContext, limites e probes em todo Deployment; PodDisruptionBudget e spread entre zonas.</span><span class="en">Pod Security <code>restricted</code> as <code>enforce</code> on app namespaces; securityContext, limits and probes on every Deployment; PodDisruptionBudget and zone spread.</span></td></tr><tr><td><span class="pt">Identidade dos Pods</span><span class="en">Pod identity</span></td><td><span class="pt">Uma ServiceAccount e uma IAM role por app (Pod Identity/IRSA), com política mínima; nunca chaves de acesso em Secret.</span><span class="en">One ServiceAccount and one IAM role per app (Pod Identity/IRSA), minimal policy; never access keys in a Secret.</span></td></tr><tr><td><span class="pt">Segredos</span><span class="en">Secrets</span></td><td><span class="pt">Valores no Secrets Manager/Parameter Store, sincronizados por External Secrets ou CSI Driver; envelope encryption do EKS com sua chave KMS; RBAC sem <code>get secrets</code> amplo.</span><span class="en">Values in Secrets Manager/Parameter Store, synced by External Secrets or the CSI Driver; EKS envelope encryption with your KMS key; RBAC without broad <code>get secrets</code>.</span></td></tr><tr><td><span class="pt">Imagens</span><span class="en">Images</span></td><td><span class="pt">ECR privado, tags imutáveis, scan na publicação (e contínuo com Inspector), digest nos manifestos, imagens mínimas (distroless/alpine), assinatura com cosign + política de admissão.</span><span class="en">Private ECR, immutable tags, scan on push (and continuous with Inspector), digests in manifests, minimal images (distroless/alpine), cosign signing + an admission policy.</span></td></tr><tr><td><span class="pt">Políticas</span><span class="en">Policies</span></td><td><span class="pt">Kyverno, Gatekeeper ou <code>ValidatingAdmissionPolicy</code> barrando <code>:latest</code>, <code>privileged</code>, <code>hostPath</code> e imagens de fora do seu ECR.</span><span class="en">Kyverno, Gatekeeper or <code>ValidatingAdmissionPolicy</code> blocking <code>:latest</code>, <code>privileged</code>, <code>hostPath</code> and images from outside your ECR.</span></td></tr><tr><td><span class="pt">Observabilidade e detecção</span><span class="en">Observability and detection</span></td><td><span class="pt">Logs do control plane (principalmente <code>audit</code>) no CloudWatch; GuardDuty com proteção para EKS; métricas e alertas (Prometheus/CloudWatch Container Insights).</span><span class="en">Control-plane logs (especially <code>audit</code>) in CloudWatch; GuardDuty with EKS protection; metrics and alerts (Prometheus/CloudWatch Container Insights).</span></td></tr><tr><td><span class="pt">Atualizações</span><span class="en">Upgrades</span></td><td><span class="pt">Acompanhe o calendário de versões do EKS; atualize o control plane e depois os nós, em dev antes de prod; versões fora de suporte padrão custam mais e deixam de receber correções.</span><span class="en">Follow the EKS version calendar; upgrade the control plane and then the nodes, dev before prod; versions out of standard support cost more and stop getting fixes.</span></td></tr><tr><td><span class="pt">Dados e recuperação</span><span class="en">Data and recovery</span></td><td><span class="pt">Manifestos no Git (recria o cluster); Velero ou AWS Backup para volumes; bancos preferencialmente em RDS, fora do cluster; teste a restauração.</span><span class="en">Manifests in Git (recreates the cluster); Velero or AWS Backup for volumes; databases preferably on RDS, outside the cluster; test the restore.</span></td></tr><tr><td><span class="pt">Custo</span><span class="en">Cost</span></td><td><span class="pt">Tags de custo, requests/limits realistas, autoscaling (Karpenter ou Cluster Autoscaler + HPA), AWS Budgets.</span><span class="en">Cost tags, realistic requests/limits, autoscaling (Karpenter or Cluster Autoscaler + HPA), AWS Budgets.</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O erro mais comum em produção não é um ataque sofisticado: é um painel, um API server ou um Service <code>LoadBalancer</code> exposto sem querer, e um Pod root com token de ServiceAccount poderoso. As três linhas que mais valem: <strong>NetworkPolicy default deny</strong>, <strong>Pod Security restricted</strong> e <strong>RBAC mínimo</strong>.</span><span class="en">The most common production failure is not a sophisticated attack: it is a dashboard, API server or <code>LoadBalancer</code> Service exposed by accident, and a root Pod with a powerful ServiceAccount token. The three lines that pay off most: <strong>default-deny NetworkPolicy</strong>, <strong>restricted Pod Security</strong> and <strong>minimal RBAC</strong>.</span></div>
+<pre><code># When you are done studying: remove everything (control plane, nodes, VPC, NAT) to stop the billing
+eksctl delete cluster -f cluster.yaml</code></pre>
+</section>
+<section class="content-section" aria-labelledby="cheat-k8s">
+<h2 id="cheat-k8s"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Comandos do dia a dia</span><span class="en">Everyday commands</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Uso</span><span class="en">I use</span></th></tr></thead><tbody><tr><td><span class="pt">aplicar um arquivo / uma pasta</span><span class="en">apply a file / a folder</span></td><td><span class="pt"><code>kubectl apply -f arquivo.yaml</code> / <code>-f pasta/</code> / <code>-k overlay/</code></span><span class="en"><code>kubectl apply -f file.yaml</code> / <code>-f folder/</code> / <code>-k overlay/</code></span></td></tr><tr><td><span class="pt">ver recursos</span><span class="en">see resources</span></td><td><span class="pt"><code>kubectl get pods,svc,deploy -n NS</code> (<code>-A</code> = todos os namespaces, <code>-o wide</code>, <code>-o yaml</code>)</span><span class="en"><code>kubectl get pods,svc,deploy -n NS</code> (<code>-A</code> = all namespaces, <code>-o wide</code>, <code>-o yaml</code>)</span></td></tr><tr><td><span class="pt">entender por que não sobe</span><span class="en">understand why it does not start</span></td><td><span class="pt"><code>kubectl describe pod X</code> · <code>kubectl get events --sort-by=.lastTimestamp</code></span><span class="en"><code>kubectl describe pod X</code> · <code>kubectl get events --sort-by=.lastTimestamp</code></span></td></tr><tr><td><span class="pt">ver logs</span><span class="en">see logs</span></td><td><span class="pt"><code>kubectl logs X</code> · <code>-f</code> (seguir) · <code>--previous</code> (contêiner que reiniciou)</span><span class="en"><code>kubectl logs X</code> · <code>-f</code> (follow) · <code>--previous</code> (the container that restarted)</span></td></tr><tr><td><span class="pt">entrar no contêiner</span><span class="en">get inside the container</span></td><td><span class="pt"><code>kubectl exec -it X -- sh</code></span><span class="en"><code>kubectl exec -it X -- sh</code></span></td></tr><tr><td><span class="pt">testar sem expor</span><span class="en">test without exposing</span></td><td><span class="pt"><code>kubectl port-forward svc/web 8080:80</code></span><span class="en"><code>kubectl port-forward svc/web 8080:80</code></span></td></tr><tr><td><span class="pt">escalar / atualizar / voltar</span><span class="en">scale / update / roll back</span></td><td><span class="pt"><code>kubectl scale</code> · <code>set image</code> · <code>rollout status|history|undo</code></span><span class="en"><code>kubectl scale</code> · <code>set image</code> · <code>rollout status|history|undo</code></span></td></tr><tr><td><span class="pt">gerar um YAML-base</span><span class="en">generate a starter YAML</span></td><td><span class="pt"><code>kubectl create deploy web --image=nginx --dry-run=client -o yaml</code></span><span class="en"><code>kubectl create deploy web --image=nginx --dry-run=client -o yaml</code></span></td></tr><tr><td><span class="pt">ver a diferença antes de aplicar</span><span class="en">see the diff before applying</span></td><td><span class="pt"><code>kubectl diff -f arquivo.yaml</code></span><span class="en"><code>kubectl diff -f file.yaml</code></span></td></tr><tr><td><span class="pt">consultar a documentação de um campo</span><span class="en">look up a field's docs</span></td><td><span class="pt"><code>kubectl explain pod.spec.containers.securityContext</code></span><span class="en"><code>kubectl explain pod.spec.containers.securityContext</code></span></td></tr><tr><td><span class="pt">checar permissões</span><span class="en">check permissions</span></td><td><span class="pt"><code>kubectl auth can-i VERBO RECURSO --as=…</code></span><span class="en"><code>kubectl auth can-i VERB RESOURCE --as=…</code></span></td></tr><tr><td><span class="pt">estado de erro comum: <code>CrashLoopBackOff</code></span><span class="en">common error: <code>CrashLoopBackOff</code></span></td><td><span class="pt">o app morre ao iniciar: <code>logs --previous</code></span><span class="en">the app dies on start: <code>logs --previous</code></span></td></tr><tr><td><span class="pt"><code>ImagePullBackOff</code> / <code>Pending</code> / <code>OOMKilled</code></span><span class="en"><code>ImagePullBackOff</code> / <code>Pending</code> / <code>OOMKilled</code></span></td><td><span class="pt">imagem/credencial errada · sem recurso ou sem nó que sirva · limite de memória baixo</span><span class="en">wrong image/credential · no resources or no fitting node · memory limit too low</span></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Que problema o Kubernetes resolve que o <code>docker run</code> sozinho não resolve?</span><span class="en">What problem does Kubernetes solve that <code>docker run</code> alone does not?</span></li><li><span class="pt">Por que dizemos que ele é declarativo e o que é o laço de reconciliação?</span><span class="en">Why do we say it is declarative, and what is the reconciliation loop?</span></li><li><span class="pt">Qual a diferença entre Pod, Deployment e Service? Por que um Pod solto não se cura?</span><span class="en">What is the difference between a Pod, a Deployment and a Service? Why does a bare Pod not heal?</span></li><li><span class="pt">O que acontece se o <code>selector</code> do Service não casa com os rótulos dos Pods?</span><span class="en">What happens if the Service's <code>selector</code> does not match the Pods' labels?</span></li><li><span class="pt">Por que um Secret não é seguro só por ser Secret? O que de fato o protege?</span><span class="en">Why is a Secret not safe just for being a Secret? What actually protects it?</span></li><li><span class="pt">Cite cinco campos de <code>securityContext</code>/Pod e o ataque que cada um dificulta.</span><span class="en">Name five <code>securityContext</code>/Pod fields and the attack each one hinders.</span></li><li><span class="pt">O que o Pod Security Admission faz e quais são seus três perfis?</span><span class="en">What does Pod Security Admission do and what are its three profiles?</span></li><li><span class="pt">Por que usar NetworkPolicy <em>default deny</em>, e por que ao negar a saída é preciso liberar o DNS?</span><span class="en">Why use a <em>default deny</em> NetworkPolicy, and why must DNS be allowed when egress is denied?</span></li><li><span class="pt">No EKS, como um Pod acessa o S3 sem chave de acesso guardada?</span><span class="en">On EKS, how does a Pod reach S3 without a stored access key?</span></li><li><span class="pt">Por que os nós ficam em subnets privadas e só o ALB é público?</span><span class="en">Why do the nodes sit in private subnets while only the ALB is public?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://kubernetes.io/docs/concepts/overview/" rel="noopener">Kubernetes docs: Overview and concepts</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/architecture/" rel="noopener">Kubernetes docs: Cluster architecture</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/security/" rel="noopener">Kubernetes docs: Security concepts</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/security/pod-security-standards/" rel="noopener">Kubernetes docs: Pod Security Standards</a></li>
+<li><a href="https://kubernetes.io/docs/tasks/configure-pod-container/security-context/" rel="noopener">Kubernetes docs: Configure a Security Context</a></li>
+<li><a href="https://kubernetes.io/docs/reference/access-authn-authz/rbac/" rel="noopener">Kubernetes docs: RBAC</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/services-networking/network-policies/" rel="noopener">Kubernetes docs: Network Policies</a></li>
+<li><a href="https://kubernetes.io/docs/concepts/configuration/secret/" rel="noopener">Kubernetes docs: Secrets (good practices)</a></li>
+<li><a href="https://kind.sigs.k8s.io/docs/user/quick-start/" rel="noopener">kind: Quick start</a></li>
+<li><a href="https://docs.aws.amazon.com/eks/latest/best-practices/" rel="noopener">AWS: Amazon EKS Best Practices Guide</a></li>
+<li><a href="https://docs.aws.amazon.com/eks/latest/userguide/" rel="noopener">AWS: Amazon EKS User Guide</a></li>
+<li><a href="https://eksctl.io/" rel="noopener">eksctl</a></li>
+<li><a href="https://media.defense.gov/2022/Aug/29/2003066362/-1/-1/0/CTR_KUBERNETES_HARDENING_GUIDANCE_1.2_20220829.PDF" rel="noopener">NSA/CISA: Kubernetes Hardening Guidance</a></li>
+<li><a href="https://www.cisecurity.org/benchmark/kubernetes" rel="noopener">CIS Kubernetes Benchmark</a></li>
+</ul></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
