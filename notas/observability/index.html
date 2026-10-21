@@ -1,0 +1,991 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="obs.metaTitle">Observability: metrics, p95/p99, logs and traces | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:obs.metaDescription" content="Observability for developers: metrics, KPIs, SLIs and SLOs, why p95 and p99 matter more than the average, Prometheus and Grafana with PromQL, traces (Jaeger, OpenTelemetry) and logs (Loki, Elasticsearch), a nine-activity Docker lab with expected results, and a secure production setup on Kubernetes and AWS.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/observability/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/observability/">
+  <meta property="og:title" data-i18n-attributes="content:obs.metaTitle" content="Observability: metrics, p95/p99, logs and traces | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:obs.metaDescription" content="Observability for developers: metrics, KPIs, SLIs and SLOs, why p95 and p99 matter more than the average, Prometheus and Grafana with PromQL, traces (Jaeger, OpenTelemetry) and logs (Loki, Elasticsearch), a nine-activity Docker lab with expected results, and a secure production setup on Kubernetes and AWS.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:obs.metaTitle" content="Observability: metrics, p95/p99, logs and traces | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:obs.metaDescription" content="Observability for developers: metrics, KPIs, SLIs and SLOs, why p95 and p99 matter more than the average, Prometheus and Grafana with PromQL, traces (Jaeger, OpenTelemetry) and logs (Loki, Elasticsearch), a nine-activity Docker lab with expected results, and a secure production setup on Kubernetes and AWS.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=3" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=3" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html" aria-current="page"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é observabilidade</span><span class="en">What observability is</span></a></li>
+<li><a href="#metrics"><span class="pt">Métricas e KPIs</span><span class="en">Metrics and KPIs</span></a></li>
+<li><a href="#percentiles"><span class="pt">Percentis: p50, p95, p99</span><span class="en">Percentiles: p50, p95, p99</span></a></li>
+<li><a href="#prometheus"><span class="pt">Prometheus e Grafana</span><span class="en">Prometheus and Grafana</span></a></li>
+<li><a href="#beyond"><span class="pt">Traces, logs e outras ferramentas</span><span class="en">Traces, logs and other tools</span></a></li>
+<li><a href="#instrument"><span class="pt">Como instrumentar</span><span class="en">How to instrument</span></a></li>
+<li><a href="#lab"><span class="pt">Praticar com Docker</span><span class="en">Practise with Docker</span></a></li>
+<li><a href="#prod"><span class="pt">Produção com segurança</span><span class="en">Secure production</span></a></li>
+<li><a href="#cheat-obs"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="obs.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="obs.heroTitle">Observability, <em>see what your system is doing.</em></h1>
+  <p class="hero-lede" data-i18n="obs.heroLede">Metrics, KPIs and percentiles (p95, p99), Prometheus and Grafana from scratch, traces and logs when metrics are not enough, hands-on labs with Docker, and how to run it securely in production.</p>
+</section>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é observabilidade e por que importa</span><span class="en">What observability is and why it matters</span></h2>
+<p><span class="pt"><strong>Observabilidade</strong> é a capacidade de entender o que acontece <em>dentro</em> de um sistema olhando só para o que ele emite para fora: a <strong>telemetria</strong>. Pense no painel de um carro: o velocímetro e a luz do óleo (<em>monitoramento</em>) avisam de problemas que você já previu; já o scanner do mecânico, que lê o motor e responde perguntas novas, é a observabilidade. Em software, você vai precisar das duas coisas.</span><span class="en"><strong>Observability</strong> is the ability to understand what happens <em>inside</em> a system by looking only at what it emits to the outside: its <strong>telemetry</strong>. Think of a car dashboard: the speedometer and the oil light (<em>monitoring</em>) warn about problems you foresaw; the mechanic's scanner, which reads the engine and answers new questions, is observability. In software you need both.</span></p>
+<p><span class="pt">Sem isso, o usuário reclama (“está lento”) e você descobre o problema <em>depois</em>, sem saber onde olhar. Com isso, você responde em minutos: <strong>está lento? para quem? desde quando? em qual serviço? por quê?</strong></span><span class="en">Without it, the user complains (“it is slow”) and you find out <em>afterwards</em>, with no idea where to look. With it, you answer in minutes: <strong>is it slow? for whom? since when? in which service? why?</strong></span></p>
+<h3><span class="pt">Os três sinais</span><span class="en">The three signals</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 205" role="img" aria-label="Três pilares / Three pillars" style="min-width:620px">
+<rect x="10" y="10" width="215" height="150" rx="4" class="ln fillsoft"/>
+<text x="117" y="38" class="pt" text-anchor="middle">Métricas</text><text x="117" y="38" class="en" text-anchor="middle">Metrics</text>
+<text x="117" y="62" class="pt mut" text-anchor="middle">Quanto? Com que frequência?</text><text x="117" y="62" class="en mut" text-anchor="middle">How much? How often?</text>
+<text x="117" y="92" class="pt mut" text-anchor="middle">números ao longo do tempo</text><text x="117" y="92" class="en mut" text-anchor="middle">numbers over time</text>
+<text x="117" y="110" class="pt mut" text-anchor="middle">barato, ótimo para alertas</text><text x="117" y="110" class="en mut" text-anchor="middle">cheap, great for alerts</text>
+<rect x="40" y="124" width="155" height="26" rx="4" class="brandfill"/>
+<text x="117" y="142" class="mono" text-anchor="middle">Prometheus</text>
+<rect x="245" y="10" width="215" height="150" rx="4" class="ln fillsoft"/>
+<text x="352" y="38" text-anchor="middle">Traces</text>
+<text x="352" y="62" class="pt mut" text-anchor="middle">Onde o tempo foi gasto?</text><text x="352" y="62" class="en mut" text-anchor="middle">Where did the time go?</text>
+<text x="352" y="92" class="pt mut" text-anchor="middle">o caminho de UMA requisição</text><text x="352" y="92" class="en mut" text-anchor="middle">the path of ONE request</text>
+<text x="352" y="110" class="pt mut" text-anchor="middle">atravessa vários serviços</text><text x="352" y="110" class="en mut" text-anchor="middle">crosses several services</text>
+<rect x="275" y="124" width="155" height="26" rx="4" class="brandfill"/>
+<text x="352" y="142" class="mono" text-anchor="middle">Jaeger · Tempo</text>
+<rect x="480" y="10" width="215" height="150" rx="4" class="ln fillsoft"/>
+<text x="587" y="38" text-anchor="middle">Logs</text>
+<text x="587" y="62" class="pt mut" text-anchor="middle">O que aconteceu, e por quê?</text><text x="587" y="62" class="en mut" text-anchor="middle">What happened, and why?</text>
+<text x="587" y="92" class="pt mut" text-anchor="middle">eventos em texto ou JSON</text><text x="587" y="92" class="en mut" text-anchor="middle">events as text or JSON</text>
+<text x="587" y="110" class="pt mut" text-anchor="middle">detalhe alto, custo alto</text><text x="587" y="110" class="en mut" text-anchor="middle">high detail, high cost</text>
+<rect x="510" y="124" width="155" height="26" rx="4" class="brandfill"/>
+<text x="587" y="142" class="mono" text-anchor="middle">Loki · Elasticsearch</text>
+<text x="350" y="190" class="pt mut" text-anchor="middle">Juntos: a métrica avisa, o trace localiza, o log explica.</text><text x="350" y="190" class="en mut" text-anchor="middle">Together: the metric alerts, the trace locates, the log explains.</text>
+</svg></div><figcaption><span class="pt">Cada sinal responde uma pergunta diferente; nenhum substitui os outros.</span><span class="en">Each signal answers a different question; none replaces the others.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Sinal</span><span class="en">Signal</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th><th><span class="pt">Boa para</span><span class="en">Good for</span></th><th><span class="pt">Limite</span><span class="en">Limit</span></th></tr></thead><tbody><tr><td><span class="pt">Métricas</span><span class="en">Metrics</span></td><td><span class="pt">Números agregados ao longo do tempo (requisições/s, % de erro, p99).</span><span class="en">Aggregated numbers over time (requests/s, % errors, p99).</span></td><td><span class="pt">painéis, alertas, tendências, SLOs</span><span class="en">dashboards, alerts, trends, SLOs</span></td><td><span class="pt">não dizem <em>qual</em> requisição nem <em>por quê</em></span><span class="en">do not say <em>which</em> request or <em>why</em></span></td></tr><tr><td><span class="pt">Traces</span><span class="en">Traces</span></td><td><span class="pt">O caminho de <em>uma</em> requisição, dividido em <em>spans</em> (cada etapa, com início e duração).</span><span class="en">The path of <em>one</em> request, split into <em>spans</em> (each step, with start and duration).</span></td><td><span class="pt">achar onde o tempo foi gasto, sobretudo entre serviços</span><span class="en">finding where the time went, especially across services</span></td><td><span class="pt">custam armazenamento; normalmente amostrados</span><span class="en">storage cost; usually sampled</span></td></tr><tr><td><span class="pt">Logs</span><span class="en">Logs</span></td><td><span class="pt">Registros de eventos, de preferência em JSON estruturado.</span><span class="en">Event records, preferably structured JSON.</span></td><td><span class="pt">explicar o motivo: mensagem de erro, entrada, estado</span><span class="en">explaining the reason: error message, input, state</span></td><td><span class="pt">volume e custo altos; difíceis de agregar</span><span class="en">high volume and cost; hard to aggregate</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O padrão aberto para produzir esses três sinais é o <strong>OpenTelemetry</strong> (OTel), da CNCF: uma API/SDK por linguagem, um formato de transporte (OTLP) e um <em>Collector</em>. Instrumentando com OTel, você troca o destino (Jaeger, Tempo, Datadog, X-Ray…) sem reescrever o app.</span><span class="en">The open standard for producing these three signals is <strong>OpenTelemetry</strong> (OTel), from the CNCF: one API/SDK per language, a transport format (OTLP) and a <em>Collector</em>. If you instrument with OTel, you change the destination (Jaeger, Tempo, Datadog, X-Ray…) without rewriting the app.</span></div>
+</section>
+<section class="content-section" aria-labelledby="metrics">
+<h2 id="metrics"><span class="pt">Métricas e KPIs: o que medir</span><span class="en">Metrics and KPIs: what to measure</span></h2>
+<p><span class="pt">Medir tudo é o mesmo que não medir nada. Três “receitas” curtas dizem <em>o que</em> olhar primeiro:</span><span class="en">Measuring everything is the same as measuring nothing. Three short “recipes” say <em>what</em> to look at first:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Receita</span><span class="en">Recipe</span></th><th><span class="pt">Para quê</span><span class="en">Used for</span></th><th><span class="pt">O que mede</span><span class="en">What it measures</span></th></tr></thead><tbody><tr><td><span class="pt"><strong>Quatro sinais de ouro</strong> (Google SRE)</span><span class="en"><strong>Four golden signals</strong> (Google SRE)</span></td><td><span class="pt">qualquer serviço</span><span class="en">any service</span></td><td><span class="pt"><strong>latência</strong>, <strong>tráfego</strong>, <strong>erros</strong> e <strong>saturação</strong> (quão cheio está o recurso mais limitado)</span><span class="en"><strong>latency</strong>, <strong>traffic</strong>, <strong>errors</strong> and <strong>saturation</strong> (how full the most constrained resource is)</span></td></tr><tr><td><span class="pt"><strong>RED</strong></span><span class="en"><strong>RED</strong></span></td><td><span class="pt">serviços que respondem requisições (APIs, sites)</span><span class="en">request-serving services (APIs, sites)</span></td><td><span class="pt"><strong>R</strong>ate (req/s), <strong>E</strong>rrors (% de falhas), <strong>D</strong>uration (latência por percentil)</span><span class="en"><strong>R</strong>ate (req/s), <strong>E</strong>rrors (% failing), <strong>D</strong>uration (latency by percentile)</span></td></tr><tr><td><span class="pt"><strong>USE</strong></span><span class="en"><strong>USE</strong></span></td><td><span class="pt">recursos: CPU, disco, rede, filas, pools</span><span class="en">resources: CPU, disk, network, queues, pools</span></td><td><span class="pt"><strong>U</strong>tilization (% ocupado), <strong>S</strong>aturation (fila de espera), <strong>E</strong>rrors</span><span class="en"><strong>U</strong>tilization (% busy), <strong>S</strong>aturation (waiting queue), <strong>E</strong>rrors</span></td></tr></tbody></table></div>
+<p><span class="pt">Na prática: <strong>RED para cada serviço, USE para cada recurso compartilhado</strong> (banco, fila, pool de conexões). É o que o painel do laboratório mostra.</span><span class="en">In practice: <strong>RED for every service, USE for every shared resource</strong> (database, queue, connection pool). That is what the lab's dashboard shows.</span></p>
+<h3><span class="pt">KPIs: do técnico ao negócio</span><span class="en">KPIs: from technical to business</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Exemplos de KPI</span><span class="en">KPI examples</span></th><th><span class="pt">Pergunta que responde</span><span class="en">Question it answers</span></th></tr></thead><tbody><tr><td><span class="pt">Serviço</span><span class="en">Service</span></td><td><span class="pt">p95/p99 de latência por rota · taxa de erro 5xx · requisições/s · disponibilidade (% de requisições bem-sucedidas)</span><span class="en">p95/p99 latency per route · 5xx error rate · requests/s · availability (% of successful requests)</span></td><td><span class="pt">o serviço está saudável para o usuário?</span><span class="en">is the service healthy for the user?</span></td></tr><tr><td><span class="pt">Infraestrutura</span><span class="en">Infrastructure</span></td><td><span class="pt">CPU, memória, atraso do event loop, conexões do banco em uso, profundidade e idade da fila</span><span class="en">CPU, memory, event loop lag, DB connections in use, queue depth and age</span></td><td><span class="pt">onde vamos ficar sem fôlego?</span><span class="en">where will we run out of room?</span></td></tr><tr><td><span class="pt">Entrega (DORA)</span><span class="en">Delivery (DORA)</span></td><td><span class="pt">frequência de deploy · lead time · taxa de falha de mudança · tempo para restaurar</span><span class="en">deploy frequency · lead time · change failure rate · time to restore</span></td><td><span class="pt">entregamos rápido e com segurança?</span><span class="en">do we ship fast and safely?</span></td></tr><tr><td><span class="pt">Negócio</span><span class="en">Business</span></td><td><span class="pt">pedidos/min · taxa de sucesso do pagamento · cadastros · conversão do checkout · receita/min</span><span class="en">orders/min · payment success rate · sign-ups · checkout conversion · revenue/min</span></td><td><span class="pt">o produto está funcionando para o negócio?</span><span class="en">is the product working for the business?</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">A métrica de negócio costuma ser o <em>primeiro</em> alarme confiável: se “pedidos por minuto” cai, algo está errado mesmo que CPU, memória e erros pareçam normais.</span><span class="en">The business metric is often the <em>first</em> reliable alarm: if “orders per minute” drops, something is wrong even when CPU, memory and errors look normal.</span></div>
+<h3><span class="pt">SLI, SLO e orçamento de erro</span><span class="en">SLI, SLO and error budget</span></h3>
+<p><span class="pt">Metas sem número viram discussão. O vocabulário do SRE resolve isso:</span><span class="en">Goals without numbers turn into arguments. SRE vocabulary fixes that:</span></p>
+<ul><li><span class="pt"><strong>SLI</strong> (indicador): o que você mede. Ex.: “% de requisições <code>/checkout</code> respondidas em menos de 500 ms e sem erro”.</span><span class="en"><strong>SLI</strong> (indicator): what you measure. E.g. “% of <code>/checkout</code> requests answered in under 500 ms with no error”.</span></li><li><span class="pt"><strong>SLO</strong> (objetivo): a meta para o SLI. Ex.: “99,9% em 30 dias”.</span><span class="en"><strong>SLO</strong> (objective): the target for the SLI. E.g. “99.9% over 30 days”.</span></li><li><span class="pt"><strong>Orçamento de erro</strong>: o que sobra para falhar. 99,9% em 30 dias = 0,1% de 43.200 min ≈ <strong>43 minutos</strong> (99% = 7,2 h; 99,95% = 21,6 min). Gastou o orçamento, pare de lançar novidades e conserte a confiabilidade.</span><span class="en"><strong>Error budget</strong>: what is left to fail. 99.9% over 30 days = 0.1% of 43,200 min ≈ <strong>43 minutes</strong> (99% = 7.2 h; 99.95% = 21.6 min). Budget spent, stop shipping features and fix reliability.</span></li><li><span class="pt"><strong>SLA</strong>: o contrato com o cliente (com multa). Costuma ser mais folgado que o SLO interno.</span><span class="en"><strong>SLA</strong>: the contract with the customer (with penalties). Usually looser than the internal SLO.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="percentiles">
+<h2 id="percentiles"><span class="pt">Percentis (p50, p95, p99): por que a média engana</span><span class="en">Percentiles (p50, p95, p99): why the average lies</span></h2>
+<p><span class="pt">O <strong>percentil</strong> responde “qual o tempo que X% das requisições não ultrapassam?”. Se o <strong>p95 = 300 ms</strong>, 95% das requisições terminaram em até 300 ms e 5% foram mais lentas. O <strong>p50</strong> é a mediana (a experiência típica); <strong>p95</strong> e <strong>p99</strong> mostram a <em>cauda</em>: os piores casos que ainda são frequentes o bastante para incomodar usuários reais.</span><span class="en">A <strong>percentile</strong> answers “what time do X% of requests not exceed?”. If <strong>p95 = 300 ms</strong>, 95% of requests finished within 300 ms and 5% were slower. <strong>p50</strong> is the median (the typical experience); <strong>p95</strong> and <strong>p99</strong> show the <em>tail</em>: the worst cases that are still frequent enough to bother real users.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 248" role="img" aria-label="Distribuição de latência / Latency distribution" style="min-width:620px">
+<path d="M40 190L660 190" class="ln"/>
+<rect x="42.0" y="40.0" width="27.0" height="150.0" class="ln fillsoft"/>
+<rect x="73.0" y="80.4" width="27.0" height="109.6" class="ln fillsoft"/>
+<rect x="104.0" y="178.5" width="27.0" height="11.5" class="ln fillsoft"/>
+<rect x="135.0" y="187.7" width="27.0" height="2.3" class="ln fillsoft"/>
+<rect x="166.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="197.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="228.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="259.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="290.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="321.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="352.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="383.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="414.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="445.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="476.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="507.0" y="187.1" width="27.0" height="2.9" class="ln fillsoft"/>
+<rect x="538.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="569.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="600.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<rect x="631.0" y="188.0" width="27.0" height="2.0" class="ln fillsoft"/>
+<path d="M40.0 190L40.0 195" class="ln"/><text x="40" y="210" class="mut" text-anchor="middle">0 ms</text>
+<path d="M195.0 190L195.0 195" class="ln"/><text x="195" y="210" class="mut" text-anchor="middle">500 ms</text>
+<path d="M350.0 190L350.0 195" class="ln"/><text x="350" y="210" class="mut" text-anchor="middle">1000 ms</text>
+<path d="M505.0 190L505.0 195" class="ln"/><text x="505" y="210" class="mut" text-anchor="middle">1500 ms</text>
+<path d="M660.0 190L660.0 195" class="ln"/><text x="660" y="210" class="mut" text-anchor="middle">2000 ms</text>
+<path d="M69.5 16L69.5 190" class="ln"/>
+<text x="74" y="22" class="mono" text-anchor="start">p50 ≈ 95 ms</text>
+<path d="M86.8 34L86.8 190" class="ln dash"/>
+<text x="92" y="40" class="pt mono" text-anchor="start">média ≈ 151 ms</text><text x="92" y="40" class="en mono" text-anchor="start">mean ≈ 151 ms</text>
+<path d="M131.9 52L131.9 190" class="ln"/>
+<text x="137" y="58" class="mono" text-anchor="start">p95 ≈ 296 ms</text>
+<path d="M536.6 16L536.6 190" class="ln"/>
+<text x="542" y="22" class="mono" text-anchor="start">p99 ≈ 1602 ms</text>
+<text x="350" y="235" class="pt mut" text-anchor="middle">tempo da requisição (altura da barra = nº de requisições)</text><text x="350" y="235" class="en mut" text-anchor="middle">request time (bar height = number of requests)</text>
+</svg></div><figcaption><span class="pt">A maioria das requisições é rápida; poucas, muito lentas. A média cai no meio do nada e o p99 mostra a cauda.</span><span class="en">Most requests are fast; a few are very slow. The mean lands in the middle of nowhere and p99 shows the tail.</span></figcaption></figure>
+<p><span class="pt">No gráfico (1.000 requisições de exemplo), a média dá ≈ 151 ms: um número que <em>nenhum</em> usuário real viveu (a maioria levou ~100 ms; alguns levaram ~1,6 s). Um painel só com a média diria que está tudo bem, enquanto 1 em cada 100 usuários espera mais de 1,6 s.</span><span class="en">In the chart (1,000 sample requests), the mean is ≈ 151 ms: a number that <em>no</em> real user experienced (most took ~100 ms; a few took ~1.6 s). A mean-only dashboard would say all is well while 1 in every 100 users waits over 1.6 s.</span></p>
+<h3><span class="pt">Por que a cauda importa mais do que parece</span><span class="en">Why the tail matters more than it looks</span></h3>
+<p><span class="pt">Uma tela quase nunca faz <em>uma</em> chamada: faz dezenas (API, banco, cache, serviços internos). Se cada chamada tem 1% de chance de cair na cauda, a chance de a <em>página</em> pegar ao menos uma chamada lenta é <code>1 − 0,99<sup>n</sup></code>: com 100 chamadas, <strong>63%</strong>. O p99 de cada peça vira a experiência típica do todo (o artigo “The Tail at Scale”, de Dean e Barroso, trata disso).</span><span class="en">A screen almost never makes <em>one</em> call: it makes dozens (API, database, cache, internal services). If each call has a 1% chance of landing in the tail, the chance that the <em>page</em> hits at least one slow call is <code>1 − 0.99<sup>n</sup></code>: with 100 calls, <strong>63%</strong>. Each piece's p99 becomes the typical experience of the whole (the paper “The Tail at Scale” by Dean and Barroso covers this).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 245" role="img" aria-label="Cauda e amplificação / Tail amplification" style="min-width:620px">
+<path d="M60 190L650 190M60 190L60 20" class="ln"/>
+<path d="M60.0 190L60.0 195" class="ln"/><text x="60" y="210" class="mut" text-anchor="middle">0</text>
+<path d="M207.5 190L207.5 195" class="ln"/><text x="208" y="210" class="mut" text-anchor="middle">50</text>
+<path d="M355.0 190L355.0 195" class="ln"/><text x="355" y="210" class="mut" text-anchor="middle">100</text>
+<path d="M502.5 190L502.5 195" class="ln"/><text x="502" y="210" class="mut" text-anchor="middle">150</text>
+<path d="M650.0 190L650.0 195" class="ln"/><text x="650" y="210" class="mut" text-anchor="middle">200</text>
+<path d="M55 190L60 190" class="ln"/><text x="50" y="194" class="mut" text-anchor="end">0%</text>
+<path d="M55 148L60 148" class="ln"/><text x="50" y="152" class="mut" text-anchor="end">25%</text>
+<path d="M55 105L60 105" class="ln"/><text x="50" y="109" class="mut" text-anchor="end">50%</text>
+<path d="M55 62L60 62" class="ln"/><text x="50" y="66" class="mut" text-anchor="end">75%</text>
+<path d="M55 20L60 20" class="ln"/><text x="50" y="24" class="mut" text-anchor="end">100%</text>
+<polyline points="60.0,190.0 71.8,183.3 83.6,176.9 95.4,170.7 107.2,164.7 119.0,159.0 130.8,153.6 142.6,148.3 154.4,143.2 166.2,138.4 178.0,133.7 189.8,129.2 201.6,124.9 213.4,120.8 225.2,116.8 237.0,113.0 248.8,109.4 260.6,105.8 272.4,102.4 284.2,99.2 296.0,96.1 307.8,93.1 319.6,90.2 331.4,87.4 343.2,84.8 355.0,82.2 366.8,79.8 378.6,77.4 390.4,75.2 402.2,73.0 414.0,70.9 425.8,68.9 437.6,67.0 449.4,65.1 461.2,63.3 473.0,61.6 484.8,60.0 496.6,58.4 508.4,56.9 520.2,55.4 532.0,54.0 543.8,52.7 555.6,51.4 567.4,50.2 579.2,49.0 591.0,47.8 602.8,46.8 614.6,45.7 626.4,44.7 638.2,43.7 650.0,42.8" class="ln"/>
+<polyline points="60.0,190.0 71.8,189.3 83.6,188.6 95.4,188.0 107.2,187.3 119.0,186.6 130.8,186.0 142.6,185.3 154.4,184.6 166.2,184.0 178.0,183.3 189.8,182.7 201.6,182.0 213.4,181.4 225.2,180.7 237.0,180.1 248.8,179.5 260.6,178.8 272.4,178.2 284.2,177.6 296.0,176.9 307.8,176.3 319.6,175.7 331.4,175.1 343.2,174.4 355.0,173.8 366.8,173.2 378.6,172.6 390.4,172.0 402.2,171.4 414.0,170.8 425.8,170.2 437.6,169.6 449.4,169.0 461.2,168.4 473.0,167.8 484.8,167.2 496.6,166.6 508.4,166.0 520.2,165.4 532.0,164.9 543.8,164.3 555.6,163.7 567.4,163.1 579.2,162.6 591.0,162.0 602.8,161.4 614.6,160.9 626.4,160.3 638.2,159.7 650.0,159.2" class="ln dash"/>
+<text x="560" y="70" class="pt" text-anchor="middle">p99 por chamada</text><text x="560" y="70" class="en" text-anchor="middle">p99 per call</text>
+<text x="560" y="148" class="pt mut" text-anchor="middle">p99.9 por chamada</text><text x="560" y="148" class="en mut" text-anchor="middle">p99.9 per call</text>
+<text x="355" y="232" class="pt mut" text-anchor="middle">chamadas feitas por uma página/ação</text><text x="355" y="232" class="en mut" text-anchor="middle">calls made by one page/action</text>
+<text x="70" y="36" class="pt mut" text-anchor="start">chance de pegar pelo menos 1 chamada lenta</text><text x="70" y="36" class="en mut" text-anchor="start">chance of hitting at least 1 slow call</text>
+</svg></div><figcaption><span class="pt">Com 100 chamadas e 1% lentas, 63% das páginas pegam ao menos uma: o p99 de cada serviço vira a experiência típica do usuário.</span><span class="en">With 100 calls and 1% slow, 63% of pages hit at least one: each service's p99 becomes the user's typical experience.</span></figcaption></figure>
+<h3><span class="pt">Regras para trabalhar com percentis</span><span class="en">Rules for working with percentiles</span></h3>
+<ol class="ds-steps"><li><span class="pt"><strong>Nunca faça a média de percentis.</strong> A média dos p99 de 10 servidores não é o p99 do conjunto. Some os <em>buckets</em> dos histogramas de todos os servidores e só depois calcule o percentil (é o que o <code>histogram_quantile</code> faz sobre <code>sum by (le)</code>).</span><span class="en"><strong>Never average percentiles.</strong> The average of 10 servers' p99s is not the fleet's p99. Sum the histograms' <em>buckets</em> across all servers and only then compute the percentile (which is what <code>histogram_quantile</code> does over <code>sum by (le)</code>).</span></li><li><span class="pt"><strong>Meça por rota</strong> (ou por operação). Um endpoint rápido e muito chamado esconde o lento e crítico, como o <code>/checkout</code>.</span><span class="en"><strong>Measure per route</strong> (or per operation). A fast, heavily-called endpoint hides the slow, critical one, like <code>/checkout</code>.</span></li><li><span class="pt"><strong>Escolha o percentil pelo impacto:</strong> p95 para a experiência geral, p99 para fluxos críticos e dependências chamadas em cascata, p99.9 para sistemas com milhões de chamadas.</span><span class="en"><strong>Pick the percentile by impact:</strong> p95 for the general experience, p99 for critical flows and cascaded dependencies, p99.9 for systems with millions of calls.</span></li><li><span class="pt"><strong>Percentil sobre poucas amostras é ruído.</strong> Com 20 requisições por janela, o “p99” é basicamente o máximo. Use janelas maiores ou ignore rotas com pouco tráfego.</span><span class="en"><strong>A percentile over few samples is noise.</strong> With 20 requests per window, the “p99” is basically the maximum. Use longer windows or ignore low-traffic routes.</span></li><li><span class="pt"><strong>Histogramas são estimativas.</strong> A precisão depende dos <em>buckets</em> (veja o laboratório): ponha limites perto do seu SLO (ex.: 0,5 s e 1 s).</span><span class="en"><strong>Histograms are estimates.</strong> Precision depends on the <em>buckets</em> (see the lab): put boundaries near your SLO (e.g. 0.5 s and 1 s).</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="prometheus">
+<h2 id="prometheus"><span class="pt">Prometheus e Grafana: como funcionam</span><span class="en">Prometheus and Grafana: how they work</span></h2>
+<p><span class="pt">O <strong>Prometheus</strong> é um banco de <em>séries temporais</em> que <strong>busca</strong> (pull) as métricas: a cada intervalo (ex.: 15 s) ele faz um <code>GET /metrics</code> em cada alvo, lê o texto e guarda os números com a hora. O <strong>Grafana</strong> não guarda nada: só consulta o Prometheus (e outros) e desenha painéis. O <strong>Alertmanager</strong> recebe os alertas que o Prometheus dispara e cuida de agrupar, silenciar e enviar (Slack, e-mail, PagerDuty).</span><span class="en"><strong>Prometheus</strong> is a <em>time-series</em> database that <strong>pulls</strong> metrics: every interval (e.g. 15 s) it does a <code>GET /metrics</code> on each target, reads the text and stores the numbers with the time. <strong>Grafana</strong> stores nothing: it only queries Prometheus (and others) and draws dashboards. <strong>Alertmanager</strong> receives the alerts Prometheus fires and handles grouping, silencing and sending (Slack, email, PagerDuty).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 232" role="img" aria-label="Arquitetura do Prometheus / Prometheus architecture" style="min-width:620px">
+<rect x="10" y="20" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="44.0" class="pt mono" text-anchor="middle">seu app</text><text x="85.0" y="44.0" class="en mono" text-anchor="middle">your app</text>
+<text x="85.0" y="60.0" class="pt mut" text-anchor="middle">/metrics (texto)</text><text x="85.0" y="60.0" class="en mut" text-anchor="middle">/metrics (text)</text>
+<rect x="10" y="92" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="116.0" class="mono" text-anchor="middle">node_exporter</text>
+<text x="85.0" y="132.0" class="pt mut" text-anchor="middle">CPU/disco da máquina</text><text x="85.0" y="132.0" class="en mut" text-anchor="middle">machine CPU/disk</text>
+<rect x="10" y="164" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="85.0" y="188.0" class="pt" text-anchor="middle">banco, fila…</text><text x="85.0" y="188.0" class="en" text-anchor="middle">database, queue…</text>
+<text x="85.0" y="204.0" class="pt mut" text-anchor="middle">exporters prontos</text><text x="85.0" y="204.0" class="en mut" text-anchor="middle">ready-made exporters</text>
+<rect x="250" y="20" width="180" height="196" rx="4" class="brandfill"/>
+<text x="340" y="46" text-anchor="middle">Prometheus</text>
+<text x="340" y="68" class="pt mut" text-anchor="middle">scrape a cada 15 s</text><text x="340" y="68" class="en mut" text-anchor="middle">scrape every 15 s</text>
+<rect x="268" y="86" width="144" height="40" rx="4" class="ln"/>
+<text x="340.0" y="104.0" text-anchor="middle">TSDB</text>
+<text x="340.0" y="120.0" class="pt mut" text-anchor="middle">séries no disco</text><text x="340.0" y="120.0" class="en mut" text-anchor="middle">series on disk</text>
+<rect x="268" y="138" width="144" height="40" rx="4" class="ln"/>
+<text x="340.0" y="156.0" class="pt" text-anchor="middle">regras</text><text x="340.0" y="156.0" class="en" text-anchor="middle">rules</text>
+<text x="340.0" y="172.0" class="pt mut" text-anchor="middle">gravação e alerta</text><text x="340.0" y="172.0" class="en mut" text-anchor="middle">recording &amp; alerts</text>
+<text x="340" y="204" class="mut" text-anchor="middle">PromQL</text>
+<path d="M250 46L160 46" class="ln"/><path d="M167.0 42.6L160 46L167.0 49.4" class="ln"/>
+<path d="M250 118L160 118" class="ln"/><path d="M167.0 114.6L160 118L167.0 121.4" class="ln"/>
+<path d="M250 190L160 190" class="ln"/><path d="M167.0 186.6L160 190L167.0 193.4" class="ln"/>
+<text x="205" y="36" class="pt mut" text-anchor="middle">puxa (pull)</text><text x="205" y="36" class="en mut" text-anchor="middle">pulls</text>
+<rect x="520" y="20" width="170" height="52" rx="4" class="ln"/>
+<text x="605.0" y="44.0" text-anchor="middle">Alertmanager</text>
+<text x="605.0" y="60.0" class="pt mut" text-anchor="middle">agrupa e silencia</text><text x="605.0" y="60.0" class="en mut" text-anchor="middle">groups and silences</text>
+<rect x="520" y="92" width="170" height="52" rx="4" class="ln fillsoft"/>
+<text x="605.0" y="122.0" class="pt" text-anchor="middle">Slack · e-mail · PagerDuty</text><text x="605.0" y="122.0" class="en" text-anchor="middle">Slack · email · PagerDuty</text>
+<path d="M430 140L520 56" class="ln"/><path d="M517.2 63.3L520 56L512.6 58.3" class="ln"/>
+<path d="M605 72L605 92" class="ln"/><path d="M601.6 85.0L605 92L608.4 85.0" class="ln"/>
+<rect x="520" y="164" width="170" height="52" rx="4" class="ln fillsoft"/>
+<text x="605.0" y="188.0" text-anchor="middle">Grafana</text>
+<text x="605.0" y="204.0" class="pt mut" text-anchor="middle">painéis via PromQL</text><text x="605.0" y="204.0" class="en mut" text-anchor="middle">dashboards via PromQL</text>
+<path d="M520 190L430 190" class="ln"/><path d="M437.0 186.6L430 190L437.0 193.4" class="ln"/>
+</svg></div><figcaption><span class="pt">O Prometheus busca (pull) as métricas, guarda como séries temporais e avalia regras; o Grafana só consulta.</span><span class="en">Prometheus pulls the metrics, stores them as time series and evaluates rules; Grafana only queries.</span></figcaption></figure>
+<h3><span class="pt">Os quatro tipos de métrica</span><span class="en">The four metric types</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Comportamento</span><span class="en">Behaviour</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th><th><span class="pt">Como consultar</span><span class="en">How to query</span></th></tr></thead><tbody><tr><td><span class="pt">Counter</span><span class="en">Counter</span></td><td><span class="pt">só cresce (zera ao reiniciar)</span><span class="en">only goes up (resets on restart)</span></td><td><span class="pt"><code>http_requests_total</code></span><span class="en"><code>http_requests_total</code></span></td><td><span class="pt"><code>rate(x[5m])</code> = por segundo</span><span class="en"><code>rate(x[5m])</code> = per second</span></td></tr><tr><td><span class="pt">Gauge</span><span class="en">Gauge</span></td><td><span class="pt">sobe e desce</span><span class="en">goes up and down</span></td><td><span class="pt">memória usada, itens na fila</span><span class="en">memory in use, items in queue</span></td><td><span class="pt">o valor direto, ou <code>avg_over_time</code></span><span class="en">the value itself, or <code>avg_over_time</code></span></td></tr><tr><td><span class="pt">Histogram</span><span class="en">Histogram</span></td><td><span class="pt">conta observações em <em>buckets</em> acumulados (<code>le</code> = “menor ou igual”), mais <code>_sum</code> e <code>_count</code></span><span class="en">counts observations into cumulative <em>buckets</em> (<code>le</code> = “less than or equal”), plus <code>_sum</code> and <code>_count</code></span></td><td><span class="pt"><code>http_request_duration_seconds</code></span><span class="en"><code>http_request_duration_seconds</code></span></td><td><span class="pt"><code>histogram_quantile(0.99, …)</code></span><span class="en"><code>histogram_quantile(0.99, …)</code></span></td></tr><tr><td><span class="pt">Summary</span><span class="en">Summary</span></td><td><span class="pt">calcula percentis no próprio app</span><span class="en">computes percentiles inside the app</span></td><td><span class="pt">(evite para latência)</span><span class="en">(avoid for latency)</span></td><td><span class="pt"><strong>não dá para agregar</strong> entre instâncias</span><span class="en"><strong>cannot be aggregated</strong> across instances</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Para latência use <strong>Histogram</strong>: é o único que permite calcular o p95/p99 do <em>conjunto</em> de servidores. O <code>histogram_quantile</code> estima o valor interpolando <em>dentro</em> do bucket onde o percentil cai.</span><span class="en">For latency use a <strong>Histogram</strong>: it is the only one that lets you compute the p95/p99 of the <em>whole fleet</em>. <code>histogram_quantile</code> estimates the value by interpolating <em>inside</em> the bucket where the percentile falls.</span></div>
+<h3><span class="pt">Rótulos e cardinalidade: o erro mais caro</span><span class="en">Labels and cardinality: the costliest mistake</span></h3>
+<p><span class="pt">Cada combinação única de rótulos vira uma <em>série</em> separada na memória e no disco. <code>route="/orders/:id"</code> é uma série; usar a URL crua (<code>/orders/8841</code>, <code>/orders/8842</code>…) cria uma série por pedido e <strong>derruba o Prometheus</strong>. Regra: rótulos têm poucos valores possíveis (rota-modelo, método, status, região). <strong>Nunca</strong> use <code>user_id</code>, e-mail, ID de requisição ou URL crua como rótulo; esses dados vão em logs e traces.</span><span class="en">Every unique label combination becomes a separate <em>series</em> in memory and on disk. <code>route="/orders/:id"</code> is one series; using the raw URL (<code>/orders/8841</code>, <code>/orders/8842</code>…) creates a series per order and <strong>brings Prometheus down</strong>. Rule: labels have few possible values (route template, method, status, region). <strong>Never</strong> use <code>user_id</code>, email, request ID or raw URL as a label; that data belongs in logs and traces.</span></p>
+<h3><span class="pt">PromQL: o essencial</span><span class="en">PromQL: the essentials</span></h3>
+<pre><code># Throughput: requests per second, per route (average over the last 5 minutes)
+sum by (route) (rate(http_request_duration_seconds_count[5m]))
+
+# Errors: percentage of requests that returned 5xx
+100 * sum(rate(http_request_duration_seconds_count{status_code=~"5.."}[5m]))
+    / sum(rate(http_request_duration_seconds_count[5m]))
+
+# Duration: p95 and p99 per route
+histogram_quantile(0.95, sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+histogram_quantile(0.99, sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+
+# Average (for comparison with the percentiles)
+sum(rate(http_request_duration_seconds_sum[5m])) / sum(rate(http_request_duration_seconds_count[5m]))
+
+# Is everything being scraped? (1 = up, 0 = down)
+up</code></pre>
+<p><span class="pt">Leia assim: <code>rate(...[5m])</code> transforma o contador em “por segundo” numa janela de 5 minutos (use pelo menos 4× o intervalo de coleta); <code>sum by (le)</code> soma os servidores mantendo os buckets; <code>histogram_quantile</code> estima o percentil. Documentação: <em>Querying basics</em> no site do Prometheus.</span><span class="en">Read it like this: <code>rate(...[5m])</code> turns the counter into “per second” over a 5-minute window (use at least 4× the scrape interval); <code>sum by (le)</code> adds up the servers keeping the buckets; <code>histogram_quantile</code> estimates the percentile. Docs: <em>Querying basics</em> on the Prometheus site.</span></p>
+<h3><span class="pt">Alertas que valem a pena</span><span class="en">Alerts worth having</span></h3>
+<ul><li><span class="pt"><strong>Alerte em sintomas, não em causas.</strong> “p99 do checkout > 1 s” e “erros > 1%” importam para o usuário; “CPU > 80%” pode ser normal. Causas ficam em painéis.</span><span class="en"><strong>Alert on symptoms, not causes.</strong> “checkout p99 > 1 s” and “errors > 1%” matter to the user; “CPU > 80%” may be normal. Causes belong on dashboards.</span></li><li><span class="pt"><strong>Use <code>for:</code></strong> (ex.: 5 min) para não acordar ninguém por um pico de 10 segundos.</span><span class="en"><strong>Use <code>for:</code></strong> (e.g. 5 min) so nobody is woken by a 10-second spike.</span></li><li><span class="pt"><strong>Alerte pela velocidade de queima do orçamento (<em>burn rate</em>)</strong>, em duas janelas (ex.: 1 h e 5 min). Reduz ruído e avisa cedo (veja <em>Alerting on SLOs</em>, no SRE Workbook).</span><span class="en"><strong>Alert on error-budget burn rate</strong>, over two windows (e.g. 1 h and 5 min). It cuts noise and warns early (see <em>Alerting on SLOs</em> in the SRE Workbook).</span></li><li><span class="pt"><strong>Todo alerta que acorda alguém precisa de ação humana</strong> e de um link para o <em>runbook</em> (passo a passo). Alerta que ninguém age vira ruído e é apagado.</span><span class="en"><strong>Every alert that wakes someone needs a human action</strong> and a link to a <em>runbook</em> (step by step). An alert nobody acts on becomes noise and gets deleted.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="beyond">
+<h2 id="beyond"><span class="pt">Prometheus + Grafana bastam? Traces, logs e outras ferramentas</span><span class="en">Are Prometheus + Grafana enough? Traces, logs and other tools</span></h2>
+<p><span class="pt"><strong>Para latência e percentis, sim:</strong> com histogramas você tem p50/p95/p99 por rota, alertas e SLOs. <strong>Para depurar, não sozinhos.</strong> A métrica diz que o p99 do <code>/checkout</code> está em 2 s, mas não diz <em>qual</em> requisição, <em>qual etapa</em> demorou nem <em>por quê</em>. Para isso entram traces e logs:</span><span class="en"><strong>For latency and percentiles, yes:</strong> with histograms you get p50/p95/p99 per route, alerts and SLOs. <strong>For debugging, not on their own.</strong> The metric says the <code>/checkout</code> p99 is 2 s, but not <em>which</em> request, <em>which step</em> was slow or <em>why</em>. That is where traces and logs come in:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 165" role="img" aria-label="Fluxo de depuração / Debugging flow" style="min-width:620px">
+<rect x="10" y="20" width="150" height="66" rx="4" class="brandfill"/>
+<text x="85.0" y="51.0" class="pt" text-anchor="middle">1. Alerta</text><text x="85.0" y="51.0" class="en" text-anchor="middle">1. Alert</text>
+<text x="85.0" y="67.0" class="pt mut" text-anchor="middle">p99 de /checkout &gt; 1 s</text><text x="85.0" y="67.0" class="en mut" text-anchor="middle">p99 of /checkout &gt; 1 s</text>
+<text x="85" y="108" class="mono mut" text-anchor="middle">Prometheus</text>
+<path d="M160 53L185 53" class="ln"/><path d="M178.0 56.4L185 53L178.0 49.6" class="ln"/>
+<rect x="185" y="20" width="150" height="66" rx="4" class="ln fillsoft"/>
+<text x="260.0" y="51.0" text-anchor="middle">2. Trace</text>
+<text x="260.0" y="67.0" class="pt mut" text-anchor="middle">qual span demorou?</text><text x="260.0" y="67.0" class="en mut" text-anchor="middle">which span was slow?</text>
+<text x="260" y="108" class="mono mut" text-anchor="middle">Jaeger · Tempo</text>
+<path d="M335 53L360 53" class="ln"/><path d="M353.0 56.4L360 53L353.0 49.6" class="ln"/>
+<rect x="360" y="20" width="150" height="66" rx="4" class="ln fillsoft"/>
+<text x="435.0" y="51.0" text-anchor="middle">3. Log</text>
+<text x="435.0" y="67.0" class="pt mut" text-anchor="middle">por quê? (trace_id)</text><text x="435.0" y="67.0" class="en mut" text-anchor="middle">why? (trace_id)</text>
+<text x="435" y="108" class="mono mut" text-anchor="middle">Loki · Elastic</text>
+<path d="M510 53L535 53" class="ln"/><path d="M528.0 56.4L535 53L528.0 49.6" class="ln"/>
+<rect x="535" y="20" width="150" height="66" rx="4" class="ln fillsoft"/>
+<text x="610.0" y="51.0" class="pt" text-anchor="middle">4. Correção</text><text x="610.0" y="51.0" class="en" text-anchor="middle">4. Fix</text>
+<text x="610.0" y="67.0" class="pt mut" text-anchor="middle">e teste/alerta novo</text><text x="610.0" y="67.0" class="en mut" text-anchor="middle">and a new test/alert</text>
+<text x="610" y="108" class="mono mut" text-anchor="middle">k6 · CI</text>
+<text x="350" y="150" class="pt mut" text-anchor="middle">do sintoma agregado à causa em uma requisição concreta</text><text x="350" y="150" class="en mut" text-anchor="middle">from the aggregate symptom to the cause in one concrete request</text>
+</svg></div><figcaption><span class="pt">O caminho típico de um incidente: alerta de métrica, trace da requisição lenta, log da causa.</span><span class="en">The typical incident path: metric alert, trace of the slow request, log of the cause.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Quem responde</span><span class="en">Who answers</span></th></tr></thead><tbody><tr><td><span class="pt">O p99 subiu? Desde quando? Em qual rota?</span><span class="en">Did p99 go up? Since when? On which route?</span></td><td><span class="pt"><strong>Prometheus + Grafana</strong> (métricas)</span><span class="en"><strong>Prometheus + Grafana</strong> (metrics)</span></td></tr><tr><td><span class="pt">Qual etapa dessa requisição lenta demorou (banco, API de pagamento, cache)?</span><span class="en">Which step of that slow request took the time (database, payment API, cache)?</span></td><td><span class="pt"><strong>Traces</strong>: Jaeger, Grafana Tempo, Elastic APM, AWS X-Ray</span><span class="en"><strong>Traces</strong>: Jaeger, Grafana Tempo, Elastic APM, AWS X-Ray</span></td></tr><tr><td><span class="pt">Qual foi o erro e com que dados? Quem foi afetado?</span><span class="en">What was the error and with what data? Who was affected?</span></td><td><span class="pt"><strong>Logs</strong>: Loki, Elasticsearch/OpenSearch, CloudWatch Logs</span><span class="en"><strong>Logs</strong>: Loki, Elasticsearch/OpenSearch, CloudWatch Logs</span></td></tr><tr><td><span class="pt">Quais clientes, versões ou regiões estão piores? (dimensões de alta cardinalidade)</span><span class="en">Which customers, versions or regions are worse? (high-cardinality dimensions)</span></td><td><span class="pt"><strong>Traces/logs</strong> consultados por atributo (ou plataformas de eventos como Honeycomb)</span><span class="en"><strong>Traces/logs</strong> queried by attribute (or event platforms such as Honeycomb)</span></td></tr></tbody></table></div>
+<p><span class="pt">O elo entre os três é o <strong><code>trace_id</code></strong>: o app o coloca em cada log e o OpenTelemetry o propaga entre serviços (cabeçalho <code>traceparent</code>). Assim, do log de erro você abre o trace completo, e do trace lento você lê os logs daquela requisição. No laboratório você fará exatamente isso.</span><span class="en">The link between the three is the <strong><code>trace_id</code></strong>: the app puts it in every log and OpenTelemetry propagates it between services (the <code>traceparent</code> header). So from an error log you open the full trace, and from a slow trace you read the logs of that very request. In the lab you will do exactly that.</span></p>
+<h3><span class="pt">Que pilha escolher</span><span class="en">Which stack to choose</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Opção</span><span class="en">Option</span></th><th><span class="pt">Composição</span><span class="en">Makeup</span></th><th><span class="pt">Pontos fortes</span><span class="en">Strengths</span></th><th><span class="pt">Custo de operar / atenção</span><span class="en">Cost to run / watch out</span></th></tr></thead><tbody><tr><td><span class="pt"><strong>Grafana stack</strong> (o do laboratório)</span><span class="en"><strong>Grafana stack</strong> (the lab's)</span></td><td><span class="pt">Prometheus (métricas) + Loki (logs) + Tempo ou Jaeger (traces) + Grafana; coleta com OTel Collector ou Grafana Alloy</span><span class="en">Prometheus (metrics) + Loki (logs) + Tempo or Jaeger (traces) + Grafana; collection with OTel Collector or Grafana Alloy</span></td><td><span class="pt">open source, uma tela só, armazenamento barato (o Loki indexa só os rótulos, não o texto)</span><span class="en">open source, single pane, cheap storage (Loki indexes only labels, not the text)</span></td><td><span class="pt">você opera tudo; busca de texto livre nos logs é mais lenta que no Elasticsearch</span><span class="en">you run everything; free-text log search is slower than in Elasticsearch</span></td></tr><tr><td><span class="pt"><strong>Elastic Stack</strong> (Elasticsearch + Kibana + APM)</span><span class="en"><strong>Elastic Stack</strong> (Elasticsearch + Kibana + APM)</span></td><td><span class="pt">tudo em um motor de busca; aceita OpenTelemetry</span><span class="en">everything in one search engine; accepts OpenTelemetry</span></td><td><span class="pt">busca de texto e análise de logs excelentes, agregações poderosas (percentis nos documentos), um só lugar para logs, traces e métricas</span><span class="en">excellent text search and log analytics, powerful aggregations (percentiles over documents), one place for logs, traces and metrics</span></td><td><span class="pt">pesado (JVM, memória, shards, retenção); é o mais caro de manter. OpenSearch é o fork Apache 2.0 (Amazon OpenSearch Service)</span><span class="en">heavy (JVM, memory, shards, retention); the costliest to maintain. OpenSearch is the Apache 2.0 fork (Amazon OpenSearch Service)</span></td></tr><tr><td><span class="pt"><strong>Gerenciado na AWS</strong></span><span class="en"><strong>Managed on AWS</strong></span></td><td><span class="pt">CloudWatch (métricas, Logs Insights, Application Signals) + X-Ray ou OTel; ou Amazon Managed Prometheus + Managed Grafana</span><span class="en">CloudWatch (metrics, Logs Insights, Application Signals) + X-Ray or OTel; or Amazon Managed Prometheus + Managed Grafana</span></td><td><span class="pt">quase nada para operar; já integrado a ALB, ECS, EKS, Lambda; percentis do ALB sem instrumentar</span><span class="en">almost nothing to run; already integrated with ALB, ECS, EKS, Lambda; ALB percentiles with no instrumentation</span></td><td><span class="pt">preço por métrica, log ingerido e consulta: monitore a conta; menos flexível que o PromQL</span><span class="en">priced per metric, ingested log and query: watch the bill; less flexible than PromQL</span></td></tr><tr><td><span class="pt"><strong>SaaS</strong> (Datadog, New Relic, Honeycomb, Grafana Cloud)</span><span class="en"><strong>SaaS</strong> (Datadog, New Relic, Honeycomb, Grafana Cloud)</span></td><td><span class="pt">plataforma pronta, com agentes</span><span class="en">ready platform, with agents</span></td><td><span class="pt">começa em minutos; ótimas buscas por alta cardinalidade</span><span class="en">starts in minutes; great high-cardinality search</span></td><td><span class="pt">custo cresce rápido com volume; dependência do fornecedor (OTel reduz isso)</span><span class="en">cost grows fast with volume; vendor lock-in (OTel reduces it)</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Recomendação para começar:</strong> métricas com Prometheus + Grafana, instrumentação com OpenTelemetry, e adicione traces (Jaeger/Tempo) e logs (Loki) quando o primeiro incidente pedir. Se sua equipe é pequena e já está na AWS, comece pelo CloudWatch e pelo Managed Prometheus/Grafana para não operar a pilha. Escolha Elasticsearch/OpenSearch quando a <em>busca e a análise de logs</em> forem o centro do trabalho.</span><span class="en"><strong>Recommendation to start:</strong> metrics with Prometheus + Grafana, instrumentation with OpenTelemetry, and add traces (Jaeger/Tempo) and logs (Loki) when the first incident asks for them. If your team is small and already on AWS, start with CloudWatch and Managed Prometheus/Grafana so you do not run the stack. Choose Elasticsearch/OpenSearch when <em>log search and analytics</em> are the centre of the work.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Percentil de <em>histograma</em> (Prometheus) é uma estimativa barata e agregável; percentil de <em>eventos brutos</em> (Elasticsearch, traces) é exato, mas custa armazenar cada requisição. Os dois se complementam: o histograma alerta, os eventos investigam. Os <em>exemplars</em> do Prometheus ligam um ponto do gráfico a um trace específico.</span><span class="en">A <em>histogram</em> percentile (Prometheus) is a cheap, aggregatable estimate; a percentile over <em>raw events</em> (Elasticsearch, traces) is exact but costs storing every request. They complement each other: the histogram alerts, the events investigate. Prometheus <em>exemplars</em> link a point on the graph to a specific trace.</span></div>
+</section>
+<section class="content-section" aria-labelledby="instrument">
+<h2 id="instrument"><span class="pt">Como instrumentar um projeto</span><span class="en">How to instrument a project</span></h2>
+<p><span class="pt">Instrumentar é fazer o app <em>emitir</em> os sinais. Três lugares cobrem quase tudo:</span><span class="en">Instrumenting is making the app <em>emit</em> the signals. Three places cover almost everything:</span></p>
+<ol class="ds-steps"><li><span class="pt"><strong>Middleware HTTP</strong> (entrada): cronometra cada requisição e gera o RED por rota. É o que o laboratório faz.</span><span class="en"><strong>HTTP middleware</strong> (the entry): times every request and produces RED per route. That is what the lab does.</span></li><li><span class="pt"><strong>Chamadas de saída</strong> (banco, HTTP, fila, cache): viram <em>spans</em> nos traces. A auto-instrumentação do OpenTelemetry cobre as bibliotecas comuns sem mexer no código.</span><span class="en"><strong>Outbound calls</strong> (database, HTTP, queue, cache): become <em>spans</em> in the traces. OpenTelemetry auto-instrumentation covers common libraries without touching the code.</span></li><li><span class="pt"><strong>Eventos de negócio</strong> (pedido criado, pagamento aprovado): contadores e atributos de span escritos por você.</span><span class="en"><strong>Business events</strong> (order created, payment approved): counters and span attributes written by you.</span></li></ol>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Stack</span><span class="en">Stack</span></th><th><span class="pt">Métricas Prometheus</span><span class="en">Prometheus metrics</span></th><th><span class="pt">Traces OpenTelemetry</span><span class="en">OpenTelemetry traces</span></th></tr></thead><tbody><tr><td><span class="pt">Node.js</span><span class="en">Node.js</span></td><td><span class="pt"><code>prom-client</code></span><span class="en"><code>prom-client</code></span></td><td><span class="pt"><code>@opentelemetry/auto-instrumentations-node</code></span><span class="en"><code>@opentelemetry/auto-instrumentations-node</code></span></td></tr><tr><td><span class="pt">Python</span><span class="en">Python</span></td><td><span class="pt"><code>prometheus-client</code> (ou <code>prometheus-fastapi-instrumentator</code>)</span><span class="en"><code>prometheus-client</code> (or <code>prometheus-fastapi-instrumentator</code>)</span></td><td><span class="pt"><code>opentelemetry-instrument</code> (agente)</span><span class="en"><code>opentelemetry-instrument</code> (agent)</span></td></tr><tr><td><span class="pt">Java / Spring Boot</span><span class="en">Java / Spring Boot</span></td><td><span class="pt">Actuator + Micrometer (<code>/actuator/prometheus</code>)</span><span class="en">Actuator + Micrometer (<code>/actuator/prometheus</code>)</span></td><td><span class="pt">OTel Java agent (<code>-javaagent</code>)</span><span class="en">OTel Java agent (<code>-javaagent</code>)</span></td></tr><tr><td><span class="pt">Go</span><span class="en">Go</span></td><td><span class="pt"><code>client_golang</code></span><span class="en"><code>client_golang</code></span></td><td><span class="pt">OTel Go SDK + <code>otelhttp</code></span><span class="en">OTel Go SDK + <code>otelhttp</code></span></td></tr><tr><td><span class="pt">Nginx, Postgres, Redis, host</span><span class="en">Nginx, Postgres, Redis, host</span></td><td><span class="pt">exporters prontos (<code>nginx-prometheus-exporter</code>, <code>postgres_exporter</code>, <code>redis_exporter</code>, <code>node_exporter</code>)</span><span class="en">ready-made exporters (<code>nginx-prometheus-exporter</code>, <code>postgres_exporter</code>, <code>redis_exporter</code>, <code>node_exporter</code>)</span></td><td><span class="pt">—</span><span class="en">—</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Cuidado com dados sensíveis.</strong> Telemetria vaza fácil: senha, token, CPF, e-mail e corpo de requisição não entram em rótulo, log nem atributo de span. Registre IDs internos, não dados pessoais, e mascare o que for inevitável. Veja <a href="../web-app-security/index.html">Secure web apps</a> para o raciocínio de superfície de ataque.</span><span class="en"><strong>Watch out for sensitive data.</strong> Telemetry leaks easily: passwords, tokens, personal IDs, emails and request bodies must not go into labels, logs or span attributes. Record internal IDs, not personal data, and mask what is unavoidable. See <a href="../web-app-security/index.html">Secure web apps</a> for the attack-surface reasoning.</span></div>
+</section>
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">Praticar na sua máquina com Docker</span><span class="en">Practise on your machine with Docker</span></h2>
+<p><span class="pt">Você vai montar, com o Docker Compose, um mini-ambiente de produção: uma API Node.js de “loja” com um endpoint lento de propósito, e ao redor dela Prometheus, Grafana, Jaeger, Loki e um gerador de carga (k6). Cada atividade é pequena e usa a anterior. Todos os arquivos e comandos abaixo foram executados de ponta a ponta, e os resultados esperados vêm dessas execuções (os números variam um pouco a cada rodada, porque a lentidão é aleatória).</span><span class="en">With Docker Compose you will build a mini production environment: a “shop” Node.js API with a deliberately slow endpoint, and around it Prometheus, Grafana, Jaeger, Loki and a load generator (k6). Each activity is small and builds on the previous one. Every file and command below was run end to end, and the expected results come from those runs (numbers vary a bit between runs, because the slowness is random).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 295" role="img" aria-label="Arquitetura do laboratório / Lab architecture" style="min-width:620px">
+<rect x="10" y="110" width="100" height="46" rx="4" class="ln fillsoft"/>
+<text x="60.0" y="131.0" class="mono" text-anchor="middle">k6</text>
+<text x="60.0" y="147.0" class="pt mut" text-anchor="middle">gera carga</text><text x="60.0" y="147.0" class="en mut" text-anchor="middle">generates load</text>
+<path d="M110 133L175 133" class="ln"/><path d="M168.0 136.4L175 133L168.0 129.6" class="ln"/>
+<rect x="175" y="100" width="130" height="66" rx="4" class="brandfill"/>
+<text x="240.0" y="131.0" class="mono" text-anchor="middle">app (Node)</text>
+<text x="240.0" y="147.0" class="mut" text-anchor="middle">/products /checkout</text>
+<rect x="400" y="15" width="140" height="46" rx="4" class="ln"/>
+<text x="470.0" y="36.0" text-anchor="middle">Prometheus</text>
+<text x="470.0" y="52.0" class="mut" text-anchor="middle">:9090</text>
+<path d="M400 45L305 108" class="ln"/><path d="M309.0 101.3L305 108L312.7 107.0" class="ln"/>
+<text x="348" y="84" class="mut" text-anchor="start">scrape /metrics</text>
+<rect x="400" y="110" width="140" height="46" rx="4" class="ln"/>
+<text x="470.0" y="131.0" text-anchor="middle">Jaeger</text>
+<text x="470.0" y="147.0" class="mut" text-anchor="middle">:16686</text>
+<path d="M305 133L400 133" class="ln"/><path d="M393.0 136.4L400 133L393.0 129.6" class="ln"/>
+<text x="352" y="126" class="mut" text-anchor="middle">OTLP</text>
+<rect x="175" y="235" width="130" height="46" rx="4" class="ln"/>
+<text x="240.0" y="256.0" text-anchor="middle">Alloy</text>
+<text x="240.0" y="272.0" class="pt mut" text-anchor="middle">lê logs do Docker</text><text x="240.0" y="272.0" class="en mut" text-anchor="middle">reads Docker logs</text>
+<path d="M240 166L240 235" class="ln"/><path d="M236.6 228.0L240 235L243.4 228.0" class="ln"/>
+<text x="248" y="205" class="pt mut" text-anchor="start">stdout JSON</text><text x="248" y="205" class="en mut" text-anchor="start">JSON stdout</text>
+<rect x="400" y="235" width="140" height="46" rx="4" class="ln"/>
+<text x="470.0" y="256.0" text-anchor="middle">Loki</text>
+<text x="470.0" y="272.0" class="pt mut" text-anchor="middle">guarda os logs</text><text x="470.0" y="272.0" class="en mut" text-anchor="middle">stores the logs</text>
+<path d="M305 258L400 258" class="ln"/><path d="M393.0 261.4L400 258L393.0 254.6" class="ln"/>
+<rect x="585" y="110" width="105" height="66" rx="4" class="brandfill"/>
+<text x="637.5" y="141.0" text-anchor="middle">Grafana</text>
+<text x="637.5" y="157.0" class="mut" text-anchor="middle">:3001</text>
+<path d="M620 110L540 52" class="ln"/><path d="M547.7 53.4L540 52L543.7 58.9" class="ln"/>
+<path d="M585 143L540 143" class="ln"/><path d="M547.0 139.6L540 143L547.0 146.4" class="ln"/>
+<path d="M630 176L540 250" class="ln"/><path d="M543.2 242.9L540 250L547.6 248.2" class="ln"/>
+<text x="10" y="40" class="pt mut" text-anchor="start">você: http://localhost:3001</text><text x="10" y="40" class="en mut" text-anchor="start">you: http://localhost:3001</text>
+<text x="10" y="58" class="pt mut" text-anchor="start">e :9090 · :16686 · :8081</text><text x="10" y="58" class="en mut" text-anchor="start">and :9090 · :16686 · :8081</text>
+</svg></div><figcaption><span class="pt">Seis contêineres no Docker Compose: a app emite métricas, traces e logs; o Grafana consulta os três.</span><span class="en">Six containers in Docker Compose: the app emits metrics, traces and logs; Grafana queries all three.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">#</span><span class="en">#</span></th><th><span class="pt">Atividade</span><span class="en">Activity</span></th><th><span class="pt">Você aprende</span><span class="en">You learn</span></th></tr></thead><tbody><tr><td><span class="pt">0</span><span class="en">0</span></td><td><span class="pt">Criar os arquivos e subir</span><span class="en">Create the files and start</span></td><td><span class="pt">a estrutura do projeto</span><span class="en">the project layout</span></td></tr><tr><td><span class="pt">1</span><span class="en">1</span></td><td><span class="pt">Ver o <code>/metrics</code> cru</span><span class="en">See the raw <code>/metrics</code></span></td><td><span class="pt">o formato de counters e histogramas</span><span class="en">the counter and histogram format</span></td></tr><tr><td><span class="pt">2</span><span class="en">2</span></td><td><span class="pt">Prometheus coletando</span><span class="en">Prometheus scraping</span></td><td><span class="pt">targets, <code>up</code> e PromQL</span><span class="en">targets, <code>up</code> and PromQL</span></td></tr><tr><td><span class="pt">3</span><span class="en">3</span></td><td><span class="pt">Painel no Grafana</span><span class="en">Grafana dashboard</span></td><td><span class="pt">RED por rota</span><span class="en">RED per route</span></td></tr><tr><td><span class="pt">4</span><span class="en">4</span></td><td><span class="pt">Carga com k6: média × p95 × p99</span><span class="en">Load with k6: average × p95 × p99</span></td><td><span class="pt">por que a média engana</span><span class="en">why the average lies</span></td></tr><tr><td><span class="pt">5</span><span class="en">5</span></td><td><span class="pt">Alertas</span><span class="en">Alerts</span></td><td><span class="pt">regras e estado <code>firing</code></span><span class="en">rules and the <code>firing</code> state</span></td></tr><tr><td><span class="pt">6</span><span class="en">6</span></td><td><span class="pt">Traces no Jaeger</span><span class="en">Traces in Jaeger</span></td><td><span class="pt">achar a etapa lenta</span><span class="en">finding the slow step</span></td></tr><tr><td><span class="pt">7</span><span class="en">7</span></td><td><span class="pt">Logs no Loki e o <code>trace_id</code></span><span class="en">Logs in Loki and the <code>trace_id</code></span></td><td><span class="pt">do log ao trace</span><span class="en">from log to trace</span></td></tr><tr><td><span class="pt">8</span><span class="en">8</span></td><td><span class="pt">Opção Elasticsearch</span><span class="en">Elasticsearch option</span></td><td><span class="pt">percentis sobre eventos brutos</span><span class="en">percentiles over raw events</span></td></tr><tr><td><span class="pt">9</span><span class="en">9</span></td><td><span class="pt">Limpar</span><span class="en">Clean up</span></td><td><span class="pt">apagar tudo</span><span class="en">delete everything</span></td></tr></tbody></table></div>
+<h3><span class="pt">Atividade 0: criar os arquivos e subir</span><span class="en">Activity 0: create the files and start</span></h3>
+<p><span class="pt">Pré-requisitos: Docker com Compose v2 (<code>docker compose version</code>). Crie esta estrutura:</span><span class="en">Prerequisites: Docker with Compose v2 (<code>docker compose version</code>). Create this layout:</span></p>
+<pre><code>obs-lab/
+├── docker-compose.yml
+├── app/
+│   ├── Dockerfile
+│   ├── package.json
+│   └── server.js
+├── prometheus/
+│   ├── prometheus.yml
+│   └── rules.yml
+├── alloy/config.alloy
+├── grafana/
+│   ├── provisioning/datasources/datasources.yml
+│   ├── provisioning/dashboards/dashboards.yml
+│   └── dashboards/shop-red.json
+└── k6/load.js</code></pre>
+<p><span class="pt"><strong>A aplicação.</strong> Uma API Express com três rotas: <code>/products</code> (rápida), <code>/checkout</code> (lenta em 5% das chamadas e com 4% de erros) e <code>/metrics</code>. O trecho que importa: o <em>histograma</em> da duração, o <em>middleware</em> que o alimenta (note que o rótulo é o <strong>modelo da rota</strong>, não a URL), os logs em JSON com o <code>trace_id</code> e um <em>span</em> manual em volta do pagamento.</span><span class="en"><strong>The application.</strong> An Express API with three routes: <code>/products</code> (fast), <code>/checkout</code> (slow on 5% of calls and failing 4%) and <code>/metrics</code>. The part that matters: the duration <em>histogram</em>, the <em>middleware</em> feeding it (note the label is the <strong>route template</strong>, not the URL), JSON logs with the <code>trace_id</code> and a manual <em>span</em> around the payment.</span></p>
+<p><code>app/server.js</code></p>
+<pre><code>const express = require('express');
+const client = require('prom-client');
+const { trace, SpanStatusCode } = require('@opentelemetry/api');
+
+const tracer = trace.getTracer('shop-api');
+
+const app = express();
+client.collectDefaultMetrics();                       // CPU, memory, event loop lag, GC...
+
+// Duration of every HTTP request. Buckets decide how precise p95/p99 will be.
+const httpDuration = new client.Histogram({
+  name: 'http_request_duration_seconds',
+  help: 'HTTP request duration in seconds',
+  labelNames: ['method', 'route', 'status_code'],
+  buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
+});
+
+const sleep = (ms) =&gt; new Promise((r) =&gt; setTimeout(r, ms));
+const log = (level, msg, extra = {}) =&gt; {
+  const span = trace.getActiveSpan();
+  console.log(JSON.stringify({
+    time: new Date().toISOString(), level, msg,
+    trace_id: span ? span.spanContext().traceId : undefined,   // lets you jump from a log to its trace
+    ...extra,
+  }));
+};
+
+// Middleware: time every request. Use the route TEMPLATE (/orders/:id), never the raw URL.
+app.use((req, res, next) =&gt; {
+  const end = httpDuration.startTimer();
+  res.on('finish', () =&gt; {
+    const route = req.route ? req.route.path : 'unmatched';
+    end({ method: req.method, route, status_code: res.statusCode });
+  });
+  next();
+});
+
+app.get('/', (req, res) =&gt; res.json({ ok: true }));
+
+app.get('/products', async (req, res) =&gt; {          // fast: 10-40 ms
+  await sleep(10 + Math.random() * 30);
+  res.json([{ id: 1 }, { id: 2 }]);
+});
+
+app.get('/checkout', async (req, res) =&gt; {          // mostly 50-150 ms, 5% take ~1.5-2 s (the "tail")
+  const slow = Math.random() &lt; 0.05;
+  const failed = Math.random() &lt; 0.04;               // 4% fail
+
+  // A manual span: the slow part now shows up by name inside the trace.
+  await tracer.startActiveSpan('payment-provider.charge', async (span) =&gt; {
+    span.setAttribute('payment.slow', slow);
+    await sleep(slow ? 1500 + Math.random() * 500 : 50 + Math.random() * 100);
+    if (failed) span.setStatus({ code: SpanStatusCode.ERROR, message: 'provider timeout' });
+    span.end();
+  });
+
+  if (failed) {
+    log('error', 'payment provider timeout', { route: '/checkout' });
+    return res.status(500).json({ error: 'payment failed' });
+  }
+  log('info', 'checkout ok', { route: '/checkout', slow });
+  res.json({ ok: true });
+});
+
+app.get('/metrics', async (req, res) =&gt; {
+  res.set('Content-Type', client.register.contentType);
+  res.end(await client.register.metrics());
+});
+
+app.listen(3000, () =&gt; log('info', 'listening on :3000'));</code></pre>
+<p><code>app/package.json</code></p>
+<pre><code>{
+  "name": "shop-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "server.js",
+  "dependencies": {
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.56.0",
+    "express": "^4.21.0",
+    "prom-client": "^15.1.3"
+  }
+}</code></pre>
+<p><code>app/Dockerfile</code></p>
+<pre><code>FROM node:22-alpine
+WORKDIR /app
+COPY package.json ./
+RUN npm install --omit=dev
+COPY server.js ./
+USER node
+EXPOSE 3000
+CMD ["node", "--require", "@opentelemetry/auto-instrumentations-node/register", "server.js"]</code></pre>
+<p><span class="pt">O <code>CMD</code> carrega <code>@opentelemetry/auto-instrumentations-node/register</code>: sem mudar o código, o OpenTelemetry cria spans para cada requisição HTTP e rota Express e os envia por OTLP ao Jaeger.</span><span class="en">The <code>CMD</code> loads <code>@opentelemetry/auto-instrumentations-node/register</code>: without changing the code, OpenTelemetry creates spans for each HTTP request and Express route and sends them over OTLP to Jaeger.</span></p>
+<p><span class="pt"><strong>O Compose.</strong> Todas as portas publicadas ficam em <code>127.0.0.1</code> (só a sua máquina). O Grafana usa a porta <code>3001</code> para não colidir com apps que já usem a <code>3000</code>.</span><span class="en"><strong>Compose.</strong> All published ports bind to <code>127.0.0.1</code> (your machine only). Grafana uses port <code>3001</code> so it does not clash with apps already using <code>3000</code>.</span></p>
+<p><code>docker-compose.yml</code></p>
+<pre><code>services:
+  app:
+    build: ./app
+    environment:
+      OTEL_SERVICE_NAME: shop-api
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318      # traces go to Jaeger over OTLP/HTTP
+      OTEL_TRACES_EXPORTER: otlp
+      OTEL_METRICS_EXPORTER: none                          # metrics come from prom-client instead
+      OTEL_LOGS_EXPORTER: none
+      OTEL_NODE_ENABLED_INSTRUMENTATIONS: http,express
+    ports: ["127.0.0.1:8081:3000"]
+
+  prometheus:
+    image: prom/prometheus:v3.5.0
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./prometheus/rules.yml:/etc/prometheus/rules.yml:ro
+    ports: ["127.0.0.1:9090:9090"]
+
+  grafana:
+    image: grafana/grafana:12.1.0
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin          # lab only
+      GF_AUTH_ANONYMOUS_ENABLED: "false"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+    ports: ["127.0.0.1:3001:3000"]
+    depends_on: [prometheus]
+
+  jaeger:
+    image: jaegertracing/jaeger:2.9.0
+    ports: ["127.0.0.1:16686:16686"]             # UI; OTLP (4318) stays inside the network
+
+  loki:
+    image: grafana/loki:3.5.0
+    command: ["-config.file=/etc/loki/local-config.yaml"]
+
+  alloy:                                         # reads container logs and ships them to Loki
+    image: grafana/alloy:v1.10.0
+    command: ["run", "/etc/alloy/config.alloy"]
+    volumes:
+      - ./alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro   # LAB ONLY: this socket is root on the host
+    depends_on: [loki]
+
+  k6:
+    image: grafana/k6:1.2.0
+    profiles: ["load"]                           # only runs when you ask for it
+    volumes: ["./k6:/scripts:ro"]
+    command: ["run", "/scripts/load.js"]
+    depends_on: [app]</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O Alloy monta o <code>/var/run/docker.sock</code> para ler os logs dos contêineres. Quem acessa esse socket controla o Docker (na prática, é root na máquina). Aceitável num laboratório local; <strong>em produção não faça isso</strong>: use agentes por nó com permissão mínima (veja a seção de produção).</span><span class="en">Alloy mounts <code>/var/run/docker.sock</code> to read container logs. Whoever reaches that socket controls Docker (effectively root on the machine). Acceptable in a local lab; <strong>do not do this in production</strong>: use per-node agents with minimal permissions (see the production section).</span></div>
+<p><span class="pt"><strong>Prometheus:</strong> o arquivo de coleta e as regras (gravação do p99 e dois alertas).</span><span class="en"><strong>Prometheus:</strong> the scrape file and the rules (p99 recording rule and two alerts).</span></p>
+<p><code>prometheus/prometheus.yml</code></p>
+<pre><code>global:
+  scrape_interval: 5s          # lab value; production usually 15s-60s
+  evaluation_interval: 5s
+
+rule_files:
+  - /etc/prometheus/rules.yml
+
+scrape_configs:
+  - job_name: shop-api
+    static_configs:
+      - targets: ["app:3000"]  # Prometheus PULLS http://app:3000/metrics
+  - job_name: prometheus
+    static_configs:
+      - targets: ["localhost:9090"]</code></pre>
+<p><code>prometheus/rules.yml</code></p>
+<pre><code>groups:
+  - name: shop-api
+    rules:
+      # Recording rule: compute the expensive p99 once and store it as a new series
+      - record: route:http_request_duration_seconds:p99_5m
+        expr: histogram_quantile(0.99, sum by (le, route) (rate(http_request_duration_seconds_bucket[5m])))
+
+      - alert: HighLatencyP99
+        expr: route:http_request_duration_seconds:p99_5m{route="/checkout"} &gt; 1
+        for: 1m
+        labels: { severity: page }
+        annotations:
+          summary: "p99 of {{ $labels.route }} is above 1s"
+
+      - alert: HighErrorRate
+        expr: |
+          sum(rate(http_request_duration_seconds_count{status_code=~"5.."}[5m]))
+            / sum(rate(http_request_duration_seconds_count[5m])) &gt; 0.01
+        for: 1m
+        labels: { severity: page }
+        annotations:
+          summary: "more than 1% of requests are failing"</code></pre>
+<p><span class="pt"><strong>Grafana e Alloy:</strong> as fontes de dados (Prometheus, Loki, Jaeger) e o painel “RED” são carregados sozinhos (<em>provisioning</em>); o campo derivado do Loki transforma o <code>trace_id</code> de cada log em link para o Jaeger. O Alloy descobre os contêineres e envia os logs ao Loki.</span><span class="en"><strong>Grafana and Alloy:</strong> the data sources (Prometheus, Loki, Jaeger) and the “RED” dashboard load themselves (<em>provisioning</em>); Loki's derived field turns each log's <code>trace_id</code> into a link to Jaeger. Alloy discovers the containers and ships the logs to Loki.</span></p>
+<p><code>grafana/provisioning/datasources/datasources.yml</code></p>
+<pre><code>apiVersion: 1
+datasources:
+  - name: Prometheus
+    uid: prometheus
+    type: prometheus
+    url: http://prometheus:9090
+    isDefault: true
+  - name: Loki
+    uid: loki
+    type: loki
+    url: http://loki:3100
+    jsonData:
+      derivedFields:                      # turns trace_id in a log line into a link to the trace
+        - name: trace_id
+          matcherRegex: '"trace_id":"(\w+)"'
+          url: '$${__value.raw}'
+          datasourceUid: jaeger
+  - name: Jaeger
+    uid: jaeger
+    type: jaeger
+    url: http://jaeger:16686</code></pre>
+<p><code>grafana/provisioning/dashboards/dashboards.yml</code></p>
+<pre><code>apiVersion: 1
+providers:
+  - name: lab
+    type: file
+    options:
+      path: /var/lib/grafana/dashboards</code></pre>
+<p><code>grafana/dashboards/shop-red.json</code></p>
+<pre><code>{
+  "title": "Shop API (RED)",
+  "uid": "shop-red",
+  "refresh": "5s",
+  "time": { "from": "now-15m", "to": "now" },
+  "schemaVersion": 39,
+  "panels": [
+    { "id": 1, "type": "timeseries", "title": "Rate: requests per second",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "reqps" }, "overrides": [] },
+      "targets": [ { "refId": "A", "legendFormat": "{{route}}",
+        "expr": "sum by (route) (rate(http_request_duration_seconds_count[1m]))" } ] },
+
+    { "id": 2, "type": "timeseries", "title": "Errors: % of requests with 5xx",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "percent" }, "overrides": [] },
+      "targets": [ { "refId": "A", "legendFormat": "5xx %",
+        "expr": "100 * sum(rate(http_request_duration_seconds_count{status_code=~\"5..\"}[1m])) / sum(rate(http_request_duration_seconds_count[1m]))" } ] },
+
+    { "id": 3, "type": "timeseries", "title": "Duration: /checkout p50, p95, p99 and average",
+      "gridPos": { "x": 0, "y": 8, "w": 16, "h": 9 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [
+        { "refId": "A", "legendFormat": "p50", "expr": "histogram_quantile(0.50, sum by (le) (rate(http_request_duration_seconds_bucket{route=\"/checkout\"}[1m])))" },
+        { "refId": "B", "legendFormat": "p95", "expr": "histogram_quantile(0.95, sum by (le) (rate(http_request_duration_seconds_bucket{route=\"/checkout\"}[1m])))" },
+        { "refId": "C", "legendFormat": "p99", "expr": "histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{route=\"/checkout\"}[1m])))" },
+        { "refId": "D", "legendFormat": "average", "expr": "sum(rate(http_request_duration_seconds_sum{route=\"/checkout\"}[1m])) / sum(rate(http_request_duration_seconds_count{route=\"/checkout\"}[1m]))" } ] },
+
+    { "id": 4, "type": "timeseries", "title": "Saturation: event loop lag p99",
+      "gridPos": { "x": 16, "y": 8, "w": 8, "h": 9 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "targets": [ { "refId": "A", "legendFormat": "lag p99", "expr": "nodejs_eventloop_lag_p99_seconds" } ] }
+  ]
+}</code></pre>
+<p><code>alloy/config.alloy</code></p>
+<pre><code>discovery.docker "containers" {
+  host = "unix:///var/run/docker.sock"
+}
+
+discovery.relabel "containers" {
+  targets = discovery.docker.containers.targets
+  rule {
+    source_labels = ["__meta_docker_container_label_com_docker_compose_service"]
+    target_label  = "service"
+  }
+}
+
+loki.source.docker "containers" {
+  host       = "unix:///var/run/docker.sock"
+  targets    = discovery.relabel.containers.output
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}</code></pre>
+<p><span class="pt">E o teste de carga: 10 usuários virtuais por 2 minutos, com <em>thresholds</em> que fazem o teste <strong>falhar</strong> se o SLO for violado (p95 &lt; 500 ms, p99 &lt; 1 s, erros &lt; 1%).</span><span class="en">And the load test: 10 virtual users for 2 minutes, with <em>thresholds</em> that make the test <strong>fail</strong> if the SLO is broken (p95 &lt; 500 ms, p99 &lt; 1 s, errors &lt; 1%).</span></p>
+<p><code>k6/load.js</code></p>
+<pre><code>import http from 'k6/http';
+import { sleep } from 'k6';
+
+export const options = {
+  vus: 10,
+  duration: '2m',
+  summaryTrendStats: ['avg', 'med', 'p(95)', 'p(99)', 'max'],   // print p99 in the summary
+  thresholds: {
+    http_req_duration: ['p(95)&lt;500', 'p(99)&lt;1000'],   // the test FAILS if the SLO is broken
+    http_req_failed: ['rate&lt;0.01'],
+  },
+};
+
+export default function () {
+  http.get('http://app:3000/products');
+  http.get('http://app:3000/checkout');
+  sleep(0.5);
+}</code></pre>
+<pre><code>cd obs-lab
+docker compose up -d --build
+docker compose ps</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> seis serviços <code>Up</code> (o <code>k6</code> não aparece: só roda quando você pede).</span><span class="en"><strong>Expected result:</strong> six services <code>Up</code> (<code>k6</code> does not appear: it only runs when you ask).</span></p>
+<pre><code>NAME                 SERVICE      STATUS
+obs-lab-alloy-1      alloy        Up 20 seconds
+obs-lab-app-1        app          Up 22 seconds
+obs-lab-grafana-1    grafana      Up 21 seconds
+obs-lab-jaeger-1     jaeger       Up 21 seconds
+obs-lab-loki-1       loki         Up 20 seconds
+obs-lab-prometheus-1 prometheus   Up 22 seconds</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Se alguma porta (<code>8081</code>, <code>9090</code>, <code>3001</code>, <code>16686</code>) já estiver em uso, o Compose falha com “port is already allocated”. Troque só o número da esquerda em <code>ports</code>.</span><span class="en">If any port (<code>8081</code>, <code>9090</code>, <code>3001</code>, <code>16686</code>) is already in use, Compose fails with “port is already allocated”. Change only the left-hand number in <code>ports</code>.</span></div>
+<h3><span class="pt">Atividade 1: ver o /metrics cru</span><span class="en">Activity 1: see the raw /metrics</span></h3>
+<pre><code>curl -s localhost:8081/products
+curl -s localhost:8081/metrics | grep -E 'http_request_duration_seconds_(bucket|sum|count)\{.*route="/products"'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> um histograma em texto: cada linha <code>_bucket{le="X"}</code> conta quantas requisições levaram <em>até</em> X segundos (os números são acumulados), mais a soma e a contagem.</span><span class="en"><strong>Expected result:</strong> a histogram in plain text: each <code>_bucket{le="X"}</code> line counts how many requests took <em>up to</em> X seconds (the numbers are cumulative), plus the sum and the count.</span></p>
+<pre><code>http_request_duration_seconds_bucket{le="0.025",method="GET",route="/products",status_code="200"} 0
+http_request_duration_seconds_bucket{le="0.05",method="GET",route="/products",status_code="200"} 1
+http_request_duration_seconds_bucket{le="0.1",method="GET",route="/products",status_code="200"} 1
+...
+http_request_duration_seconds_bucket{le="+Inf",method="GET",route="/products",status_code="200"} 1
+http_request_duration_seconds_sum{method="GET",route="/products",status_code="200"} 0.0373
+http_request_duration_seconds_count{method="GET",route="/products",status_code="200"} 1</code></pre>
+<p><span class="pt">Aqui está o segredo do percentil: o Prometheus <em>não</em> guarda cada requisição, só estes contadores por faixa. Dá para estimar p95/p99 a partir deles, de graça e para qualquer número de requisições.</span><span class="en">Here is the percentile secret: Prometheus does <em>not</em> store each request, only these per-range counters. You can estimate p95/p99 from them, cheaply and for any number of requests.</span></p>
+<h3><span class="pt">Atividade 2: o Prometheus coletando</span><span class="en">Activity 2: Prometheus scraping</span></h3>
+<p><span class="pt">Abra <code>http://localhost:9090/targets</code>: os dois alvos devem estar <strong>UP</strong>. Depois, em <code>http://localhost:9090/query</code>, rode <code>up</code>. Ou pela linha de comando:</span><span class="en">Open <code>http://localhost:9090/targets</code>: both targets should be <strong>UP</strong>. Then, at <code>http://localhost:9090/query</code>, run <code>up</code>. Or from the command line:</span></p>
+<pre><code>curl -s localhost:9090/api/v1/targets | grep -o '"health":"[a-z]*"'
+curl -s -G localhost:9090/api/v1/query --data-urlencode 'query=up'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> os dois alvos saudáveis e <code>up</code> igual a 1 para cada job.</span><span class="en"><strong>Expected result:</strong> both targets healthy and <code>up</code> equal to 1 for each job.</span></p>
+<pre><code>"health":"up"
+"health":"up"
+{"metric":{"__name__":"up","instance":"app:3000","job":"shop-api"},"value":[...,"1"]}
+{"metric":{"__name__":"up","instance":"localhost:9090","job":"prometheus"},"value":[...,"1"]}</code></pre>
+<h3><span class="pt">Atividade 3: o painel no Grafana</span><span class="en">Activity 3: the Grafana dashboard</span></h3>
+<p><span class="pt">Abra <code>http://localhost:3001</code> (usuário <code>admin</code>, senha <code>admin</code>; só no laboratório) e vá em <em>Dashboards → Shop API (RED)</em>. Há quatro painéis: <strong>Rate</strong> (req/s por rota), <strong>Errors</strong> (% de 5xx), <strong>Duration</strong> (p50, p95, p99 e média do <code>/checkout</code>) e <strong>Saturation</strong> (atraso do event loop). Sem tráfego, os gráficos ficam vazios. Gere um pouco de tráfego:</span><span class="en">Open <code>http://localhost:3001</code> (user <code>admin</code>, password <code>admin</code>; lab only) and go to <em>Dashboards → Shop API (RED)</em>. There are four panels: <strong>Rate</strong> (req/s per route), <strong>Errors</strong> (% of 5xx), <strong>Duration</strong> (p50, p95, p99 and average of <code>/checkout</code>) and <strong>Saturation</strong> (event loop lag). With no traffic the charts are empty. Generate some traffic:</span></p>
+<pre><code>for i in $(seq 1 100); do curl -s -o /dev/null localhost:8081/checkout; done</code></pre>
+<p><span class="pt">Clique no título de um painel e escolha <em>Explore</em> para ver (e editar) a consulta PromQL: é a mesma da seção anterior. Aprender a ler o PromQL por trás de cada painel é metade do ofício.</span><span class="en">Click a panel's title and choose <em>Explore</em> to see (and edit) the PromQL query: it is the same as in the previous section. Learning to read the PromQL behind each panel is half the craft.</span></p>
+<h3><span class="pt">Atividade 4: carga com k6, média × p95 × p99</span><span class="en">Activity 4: load with k6, average × p95 × p99</span></h3>
+<pre><code>docker compose --profile load run --rm k6 run --quiet /scripts/load.js</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> em 2 minutos o k6 imprime o resumo. Repare: a <strong>média é ≈ 108 ms</strong>, o <strong>p95 passa</strong> no limite, e só o <strong>p99 revela o problema</strong>. O k6 sai com código 99, porque dois <em>thresholds</em> falharam.</span><span class="en"><strong>Expected result:</strong> after 2 minutes k6 prints the summary. Note: the <strong>average is ≈ 108 ms</strong>, <strong>p95 passes</strong> its limit, and only <strong>p99 reveals the problem</strong>. k6 exits with code 99, because two <em>thresholds</em> failed.</span></p>
+<pre><code>  █ THRESHOLDS
+
+    http_req_duration
+    ✓ 'p(95)&lt;500' p(95)=148.3ms
+    ✗ 'p(99)&lt;1000' p(99)=1.79s
+
+    http_req_failed
+    ✗ 'rate&lt;0.01' rate=2.05%
+
+  █ TOTAL RESULTS
+
+    http_req_duration..............: avg=108.26ms med=53.5ms   p(95)=148.3ms  p(99)=1.79s max=1.99s
+    http_req_failed................: 2.05%  69 out of 3356
+    http_reqs......................: 3356   27.710167/s</code></pre>
+<p><span class="pt">Agora volte ao Grafana (painel <em>Duration</em>, últimos 5 minutos) ou consulte o Prometheus. Os valores só do <code>/checkout</code>, com a carga rodando:</span><span class="en">Now go back to Grafana (the <em>Duration</em> panel, last 5 minutes) or query Prometheus. The values for <code>/checkout</code> alone, with the load running:</span></p>
+<pre><code>curl -s -G localhost:9090/api/v1/query --data-urlencode \
+ 'query=histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{route="/checkout"}[1m])))'</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Métrica do /checkout</span><span class="en">/checkout metric</span></th><th><span class="pt">Valor típico</span><span class="en">Typical value</span></th><th><span class="pt">Leitura</span><span class="en">Reading</span></th></tr></thead><tbody><tr><td><span class="pt">p50</span><span class="en">p50</span></td><td><span class="pt">≈ 0,10 s</span><span class="en">≈ 0.10 s</span></td><td><span class="pt">a experiência típica é ótima</span><span class="en">the typical experience is great</span></td></tr><tr><td><span class="pt">média</span><span class="en">average</span></td><td><span class="pt">≈ 0,18 s</span><span class="en">≈ 0.18 s</span></td><td><span class="pt">parece “ok”, mas esconde a cauda</span><span class="en">looks “fine” but hides the tail</span></td></tr><tr><td><span class="pt">p95</span><span class="en">p95</span></td><td><span class="pt">≈ 0,25 s</span><span class="en">≈ 0.25 s</span></td><td><span class="pt">ainda dentro do SLO de 500 ms</span><span class="en">still within the 500 ms SLO</span></td></tr><tr><td><span class="pt">p99</span><span class="en">p99</span></td><td><span class="pt">≈ 2 s</span><span class="en">≈ 2 s</span></td><td><span class="pt">1 em cada 100 usuários espera ~2 s: <strong>SLO violado</strong></span><span class="en">1 in 100 users waits ~2 s: <strong>SLO broken</strong></span></td></tr><tr><td><span class="pt">% de erros</span><span class="en">% errors</span></td><td><span class="pt">≈ 2%</span><span class="en">≈ 2%</span></td><td><span class="pt">acima do limite de 1%</span><span class="en">above the 1% limit</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Uma lição escondida no número:</strong> o p99 do Prometheus deu ≈ 2,2 s, mas o k6 mediu ≈ 1,8 s. A lentidão real fica entre 1,5 e 2 s; o histograma só conhece o <em>bucket</em> de 1 s a 2,5 s e <em>interpola</em> dentro dele. Quanto mais largos os buckets perto do valor que importa, mais impreciso o percentil. Desafio: troque <code>buckets</code> em <code>server.js</code> para incluir <code>1.5</code> e <code>2</code>, rode <code>docker compose up -d --build app</code>, repita a carga e compare.</span><span class="en"><strong>A lesson hidden in the number:</strong> Prometheus's p99 came out ≈ 2.2 s, but k6 measured ≈ 1.8 s. The real slowness sits between 1.5 and 2 s; the histogram only knows the 1 s to 2.5 s <em>bucket</em> and <em>interpolates</em> inside it. The wider the buckets near the value that matters, the less precise the percentile. Challenge: change <code>buckets</code> in <code>server.js</code> to include <code>1.5</code> and <code>2</code>, run <code>docker compose up -d --build app</code>, repeat the load and compare.</span></div>
+<h3><span class="pt">Atividade 5: alertas</span><span class="en">Activity 5: alerts</span></h3>
+<p><span class="pt">Com a carga rodando (ou logo depois), abra <code>http://localhost:9090/alerts</code>. A regra <code>HighLatencyP99</code> fica <em>pending</em> por 1 minuto (o <code>for:</code>) e então <strong>firing</strong>; <code>HighErrorRate</code> também. Pela API:</span><span class="en">With the load running (or right after), open <code>http://localhost:9090/alerts</code>. The <code>HighLatencyP99</code> rule stays <em>pending</em> for 1 minute (the <code>for:</code>) and then goes <strong>firing</strong>; so does <code>HighErrorRate</code>. Through the API:</span></p>
+<pre><code>curl -s localhost:9090/api/v1/alerts | grep -o '"alertname":"[A-Za-z0-9]*"\|"state":"[a-z]*"'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> os alertas disparados.</span><span class="en"><strong>Expected result:</strong> the fired alerts.</span></p>
+<pre><code>"alertname":"HighLatencyP99"
+"state":"firing"
+"alertname":"HighErrorRate"
+"state":"firing"</code></pre>
+<p><span class="pt">No laboratório não há Alertmanager, então nada é enviado a ninguém; em produção, o Prometheus aponta para um Alertmanager que manda a mensagem ao Slack ou ao PagerDuty. Depois que a carga termina e a janela de 5 minutos esvazia, os alertas voltam ao normal sozinhos. Se editar o <code>rules.yml</code>, aplique com <code>docker compose restart prometheus</code>.</span><span class="en">The lab has no Alertmanager, so nothing is sent to anyone; in production, Prometheus points to an Alertmanager that posts to Slack or PagerDuty. After the load ends and the 5-minute window drains, the alerts resolve themselves. If you edit <code>rules.yml</code>, apply it with <code>docker compose restart prometheus</code>.</span></p>
+<h3><span class="pt">Atividade 6: traces no Jaeger</span><span class="en">Activity 6: traces in Jaeger</span></h3>
+<p><span class="pt">O alerta disse <em>que</em> o <code>/checkout</code> está lento. Agora descubra <em>onde</em>. Abra <code>http://localhost:16686</code>, escolha o serviço <code>shop-api</code>, a operação <code>GET /checkout</code>, ponha <strong>Min Duration = 1s</strong> e clique em <em>Find Traces</em>. Abra um trace. Ou pela API:</span><span class="en">The alert said <em>that</em> <code>/checkout</code> is slow. Now find <em>where</em>. Open <code>http://localhost:16686</code>, choose the <code>shop-api</code> service, the <code>GET /checkout</code> operation, set <strong>Min Duration = 1s</strong> and click <em>Find Traces</em>. Open a trace. Or through the API:</span></p>
+<pre><code>curl -s "localhost:16686/api/traces?service=shop-api&amp;operation=GET%20%2Fcheckout&amp;minDuration=1s&amp;limit=2" \
+ | python3 -c "
+import sys, json
+for t in json.load(sys.stdin)['data']:
+    spans = sorted(t['spans'], key=lambda s: -s['duration'])[:2]
+    print(t['traceID'], [(s['operationName'], s['duration'] // 1000) for s in spans])"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> quase todo o tempo está no span manual <code>payment-provider.charge</code> (em ms), com o atributo <code>payment.slow = true</code>. A causa não está no Express nem no seu código de rota, mas na chamada ao provedor de pagamento.</span><span class="en"><strong>Expected result:</strong> almost all the time is in the manual span <code>payment-provider.charge</code> (in ms), with the attribute <code>payment.slow = true</code>. The cause is not Express nor your route code, but the call to the payment provider.</span></p>
+<pre><code>a0b4fcd7e981c58dfc6fef6ab8c7455a [('GET /checkout', 1677), ('payment-provider.charge', 1675)]
+42c31eab59b6ca2e89853d257e72435c [('GET /checkout', 1729), ('payment-provider.charge', 1728)]</code></pre>
+<p><span class="pt">Na interface, o trace aparece como barras horizontais (um <em>flame/Gantt</em>): a barra do <code>payment-provider.charge</code> ocupa quase toda a largura do trace. Num sistema real, essas barras seriam chamadas ao banco, ao cache e a outros serviços, e é assim que você acha o culpado em uma arquitetura distribuída.</span><span class="en">In the UI the trace shows as horizontal bars (a <em>flame/Gantt</em>): the <code>payment-provider.charge</code> bar takes almost the whole width of the trace. In a real system, those bars would be calls to the database, cache and other services, and that is how you find the culprit in a distributed architecture.</span></p>
+<h3><span class="pt">Atividade 7: logs no Loki e o trace_id</span><span class="en">Activity 7: logs in Loki and the trace_id</span></h3>
+<p><span class="pt">No Grafana, abra <em>Explore</em> (ícone de bússola), escolha a fonte <strong>Loki</strong> e consulte os erros do app com LogQL:</span><span class="en">In Grafana, open <em>Explore</em> (the compass icon), choose the <strong>Loki</strong> data source and query the app's errors with LogQL:</span></p>
+<pre><code>{service="app"} |= "error"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> linhas JSON de erro, cada uma com um <code>trace_id</code>. Ao lado do campo aparece um link <strong>Jaeger</strong> (o campo derivado do <code>datasources.yml</code>): clique e você cai no trace daquela requisição que falhou.</span><span class="en"><strong>Expected result:</strong> JSON error lines, each with a <code>trace_id</code>. Next to the field a <strong>Jaeger</strong> link appears (the derived field from <code>datasources.yml</code>): click it and you land on the trace of that failed request.</span></p>
+<pre><code>{"time":"2026-10-21T12:15:04.678Z","level":"error","msg":"payment provider timeout","trace_id":"41c4b47ae4d055290cf8035332d751b5","route":"/checkout"}
+{"time":"2026-10-21T12:15:00.433Z","level":"error","msg":"payment provider timeout","trace_id":"d11ce37091a1f000fd889b7ac959154a","route":"/checkout"}</code></pre>
+<p><span class="pt">Outras consultas úteis: <code>{service="app"} | json | slow="true"</code> (só as lentas) e <code>sum(rate({service="app"} |= "error" [1m]))</code> (erros por segundo, a partir dos logs).</span><span class="en">Other useful queries: <code>{service="app"} | json | slow="true"</code> (slow ones only) and <code>sum(rate({service="app"} |= "error" [1m]))</code> (errors per second, from the logs).</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Você acabou de percorrer o fluxo completo de um incidente: <strong>alerta (métrica) → trace → log</strong>. Esse é o valor de ter os três sinais ligados pelo <code>trace_id</code>.</span><span class="en">You just walked the full incident flow: <strong>alert (metric) → trace → log</strong>. That is the value of having the three signals tied together by the <code>trace_id</code>.</span></div>
+<h3><span class="pt">Atividade 8: a opção Elasticsearch (percentis sobre eventos brutos)</span><span class="en">Activity 8: the Elasticsearch option (percentiles over raw events)</span></h3>
+<p><span class="pt">Para ver como o outro mundo faz, suba um Elasticsearch de um nó (sem segurança, só no laboratório e só em <code>127.0.0.1</code>), grave 1.000 eventos de requisição sintéticos e peça os percentis. Aqui o cálculo é sobre <em>cada evento</em>, não sobre buckets:</span><span class="en">To see how the other world does it, start a single-node Elasticsearch (no security, lab only and on <code>127.0.0.1</code> only), store 1,000 synthetic request events and ask for the percentiles. Here the calculation runs over <em>each event</em>, not over buckets:</span></p>
+<pre><code>docker run -d --name es-lab -p 127.0.0.1:9200:9200 \
+  -e discovery.type=single-node -e xpack.security.enabled=false \
+  -e ES_JAVA_OPTS="-Xms512m -Xmx512m" \
+  docker.elastic.co/elasticsearch/elasticsearch:9.1.0
+
+# wait until it answers, then generate 1000 events (3% slow) and bulk-load them
+until curl -s localhost:9200 &gt;/dev/null; do sleep 3; done
+awk 'BEGIN{srand(42); for(i=0;i&lt;1000;i++){slow=(rand()&lt;0.03); d=slow?1500+rand()*500:50+rand()*100;
+  printf "{\"index\":{}}\n{\"@timestamp\":\"2026-01-01T00:00:00Z\",\"route\":\"/checkout\",\"duration_ms\":%d}\n", d}}' &gt; bulk.ndjson
+curl -s -H 'Content-Type: application/x-ndjson' -X POST 'localhost:9200/requests/_bulk?refresh=true' --data-binary @bulk.ndjson &gt; /dev/null
+
+curl -s -H 'Content-Type: application/json' 'localhost:9200/requests/_search?size=0&amp;pretty' -d '{
+  "aggs": {
+    "latency": { "percentiles": { "field": "duration_ms", "percents": [50, 95, 99] } },
+    "avg_ms":  { "avg": { "field": "duration_ms" } } } }'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> de novo, p50 e p95 baixos, p99 enorme e média “enganosa” (os números exatos dependem do seu <code>awk</code>).</span><span class="en"><strong>Expected result:</strong> again, low p50 and p95, a huge p99 and a “misleading” average (exact numbers depend on your <code>awk</code>).</span></p>
+<pre><code>  "aggregations" : {
+    "latency" : { "values" : { "50.0" : 100.5, "95.0" : 147.0, "99.0" : 1818.0 } },
+    "avg_ms"  : { "value" : 147.6 }
+  }</code></pre>
+<p><span class="pt">Na prática você não carrega dados à mão: o Elastic Agent, o Filebeat ou um OpenTelemetry Collector enviam logs e traces, e o Kibana (a interface) faz os gráficos. O que este exercício mostra é a diferença de modelo: <strong>Prometheus guarda contagens agregadas (barato, estimado)</strong>; <strong>Elasticsearch guarda cada evento (caro, exato e pesquisável por qualquer campo)</strong>.</span><span class="en">In practice you do not load data by hand: Elastic Agent, Filebeat or an OpenTelemetry Collector ship logs and traces, and Kibana (the UI) draws the charts. What this exercise shows is the model difference: <strong>Prometheus stores aggregated counts (cheap, estimated)</strong>; <strong>Elasticsearch stores every event (costly, exact and searchable by any field)</strong>.</span></p>
+<h3><span class="pt">Atividade 9: limpar</span><span class="en">Activity 9: clean up</span></h3>
+<pre><code>docker compose down -v          # stops the stack and removes its volumes
+docker rm -f es-lab             # only if you ran activity 8
+rm -f bulk.ndjson</code></pre>
+<h3><span class="pt">Desafios para continuar</span><span class="en">Challenges to continue</span></h3>
+<ol class="ds-steps"><li><span class="pt"><strong>Cardinalidade na prática:</strong> adicione um rótulo <code>user_id</code> (valor aleatório) ao histograma, gere carga e compare <code>curl -s localhost:8081/metrics | wc -l</code> antes e depois. Veja o crescimento e entenda por que isso derruba o Prometheus.</span><span class="en"><strong>Cardinality in practice:</strong> add a <code>user_id</code> label (random value) to the histogram, generate load and compare <code>curl -s localhost:8081/metrics | wc -l</code> before and after. See the growth and understand why it brings Prometheus down.</span></li><li><span class="pt"><strong>Seu próprio SLO:</strong> escreva uma regra de gravação para a proporção de requisições <code>/checkout</code> abaixo de 500 ms e sem erro, e um painel “orçamento de erro restante”.</span><span class="en"><strong>Your own SLO:</strong> write a recording rule for the ratio of <code>/checkout</code> requests under 500 ms and error-free, and an “error budget remaining” panel.</span></li><li><span class="pt"><strong>Mais um serviço:</strong> faça o <code>/checkout</code> chamar outro serviço (um segundo contêiner) e veja o trace atravessar os dois, com o mesmo <code>trace_id</code>.</span><span class="en"><strong>One more service:</strong> make <code>/checkout</code> call another service (a second container) and watch the trace cross both, with the same <code>trace_id</code>.</span></li><li><span class="pt"><strong>Alertmanager:</strong> adicione o contêiner <code>prom/alertmanager</code> com um receptor de webhook e veja o alerta chegar.</span><span class="en"><strong>Alertmanager:</strong> add the <code>prom/alertmanager</code> container with a webhook receiver and watch the alert arrive.</span></li><li><span class="pt"><strong>Seus próprios apps:</strong> ponha <code>postgres_exporter</code> e <code>node_exporter</code> no Compose e monte um painel USE para o banco (use o <a href="../postgres-for-devs/index.html">Postgres</a> da outra nota).</span><span class="en"><strong>Your own apps:</strong> put <code>postgres_exporter</code> and <code>node_exporter</code> in Compose and build a USE panel for the database (use the <a href="../postgres-for-devs/index.html">Postgres</a> from the other note).</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="prod">
+<h2 id="prod"><span class="pt">Colocar em produção com segurança</span><span class="en">Running it in production, securely</span></h2>
+<p><span class="pt">O laboratório tem tudo num só Compose, sem alta disponibilidade e com senha <code>admin</code>. Em produção, o desenho muda em três eixos: <strong>onde</strong> roda, <strong>como</strong> os dados são guardados e <strong>quem</strong> pode ver ou mexer. A arquitetura de referência:</span><span class="en">The lab has everything in one Compose, with no high availability and an <code>admin</code> password. In production, the design changes along three axes: <strong>where</strong> it runs, <strong>how</strong> data is stored and <strong>who</strong> may see or touch it. The reference architecture:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 318" role="img" aria-label="Produção de referência / Reference production setup" style="min-width:620px">
+<rect x="10" y="15" width="190" height="240" rx="4" class="ln dash"/>
+<text x="22" y="36" class="mut" text-anchor="start">cluster / VMs</text>
+<rect x="25" y="50" width="160" height="44" rx="4" class="ln fillsoft"/>
+<text x="105.0" y="70.0" text-anchor="middle">app 1</text>
+<text x="105.0" y="86.0" class="pt mut" text-anchor="middle">SDK OpenTelemetry</text><text x="105.0" y="86.0" class="en mut" text-anchor="middle">OpenTelemetry SDK</text>
+<rect x="25" y="106" width="160" height="44" rx="4" class="ln fillsoft"/>
+<text x="105.0" y="126.0" text-anchor="middle">app 2</text>
+<text x="105.0" y="142.0" class="pt mut" text-anchor="middle">SDK OpenTelemetry</text><text x="105.0" y="142.0" class="en mut" text-anchor="middle">OpenTelemetry SDK</text>
+<rect x="25" y="162" width="160" height="44" rx="4" class="ln fillsoft"/>
+<text x="105.0" y="182.0" text-anchor="middle">app 3</text>
+<text x="105.0" y="198.0" class="pt mut" text-anchor="middle">SDK OpenTelemetry</text><text x="105.0" y="198.0" class="en mut" text-anchor="middle">OpenTelemetry SDK</text>
+<text x="105" y="232" class="mut mono" text-anchor="middle">/metrics · OTLP · stdout</text>
+<rect x="250" y="100" width="130" height="80" rx="4" class="brandfill"/>
+<text x="315.0" y="138.0" text-anchor="middle">Collector</text>
+<text x="315.0" y="154.0" class="mut" text-anchor="middle">OTel / Alloy</text>
+<path d="M200 140L250 140" class="ln"/><path d="M243.0 143.4L250 140L243.0 136.6" class="ln"/>
+<rect x="440" y="12" width="160" height="52" rx="4" class="ln"/>
+<text x="520.0" y="36.0" text-anchor="middle">Alertmanager</text>
+<text x="520.0" y="52.0" class="mut" text-anchor="middle">→ Slack · PagerDuty</text>
+<rect x="440" y="80" width="160" height="52" rx="4" class="ln"/>
+<text x="520.0" y="104.0" class="pt" text-anchor="middle">Métricas</text><text x="520.0" y="104.0" class="en" text-anchor="middle">Metrics</text>
+<text x="520.0" y="120.0" class="mut" text-anchor="middle">Prometheus / AMP</text>
+<rect x="440" y="148" width="160" height="52" rx="4" class="ln"/>
+<text x="520.0" y="172.0" text-anchor="middle">Traces</text>
+<text x="520.0" y="188.0" class="mut" text-anchor="middle">Tempo / X-Ray</text>
+<rect x="440" y="216" width="160" height="52" rx="4" class="ln"/>
+<text x="520.0" y="240.0" text-anchor="middle">Logs</text>
+<text x="520.0" y="256.0" class="mut" text-anchor="middle">Loki / CloudWatch</text>
+<path d="M520 80L520 64" class="ln"/><path d="M523.4 71.0L520 64L516.6 71.0" class="ln"/>
+<path d="M380 125L440 106" class="ln"/><path d="M434.4 111.4L440 106L432.3 104.9" class="ln"/>
+<path d="M380 140L440 174" class="ln"/><path d="M432.2 173.5L440 174L435.6 167.6" class="ln"/>
+<path d="M380 155L440 242" class="ln"/><path d="M433.2 238.2L440 242L438.8 234.3" class="ln"/>
+<rect x="635" y="80" width="55" height="188" rx="4" class="brandfill"/>
+<text x="662.5" y="178.0" text-anchor="middle">Grafana</text>
+<path d="M600 106L635 106" class="ln"/><path d="M628.0 109.4L635 106L628.0 102.6" class="ln"/>
+<path d="M600 174L635 174" class="ln"/><path d="M628.0 177.4L635 174L628.0 170.6" class="ln"/>
+<path d="M600 242L635 242" class="ln"/><path d="M628.0 245.4L635 242L628.0 238.6" class="ln"/>
+<text x="350" y="304" class="pt mut" text-anchor="middle">tudo atrás de login/SSO e rede privada; o Grafana é a única janela</text><text x="350" y="304" class="en mut" text-anchor="middle">everything behind login/SSO and a private network; Grafana is the only window</text>
+</svg></div><figcaption><span class="pt">Os apps falam só com um coletor; o armazenamento de cada sinal pode ser trocado sem mexer nos apps.</span><span class="en">Apps talk only to a collector; each signal's storage can be swapped without touching the apps.</span></figcaption></figure>
+<p><span class="pt">Os apps falam só com um <strong>coletor</strong> (OpenTelemetry Collector ou Grafana Alloy, rodando como agente em cada nó). É o coletor que decide para onde cada sinal vai, faz amostragem e remove dados sensíveis: trocar de fornecedor vira configuração, não reescrita de código.</span><span class="en">Apps talk only to a <strong>collector</strong> (OpenTelemetry Collector or Grafana Alloy, running as an agent on each node). The collector decides where each signal goes, samples and strips sensitive data: changing vendor becomes configuration, not a rewrite.</span></p>
+<h3><span class="pt">Caminho A: Kubernetes (kube-prometheus-stack)</span><span class="en">Path A: Kubernetes (kube-prometheus-stack)</span></h3>
+<p><span class="pt">Se você já roda <a href="../kubernetes/index.html">Kubernetes</a>, o jeito padrão é o Helm chart <code>kube-prometheus-stack</code>: instala Prometheus (via Operator), Alertmanager, Grafana, <code>node-exporter</code> e <code>kube-state-metrics</code> já configurados, com painéis prontos para o cluster. Os alvos são declarados com um objeto <code>ServiceMonitor</code>, em vez de editar o <code>prometheus.yml</code>:</span><span class="en">If you already run <a href="../kubernetes/index.html">Kubernetes</a>, the standard way is the <code>kube-prometheus-stack</code> Helm chart: it installs Prometheus (via the Operator), Alertmanager, Grafana, <code>node-exporter</code> and <code>kube-state-metrics</code> already wired, with cluster dashboards included. Targets are declared with a <code>ServiceMonitor</code> object instead of editing <code>prometheus.yml</code>:</span></p>
+<pre><code>kubectl create namespace monitoring
+kubectl -n monitoring create secret generic grafana-admin \
+  --from-literal=admin-user=admin --from-literal=admin-password="$(openssl rand -base64 24)"
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm install kps prometheus-community/kube-prometheus-stack -n monitoring \
+  --set grafana.admin.existingSecret=grafana-admin \
+  --set grafana.admin.userKey=admin-user --set grafana.admin.passwordKey=admin-password
+# read the password later with:
+# kubectl -n monitoring get secret grafana-admin -o jsonpath='{.data.admin-password}' | base64 -d</code></pre>
+<pre><code>apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: shop-api
+  namespace: monitoring
+  labels:
+    release: kps                  # must match the chart's serviceMonitorSelector
+spec:
+  namespaceSelector:
+    matchNames: [prod]
+  selector:
+    matchLabels:
+      app: shop-api               # the Service's labels
+  endpoints:
+    - port: http                  # the Service's port NAME
+      path: /metrics
+      interval: 30s</code></pre>
+<p><span class="pt">Para logs e traces, instale Loki e Tempo (charts da Grafana) e um Alloy como <em>DaemonSet</em> que lê os logs de cada nó. O app envia OTLP para o Collector do cluster (<code>OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring:4318</code>).</span><span class="en">For logs and traces, install Loki and Tempo (Grafana charts) and an Alloy as a <em>DaemonSet</em> reading each node's logs. The app sends OTLP to the cluster's Collector (<code>OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.monitoring:4318</code>).</span></p>
+<h3><span class="pt">Caminho B: AWS gerenciada</span><span class="en">Path B: managed AWS</span></h3>
+<p><span class="pt">Para não operar armazenamento, retenção e alta disponibilidade:</span><span class="en">To avoid operating storage, retention and high availability:</span></p>
+<ul><li><span class="pt"><strong>Amazon Managed Service for Prometheus (AMP):</strong> seu Prometheus (ou o Collector) faz <code>remote_write</code> para um <em>workspace</em> gerenciado e durável; você mantém PromQL e regras.</span><span class="en"><strong>Amazon Managed Service for Prometheus (AMP):</strong> your Prometheus (or the Collector) does <code>remote_write</code> to a managed, durable <em>workspace</em>; you keep PromQL and rules.</span></li><li><span class="pt"><strong>Amazon Managed Grafana (AMG):</strong> Grafana gerenciado com login por SSO (IAM Identity Center) e fontes AMP, CloudWatch e X-Ray.</span><span class="en"><strong>Amazon Managed Grafana (AMG):</strong> managed Grafana with SSO login (IAM Identity Center) and AMP, CloudWatch and X-Ray sources.</span></li><li><span class="pt"><strong>CloudWatch:</strong> o ALB já publica <code>TargetResponseTime</code> com percentis, sem instrumentar nada; Logs Insights consulta logs; <em>Application Signals</em> dá latência, erros e SLOs por serviço no EKS/ECS.</span><span class="en"><strong>CloudWatch:</strong> the ALB already publishes <code>TargetResponseTime</code> with percentiles, with no instrumentation; Logs Insights queries logs; <em>Application Signals</em> gives latency, errors and SLOs per service on EKS/ECS.</span></li><li><span class="pt"><strong>AWS Distro for OpenTelemetry (ADOT) / X-Ray:</strong> coletor suportado pela AWS que envia traces ao X-Ray e métricas ao AMP.</span><span class="en"><strong>AWS Distro for OpenTelemetry (ADOT) / X-Ray:</strong> an AWS-supported collector that ships traces to X-Ray and metrics to AMP.</span></li></ul>
+<pre><code># prometheus.yml: keep scraping locally, also copy everything to AMP (SigV4 = IAM-signed requests, no passwords)
+remote_write:
+  - url: https://aps-workspaces.us-east-1.amazonaws.com/workspaces/ws-REPLACE-ME/api/v1/remote_write
+    sigv4:
+      region: us-east-1           # credentials come from the pod/instance IAM role</code></pre>
+<pre><code># p95 and p99 of an ALB with zero instrumentation (CloudWatch extended statistics)
+aws cloudwatch get-metric-statistics --namespace AWS/ApplicationELB --metric-name TargetResponseTime \
+  --dimensions Name=LoadBalancer,Value=app/my-alb/0123456789abcdef \
+  --start-time "$(date -u -d '-1 hour' +%FT%TZ)" --end-time "$(date -u +%FT%TZ)" \
+  --period 300 --extended-statistics p95 p99</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">A conta IAM da escrita no AMP é mínima: <code>aps:RemoteWrite</code> no workspace, atrelada à role do Pod (<a href="../kubernetes/index.html">Pod Identity/IRSA</a>) ou da instância. Sem chaves de acesso no arquivo.</span><span class="en">The IAM permission to write to AMP is minimal: <code>aps:RemoteWrite</code> on the workspace, attached to the Pod's role (<a href="../kubernetes/index.html">Pod Identity/IRSA</a>) or the instance's. No access keys in the file.</span></div>
+<h3><span class="pt">Caminho C: uma VM com Docker Compose</span><span class="en">Path C: a single VM with Docker Compose</span></h3>
+<p><span class="pt">Para um projeto pequeno, o próprio Compose do laboratório serve em uma VM, <strong>depois dos ajustes de segurança abaixo</strong>: tire o <code>docker.sock</code>, ponha as portas atrás de um proxy reverso com HTTPS e login (ou de uma VPN/Tailscale), troque as senhas, defina retenção e faça backup dos volumes.</span><span class="en">For a small project, the lab's own Compose works on a VM, <strong>after the security changes below</strong>: remove <code>docker.sock</code>, put the ports behind a reverse proxy with HTTPS and login (or a VPN/Tailscale), change the passwords, set retention and back up the volumes.</span></p>
+<h3><span class="pt">Lista de verificação de produção</span><span class="en">Production checklist</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Área</span><span class="en">Area</span></th><th><span class="pt">O que fazer</span><span class="en">What to do</span></th></tr></thead><tbody><tr><td><span class="pt">Acesso</span><span class="en">Access</span></td><td><span class="pt">Grafana atrás de SSO/OIDC (nada de <code>admin/admin</code>), sem cadastro aberto, papéis de leitura para a equipe; Prometheus, Alertmanager, Loki e Jaeger <strong>nunca</strong> expostos à internet (sem autenticação própria forte, entregam seus dados e permitem consultas pesadas).</span><span class="en">Grafana behind SSO/OIDC (no <code>admin/admin</code>), no open sign-up, read roles for the team; Prometheus, Alertmanager, Loki and Jaeger <strong>never</strong> exposed to the internet (without strong built-in auth they hand over your data and allow heavy queries).</span></td></tr><tr><td><span class="pt">Rede</span><span class="en">Network</span></td><td><span class="pt"><code>/metrics</code> só na rede interna (NetworkPolicy/Security Group); o app responde <code>/metrics</code> em uma porta separada da pública quando possível; TLS entre componentes que cruzam redes.</span><span class="en"><code>/metrics</code> only on the internal network (NetworkPolicy/Security Group); the app serves <code>/metrics</code> on a port separate from the public one when possible; TLS between components crossing networks.</span></td></tr><tr><td><span class="pt">Segredos</span><span class="en">Secrets</span></td><td><span class="pt">Senhas e tokens (webhook do Slack, chave do PagerDuty) em Secrets Manager/Secret do Kubernetes, nunca no <code>docker-compose.yml</code> nem no Git.</span><span class="en">Passwords and tokens (Slack webhook, PagerDuty key) in Secrets Manager/Kubernetes Secrets, never in <code>docker-compose.yml</code> or Git.</span></td></tr><tr><td><span class="pt">Privilégio do coletor</span><span class="en">Collector privilege</span></td><td><span class="pt">Sem <code>docker.sock</code>: agente por nó (DaemonSet) com RBAC mínimo e leitura dos logs do nó. Nunca <code>privileged</code>.</span><span class="en">No <code>docker.sock</code>: a per-node agent (DaemonSet) with minimal RBAC and read access to the node's logs. Never <code>privileged</code>.</span></td></tr><tr><td><span class="pt">Dados sensíveis</span><span class="en">Sensitive data</span></td><td><span class="pt">Sem PII, senha ou token em logs, rótulos e atributos; redija no app e no Collector (processor de redação); cuide da LGPD/GDPR: retenção curta de logs com dados pessoais.</span><span class="en">No PII, password or token in logs, labels or attributes; redact in the app and in the Collector (a redaction processor); mind GDPR/LGPD: short retention for logs with personal data.</span></td></tr><tr><td><span class="pt">Cardinalidade e custo</span><span class="en">Cardinality and cost</span></td><td><span class="pt">Revise séries ativas (<code>prometheus_tsdb_head_series</code>); use <code>sample_limit</code> e <code>label_limit</code> no <code>scrape_config</code> para um app com bug não derrubar o Prometheus; rótulos sem ID.</span><span class="en">Review active series (<code>prometheus_tsdb_head_series</code>); use <code>sample_limit</code> and <code>label_limit</code> in <code>scrape_config</code> so a buggy app cannot take Prometheus down; no IDs in labels.</span></td></tr><tr><td><span class="pt">Retenção e disco</span><span class="en">Retention and disk</span></td><td><span class="pt">Defina retenção (o padrão do Prometheus é 15 dias; <code>--storage.tsdb.retention.time</code>); volume dedicado, com alerta de espaço; dados de longo prazo via <code>remote_write</code> (AMP, Mimir, Thanos).</span><span class="en">Set retention (Prometheus defaults to 15 days; <code>--storage.tsdb.retention.time</code>); dedicated volume with a disk-space alert; long-term data via <code>remote_write</code> (AMP, Mimir, Thanos).</span></td></tr><tr><td><span class="pt">Alta disponibilidade</span><span class="en">High availability</span></td><td><span class="pt">Dois Prometheus idênticos ou <code>remote_write</code> para um armazenamento gerenciado; Alertmanager em cluster (3 réplicas). Monitore o monitor: um alerta “sempre disparando” (<em>dead man's switch</em>) que avisa quando o alerta <em>deixa</em> de chegar.</span><span class="en">Two identical Prometheus instances or <code>remote_write</code> to managed storage; clustered Alertmanager (3 replicas). Monitor the monitor: an “always firing” alert (a <em>dead man's switch</em>) that tells you when alerts <em>stop</em> arriving.</span></td></tr><tr><td><span class="pt">Traces</span><span class="en">Traces</span></td><td><span class="pt">Amostragem: guarde de 1% a 10% por <em>head sampling</em>, ou 100% dos erros e dos lentos com <em>tail sampling</em> no Collector. Propague o <code>traceparent</code> entre serviços.</span><span class="en">Sampling: keep 1% to 10% with <em>head sampling</em>, or 100% of errors and slow ones with <em>tail sampling</em> in the Collector. Propagate <code>traceparent</code> between services.</span></td></tr><tr><td><span class="pt">Logs</span><span class="en">Logs</span></td><td><span class="pt">JSON estruturado com <code>trace_id</code>, nível e serviço; níveis <code>debug</code> desligados em produção; amostre logs repetitivos.</span><span class="en">Structured JSON with <code>trace_id</code>, level and service; <code>debug</code> level off in production; sample repetitive logs.</span></td></tr><tr><td><span class="pt">Alertas</span><span class="en">Alerts</span></td><td><span class="pt">Sintoma, não causa; <em>burn rate</em> de SLO em duas janelas; severidade (página × ticket); <em>runbook</em> em cada alerta; revisão mensal dos que mais dispararam.</span><span class="en">Symptom, not cause; SLO <em>burn rate</em> over two windows; severity (page × ticket); a <em>runbook</em> on every alert; monthly review of the noisiest.</span></td></tr><tr><td><span class="pt">Painéis como código</span><span class="en">Dashboards as code</span></td><td><span class="pt">Versione os JSON (provisioning, como no laboratório) ou use o provider Grafana do <a href="../terraform/index.html">Terraform</a>. Painel editado só na interface se perde.</span><span class="en">Version the JSON (provisioning, as in the lab) or use the Grafana provider of <a href="../terraform/index.html">Terraform</a>. A dashboard edited only in the UI gets lost.</span></td></tr><tr><td><span class="pt">Atualizações</span><span class="en">Upgrades</span></td><td><span class="pt">Fixe versões de imagem (nada de <code>:latest</code>) e atualize de propósito; leia as notas de versão (ex.: mudanças entre Prometheus 2 e 3).</span><span class="en">Pin image versions (no <code>:latest</code>) and upgrade on purpose; read release notes (e.g. changes between Prometheus 2 and 3).</span></td></tr><tr><td><span class="pt">Cultura</span><span class="en">Culture</span></td><td><span class="pt">Defina SLOs com o produto; revise o orçamento de erro toda semana; faça post-mortems sem culpa e transforme cada incidente em um alerta, painel ou teste novo.</span><span class="en">Define SLOs with product; review the error budget weekly; run blameless post-mortems and turn every incident into a new alert, dashboard or test.</span></td></tr></tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O erro mais comum não é técnico: é ter painéis lindos que ninguém olha e alertas demais que todos silenciam. Comece com <strong>poucos alertas que acordam por sintomas reais</strong>, um painel RED por serviço e um SLO combinado com o negócio. Dá para refinar depois; o contrário (apagar 200 alertas ruidosos) é muito mais difícil.</span><span class="en">The most common failure is not technical: it is beautiful dashboards nobody looks at and too many alerts everyone mutes. Start with <strong>a few alerts that wake people for real symptoms</strong>, one RED dashboard per service and an SLO agreed with the business. You can refine later; the reverse (deleting 200 noisy alerts) is far harder.</span></div>
+</section>
+<section class="content-section" aria-labelledby="cheat-obs">
+<h2 id="cheat-obs"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Uso</span><span class="en">I use</span></th></tr></thead><tbody><tr><td><span class="pt">ver o p95 por rota</span><span class="en">see p95 per route</span></td><td><span class="pt"><code>histogram_quantile(0.95, sum by (le, route) (rate(x_bucket[5m])))</code></span><span class="en"><code>histogram_quantile(0.95, sum by (le, route) (rate(x_bucket[5m])))</code></span></td></tr><tr><td><span class="pt">requisições por segundo</span><span class="en">requests per second</span></td><td><span class="pt"><code>sum(rate(x_count[5m]))</code></span><span class="en"><code>sum(rate(x_count[5m]))</code></span></td></tr><tr><td><span class="pt">% de erros</span><span class="en">% errors</span></td><td><span class="pt"><code>sum(rate(x_count{status_code=~"5.."}[5m])) / sum(rate(x_count[5m]))</code></span><span class="en"><code>sum(rate(x_count{status_code=~"5.."}[5m])) / sum(rate(x_count[5m]))</code></span></td></tr><tr><td><span class="pt">média (para comparar)</span><span class="en">average (to compare)</span></td><td><span class="pt"><code>rate(x_sum[5m]) / rate(x_count[5m])</code></span><span class="en"><code>rate(x_sum[5m]) / rate(x_count[5m])</code></span></td></tr><tr><td><span class="pt">todo mundo está sendo coletado?</span><span class="en">is everything being scraped?</span></td><td><span class="pt"><code>up == 0</code> (lista o que caiu)</span><span class="en"><code>up == 0</code> (lists what is down)</span></td></tr><tr><td><span class="pt">orçamento de erro de 99,9%/30 dias</span><span class="en">error budget of 99.9%/30 days</span></td><td><span class="pt">0,1% × 43.200 min ≈ 43 min</span><span class="en">0.1% × 43,200 min ≈ 43 min</span></td></tr><tr><td><span class="pt">achar o trace lento</span><span class="en">find the slow trace</span></td><td><span class="pt">Jaeger/Tempo: serviço + operação + duração mínima</span><span class="en">Jaeger/Tempo: service + operation + min duration</span></td></tr><tr><td><span class="pt">achar o erro</span><span class="en">find the error</span></td><td><span class="pt">Loki: <code>{service="app"} |= "error"</code>; clique no <code>trace_id</code></span><span class="en">Loki: <code>{service="app"} |= "error"</code>; click the <code>trace_id</code></span></td></tr><tr><td><span class="pt">RED / USE / golden signals</span><span class="en">RED / USE / golden signals</span></td><td><span class="pt">RED por serviço; USE por recurso; latência, tráfego, erros, saturação</span><span class="en">RED per service; USE per resource; latency, traffic, errors, saturation</span></td></tr><tr><td><span class="pt">evitar derrubar o Prometheus</span><span class="en">avoid taking Prometheus down</span></td><td><span class="pt">rótulos com poucos valores; nunca ID de usuário/requisição/URL crua</span><span class="en">labels with few values; never user/request IDs or raw URLs</span></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Qual a diferença entre monitoramento e observabilidade? O que cada um dos três sinais responde?</span><span class="en">What is the difference between monitoring and observability? What does each of the three signals answer?</span></li><li><span class="pt">O que significa p99 = 2 s? Por que a média não mostra isso?</span><span class="en">What does p99 = 2 s mean? Why does the average not show it?</span></li><li><span class="pt">Por que um p99 de 1% de lentidão por chamada vira 63% das páginas lentas com 100 chamadas?</span><span class="en">Why does a 1% per-call tail become 63% slow pages with 100 calls?</span></li><li><span class="pt">Por que não se faz a média de percentis de vários servidores? Como se calcula o certo?</span><span class="en">Why do you not average percentiles across servers? How do you compute it correctly?</span></li><li><span class="pt">Por que usar Histogram e não Summary para latência? Como a escolha dos buckets afeta o p99?</span><span class="en">Why use a Histogram rather than a Summary for latency? How does bucket choice affect p99?</span></li><li><span class="pt">O que é cardinalidade, e por que <code>user_id</code> como rótulo é um erro?</span><span class="en">What is cardinality, and why is <code>user_id</code> as a label a mistake?</span></li><li><span class="pt">Que alertas valem a pena? Por que alertar em sintomas e não em causas?</span><span class="en">Which alerts are worth having? Why alert on symptoms rather than causes?</span></li><li><span class="pt">Dado um alerta de p99 alto, descreva o caminho até a causa (métrica → trace → log).</span><span class="en">Given a high-p99 alert, describe the path to the cause (metric → trace → log).</span></li><li><span class="pt">Quando escolher Elasticsearch/OpenSearch no lugar de (ou junto com) Loki? E o CloudWatch?</span><span class="en">When would you choose Elasticsearch/OpenSearch instead of (or alongside) Loki? And CloudWatch?</span></li><li><span class="pt">Cite cinco cuidados de segurança ao colocar a observabilidade em produção.</span><span class="en">Name five security precautions when taking observability to production.</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://prometheus.io/docs/introduction/overview/" rel="noopener">Prometheus docs: Overview and architecture</a></li>
+<li><a href="https://prometheus.io/docs/concepts/metric_types/" rel="noopener">Prometheus docs: Metric types</a></li>
+<li><a href="https://prometheus.io/docs/practices/histograms/" rel="noopener">Prometheus docs: Histograms and summaries</a></li>
+<li><a href="https://prometheus.io/docs/prometheus/latest/querying/basics/" rel="noopener">Prometheus docs: Querying basics (PromQL)</a></li>
+<li><a href="https://prometheus.io/docs/practices/alerting/" rel="noopener">Prometheus docs: Alerting best practices</a></li>
+<li><a href="https://prometheus.io/docs/practices/naming/" rel="noopener">Prometheus docs: Metric and label naming</a></li>
+<li><a href="https://grafana.com/docs/grafana/latest/administration/provisioning/" rel="noopener">Grafana docs: Provisioning</a></li>
+<li><a href="https://grafana.com/docs/loki/latest/" rel="noopener">Grafana Loki docs</a> · <a href="https://grafana.com/docs/alloy/latest/" rel="noopener">Grafana Alloy docs</a></li>
+<li><a href="https://opentelemetry.io/docs/" rel="noopener">OpenTelemetry docs</a> · <a href="https://opentelemetry.io/docs/languages/js/getting-started/nodejs/" rel="noopener">Node.js getting started</a></li>
+<li><a href="https://www.jaegertracing.io/docs/" rel="noopener">Jaeger docs</a></li>
+<li><a href="https://grafana.com/docs/k6/latest/using-k6/thresholds/" rel="noopener">k6 docs: Thresholds</a></li>
+<li><a href="https://www.elastic.co/docs/reference/aggregations/search-aggregations-metrics-percentile-aggregation" rel="noopener">Elasticsearch docs: Percentiles aggregation</a></li>
+<li><a href="https://sre.google/sre-book/monitoring-distributed-systems/" rel="noopener">Google SRE Book: Monitoring Distributed Systems (the four golden signals)</a></li>
+<li><a href="https://sre.google/workbook/alerting-on-slos/" rel="noopener">Google SRE Workbook: Alerting on SLOs</a></li>
+<li><a href="https://research.google/pubs/the-tail-at-scale/" rel="noopener">Dean and Barroso: The Tail at Scale</a></li>
+<li><a href="https://docs.aws.amazon.com/prometheus/latest/userguide/what-is-Amazon-Managed-Service-Prometheus.html" rel="noopener">AWS: Amazon Managed Service for Prometheus</a></li>
+<li><a href="https://docs.aws.amazon.com/grafana/latest/userguide/what-is-Amazon-Managed-Service-Grafana.html" rel="noopener">AWS: Amazon Managed Grafana</a></li>
+<li><a href="https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/cloudwatch_concepts.html" rel="noopener">AWS: CloudWatch concepts (percentiles)</a></li>
+<li><a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack" rel="noopener">kube-prometheus-stack Helm chart</a></li>
+</ul></div>
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#8a5cf0" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#8a5cf0" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#8a5cf0"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
