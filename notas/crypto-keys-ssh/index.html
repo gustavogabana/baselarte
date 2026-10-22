@@ -1,0 +1,1065 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="crypto.metaTitle">Cryptography, keys and SSH: how public and private keys work | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:crypto.metaDescription" content="Hashes, symmetric and asymmetric encryption, digital signatures, Diffie-Hellman, TLS and certificates, private keys kept on the device (passkeys), how the session follows sign-in, and SSH step by step, with 16 diagrams.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/crypto-keys-ssh/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/crypto-keys-ssh/">
+  <meta property="og:title" data-i18n-attributes="content:crypto.metaTitle" content="Cryptography, keys and SSH: how public and private keys work | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:crypto.metaDescription" content="Hashes, symmetric and asymmetric encryption, digital signatures, Diffie-Hellman, TLS and certificates, private keys kept on the device (passkeys), how the session follows sign-in, and SSH step by step, with 16 diagrams.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:crypto.metaTitle" content="Cryptography, keys and SSH: how public and private keys work | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:crypto.metaDescription" content="Hashes, symmetric and asymmetric encryption, digital signatures, Diffie-Hellman, TLS and certificates, private keys kept on the device (passkeys), how the session follows sign-in, and SSH step by step, with 16 diagrams.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+          <li><a href="../auth-sso-oauth-oidc/index.html"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
+          <li><a href="../crypto-keys-ssh/index.html" aria-current="page"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
+        <ul data-sidebar-group>
+          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
+          <li><a href="../llm-agents-open-source/index.html"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
+        <ul data-sidebar-group>
+          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#tldr"><span class="pt">Resumo (TL;DR)</span><span class="en">Summary (TL;DR)</span></a></li>
+        <li><a href="#basics"><span class="pt">Três promessas e um ingrediente</span><span class="en">Three promises and one ingredient</span></a></li>
+        <li><a href="#symmetric"><span class="pt">Chave simétrica: um segredo, dois lados</span><span class="en">Symmetric key: one secret, two sides</span></a></li>
+        <li><a href="#asymmetric"><span class="pt">Chaves pública e privada</span><span class="en">Public and private keys</span></a></li>
+        <li><a href="#signature"><span class="pt">Assinatura digital passo a passo</span><span class="en">Digital signature step by step</span></a></li>
+        <li><a href="#tls"><span class="pt">Juntando tudo: troca de chaves, TLS e certificados</span><span class="en">Putting it together: key exchange, TLS and certificates</span></a></li>
+        <li><a href="#device"><span class="pt">Apps com a chave privada no aparelho</span><span class="en">Apps with the private key on the device</span></a></li>
+        <li><a href="#session"><span class="pt">E depois do login: a sessão</span><span class="en">After sign-in: the session</span></a></li>
+        <li><a href="#ssh"><span class="pt">Como o SSH funciona</span><span class="en">How SSH works</span></a></li>
+        <li><a href="#where"><span class="pt">Onde isso aparece no dia a dia</span><span class="en">Where this shows up day to day</span></a></li>
+        <li><a href="#glossary"><span class="pt">Glossário</span><span class="en">Glossary</span></a></li>
+        <li><a href="#errors"><span class="pt">Erros comuns e como resolver</span><span class="en">Common errors and how to fix them</span></a></li>
+        <li><a href="#cheat-cry"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></li></ol></nav>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="crypto.kicker">Study guide</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="crypto.heroTitle">Cryptography and keys: <em>public, private, sessions and SSH.</em></h1>
+      <p class="hero-lede" data-i18n="crypto.heroLede">How encryption, signatures and key pairs work, how apps keep a private key on the device, how the session carries on from there, and what SSH does step by step.</p>
+    </section>
+        <section class="content-section" aria-labelledby="tldr">
+          <h2 id="tldr"><span class="pt">Resumo (TL;DR)</span><span class="en">Summary (TL;DR)</span></h2>
+          <div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Onde esta nota se encaixa: é o alicerce de matemática e chaves por baixo de login, HTTPS e SSH. O mapa de identidade (SSO, OAuth, OIDC) está em <a href="../auth-sso-oauth-oidc/index.html">Login e autenticação</a>; sessões e cookies do lado do app, em <a href="../web-app-security/index.html">Apps web seguros</a>; o uso prático com chaves de curta duração, em <a href="../github-aws-oidc/index.html">GitHub para AWS com OIDC</a>.</span><span class="en">Where this note fits: it is the math-and-keys foundation under sign-in, HTTPS and SSH. The identity map (SSO, OAuth, OIDC) is in <a href="../auth-sso-oauth-oidc/index.html">Sign-in and authentication</a>; sessions and cookies from the app’s side, in <a href="../web-app-security/index.html">Secure web apps</a>; the practical use with short-lived credentials, in <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a>.</span></div>
+          <ol class="ds-steps">
+            <li><span class="pt"><b>Chave simétrica</b>: um segredo só, igual nos dois lados (rápido, mas difícil de combinar). <b>Par de chaves</b>: uma <b>pública</b> (todos podem ter) e uma <b>privada</b> (só você). O que uma fecha, só a outra abre.</span><span class="en"><b>Symmetric key</b>: a single secret, the same on both sides (fast, but hard to agree on). <b>Key pair</b>: a <b>public</b> key (everyone may have it) and a <b>private</b> key (only you). What one locks, only the other unlocks.</span></li>
+            <li><span class="pt">Com o par você <b>cifra</b> (pública cifra, privada decifra) e <b>assina</b> (privada assina, pública verifica). Na prática, tudo combina os dois mundos: o par acorda uma chave simétrica e a simétrica protege os dados (TLS, SSH).</span><span class="en">With the pair you <b>encrypt</b> (public encrypts, private decrypts) and <b>sign</b> (private signs, public verifies). In practice everything mixes both worlds: the pair agrees on a symmetric key and the symmetric key protects the data (TLS, SSH).</span></li>
+            <li><span class="pt">Apps com a chave privada no aparelho (passkeys, bancos, autenticadores) provam quem você é <b>assinando um desafio</b>; o servidor só guarda a pública. Depois da prova, uma <b>sessão</b> (cookie ou token) evita repetir a assinatura a cada requisição. O <b>SSH</b> usa o mesmo truque: o servidor se prova a você, depois você se prova a ele.</span><span class="en">Apps with the private key on the device (passkeys, banks, authenticators) prove who you are by <b>signing a challenge</b>; the server only keeps the public key. After the proof, a <b>session</b> (cookie or token) avoids repeating the signature on every request. <b>SSH</b> uses the same trick: the server proves itself to you, then you prove yourself to it.</span></li>
+          </ol>
+        </section>
+
+        <section class="content-section" aria-labelledby="basics">
+          <h2 id="basics"><span class="pt">Três promessas e um ingrediente</span><span class="en">Three promises and one ingredient</span></h2>
+          <p><span class="pt">Criptografia não é uma coisa só: é um conjunto de ferramentas que entregam promessas diferentes. Saber qual promessa você quer evita usar a ferramenta errada.</span><span class="en">Cryptography is not one thing: it is a toolbox whose tools deliver different promises. Knowing which promise you want avoids using the wrong tool.</span></p>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Promessa</span><span class="en">Promise</span></th><th><span class="pt">Significa</span><span class="en">Means</span></th><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt"><b>Sigilo</b> (confidencialidade)</span><span class="en"><b>Secrecy</b> (confidentiality)</span></td><td><span class="pt">Só quem deve consegue ler.</span><span class="en">Only the intended people can read it.</span></td><td><span class="pt">Cifra (simétrica ou assimétrica)</span><span class="en">Cipher (symmetric or asymmetric)</span></td></tr>
+                <tr><td><span class="pt"><b>Integridade</b></span><span class="en"><b>Integrity</b></span></td><td><span class="pt">Ninguém alterou o dado no caminho.</span><span class="en">Nobody changed the data on the way.</span></td><td><span class="pt">Hash, MAC, assinatura</span><span class="en">Hash, MAC, signature</span></td></tr>
+                <tr><td><span class="pt"><b>Autenticidade</b></span><span class="en"><b>Authenticity</b></span></td><td><span class="pt">Veio mesmo de quem diz que enviou.</span><span class="en">It really came from who says sent it.</span></td><td><span class="pt">Assinatura digital, certificado</span><span class="en">Digital signature, certificate</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="pt">O ingrediente: o hash</span><span class="en">The ingredient: the hash</span></h3>
+          <p><span class="pt">Um <b>hash</b> transforma qualquer dado em um resumo de tamanho fixo. Mesma entrada, mesmo resumo; mudou um caractere, o resumo muda por inteiro; e não há caminho de volta. Ele não esconde nada (não é cifra): serve de impressão digital, e por isso aparece dentro das assinaturas, dos certificados e das senhas guardadas.</span><span class="en">A <b>hash</b> turns any data into a fixed-size digest. Same input, same digest; change one character and the whole digest changes; and there is no way back. It hides nothing (it is not a cipher): it works as a fingerprint, which is why it shows up inside signatures, certificates and stored passwords.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 210" role="img" aria-label="Um hash como impressão digital / A hash as a fingerprint" style="min-width:560px">
+<path d="M20 30L39 30L48 39L48 66L20 66Z" class="ln fillsoft"/>
+<path d="M26 46L42 46" class="ln"/>
+<path d="M26 54L42 54" class="ln"/>
+<path d="M26 62L42 62" class="ln"/>
+<rect x="58" y="30" width="150" height="36" rx="4" class="ln"/>
+<text x="133.0" y="52.5" class="mono" text-anchor="middle">Olá, mundo</text>
+<path d="M208 48L330 48" class="ln"/>
+<path d="M322.0 51.6L330 48L322.0 44.4" class="ln"/>
+<text x="269" y="42" class="pt mut mono" text-anchor="middle">SHA-256</text><text x="269" y="42" class="en mut mono" text-anchor="middle">SHA-256</text>
+<rect x="330" y="30" width="350" height="36" rx="4" class="ln fillsoft"/>
+<text x="505.0" y="52.5" class="mono" text-anchor="middle">b8a0136dcb2459c3070d390239f18258248d9f9d…</text>
+<path d="M20 100L39 100L48 109L48 136L20 136Z" class="ln fillsoft"/>
+<path d="M26 116L42 116" class="ln"/>
+<path d="M26 124L42 124" class="ln"/>
+<path d="M26 132L42 132" class="ln"/>
+<rect x="58" y="100" width="150" height="36" rx="4" class="ln"/>
+<text x="133.0" y="122.5" class="mono" text-anchor="middle">Olá, mundo!</text>
+<path d="M208 118L330 118" class="ln"/>
+<path d="M322.0 121.6L330 118L322.0 114.4" class="ln"/>
+<text x="269" y="112" class="pt mut mono" text-anchor="middle">SHA-256</text><text x="269" y="112" class="en mut mono" text-anchor="middle">SHA-256</text>
+<rect x="330" y="100" width="350" height="36" rx="4" class="ln fillsoft"/>
+<text x="505.0" y="122.5" class="mono" text-anchor="middle">9583b013baa520d3a893c4270d0c67732d7ef176…</text>
+<text x="505" y="78" class="pt mut" text-anchor="middle">↑ muda 1 caractere → o resultado inteiro muda</text><text x="505" y="78" class="en mut" text-anchor="middle">↑ change 1 character → the whole result changes</text>
+<text x="20" y="168" class="pt" text-anchor="start">Mesma entrada → mesmo hash</text><text x="20" y="168" class="en" text-anchor="start">Same input → same hash</text>
+<text x="250" y="168" class="pt" text-anchor="start">Entrada de qualquer tamanho → saída de tamanho fixo (256 bits)</text><text x="250" y="168" class="en" text-anchor="start">Input of any size → fixed-size output (256 bits)</text>
+<text x="20" y="194" class="pt mut" text-anchor="start">Mão única: do hash não se volta ao texto. É uma impressão digital, não uma cifra.</text><text x="20" y="194" class="en mut" text-anchor="start">One way: you cannot go from hash back to text. It is a fingerprint, not a cipher.</text>
+</svg></div><figcaption><span class="pt">Hash é a impressão digital de um dado. Os valores acima são SHA-256 reais (truncados na tela).</span><span class="en">A hash is the fingerprint of a piece of data. The values above are real SHA-256 digests (truncated on screen).</span></figcaption></figure>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Três palavras que não são sinônimos.</b> <i>Cifrar</i> esconde com uma chave e dá para desfazer; <i>hash</i> resume e não dá para desfazer; <i>codificar</i> (Base64, URL-encoding) só muda a representação e não protege nada. Um JWT, por exemplo, é Base64URL: qualquer um lê; o que o protege é a assinatura.</span><span class="en"><b>Three words that are not synonyms.</b> <i>Encrypting</i> hides with a key and can be undone; <i>hashing</i> summarizes and cannot be undone; <i>encoding</i> (Base64, URL-encoding) only changes the representation and protects nothing. A JWT, for example, is Base64URL: anyone can read it; what protects it is the signature.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="symmetric">
+          <h2 id="symmetric"><span class="pt">Chave simétrica: um segredo, dois lados</span><span class="en">Symmetric key: one secret, two sides</span></h2>
+          <p><span class="pt">É a ideia mais antiga: a mesma chave cifra e decifra. Pense em um cofre com uma só chave, da qual existem duas cópias.</span><span class="en">It is the oldest idea: the same key encrypts and decrypts. Think of a safe with a single key, of which there are two copies.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 240" role="img" aria-label="Criptografia simétrica: a mesma chave cifra e decifra / Symmetric cryptography: the same key encrypts and decrypts" style="min-width:560px">
+<circle cx="45" cy="60" r="7" class="ln fillsoft"/>
+<path d="M32 84C32 69 58 69 58 84Z" class="ln fillsoft"/>
+<text x="45" y="110" class="pt mut" text-anchor="middle">Alice</text><text x="45" y="110" class="en mut" text-anchor="middle">Alice</text>
+<circle cx="655" cy="60" r="7" class="ln fillsoft"/>
+<path d="M642 84C642 69 668 69 668 84Z" class="ln fillsoft"/>
+<text x="655" y="110" class="pt mut" text-anchor="middle">Bob</text><text x="655" y="110" class="en mut" text-anchor="middle">Bob</text>
+<rect x="85" y="40" width="82" height="40" rx="4" class="ln"/>
+<text x="126.0" y="56.0" class="pt" text-anchor="middle">texto</text><text x="126.0" y="56.0" class="en" text-anchor="middle">text</text>
+<text x="126.0" y="73.0" class="pt" text-anchor="middle">"oi"</text><text x="126.0" y="73.0" class="en" text-anchor="middle">"hi"</text>
+<path d="M167 60L205 60" class="ln"/>
+<path d="M197.0 63.6L205 60L197.0 56.4" class="ln"/>
+<rect x="205" y="40" width="90" height="40" rx="4" class="ln fillsoft"/>
+<text x="250.0" y="56.0" class="pt" text-anchor="middle">cifrar</text><text x="250.0" y="56.0" class="en" text-anchor="middle">encrypt</text>
+<text x="250.0" y="73.0" class="mono" text-anchor="middle">AES</text>
+<path d="M295 60L320 60" class="ln"/>
+<path d="M312.0 63.6L320 60L312.0 56.4" class="ln"/>
+<rect x="320" y="40" width="100" height="40" rx="4" class="ln"/>
+<text x="370.0" y="56.0" class="pt" text-anchor="middle">cifrado</text><text x="370.0" y="56.0" class="en" text-anchor="middle">ciphertext</text>
+<text x="370.0" y="73.0" class="mono" text-anchor="middle">x9#kQ2…</text>
+<path d="M420 60L445 60" class="ln"/>
+<path d="M437.0 63.6L445 60L437.0 56.4" class="ln"/>
+<rect x="445" y="40" width="90" height="40" rx="4" class="ln fillsoft"/>
+<text x="490.0" y="56.0" class="pt" text-anchor="middle">decifrar</text><text x="490.0" y="56.0" class="en" text-anchor="middle">decrypt</text>
+<text x="490.0" y="73.0" class="mono" text-anchor="middle">AES</text>
+<path d="M535 60L555 60" class="ln"/>
+<path d="M547.0 63.6L555 60L547.0 56.4" class="ln"/>
+<rect x="555" y="40" width="60" height="40" rx="4" class="ln"/>
+<text x="585.0" y="56.0" class="pt" text-anchor="middle">texto</text><text x="585.0" y="56.0" class="en" text-anchor="middle">text</text>
+<text x="585.0" y="73.0" class="pt" text-anchor="middle">"oi"</text><text x="585.0" y="73.0" class="en" text-anchor="middle">"hi"</text>
+<circle cx="237" cy="150" r="8" class="fill"/><circle cx="237" cy="150" r="3" class="inv"/>
+<path d="M245 150L267 150M261 150L261 156M267 150L267 156" class="ln"/>
+<circle cx="477" cy="150" r="8" class="fill"/><circle cx="477" cy="150" r="3" class="inv"/>
+<path d="M485 150L507 150M501 150L501 156M507 150L507 156" class="ln"/>
+<path d="M250 134L250 82" class="ln"/>
+<path d="M253.6 90.0L250 82L246.4 90.0" class="ln"/>
+<path d="M490 134L490 82" class="ln"/>
+<path d="M493.6 90.0L490 82L486.4 90.0" class="ln"/>
+<path d="M290 150L450 150" class="ln dash"/>
+<path d="M442.0 153.6L450 150L442.0 146.4" class="ln"/>
+<path d="M298.0 146.4L290 150L298.0 153.6" class="ln"/>
+<text x="370" y="144" class="pt" text-anchor="middle">a MESMA chave nos dois lados</text><text x="370" y="144" class="en" text-anchor="middle">the SAME key on both sides</text>
+<text x="370" y="170" class="pt mut" text-anchor="middle">(precisa ser combinada antes, em segredo)</text><text x="370" y="170" class="en mut" text-anchor="middle">(must be agreed beforehand, in secret)</text>
+<text x="20" y="206" class="pt mut" text-anchor="start">Rápido e simples, mas: como entregar a chave sem ninguém copiar?</text><text x="20" y="206" class="en mut" text-anchor="start">Fast and simple, but: how do you hand over the key without anyone copying it?</text>
+<text x="20" y="226" class="pt" text-anchor="start">Para n pessoas conversarem em pares são n(n−1)/2 chaves: 10 pessoas → 45 · 100 pessoas → 4.950.</text><text x="20" y="226" class="en" text-anchor="start">For n people to talk in pairs you need n(n−1)/2 keys: 10 people → 45 · 100 people → 4,950.</text>
+</svg></div><figcaption><span class="pt">Na simétrica há um só segredo compartilhado. O problema deixa de ser a matemática e passa a ser a distribuição da chave.</span><span class="en">Symmetric encryption has a single shared secret. The problem stops being the math and becomes distributing the key.</span></figcaption></figure>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Algoritmo</span><span class="en">Algorithm</span></th><th><span class="pt">Para que serve</span><span class="en">What it is for</span></th><th><span class="pt">Nota</span><span class="en">Note</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>AES</b> (128/256 bits)</td><td><span class="pt">Padrão de fato para cifrar dados: arquivos, discos, TLS.</span><span class="en">The de facto standard for encrypting data: files, disks, TLS.</span></td><td><span class="pt">Usado em modos autenticados como <b>GCM</b>, que também detectam alteração.</span><span class="en">Used in authenticated modes such as <b>GCM</b>, which also detect tampering.</span></td></tr>
+                <tr><td><b>ChaCha20-Poly1305</b></td><td><span class="pt">Alternativa moderna ao AES, rápida mesmo sem hardware dedicado (celulares).</span><span class="en">Modern alternative to AES, fast even without dedicated hardware (phones).</span></td><td><span class="pt">Presente no TLS 1.3 e no SSH.</span><span class="en">Present in TLS 1.3 and SSH.</span></td></tr>
+                <tr><td><b>HMAC</b> (ex.: HMAC-SHA-256)</td><td><span class="pt">Não cifra: prova integridade e autoria entre quem divide o segredo.</span><span class="en">Does not encrypt: proves integrity and origin between parties that share the secret.</span></td><td><span class="pt">É como as requisições da AWS (SigV4) são assinadas com a secret key.</span><span class="en">It is how AWS requests (SigV4) are signed with the secret key.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O limite da simétrica não é a segurança, é a logística.</b> Para duas pessoas que nunca se encontraram, como combinar a chave sem que alguém a copie no caminho? E com muitas pessoas, o número de chaves explode. A criptografia assimétrica existe para resolver isso.</span><span class="en"><b>The limit of symmetric is not security, it is logistics.</b> For two people who never met, how do you agree on the key without someone copying it on the way? And with many people, the number of keys explodes. Asymmetric cryptography exists to solve this.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="asymmetric">
+          <h2 id="asymmetric"><span class="pt">Chaves pública e privada</span><span class="en">Public and private keys</span></h2>
+          <p><span class="pt">Aqui a chave vem em <b>par</b>, gerado junto por uma conta matemática: o que uma chave faz, só a outra desfaz. Uma você espalha (<b>pública</b>); a outra nunca sai de você (<b>privada</b>). Descobrir a privada a partir da pública é inviável com os tamanhos usados hoje.</span><span class="en">Here the key comes as a <b>pair</b>, generated together by a mathematical operation: what one key does, only the other undoes. You spread one (<b>public</b>); the other never leaves you (<b>private</b>). Deriving the private key from the public one is infeasible at today’s key sizes.</span></p>
+          <div class="callout good"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Analogia do cadeado.</b> Você fabrica milhares de cadeados abertos idênticos e os distribui (chave pública). Qualquer um pode fechar um cadeado numa caixa e mandar para você. Só você tem a chave que abre (chave privada). Quem distribuiu cadeados não perdeu segurança alguma.</span><span class="en"><b>Padlock analogy.</b> You make thousands of identical open padlocks and hand them out (public key). Anyone can snap one shut on a box and send it to you. Only you have the key that opens it (private key). Handing out padlocks cost you no security at all.</span></div>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 288" role="img" aria-label="Par de chaves: Alice cifra com a pública, só Bob decifra com a privada / Key pair: Alice encrypts with the public key, only Bob decrypts with the private key" style="min-width:560px">
+<rect x="20" y="20" width="210" height="132" rx="4" class="ln"/>
+<text x="125" y="42" class="pt" text-anchor="middle" style="font-weight:600">Bob</text><text x="125" y="42" class="en" text-anchor="middle" style="font-weight:600">Bob</text>
+<circle cx="45" cy="78" r="8" class="fill"/><circle cx="45" cy="78" r="3" class="inv"/>
+<path d="M53 78L75 78M69 78L69 84M75 78L75 84" class="ln"/>
+<text x="94" y="82" class="pt" text-anchor="start">privada: só Bob</text><text x="94" y="82" class="en" text-anchor="start">private: Bob only</text>
+<circle cx="45" cy="122" r="8" class="brandfill"/><circle cx="45" cy="122" r="3" class="inv"/>
+<path d="M53 122L75 122M69 122L69 128M75 122L75 128" class="ln"/>
+<text x="94" y="126" class="pt" text-anchor="start">pública: para todos</text><text x="94" y="126" class="en" text-anchor="start">public: for everyone</text>
+<rect x="470" y="20" width="210" height="132" rx="4" class="ln"/>
+<text x="575" y="42" class="pt" text-anchor="middle" style="font-weight:600">Alice</text><text x="575" y="42" class="en" text-anchor="middle" style="font-weight:600">Alice</text>
+<path d="M490 62L511 62L520 71L520 100L490 100Z" class="ln fillsoft"/>
+<path d="M496 78L514 78" class="ln"/>
+<path d="M496 86L514 86" class="ln"/>
+<path d="M496 94L514 94" class="ln"/>
+<text x="530" y="85" class="pt" text-anchor="start">quer enviar "oi"</text><text x="530" y="85" class="en" text-anchor="start">wants to send "hi"</text>
+<circle cx="495" cy="126" r="8" class="brandfill"/><circle cx="495" cy="126" r="3" class="inv"/>
+<path d="M503 126L525 126M519 126L519 132M525 126L525 132" class="ln"/>
+<text x="544" y="130" class="pt mut" text-anchor="start">cópia da pública</text><text x="544" y="130" class="en mut" text-anchor="start">copy of the public one</text>
+<path d="M232 122L468 122" class="ln dash"/>
+<path d="M460.0 125.6L468 122L460.0 118.4" class="ln"/>
+<circle cx="350" cy="98" r="9" class="ln fillsoft"/><text x="350" y="102" class="mono" text-anchor="middle">1</text>
+<text x="350" y="82" class="pt" text-anchor="middle">envia a chave pública</text><text x="350" y="82" class="en" text-anchor="middle">sends the public key</text>
+<text x="350" y="144" class="pt mut" text-anchor="middle">(por qualquer canal, até público)</text><text x="350" y="144" class="en mut" text-anchor="middle">(over any channel, even public)</text>
+<path d="M575 154L575 232L125 232L125 156" class="ln"/>
+<path d="M128.6 164.0L125 156L121.4 164.0" class="ln"/>
+<rect x="310" y="218" width="130" height="28" rx="4" class="ln fillsoft"/>
+<text x="375.0" y="236.5" class="mono" text-anchor="middle">x9#kQ2…</text>
+<circle cx="575" cy="190" r="9" class="ln fillsoft"/><text x="575" y="194" class="mono" text-anchor="middle">2</text>
+<text x="562" y="194" class="pt" text-anchor="end">cifra com a pública de Bob</text><text x="562" y="194" class="en" text-anchor="end">encrypts with Bob’s public key</text>
+<circle cx="125" cy="190" r="9" class="ln fillsoft"/><text x="125" y="194" class="mono" text-anchor="middle">3</text>
+<text x="138" y="194" class="pt" text-anchor="start">só a privada de Bob decifra</text><text x="138" y="194" class="en" text-anchor="start">only Bob’s private key decrypts</text>
+<rect x="565" y="160" width="20" height="15" rx="2" class="ln fillsoft"/>
+<path d="M569 160L569 154A6 6 0 0 1 581 154L581 160" class="ln"/>
+<text x="375" y="272" class="pt mut" text-anchor="middle">Quem intercepta o canal (Eve) vê só x9#kQ2…: a pública não decifra o que ela mesma cifrou.</text><text x="375" y="272" class="en mut" text-anchor="middle">Whoever taps the channel (Eve) sees only x9#kQ2…: the public key cannot decrypt what it encrypted.</text>
+</svg></div><figcaption><span class="pt">Pense num cadeado aberto: Bob distribui cópias à vontade, qualquer um fecha, mas só ele tem a chave que abre.</span><span class="en">Think of an open padlock: Bob hands out copies freely, anyone can snap one shut, but only he holds the key that opens it.</span></figcaption></figure>
+          <h3><span class="pt">Dois usos opostos do mesmo par</span><span class="en">Two opposite uses of the same pair</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 252" role="img" aria-label="Os dois usos de um par de chaves / The two uses of a key pair" style="min-width:560px">
+<rect x="10" y="10" width="330" height="232" rx="4" class="ln"/>
+<text x="175" y="34" class="pt" text-anchor="middle" style="font-weight:600">Cifrar → sigilo</text><text x="175" y="34" class="en" text-anchor="middle" style="font-weight:600">Encrypt → secrecy</text>
+<rect x="360" y="10" width="330" height="232" rx="4" class="ln"/>
+<text x="525" y="34" class="pt" text-anchor="middle" style="font-weight:600">Assinar → autenticidade</text><text x="525" y="34" class="en" text-anchor="middle" style="font-weight:600">Sign → authenticity</text>
+<rect x="30" y="56" width="100" height="38" rx="4" class="ln"/>
+<text x="80.0" y="79.5" class="pt" text-anchor="middle">Remetente</text><text x="80.0" y="79.5" class="en" text-anchor="middle">Sender</text>
+<rect x="220" y="56" width="100" height="38" rx="4" class="ln"/>
+<text x="270.0" y="79.5" class="pt" text-anchor="middle">Destinatário</text><text x="270.0" y="79.5" class="en" text-anchor="middle">Recipient</text>
+<path d="M130 75L220 75" class="ln"/>
+<path d="M212.0 78.6L220 75L212.0 71.4" class="ln"/>
+<text x="175" y="68" class="pt mut" text-anchor="middle">texto cifrado</text><text x="175" y="68" class="en mut" text-anchor="middle">ciphertext</text>
+<circle cx="67" cy="130" r="8" class="brandfill"/><circle cx="67" cy="130" r="3" class="inv"/>
+<path d="M75 130L97 130M91 130L91 136M97 130L97 136" class="ln"/>
+<text x="80" y="156" class="pt mut" text-anchor="middle">pública do</text><text x="80" y="156" class="en mut" text-anchor="middle">recipient’s</text>
+<text x="80" y="172" class="pt mut" text-anchor="middle">destinatário</text><text x="80" y="172" class="en mut" text-anchor="middle">public key</text>
+<circle cx="257" cy="130" r="8" class="fill"/><circle cx="257" cy="130" r="3" class="inv"/>
+<path d="M265 130L287 130M281 130L281 136M287 130L287 136" class="ln"/>
+<text x="270" y="156" class="pt mut" text-anchor="middle">privada do</text><text x="270" y="156" class="en mut" text-anchor="middle">recipient’s</text>
+<text x="270" y="172" class="pt mut" text-anchor="middle">destinatário</text><text x="270" y="172" class="en mut" text-anchor="middle">private key</text>
+<path d="M80 118L80 96" class="ln"/>
+<path d="M270 118L270 96" class="ln"/>
+<text x="175" y="205" class="pt" text-anchor="middle">Qualquer um cifra;</text><text x="175" y="205" class="en" text-anchor="middle">Anyone can encrypt;</text>
+<text x="175" y="224" class="pt" text-anchor="middle">só o dono da privada lê.</text><text x="175" y="224" class="en" text-anchor="middle">only the private-key owner reads.</text>
+<rect x="380" y="56" width="100" height="38" rx="4" class="ln"/>
+<text x="430.0" y="79.5" class="pt" text-anchor="middle">Autor</text><text x="430.0" y="79.5" class="en" text-anchor="middle">Author</text>
+<rect x="570" y="56" width="100" height="38" rx="4" class="ln"/>
+<text x="620.0" y="79.5" class="pt" text-anchor="middle">Verificador</text><text x="620.0" y="79.5" class="en" text-anchor="middle">Verifier</text>
+<path d="M480 75L570 75" class="ln"/>
+<path d="M562.0 78.6L570 75L562.0 71.4" class="ln"/>
+<text x="525" y="68" class="pt mut" text-anchor="middle">mensagem</text><text x="525" y="68" class="en mut" text-anchor="middle">message</text>
+<text x="525" y="91" class="pt mut" text-anchor="middle">+ assinatura</text><text x="525" y="91" class="en mut" text-anchor="middle">+ signature</text>
+<circle cx="417" cy="130" r="8" class="fill"/><circle cx="417" cy="130" r="3" class="inv"/>
+<path d="M425 130L447 130M441 130L441 136M447 130L447 136" class="ln"/>
+<text x="430" y="156" class="pt mut" text-anchor="middle">privada</text><text x="430" y="156" class="en mut" text-anchor="middle">author’s</text>
+<text x="430" y="172" class="pt mut" text-anchor="middle">do autor</text><text x="430" y="172" class="en mut" text-anchor="middle">private key</text>
+<circle cx="607" cy="130" r="8" class="brandfill"/><circle cx="607" cy="130" r="3" class="inv"/>
+<path d="M615 130L637 130M631 130L631 136M637 130L637 136" class="ln"/>
+<text x="620" y="156" class="pt mut" text-anchor="middle">pública</text><text x="620" y="156" class="en mut" text-anchor="middle">author’s</text>
+<text x="620" y="172" class="pt mut" text-anchor="middle">do autor</text><text x="620" y="172" class="en mut" text-anchor="middle">public key</text>
+<path d="M430 118L430 96" class="ln"/>
+<path d="M620 118L620 96" class="ln"/>
+<text x="525" y="205" class="pt" text-anchor="middle">Qualquer um verifica;</text><text x="525" y="205" class="en" text-anchor="middle">Anyone can verify;</text>
+<text x="525" y="224" class="pt" text-anchor="middle">só o dono da privada assina.</text><text x="525" y="224" class="en" text-anchor="middle">only the private-key owner signs.</text>
+</svg></div><figcaption><span class="pt">O mesmo par serve a duas coisas opostas: a pública protege o que vai para o dono; a privada prova que algo veio do dono.</span><span class="en">The same pair does two opposite jobs: the public key protects what goes to the owner; the private key proves something came from the owner.</span></figcaption></figure>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt"></span><span class="en"></span></th><th><span class="pt">Cifrar</span><span class="en">Encrypt</span></th><th><span class="pt">Assinar</span><span class="en">Sign</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt"><b>Quem usa a privada</b></span><span class="en"><b>Who uses the private key</b></span></td><td><span class="pt">Destinatário, para ler</span><span class="en">Recipient, to read</span></td><td><span class="pt">Autor, para assinar</span><span class="en">Author, to sign</span></td></tr>
+                <tr><td><span class="pt"><b>Quem usa a pública</b></span><span class="en"><b>Who uses the public key</b></span></td><td><span class="pt">Qualquer um, para cifrar</span><span class="en">Anyone, to encrypt</span></td><td><span class="pt">Qualquer um, para verificar</span><span class="en">Anyone, to verify</span></td></tr>
+                <tr><td><span class="pt"><b>Garante</b></span><span class="en"><b>Guarantees</b></span></td><td><span class="pt">Sigilo</span><span class="en">Secrecy</span></td><td><span class="pt">Autenticidade e integridade</span><span class="en">Authenticity and integrity</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Cuidado com o ditado “assinar é cifrar com a privada”.</b> É uma simplificação que funciona no RSA clássico, mas assinatura e cifragem são operações diferentes (e algoritmos como Ed25519 só assinam). Pense em dois papéis: <b>a privada prova autoria; a pública protege o envio ao dono</b>.</span><span class="en"><b>Beware of the saying “signing is encrypting with the private key”.</b> It is a simplification that works for classic RSA, but signing and encrypting are different operations (and algorithms like Ed25519 only sign). Think of two roles: <b>the private key proves authorship; the public key protects what is sent to the owner</b>.</span></div>
+          <h3><span class="pt">Algoritmos que você encontra</span><span class="en">Algorithms you will meet</span></h3>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Algoritmo</span><span class="en">Algorithm</span></th><th><span class="pt">Faz</span><span class="en">Does</span></th><th><span class="pt">Onde aparece</span><span class="en">Where you see it</span></th><th><span class="pt">Nota</span><span class="en">Note</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>RSA</b></td><td><span class="pt">Cifrar e assinar</span><span class="en">Encrypt and sign</span></td><td><span class="pt">Certificados mais antigos, chaves SSH antigas, JWT <code>RS256</code></span><span class="en">Older certificates, older SSH keys, JWT <code>RS256</code></span></td><td><span class="pt">Chaves grandes (2048 bits no mínimo; 3072 ou 4096 para folga). Mais lento e mais pesado.</span><span class="en">Large keys (2048 bits at least; 3072 or 4096 for margin). Slower and heavier.</span></td></tr>
+                <tr><td><b>ECDSA</b> (curvas P-256, P-384)</td><td><span class="pt">Assinar</span><span class="en">Sign</span></td><td><span class="pt">Certificados TLS, JWT <code>ES256</code>, passkeys</span><span class="en">TLS certificates, JWT <code>ES256</code>, passkeys</span></td><td><span class="pt">Chaves curtas para a mesma força que o RSA.</span><span class="en">Short keys for the same strength as RSA.</span></td></tr>
+                <tr><td><b>Ed25519</b></td><td><span class="pt">Assinar</span><span class="en">Sign</span></td><td><span class="pt">Chaves SSH modernas, assinatura de commits</span><span class="en">Modern SSH keys, commit signing</span></td><td><span class="pt">Rápido, chaves pequenas e poucas armadilhas de uso. Padrão recomendado para novas chaves SSH.</span><span class="en">Fast, small keys and few pitfalls. The recommended default for new SSH keys.</span></td></tr>
+                <tr><td><b>X25519</b> / ECDH</td><td><span class="pt">Acordar uma chave compartilhada</span><span class="en">Agree on a shared key</span></td><td><span class="pt">TLS 1.3, SSH</span><span class="en">TLS 1.3, SSH</span></td><td><span class="pt">Não cifra nem assina: só produz o segredo comum (veja a seção de TLS).</span><span class="en">Neither encrypts nor signs: it only produces the common secret (see the TLS section).</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="signature">
+          <h2 id="signature"><span class="pt">Assinatura digital passo a passo</span><span class="en">Digital signature step by step</span></h2>
+          <p><span class="pt">A assinatura responde duas perguntas ao mesmo tempo: <i>quem</i> fez isto e <i>se algo mudou</i> desde então. Ela não esconde o conteúdo; qualquer um lê, e qualquer um confere.</span><span class="en">A signature answers two questions at once: <i>who</i> made this and <i>whether anything changed</i> since. It does not hide the content; anyone can read it, and anyone can check it.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 286" role="img" aria-label="Assinatura digital: assinar e verificar / Digital signature: sign and verify" style="min-width:560px">
+<text x="20" y="20" class="pt mut" text-anchor="start">ASSINAR (o autor, com a chave privada)</text><text x="20" y="20" class="en mut" text-anchor="start">SIGN (the author, with the private key)</text>
+<rect x="15" y="32" width="90" height="44" rx="4" class="ln"/>
+<text x="60.0" y="58.5" class="pt" text-anchor="middle">documento</text><text x="60.0" y="58.5" class="en" text-anchor="middle">document</text>
+<path d="M105 54L135 54" class="ln"/>
+<path d="M127.0 57.6L135 54L127.0 50.4" class="ln"/>
+<rect x="135" y="32" width="80" height="44" rx="4" class="ln fillsoft"/>
+<text x="175.0" y="50.0" class="pt" text-anchor="middle">hash</text><text x="175.0" y="50.0" class="en" text-anchor="middle">hash</text>
+<text x="175.0" y="67.0" class="mono" text-anchor="middle">SHA-256</text>
+<path d="M215 54L245 54" class="ln"/>
+<path d="M237.0 57.6L245 54L237.0 50.4" class="ln"/>
+<rect x="245" y="32" width="80" height="44" rx="4" class="ln"/>
+<text x="285.0" y="50.0" class="pt" text-anchor="middle">resumo</text><text x="285.0" y="50.0" class="en" text-anchor="middle">digest</text>
+<text x="285.0" y="67.0" class="mono" text-anchor="middle">H</text>
+<path d="M325 54L355 54" class="ln"/>
+<path d="M347.0 57.6L355 54L347.0 50.4" class="ln"/>
+<rect x="355" y="32" width="150" height="44" rx="4" class="ln fillsoft"/>
+<text x="430" y="50" class="pt" text-anchor="middle">assina com a</text><text x="430" y="50" class="en" text-anchor="middle">signs with the</text>
+<text x="430" y="68" class="pt" text-anchor="middle">chave PRIVADA</text><text x="430" y="68" class="en" text-anchor="middle">PRIVATE key</text>
+<path d="M505 54L535 54" class="ln"/>
+<path d="M527.0 57.6L535 54L527.0 50.4" class="ln"/>
+<rect x="535" y="32" width="150" height="44" rx="4" class="ln brandfill"/>
+<text x="610.0" y="50.0" class="pt" text-anchor="middle">assinatura</text><text x="610.0" y="50.0" class="en" text-anchor="middle">signature</text>
+<text x="610.0" y="67.0" class="mono" text-anchor="middle">S</text>
+<text x="20" y="118" class="pt mut" text-anchor="start">VERIFICAR (qualquer um, com a chave pública)</text><text x="20" y="118" class="en mut" text-anchor="start">VERIFY (anyone, with the public key)</text>
+<rect x="15" y="130" width="90" height="44" rx="4" class="ln"/>
+<text x="60.0" y="148.0" class="pt" text-anchor="middle">documento</text><text x="60.0" y="148.0" class="en" text-anchor="middle">document</text>
+<text x="60.0" y="165.0" class="pt" text-anchor="middle">recebido</text><text x="60.0" y="165.0" class="en" text-anchor="middle">received</text>
+<path d="M105 152L135 152" class="ln"/>
+<path d="M127.0 155.6L135 152L127.0 148.4" class="ln"/>
+<rect x="135" y="130" width="80" height="44" rx="4" class="ln fillsoft"/>
+<text x="175.0" y="148.0" class="pt" text-anchor="middle">hash</text><text x="175.0" y="148.0" class="en" text-anchor="middle">hash</text>
+<text x="175.0" y="165.0" class="mono" text-anchor="middle">SHA-256</text>
+<path d="M215 152L245 152" class="ln"/>
+<path d="M237.0 155.6L245 152L237.0 148.4" class="ln"/>
+<rect x="245" y="130" width="80" height="44" rx="4" class="ln"/>
+<text x="285.0" y="148.0" class="pt" text-anchor="middle">resumo</text><text x="285.0" y="148.0" class="en" text-anchor="middle">digest</text>
+<text x="285.0" y="165.0" class="mono" text-anchor="middle">H₁</text>
+<rect x="535" y="205" width="150" height="44" rx="4" class="ln brandfill"/>
+<text x="610.0" y="223.0" class="pt" text-anchor="middle">assinatura</text><text x="610.0" y="223.0" class="en" text-anchor="middle">signature</text>
+<text x="610.0" y="240.0" class="mono" text-anchor="middle">S</text>
+<path d="M535 227L505 227" class="ln"/>
+<path d="M513.0 223.4L505 227L513.0 230.6" class="ln"/>
+<rect x="355" y="205" width="150" height="44" rx="4" class="ln fillsoft"/>
+<text x="430" y="223" class="pt" text-anchor="middle">abre com a</text><text x="430" y="223" class="en" text-anchor="middle">opens with the</text>
+<text x="430" y="241" class="pt" text-anchor="middle">chave PÚBLICA</text><text x="430" y="241" class="en" text-anchor="middle">PUBLIC key</text>
+<path d="M355 227L325 227" class="ln"/>
+<path d="M333.0 223.4L325 227L333.0 230.6" class="ln"/>
+<rect x="245" y="205" width="80" height="44" rx="4" class="ln"/>
+<text x="285.0" y="223.0" class="pt" text-anchor="middle">resumo</text><text x="285.0" y="223.0" class="en" text-anchor="middle">digest</text>
+<text x="285.0" y="240.0" class="mono" text-anchor="middle">H₂</text>
+<path d="M285 174L285 205" class="ln"/>
+<path d="M281.4 197.0L285 205L288.6 197.0" class="ln"/>
+<path d="M288.6 182.0L285 174L281.4 182.0" class="ln"/>
+<text x="300" y="196" class="pt mono" text-anchor="start">=?</text><text x="300" y="196" class="en mono" text-anchor="start">=?</text>
+<circle cx="30" cy="221" r="10" class="brandfill"/><path d="M25 221L29 225L36 216" class="ln"/>
+<text x="48" y="217" class="pt" text-anchor="start">iguais: válido</text><text x="48" y="217" class="en" text-anchor="start">equal: valid</text>
+<text x="48" y="235" class="pt mut" text-anchor="start">autor certo, texto intacto</text><text x="48" y="235" class="en mut" text-anchor="start">right author, text intact</text>
+<text x="20" y="272" class="pt mut" text-anchor="start">Se 1 bit do documento mudar, H₁ ≠ H₂ e a verificação falha. Sem a privada, ninguém gera uma S válida.</text><text x="20" y="272" class="en mut" text-anchor="start">If a single bit of the document changes, H₁ ≠ H₂ and verification fails. Without the private key, nobody can produce a valid S.</text>
+</svg></div><figcaption><span class="pt">Na prática assina-se o hash do documento (curto e de tamanho fixo), não o documento inteiro. Detalhes variam por algoritmo; a ideia é esta.</span><span class="en">In practice you sign the hash of the document (short, fixed-size), not the whole document. Details vary by algorithm; the idea is this.</span></figcaption></figure>
+          <ul class="ds-list">
+            <li><span class="pt"><b>Em um JWT</b>: o emissor assina cabeçalho + payload com a chave privada (<code>RS256</code>, <code>ES256</code>); quem recebe baixa as chaves públicas do emissor (o endereço <code>jwks_uri</code> do documento de descoberta do OIDC) e verifica. Foi assim que a AWS confiou no token do GitHub Actions.</span><span class="en"><b>In a JWT</b>: the issuer signs header + payload with the private key (<code>RS256</code>, <code>ES256</code>); the receiver downloads the issuer’s public keys (the <code>jwks_uri</code> address in the OIDC discovery document) and verifies. That is how AWS trusted the GitHub Actions token.</span></li>
+            <li><span class="pt"><b>Em um commit do Git</b>: você assina com a privada; o GitHub mostra “Verified” ao conferir com a pública cadastrada na sua conta.</span><span class="en"><b>In a Git commit</b>: you sign with the private key; GitHub shows “Verified” after checking against the public key registered on your account.</span></li>
+            <li><span class="pt"><b>Em um certificado TLS</b>: a autoridade certificadora assina “esta chave pública pertence a este domínio”.</span><span class="en"><b>In a TLS certificate</b>: the certificate authority signs “this public key belongs to this domain”.</span></li>
+          </ul>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>HS256 é outra coisa.</b> No JWT <code>HS256</code> existe um segredo compartilhado (HMAC): quem verifica também consegue forjar. Com <code>RS256</code>/<code>ES256</code>, só o dono da privada assina. Sempre fixe o algoritmo esperado ao verificar (RFC 8725).</span><span class="en"><b>HS256 is something else.</b> In an <code>HS256</code> JWT there is a shared secret (HMAC): whoever verifies can also forge. With <code>RS256</code>/<code>ES256</code>, only the private-key owner signs. Always pin the expected algorithm when verifying (RFC 8725).</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="tls">
+          <h2 id="tls"><span class="pt">Juntando tudo: troca de chaves, TLS e certificados</span><span class="en">Putting it together: key exchange, TLS and certificates</span></h2>
+          <p><span class="pt">A assimétrica é mais lenta e só trata blocos pequenos; a simétrica é rápida e cuida de qualquer volume, mas precisa de uma chave combinada. A solução é <b>híbrida</b>: use a assimétrica para <i>combinar</i> uma chave e a simétrica para <i>proteger os dados</i>. É assim no HTTPS e no SSH.</span><span class="en">Asymmetric is slower and handles only small blocks; symmetric is fast and handles any volume, but needs an agreed key. The solution is <b>hybrid</b>: use asymmetric to <i>agree</i> on a key and symmetric to <i>protect the data</i>. That is how HTTPS and SSH work.</span></p>
+          <h3><span class="pt">Acordar uma chave em público: Diffie-Hellman</span><span class="en">Agreeing on a key in public: Diffie-Hellman</span></h3>
+          <p><span class="pt">Duas partes trocam mensagens à vista de todos e, no fim, cada uma calcula o <b>mesmo segredo</b> sem que ele tenha trafegado. A analogia das tintas mostra a intuição: misturar é fácil, desmisturar é inviável.</span><span class="en">Two parties exchange messages in plain sight and, at the end, each computes the <b>same secret</b> without it ever having travelled. The paint analogy shows the intuition: mixing is easy, unmixing is infeasible.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 366" role="img" aria-label="Troca de chaves de Diffie-Hellman com cores / Diffie-Hellman key exchange with colors" style="min-width:560px">
+<circle cx="70" cy="28" r="7" class="ln fillsoft"/>
+<path d="M57 52C57 37 83 37 83 52Z" class="ln fillsoft"/>
+<text x="70" y="78" class="pt" text-anchor="middle">Alice</text><text x="70" y="78" class="en" text-anchor="middle">Alice</text>
+<circle cx="630" cy="28" r="7" class="ln fillsoft"/>
+<path d="M617 52C617 37 643 37 643 52Z" class="ln fillsoft"/>
+<text x="630" y="78" class="pt" text-anchor="middle">Bob</text><text x="630" y="78" class="en" text-anchor="middle">Bob</text>
+<circle cx="350" cy="40" r="16" fill="#f2c94c" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<text x="350" y="72" class="pt mut" text-anchor="middle">cor pública (todos veem)</text><text x="350" y="72" class="en mut" text-anchor="middle">public color (everyone sees)</text>
+<circle cx="70" cy="112" r="16" fill="#d9534f" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<text x="70" y="144" class="pt mut" text-anchor="middle">segredo de Alice</text><text x="70" y="144" class="en mut" text-anchor="middle">Alice’s secret</text>
+<circle cx="630" cy="112" r="16" fill="#4a7fd6" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<text x="630" y="144" class="pt mut" text-anchor="middle">segredo de Bob</text><text x="630" y="144" class="en mut" text-anchor="middle">Bob’s secret</text>
+<rect x="175" y="96" width="350" height="118" rx="4" class="ln dash fillsoft"/>
+<text x="350" y="116" class="pt mut" text-anchor="middle">canal público: Eve vê tudo o que passa aqui</text><text x="350" y="116" class="en mut" text-anchor="middle">public channel: Eve sees everything that passes here</text>
+<circle cx="205" cy="150" r="16" fill="#f0883e" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<path d="M227 150L495 150" class="ln"/>
+<path d="M487.0 153.6L495 150L487.0 146.4" class="ln"/>
+<text x="360" y="143" class="pt" text-anchor="middle">amarelo + vermelho = laranja</text><text x="360" y="143" class="en" text-anchor="middle">yellow + red = orange</text>
+<circle cx="495" cy="188" r="16" fill="#4caf6a" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<path d="M473 188L205 188" class="ln"/>
+<path d="M213.0 184.4L205 188L213.0 191.6" class="ln"/>
+<text x="340" y="206" class="pt" text-anchor="middle">amarelo + azul = verde</text><text x="340" y="206" class="en" text-anchor="middle">yellow + blue = green</text>
+<circle cx="70" cy="300" r="16" fill="#8a6a4f" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<circle cx="630" cy="300" r="16" fill="#8a6a4f" stroke="currentColor" stroke-width="1.2" style="stroke:var(--fg-strong)"/>
+<path d="M175 200L92 286" class="ln"/>
+<path d="M95.0 277.7L92 286L100.1 282.7" class="ln"/>
+<path d="M525 160L608 286" class="ln"/>
+<path d="M600.6 281.3L608 286L606.6 277.3" class="ln"/>
+<text x="70" y="336" class="pt mut" text-anchor="middle">verde + vermelho</text><text x="70" y="336" class="en mut" text-anchor="middle">green + red</text>
+<text x="630" y="336" class="pt mut" text-anchor="middle">laranja + azul</text><text x="630" y="336" class="en mut" text-anchor="middle">orange + blue</text>
+<text x="350" y="284" class="pt" text-anchor="middle" style="font-weight:600">mesmo marrom nos dois lados</text><text x="350" y="284" class="en" text-anchor="middle" style="font-weight:600">same brown on both sides</text>
+<text x="350" y="304" class="pt" text-anchor="middle" style="font-weight:600">= segredo compartilhado</text><text x="350" y="304" class="en" text-anchor="middle" style="font-weight:600">= shared secret</text>
+<text x="350" y="336" class="pt mut" text-anchor="middle">Eve tem amarelo, laranja e verde,</text><text x="350" y="336" class="en mut" text-anchor="middle">Eve has yellow, orange and green,</text>
+<text x="350" y="354" class="pt mut" text-anchor="middle">mas não consegue "desmisturar" para achar o vermelho ou o azul.</text><text x="350" y="354" class="en mut" text-anchor="middle">but cannot "unmix" to recover the red or the blue.</text>
+</svg></div><figcaption><span class="pt">Misturar é fácil, desmisturar é inviável. Na prática a "tinta" é matemática (curvas elípticas, como no X25519), e o resultado vira a chave simétrica da sessão.</span><span class="en">Mixing is easy, unmixing is infeasible. In practice the "paint" is math (elliptic curves, as in X25519), and the result becomes the session’s symmetric key.</span></figcaption></figure>
+          <div class="callout good"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Chaves efêmeras e sigilo futuro.</b> No TLS 1.3 e no SSH as chaves desse acordo são geradas para a conexão e descartadas depois (<i>forward secrecy</i>). Se alguém roubar a chave privada do servidor no futuro, as conversas antigas gravadas continuam ilegíveis.</span><span class="en"><b>Ephemeral keys and forward secrecy.</b> In TLS 1.3 and SSH the keys for this agreement are generated for the connection and discarded afterwards. If someone steals the server’s private key in the future, old recorded conversations stay unreadable.</span></div>
+          <h3><span class="pt">O handshake do TLS 1.3</span><span class="en">The TLS 1.3 handshake</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 380" role="img" aria-label="Handshake TLS 1.3: assimétrico para combinar, simétrico para o resto / TLS 1.3 handshake: asymmetric to agree, symmetric for the rest" style="min-width:560px">
+<rect x="55" y="8" width="110" height="32" rx="4" class="ln"/>
+<text x="110.0" y="28.5" class="pt" text-anchor="middle">Navegador</text><text x="110.0" y="28.5" class="en" text-anchor="middle">Browser</text>
+<rect x="535" y="8" width="110" height="32" rx="4" class="ln"/>
+<text x="590.0" y="28.5" class="pt" text-anchor="middle">Servidor</text><text x="590.0" y="28.5" class="en" text-anchor="middle">Server</text>
+<path d="M110 40L110 372" class="ln dash"/>
+<path d="M590 40L590 372" class="ln dash"/>
+<rect x="20" y="56" width="660" height="188" rx="4" class="brandfill"/>
+<text x="32" y="74" class="pt mut" text-anchor="start">Handshake: criptografia assimétrica</text><text x="32" y="74" class="en mut" text-anchor="start">Handshake: asymmetric cryptography</text>
+<rect x="20" y="264" width="660" height="100" rx="4" class="ln fillsoft"/>
+<text x="32" y="282" class="pt mut" text-anchor="start">Dados: criptografia simétrica (rápida)</text><text x="32" y="282" class="en mut" text-anchor="start">Data: symmetric cryptography (fast)</text>
+<path d="M114 100L586 100" class="ln"/>
+<path d="M578.0 103.6L586 100L578.0 96.4" class="ln"/>
+<text x="350" y="88" class="pt" text-anchor="middle">① ClientHello</text><text x="350" y="88" class="en" text-anchor="middle">① ClientHello</text>
+<text x="350" y="116" class="pt mut" text-anchor="middle">algoritmos aceitos + metade pública efêmera (X25519)</text><text x="350" y="116" class="en mut" text-anchor="middle">accepted algorithms + ephemeral public half (X25519)</text>
+<path d="M586 150L114 150" class="ln"/>
+<path d="M122.0 146.4L114 150L122.0 153.6" class="ln"/>
+<text x="350" y="138" class="pt" text-anchor="middle">② ServerHello</text><text x="350" y="138" class="en" text-anchor="middle">② ServerHello</text>
+<text x="350" y="166" class="pt mut" text-anchor="middle">algoritmo escolhido + metade pública do servidor</text><text x="350" y="166" class="en mut" text-anchor="middle">chosen algorithm + the server’s public half</text>
+<text x="110" y="178" class="pt" text-anchor="middle"></text><text x="110" y="178" class="en" text-anchor="middle"></text>
+<text x="350" y="190" class="pt" text-anchor="middle" style="font-weight:600">os dois calculam o mesmo segredo e derivam as chaves de sessão</text><text x="350" y="190" class="en" text-anchor="middle" style="font-weight:600">both compute the same secret and derive the session keys</text>
+<path d="M586 222L114 222" class="ln"/>
+<path d="M122.0 218.4L114 222L122.0 225.6" class="ln"/>
+<text x="350" y="210" class="pt" text-anchor="middle">③ Certificado + assinatura</text><text x="350" y="210" class="en" text-anchor="middle">③ Certificate + signature</text>
+<text x="350" y="238" class="pt mut" text-anchor="middle">(já cifrado) prova que o servidor é dono do domínio</text><text x="350" y="238" class="en mut" text-anchor="middle">(already encrypted) proves the server owns the domain</text>
+<path d="M114 308L586 308" class="ln"/>
+<path d="M578.0 311.6L586 308L578.0 304.4" class="ln"/>
+<text x="350" y="296" class="pt" text-anchor="middle">④ Dados HTTP cifrados</text><text x="350" y="296" class="en" text-anchor="middle">④ Encrypted HTTP data</text>
+<text x="350" y="324" class="pt mut" text-anchor="middle">AES-GCM ou ChaCha20-Poly1305, com a chave de sessão</text><text x="350" y="324" class="en mut" text-anchor="middle">AES-GCM or ChaCha20-Poly1305, with the session key</text>
+<path d="M586 340L114 340" class="ln"/>
+<path d="M122.0 336.4L114 340L122.0 343.6" class="ln"/>
+<text x="350" y="356" class="pt mut" text-anchor="middle">← resposta cifrada com a mesma chave de sessão</text><text x="350" y="356" class="en mut" text-anchor="middle">← response encrypted with the same session key</text>
+</svg></div><figcaption><span class="pt">Sequência simplificada do TLS 1.3. A criptografia assimétrica só faz o acordo de chave e a prova de identidade; os dados passam pela simétrica.</span><span class="en">Simplified TLS 1.3 sequence. Asymmetric cryptography only does the key agreement and identity proof; the data goes through symmetric encryption.</span></figcaption></figure>
+          <h3><span class="pt">Certificados: quem garante que a chave pública é do site?</span><span class="en">Certificates: who guarantees the public key belongs to the site?</span></h3>
+          <p><span class="pt">Se o seu navegador aceitasse qualquer chave pública enviada pelo servidor, um intermediário poderia mandar a dele. O <b>certificado</b> resolve: é a chave pública do site <b>mais o nome do domínio</b>, assinada por uma autoridade (CA) em quem o sistema já confia. As raízes confiáveis vêm instaladas no sistema operacional e no navegador.</span><span class="en">If your browser accepted any public key the server sent, a man in the middle could send its own. The <b>certificate</b> fixes this: it is the site’s public key <b>plus the domain name</b>, signed by an authority (CA) the system already trusts. The trusted roots ship with the operating system and the browser.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 252" role="img" aria-label="Cadeia de confiança dos certificados / Certificate chain of trust" style="min-width:560px">
+<rect x="20" y="18" width="372" height="56" rx="4" class="brandfill"/>
+<text x="206" y="42" class="pt" text-anchor="middle" style="font-weight:600">Autoridade raiz (Root CA)</text><text x="206" y="42" class="en" text-anchor="middle" style="font-weight:600">Root CA</text>
+<text x="206" y="62" class="pt mut" text-anchor="middle">já vem instalada no sistema/navegador</text><text x="206" y="62" class="en mut" text-anchor="middle">ships with the OS/browser</text>
+<rect x="20" y="100" width="372" height="56" rx="4" class="ln fillsoft"/>
+<text x="206" y="124" class="pt" text-anchor="middle" style="font-weight:600">Autoridade intermediária</text><text x="206" y="124" class="en" text-anchor="middle" style="font-weight:600">Intermediate CA</text>
+<text x="206" y="144" class="pt mut" text-anchor="middle">assinada pela raiz</text><text x="206" y="144" class="en mut" text-anchor="middle">signed by the root</text>
+<rect x="20" y="182" width="372" height="56" rx="4" class="ln"/>
+<text x="206" y="206" class="pt" text-anchor="middle" style="font-weight:600">Certificado do site: baselarte.com</text><text x="206" y="206" class="en" text-anchor="middle" style="font-weight:600">Site certificate: baselarte.com</text>
+<text x="206" y="226" class="pt mut" text-anchor="middle">assinado pela intermediária · traz a chave pública</text><text x="206" y="226" class="en mut" text-anchor="middle">signed by the intermediate · carries the public key</text>
+<path d="M206 74L206 100" class="ln"/>
+<path d="M202.4 92.0L206 100L209.6 92.0" class="ln"/>
+<text x="220" y="92" class="pt mut" text-anchor="start">assina</text><text x="220" y="92" class="en mut" text-anchor="start">signs</text>
+<path d="M206 156L206 182" class="ln"/>
+<path d="M202.4 174.0L206 182L209.6 174.0" class="ln"/>
+<text x="220" y="174" class="pt mut" text-anchor="start">assina</text><text x="220" y="174" class="en mut" text-anchor="start">signs</text>
+<text x="420" y="40" class="pt" text-anchor="start" style="font-weight:600">O navegador confere:</text><text x="420" y="40" class="en" text-anchor="start" style="font-weight:600">The browser checks:</text>
+<circle cx="430" cy="62" r="9" class="ln fillsoft"/><text x="430" y="66" class="mono" text-anchor="middle">1</text>
+<text x="448" y="58" class="pt" text-anchor="start">cada assinatura da cadeia,</text><text x="448" y="58" class="en" text-anchor="start">each signature in the chain,</text>
+<text x="448" y="74" class="pt mut" text-anchor="start">até uma raiz confiável</text><text x="448" y="74" class="en mut" text-anchor="start">up to a trusted root</text>
+<circle cx="430" cy="106" r="9" class="ln fillsoft"/><text x="430" y="110" class="mono" text-anchor="middle">2</text>
+<text x="448" y="102" class="pt" text-anchor="start">o nome no certificado =</text><text x="448" y="102" class="en" text-anchor="start">the name in the certificate =</text>
+<text x="448" y="118" class="pt mut" text-anchor="start">o domínio acessado</text><text x="448" y="118" class="en mut" text-anchor="start">the domain visited</text>
+<circle cx="430" cy="150" r="9" class="ln fillsoft"/><text x="430" y="154" class="mono" text-anchor="middle">3</text>
+<text x="448" y="154" class="pt" text-anchor="start">a data: dentro da validade</text><text x="448" y="154" class="en" text-anchor="start">the date: within the validity period</text>
+<circle cx="430" cy="194" r="9" class="ln fillsoft"/><text x="430" y="198" class="mono" text-anchor="middle">4</text>
+<text x="448" y="190" class="pt" text-anchor="start">depois: o servidor assina o handshake</text><text x="448" y="190" class="en" text-anchor="start">then: the server signs the handshake</text>
+<text x="448" y="206" class="pt mut" text-anchor="start">com a privada do certificado</text><text x="448" y="206" class="en mut" text-anchor="start">with the certificate’s private key</text>
+</svg></div><figcaption><span class="pt">Um certificado é uma chave pública com um nome, assinada por alguém em quem o navegador já confia. A confiança desce a cadeia.</span><span class="en">A certificate is a public key with a name, signed by someone the browser already trusts. Trust flows down the chain.</span></figcaption></figure>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O cadeado do navegador prova o canal, não a honestidade.</b> Ele diz que você fala com quem controla o domínio e que ninguém lê no meio. Um site de golpe também pode ter um certificado válido para o domínio dele.</span><span class="en"><b>The browser padlock proves the channel, not honesty.</b> It says you are talking to whoever controls the domain and that nobody reads in the middle. A scam site can also hold a valid certificate for its own domain.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="device">
+          <h2 id="device"><span class="pt">Apps com a chave privada no aparelho</span><span class="en">Apps with the private key on the device</span></h2>
+          <p><span class="pt">Passkeys, apps de banco, autenticadores e chaves de segurança seguem o mesmo desenho: o <b>aparelho</b> gera o par, guarda a privada e entrega ao servidor só a pública. Daí em diante, entrar é <b>assinar um desafio</b>, não digitar um segredo que o servidor também conhece.</span><span class="en">Passkeys, banking apps, authenticators and security keys follow the same design: the <b>device</b> generates the pair, keeps the private key and gives the server only the public key. From then on, signing in is <b>signing a challenge</b>, not typing a secret the server also knows.</span></p>
+          <h3><span class="pt">1. Cadastro: o par nasce no aparelho</span><span class="en">1. Enrollment: the pair is born on the device</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 262" role="img" aria-label="Cadastro de um login por chave no aparelho / Enrolling a device-bound key login" style="min-width:560px">
+<rect x="15" y="15" width="300" height="235" rx="4" class="ln"/>
+<text x="165" y="36" class="pt" text-anchor="middle" style="font-weight:600">Seu aparelho</text><text x="165" y="36" class="en" text-anchor="middle" style="font-weight:600">Your device</text>
+<rect x="35" y="55" width="54" height="96" rx="8" class="ln fillsoft"/>
+<path d="M56.0 61L68.0 61" class="ln"/>
+<text x="62" y="168" class="pt mut" text-anchor="middle">app</text><text x="62" y="168" class="en mut" text-anchor="middle">app</text>
+<rect x="120" y="70" width="170" height="56" rx="3" class="brandfill"/>
+<path d="M132.0 65L132.0 70M132.0 126L132.0 131" class="ln"/>
+<path d="M180.7 65L180.7 70M180.7 126L180.7 131" class="ln"/>
+<path d="M229.3 65L229.3 70M229.3 126L229.3 131" class="ln"/>
+<path d="M278.0 65L278.0 70M278.0 126L278.0 131" class="ln"/>
+<text x="205" y="94" class="pt" text-anchor="middle" style="font-weight:600">chip seguro</text><text x="205" y="94" class="en" text-anchor="middle" style="font-weight:600">secure chip</text>
+<text x="205" y="112" class="pt mut" text-anchor="middle">Enclave · TPM · StrongBox</text><text x="205" y="112" class="en mut" text-anchor="middle">Enclave · TPM · StrongBox</text>
+<circle cx="147" cy="150" r="8" class="fill"/><circle cx="147" cy="150" r="3" class="inv"/>
+<path d="M155 150L177 150M171 150L171 156M177 150L177 156" class="ln"/>
+<text x="190" y="154" class="pt" text-anchor="start">privada: nasce e fica aqui</text><text x="190" y="154" class="en" text-anchor="start">private: born and stays here</text>
+<circle cx="147" cy="190" r="8" class="brandfill"/><circle cx="147" cy="190" r="3" class="inv"/>
+<path d="M155 190L177 190M171 190L171 196M177 190L177 196" class="ln"/>
+<text x="190" y="194" class="pt" text-anchor="start">pública: pode sair</text><text x="190" y="194" class="en" text-anchor="start">public: may leave</text>
+<text x="165" y="236" class="pt mut" text-anchor="middle">a privada é marcada como "não exportável"</text><text x="165" y="236" class="en mut" text-anchor="middle">the private key is marked "non-exportable"</text>
+<rect x="430" y="15" width="255" height="235" rx="4" class="ln"/>
+<text x="557" y="36" class="pt" text-anchor="middle" style="font-weight:600">Servidor</text><text x="557" y="36" class="en" text-anchor="middle" style="font-weight:600">Server</text>
+<rect x="455" y="55" width="54" height="66" rx="4" class="ln fillsoft"/>
+<path d="M463 65L501 65" class="ln"/><circle cx="495" cy="73" r="2" class="fill"/>
+<path d="M463 85L501 85" class="ln"/><circle cx="495" cy="93" r="2" class="fill"/>
+<path d="M463 105L501 105" class="ln"/><circle cx="495" cy="113" r="2" class="fill"/>
+<text x="550" y="80" class="pt mut" text-anchor="start">tabela de contas</text><text x="550" y="80" class="en mut" text-anchor="start">accounts table</text>
+<rect x="520" y="92" width="150" height="70" rx="4" class="ln fillsoft"/>
+<text x="595.0" y="114.5" class="pt" text-anchor="middle">gustavo</text><text x="595.0" y="114.5" class="en" text-anchor="middle">gustavo</text>
+<text x="595.0" y="131.5" class="pt" text-anchor="middle">credencial: id</text><text x="595.0" y="131.5" class="en" text-anchor="middle">credential: id</text>
+<text x="595.0" y="148.5" class="pt" text-anchor="middle">chave pública: …</text><text x="595.0" y="148.5" class="en" text-anchor="middle">public key: …</text>
+<text x="557" y="190" class="pt" text-anchor="middle">guarda só a pública</text><text x="557" y="190" class="en" text-anchor="middle">stores only the public key</text>
+<text x="557" y="210" class="pt mut" text-anchor="middle">vazar o banco não permite</text><text x="557" y="210" class="en mut" text-anchor="middle">leaking the database does not let</text>
+<text x="557" y="228" class="pt mut" text-anchor="middle">entrar como você</text><text x="557" y="228" class="en mut" text-anchor="middle">anyone sign in as you</text>
+<path d="M315 214L430 214" class="ln"/>
+<path d="M422.0 217.6L430 214L422.0 210.4" class="ln"/>
+<text x="372" y="206" class="pt" text-anchor="middle">só a pública viaja</text><text x="372" y="206" class="en" text-anchor="middle">public key only</text>
+</svg></div><figcaption><span class="pt">No cadastro (registro de passkey, ativação de biometria num app), o aparelho gera o par; a privada fica no chip, a pública vai para o servidor.</span><span class="en">At enrollment (registering a passkey, enabling biometrics in an app), the device generates the pair; the private key stays in the chip, the public key goes to the server.</span></figcaption></figure>
+          <h3><span class="pt">2. Login: o servidor desafia, o aparelho assina</span><span class="en">2. Sign-in: the server challenges, the device signs</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 396" role="img" aria-label="Login por desafio e assinatura com a chave do aparelho / Challenge-and-signature login with the device key" style="min-width:560px">
+<rect x="45" y="8" width="150" height="34" rx="4" class="ln"/>
+<text x="120.0" y="29.5" class="pt" text-anchor="middle">Aparelho + app</text><text x="120.0" y="29.5" class="en" text-anchor="middle">Device + app</text>
+<rect x="505" y="8" width="150" height="34" rx="4" class="ln"/>
+<text x="580.0" y="29.5" class="pt" text-anchor="middle">Servidor</text><text x="580.0" y="29.5" class="en" text-anchor="middle">Server</text>
+<path d="M120 42L120 400" class="ln dash"/>
+<path d="M580 42L580 400" class="ln dash"/>
+<path d="M124 75L576 75" class="ln"/>
+<path d="M568.0 78.6L576 75L568.0 71.4" class="ln"/>
+<text x="350" y="67" class="pt" text-anchor="middle">① quero entrar como "gustavo"</text><text x="350" y="67" class="en" text-anchor="middle">① I want to sign in as "gustavo"</text>
+<path d="M576 115L124 115" class="ln"/>
+<path d="M132.0 111.4L124 115L132.0 118.6" class="ln"/>
+<text x="350" y="107" class="pt" text-anchor="middle">② desafio: número aleatório novo (nonce)</text><text x="350" y="107" class="en" text-anchor="middle">② challenge: a fresh random number (nonce)</text>
+<rect x="30" y="140" width="200" height="56" rx="4" class="brandfill"/>
+<text x="130.0" y="164.0" class="pt" text-anchor="middle">③ biometria ou PIN</text><text x="130.0" y="164.0" class="en" text-anchor="middle">③ biometrics or PIN</text>
+<text x="130.0" y="181.0" class="pt mut" text-anchor="middle">libera o uso da chave (local)</text><text x="130.0" y="181.0" class="en mut" text-anchor="middle">unlocks the key (local only)</text>
+<rect x="30" y="212" width="200" height="56" rx="4" class="brandfill"/>
+<text x="130.0" y="236.0" class="pt" text-anchor="middle">④ o chip assina o desafio</text><text x="130.0" y="236.0" class="en" text-anchor="middle">④ the chip signs the challenge</text>
+<text x="130.0" y="253.0" class="pt mut" text-anchor="middle">com a chave privada</text><text x="130.0" y="253.0" class="en mut" text-anchor="middle">with the private key</text>
+<path d="M124 300L576 300" class="ln"/>
+<path d="M568.0 303.6L576 300L568.0 296.4" class="ln"/>
+<text x="350" y="292" class="pt" text-anchor="middle">⑤ assinatura do desafio (+ domínio/app)</text><text x="350" y="292" class="en" text-anchor="middle">⑤ signature of the challenge (+ domain/app)</text>
+<rect x="400" y="322" width="270" height="58" rx="4" class="ln fillsoft"/>
+<text x="535.0" y="347.0" class="pt" text-anchor="middle">⑥ verifica com a chave pública</text><text x="535.0" y="347.0" class="en" text-anchor="middle">⑥ verifies with the public key</text>
+<text x="535.0" y="364.0" class="pt mut" text-anchor="middle">guardada no cadastro → ok</text><text x="535.0" y="364.0" class="en mut" text-anchor="middle">stored at enrollment → ok</text>
+<text x="350" y="330" class="pt" text-anchor="middle"></text><text x="350" y="330" class="en" text-anchor="middle"></text>
+</svg></div><figcaption><span class="pt">O servidor nunca recebe senha nem a chave privada: recebe a prova de que o aparelho a possui. Como o desafio é novo a cada vez, copiar a resposta não adianta.</span><span class="en">The server never receives a password or the private key: it receives proof the device holds it. Since the challenge is new each time, copying the answer is useless.</span></figcaption></figure>
+          <ul class="ds-list">
+            <li><span class="pt"><b>Por que um desafio novo a cada vez?</b> Se a assinatura fosse sempre a mesma, quem a interceptasse poderia reenviá-la (ataque de replay). Com um número aleatório inédito, cada resposta só vale uma vez.</span><span class="en"><b>Why a new challenge every time?</b> If the signature were always the same, whoever intercepted it could resend it (replay attack). With a never-seen random number, each answer is good only once.</span></li>
+            <li><span class="pt"><b>Por que a biometria não vai para o servidor?</b> Ela só autoriza o chip a usar a chave, localmente. O servidor recebe uma assinatura, nunca a digital nem o rosto.</span><span class="en"><b>Why does the biometric not go to the server?</b> It only authorizes the chip to use the key, locally. The server receives a signature, never the fingerprint or the face.</span></li>
+            <li><span class="pt"><b>Por que resiste a phishing?</b> No WebAuthn a assinatura cobre o domínio (origem) da página. Uma página falsa em outro domínio não consegue obter uma assinatura que valha para o site verdadeiro.</span><span class="en"><b>Why is it phishing-resistant?</b> In WebAuthn the signature covers the page’s domain (origin). A fake page on another domain cannot obtain a signature that is valid for the real site.</span></li>
+            <li><span class="pt"><b>E se vazar o banco de dados do servidor?</b> Lá só há chaves públicas, que não permitem assinar. Compare com senhas, em que o vazamento de hashes já ajuda quem ataca.</span><span class="en"><b>And if the server database leaks?</b> It only holds public keys, which cannot sign. Compare with passwords, where leaked hashes already help the attacker.</span></li>
+          </ul>
+          <h3><span class="pt">Onde fica a chave privada</span><span class="en">Where the private key lives</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 226" role="img" aria-label="Onde fica a chave privada no aparelho / Where the private key lives on the device" style="min-width:560px">
+<rect x="30" y="14" width="380" height="54" rx="4" class="ln"/>
+<text x="220" y="36" class="pt" text-anchor="middle" style="font-weight:600">App (código do aplicativo)</text><text x="220" y="36" class="en" text-anchor="middle" style="font-weight:600">App (application code)</text>
+<text x="220" y="55" class="pt mut" text-anchor="middle">só pede: "assine isto"</text><text x="220" y="55" class="en mut" text-anchor="middle">only asks: "sign this"</text>
+<rect x="30" y="84" width="380" height="54" rx="4" class="ln fillsoft"/>
+<text x="220" y="106" class="pt" text-anchor="middle" style="font-weight:600">API do sistema (Keychain, Keystore, CNG)</text><text x="220" y="106" class="en" text-anchor="middle" style="font-weight:600">OS API (Keychain, Keystore, CNG)</text>
+<text x="220" y="125" class="pt mut" text-anchor="middle">controla quem pode usar a chave</text><text x="220" y="125" class="en mut" text-anchor="middle">controls who may use the key</text>
+<rect x="30" y="154" width="380" height="54" rx="4" class="brandfill"/>
+<text x="220" y="176" class="pt" text-anchor="middle" style="font-weight:600">Hardware seguro (Enclave, TEE/StrongBox, TPM)</text><text x="220" y="176" class="en" text-anchor="middle" style="font-weight:600">Secure hardware (Enclave, TEE/StrongBox, TPM)</text>
+<text x="220" y="195" class="pt mut" text-anchor="middle">a chave privada vive e assina aqui dentro</text><text x="220" y="195" class="en mut" text-anchor="middle">the private key lives and signs in here</text>
+<path d="M120 68L120 84" class="ln"/>
+<path d="M116.4 76.0L120 84L123.6 76.0" class="ln"/>
+<path d="M120 138L120 154" class="ln"/>
+<path d="M116.4 146.0L120 154L123.6 146.0" class="ln"/>
+<path d="M320 154L320 138" class="ln"/>
+<path d="M323.6 146.0L320 138L316.4 146.0" class="ln"/>
+<path d="M320 84L320 68" class="ln"/>
+<path d="M323.6 76.0L320 68L316.4 76.0" class="ln"/>
+<text x="110" y="80" class="pt" text-anchor="middle"></text><text x="110" y="80" class="en" text-anchor="middle"></text>
+<text x="445" y="50" class="pt" text-anchor="start">↓ pedido de assinatura</text><text x="445" y="50" class="en" text-anchor="start">↓ signing request</text>
+<text x="445" y="70" class="pt" text-anchor="start">↑ só a assinatura volta</text><text x="445" y="70" class="en" text-anchor="start">↑ only the signature comes back</text>
+<text x="445" y="110" class="pt" text-anchor="start" style="font-weight:600">A chave privada nunca sobe</text><text x="445" y="110" class="en" text-anchor="start" style="font-weight:600">The private key never moves up</text>
+<text x="445" y="128" class="pt" text-anchor="start" style="font-weight:600">ao app nem à memória comum</text><text x="445" y="128" class="en" text-anchor="start" style="font-weight:600">to the app or to ordinary memory</text>
+<text x="445" y="164" class="pt mut" text-anchor="start">Limite honesto: aparelho comprometido</text><text x="445" y="164" class="en mut" text-anchor="start">Honest limit: a compromised device</text>
+<text x="445" y="182" class="pt mut" text-anchor="start">e desbloqueado ainda pode PEDIR</text><text x="445" y="182" class="en mut" text-anchor="start">that is unlocked can still ASK for</text>
+<text x="445" y="200" class="pt mut" text-anchor="start">assinaturas, mas não COPIA a chave.</text><text x="445" y="200" class="en mut" text-anchor="start">signatures, but cannot COPY the key.</text>
+</svg></div><figcaption><span class="pt">Em cada plataforma o nome muda, a ideia não: um cofre em hardware que assina por você e nunca entrega a chave.</span><span class="en">Names change per platform, the idea does not: a hardware vault that signs for you and never hands over the key.</span></figcaption></figure>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Plataforma</span><span class="en">Platform</span></th><th><span class="pt">Cofre</span><span class="en">Vault</span></th><th><span class="pt">Comportamento</span><span class="en">Behavior</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>iPhone / Mac</b></td><td><span class="pt">Secure Enclave + Keychain</span><span class="en">Secure Enclave + Keychain</span></td><td><span class="pt">Chaves podem ser geradas dentro do Enclave e não saem dele; o app só pede a assinatura.</span><span class="en">Keys can be generated inside the Enclave and never leave it; the app only requests the signature.</span></td></tr>
+                <tr><td><b>Android</b></td><td><span class="pt">Android Keystore (TEE ou StrongBox)</span><span class="en">Android Keystore (TEE or StrongBox)</span></td><td><span class="pt">Chaves protegidas por hardware, marcadas como não exportáveis; uso pode exigir biometria.</span><span class="en">Hardware-backed keys, marked non-exportable; use can require biometrics.</span></td></tr>
+                <tr><td><b>Windows / Linux</b></td><td><span class="pt">TPM</span><span class="en">TPM</span></td><td><span class="pt">Chip na placa-mãe que guarda e usa chaves sem entregá-las.</span><span class="en">Chip on the motherboard that stores and uses keys without handing them out.</span></td></tr>
+                <tr><td><b>Chave de segurança</b></td><td><span class="pt">YubiKey e similares (FIDO2)</span><span class="en">YubiKey and similar (FIDO2)</span></td><td><span class="pt">Hardware dedicado: a chave nunca está no seu computador e vale em vários aparelhos.</span><span class="en">Dedicated hardware: the key is never on your computer and works across devices.</span></td></tr>
+                <tr><td><b>Gerenciador de senhas</b></td><td><span class="pt">Cofre sincronizado</span><span class="en">Synced vault</span></td><td><span class="pt">Passkeys sincronizadas entre aparelhos: mais conveniência, e a segurança passa a depender da conta do gerenciador.</span><span class="en">Passkeys synced across devices: more convenience, and security now depends on the manager’s account.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Perdeu o aparelho?</b> A chave privada some com ele, e é isso que se quer. O servidor precisa de um caminho de recuperação (outra passkey, códigos de backup) e de um modo de <b>revogar</b> a chave pública antiga. Planejar a recuperação faz parte do projeto, não é detalhe.</span><span class="en"><b>Lost the device?</b> The private key goes with it, which is what you want. The server needs a recovery path (another passkey, backup codes) and a way to <b>revoke</b> the old public key. Planning recovery is part of the design, not a detail.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="session">
+          <h2 id="session"><span class="pt">E depois do login: a sessão</span><span class="en">After sign-in: the session</span></h2>
+          <p><span class="pt">Assinar um desafio a cada clique seria inviável (e irritante: uma biometria por requisição). Por isso a prova por chave serve para <b>abrir uma sessão</b>, e a sessão vale por um tempo.</span><span class="en">Signing a challenge on every click would be impractical (and annoying: one biometric prompt per request). So the key proof is used to <b>open a session</b>, and the session lasts for a while.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 410" role="img" aria-label="Como a sessão funciona depois do login por chave / How the session works after a key login" style="min-width:560px">
+<rect x="50" y="8" width="120" height="34" rx="4" class="ln"/>
+<text x="110.0" y="29.5" class="pt" text-anchor="middle">App / navegador</text><text x="110.0" y="29.5" class="en" text-anchor="middle">App / browser</text>
+<rect x="500" y="8" width="120" height="34" rx="4" class="ln"/>
+<text x="560.0" y="29.5" class="pt" text-anchor="middle">Servidor</text><text x="560.0" y="29.5" class="en" text-anchor="middle">Server</text>
+<path d="M110 42L110 398" class="ln dash"/>
+<path d="M560 42L560 398" class="ln dash"/>
+<rect x="15" y="58" width="670" height="62" rx="4" class="brandfill"/>
+<path d="M114 78L556 78" class="ln"/>
+<path d="M548.0 81.6L556 78L548.0 74.4" class="ln"/>
+<path d="M122.0 74.4L114 78L122.0 81.6" class="ln"/>
+<text x="335" y="72" class="pt" text-anchor="middle">① login por chave (desafio + assinatura): acontece UMA vez</text><text x="335" y="72" class="en" text-anchor="middle">① key login (challenge + signature): happens ONCE</text>
+<text x="335" y="106" class="pt mut" text-anchor="middle">a chave privada é usada só neste passo</text><text x="335" y="106" class="en mut" text-anchor="middle">the private key is used only in this step</text>
+<rect x="440" y="134" width="240" height="58" rx="4" class="ln fillsoft"/>
+<text x="560.0" y="159.0" class="pt" text-anchor="middle">② cria a sessão no servidor</text><text x="560.0" y="159.0" class="en" text-anchor="middle">② creates the session on the server</text>
+<text x="560.0" y="176.0" class="pt mut mono" text-anchor="middle">sid=7f3a… → gustavo · 8h</text><text x="560.0" y="176.0" class="en mut mono" text-anchor="middle">sid=7f3a… → gustavo · 8h</text>
+<path d="M556 214L114 214" class="ln"/>
+<path d="M122.0 210.4L114 214L122.0 217.6" class="ln"/>
+<text x="335" y="206" class="pt mono" text-anchor="middle">③ Set-Cookie: sid=7f3a… (HttpOnly; Secure; SameSite)</text><text x="335" y="206" class="en mono" text-anchor="middle">③ Set-Cookie: sid=7f3a… (HttpOnly; Secure; SameSite)</text>
+<path d="M114 256L556 256" class="ln"/>
+<path d="M548.0 259.6L556 256L548.0 252.4" class="ln"/>
+<text x="335" y="248" class="pt mono" text-anchor="middle">④ GET /conta  +  Cookie: sid=7f3a…</text><text x="335" y="248" class="en mono" text-anchor="middle">④ GET /account  +  Cookie: sid=7f3a…</text>
+<path d="M556 292L114 292" class="ln"/>
+<path d="M122.0 288.4L114 292L122.0 295.6" class="ln"/>
+<text x="335" y="284" class="pt mut" text-anchor="middle">200 OK: o servidor achou o sid e sabe que é o gustavo</text><text x="335" y="284" class="en mut" text-anchor="middle">200 OK: the server found the sid and knows it is gustavo</text>
+<path d="M114 330L556 330" class="ln"/>
+<path d="M548.0 333.6L556 330L548.0 326.4" class="ln"/>
+<text x="335" y="322" class="pt" text-anchor="middle">⑤ ação sensível → pode exigir nova assinatura (step-up)</text><text x="335" y="322" class="en" text-anchor="middle">⑤ sensitive action → may require a new signature (step-up)</text>
+<path d="M114 372L556 372" class="ln"/>
+<path d="M548.0 375.6L556 372L548.0 368.4" class="ln"/>
+<text x="335" y="364" class="pt" text-anchor="middle">⑥ logout ou expiração: servidor apaga o sid; o cookie vira inútil</text><text x="335" y="364" class="en" text-anchor="middle">⑥ logout or expiry: the server deletes the sid; the cookie becomes useless</text>
+</svg></div><figcaption><span class="pt">A prova por chave abre a sessão; as requisições seguintes mostram apenas o cookie (ou token). Quem roubar o cookie age como você até a sessão cair.</span><span class="en">The key proof opens the session; later requests show only the cookie (or token). Whoever steals the cookie acts as you until the session ends.</span></figcaption></figure>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt"></span><span class="en"></span></th><th><span class="pt">Sessão com ID opaco (cookie)</span><span class="en">Opaque session ID (cookie)</span></th><th><span class="pt">Tokens (access + refresh, JWT)</span><span class="en">Tokens (access + refresh, JWT)</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt"><b>O que o cliente guarda</b></span><span class="en"><b>What the client holds</b></span></td><td><span class="pt">Um ID aleatório sem significado.</span><span class="en">A random ID with no meaning.</span></td><td><span class="pt">Um token assinado com claims dentro.</span><span class="en">A signed token with claims inside.</span></td></tr>
+                <tr><td><span class="pt"><b>Onde está o estado</b></span><span class="en"><b>Where the state lives</b></span></td><td><span class="pt">No servidor (memória, Redis, banco).</span><span class="en">On the server (memory, Redis, database).</span></td><td><span class="pt">No próprio token; o servidor só verifica a assinatura.</span><span class="en">In the token itself; the server only verifies the signature.</span></td></tr>
+                <tr><td><span class="pt"><b>Encerrar à força</b></span><span class="en"><b>Force-ending it</b></span></td><td><span class="pt">Fácil: apaga o ID no servidor.</span><span class="en">Easy: delete the ID on the server.</span></td><td><span class="pt">Mais difícil: o token vale até expirar; por isso o access token é curto e há refresh token.</span><span class="en">Harder: the token is valid until it expires; hence a short access token and a refresh token.</span></td></tr>
+                <tr><td><span class="pt"><b>Cuidados</b></span><span class="en"><b>Care points</b></span></td><td><span class="pt"><code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>; renovar o ID após o login.</span><span class="en"><code>HttpOnly</code>, <code>Secure</code>, <code>SameSite</code>; renew the ID after login.</span></td><td><span class="pt">Fixar o algoritmo, validar <code>iss</code>, <code>aud</code>, <code>exp</code>; guardar o refresh com mais cuidado.</span><span class="en">Pin the algorithm, validate <code>iss</code>, <code>aud</code>, <code>exp</code>; guard the refresh token more carefully.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>A sessão é um “portador”: quem tiver o cookie ou o token age como você.</b> A chave no hardware protege o login, mas não impede que um token roubado seja usado até expirar. Por isso: prazos curtos, revogação, reautenticação em ações sensíveis (<i>step-up</i>) e, em cenários avançados, tokens amarrados a uma chave do cliente (<i>DPoP</i>, RFC 9449).</span><span class="en"><b>The session is a “bearer”: whoever holds the cookie or token acts as you.</b> The hardware key protects the sign-in, but does not stop a stolen token from being used until it expires. Hence: short lifetimes, revocation, re-authentication on sensitive actions (<i>step-up</i>) and, in advanced setups, tokens bound to a client key (<i>DPoP</i>, RFC 9449).</span></div>
+          <p><span class="pt">Como as sessões, o OAuth e o OIDC se encaixam nisso está em <a href="../auth-sso-oauth-oidc/index.html">Login e autenticação</a>, e os detalhes de cookies e JWT do lado de quem constrói o app estão em <a href="../web-app-security/index.html">Apps web seguros</a>.</span><span class="en">How sessions, OAuth and OIDC fit in is covered in <a href="../auth-sso-oauth-oidc/index.html">Sign-in and authentication</a>, and the cookie and JWT details from the app builder’s side are in <a href="../web-app-security/index.html">Secure web apps</a>.</span></p>
+        </section>
+
+        <section class="content-section" aria-labelledby="ssh">
+          <h2 id="ssh"><span class="pt">Como o SSH funciona</span><span class="en">How SSH works</span></h2>
+          <p><span class="pt"><b>SSH</b> (Secure Shell) abre um canal cifrado até outra máquina para shell remoto, execução de comandos, transferência de arquivos (<code>scp</code>, <code>sftp</code>) e túneis. É a seção anterior aplicada: acordo de chave efêmera, assinaturas, chaves públicas e privadas, e um túnel simétrico.</span><span class="en"><b>SSH</b> (Secure Shell) opens an encrypted channel to another machine for a remote shell, running commands, file transfer (<code>scp</code>, <code>sftp</code>) and tunnels. It is the previous sections applied: ephemeral key agreement, signatures, public and private keys, and a symmetric tunnel.</span></p>
+          <h3><span class="pt">As três camadas</span><span class="en">The three layers</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 258" role="img" aria-label="As três camadas do protocolo SSH / The three layers of the SSH protocol" style="min-width:560px">
+<rect x="30" y="14" width="520" height="50" rx="4" class="ln"/>
+<text x="290" y="35" class="pt" text-anchor="middle" style="font-weight:600">Camada de conexão</text><text x="290" y="35" class="en" text-anchor="middle" style="font-weight:600">Connection layer</text>
+<text x="290" y="53" class="pt mut" text-anchor="middle">canais: shell, comando, sftp, túneis de porta</text><text x="290" y="53" class="en mut" text-anchor="middle">channels: shell, command, sftp, port tunnels</text>
+<text x="610" y="43" class="mut mono" text-anchor="middle">RFC 4254</text>
+<rect x="30" y="74" width="520" height="50" rx="4" class="brandfill"/>
+<text x="290" y="95" class="pt" text-anchor="middle" style="font-weight:600">Camada de autenticação do usuário</text><text x="290" y="95" class="en" text-anchor="middle" style="font-weight:600">User authentication layer</text>
+<text x="290" y="113" class="pt mut" text-anchor="middle">senha, chave pública, etc.</text><text x="290" y="113" class="en mut" text-anchor="middle">password, public key, etc.</text>
+<text x="610" y="103" class="mut mono" text-anchor="middle">RFC 4252</text>
+<rect x="30" y="134" width="520" height="50" rx="4" class="brandfill"/>
+<text x="290" y="155" class="pt" text-anchor="middle" style="font-weight:600">Camada de transporte</text><text x="290" y="155" class="en" text-anchor="middle" style="font-weight:600">Transport layer</text>
+<text x="290" y="173" class="pt mut" text-anchor="middle">troca de chaves · cifra · integridade · autentica o SERVIDOR</text><text x="290" y="173" class="en mut" text-anchor="middle">key exchange · encryption · integrity · authenticates the SERVER</text>
+<text x="610" y="163" class="mut mono" text-anchor="middle">RFC 4253</text>
+<rect x="30" y="194" width="520" height="50" rx="4" class="ln fillsoft"/>
+<text x="290" y="215" class="pt" text-anchor="middle" style="font-weight:600">TCP, porta 22</text><text x="290" y="215" class="en" text-anchor="middle" style="font-weight:600">TCP, port 22</text>
+<text x="290" y="233" class="pt mut" text-anchor="middle">o transporte de rede comum</text><text x="290" y="233" class="en mut" text-anchor="middle">the ordinary network transport</text>
+</svg></div><figcaption><span class="pt">O SSH constrói primeiro um túnel seguro que prova quem é o servidor; só depois, dentro dele, prova quem é você.</span><span class="en">SSH first builds a secure tunnel that proves who the server is; only then, inside it, does it prove who you are.</span></figcaption></figure>
+          <h3><span class="pt">Quem confia em quem: os arquivos</span><span class="en">Who trusts whom: the files</span></h3>
+          <p><span class="pt">O SSH tem <b>duas</b> verificações, uma em cada sentido, e cada uma usa um arquivo diferente. Confundi-las é a origem da maioria dos erros.</span><span class="en">SSH has <b>two</b> checks, one in each direction, and each uses a different file. Mixing them up is the source of most errors.</span></p>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 348" role="img" aria-label="Quais arquivos existem no cliente e no servidor SSH / Which files exist on the SSH client and server" style="min-width:560px">
+<rect x="15" y="15" width="295" height="262" rx="4" class="ln"/>
+<text x="162" y="36" class="pt" text-anchor="middle" style="font-weight:600">Seu computador (cliente)</text><text x="162" y="36" class="en" text-anchor="middle" style="font-weight:600">Your computer (client)</text>
+<rect x="390" y="15" width="295" height="262" rx="4" class="ln"/>
+<text x="537" y="36" class="pt" text-anchor="middle" style="font-weight:600">Servidor</text><text x="537" y="36" class="en" text-anchor="middle" style="font-weight:600">Server</text>
+<circle cx="37" cy="78" r="8" class="fill"/><circle cx="37" cy="78" r="3" class="inv"/>
+<path d="M45 78L67 78M61 78L61 84M67 78L67 84" class="ln"/>
+<text x="80" y="76" class="mono" text-anchor="start">~/.ssh/id_ed25519</text>
+<text x="80" y="94" class="pt mut" text-anchor="start">privada · chmod 600 · nunca sai</text><text x="80" y="94" class="en mut" text-anchor="start">private · chmod 600 · never leaves</text>
+<circle cx="37" cy="134" r="8" class="brandfill"/><circle cx="37" cy="134" r="3" class="inv"/>
+<path d="M45 134L67 134M61 134L61 140M67 134L67 140" class="ln"/>
+<text x="80" y="132" class="mono" text-anchor="start">~/.ssh/id_ed25519.pub</text>
+<text x="80" y="150" class="pt mut" text-anchor="start">pública · pode ser copiada</text><text x="80" y="150" class="en mut" text-anchor="start">public · safe to copy</text>
+<rect x="30" y="180" width="265" height="80" rx="4" class="ln fillsoft"/>
+<text x="42" y="202" class="mono" text-anchor="start">~/.ssh/known_hosts</text>
+<text x="42" y="222" class="pt mut" text-anchor="start">impressões dos servidores em que</text><text x="42" y="222" class="en mut" text-anchor="start">fingerprints of servers you</text>
+<text x="42" y="240" class="pt mut" text-anchor="start">você confia: você verifica o SERVIDOR</text><text x="42" y="240" class="en mut" text-anchor="start">trust: you verify the SERVER</text>
+<circle cx="412" cy="78" r="8" class="fill"/><circle cx="412" cy="78" r="3" class="inv"/>
+<path d="M420 78L442 78M436 78L436 84M442 78L442 84" class="ln"/>
+<text x="455" y="76" class="mono" text-anchor="start">ssh_host_ed25519_key</text>
+<text x="455" y="94" class="pt mut" text-anchor="start">privada do servidor (host key)</text><text x="455" y="94" class="en mut" text-anchor="start">server’s private host key</text>
+<circle cx="412" cy="124" r="8" class="brandfill"/><circle cx="412" cy="124" r="3" class="inv"/>
+<path d="M420 124L442 124M436 124L436 130M442 124L442 130" class="ln"/>
+<text x="455" y="122" class="mono" text-anchor="start">ssh_host_ed25519_key.pub</text>
+<text x="455" y="140" class="pt mut" text-anchor="start">pública do servidor</text><text x="455" y="140" class="en mut" text-anchor="start">server’s public host key</text>
+<rect x="405" y="170" width="265" height="90" rx="4" class="ln fillsoft"/>
+<text x="417" y="192" class="mono" text-anchor="start">~/.ssh/authorized_keys</text>
+<text x="417" y="212" class="pt mut" text-anchor="start">chaves públicas de quem pode</text><text x="417" y="212" class="en mut" text-anchor="start">public keys of who may</text>
+<text x="417" y="230" class="pt mut" text-anchor="start">entrar como este usuário:</text><text x="417" y="230" class="en mut" text-anchor="start">log in as this user:</text>
+<text x="417" y="248" class="pt mut" text-anchor="start">o servidor verifica VOCÊ</text><text x="417" y="248" class="en mut" text-anchor="start">the server verifies YOU</text>
+<path d="M298 140L405 205" class="ln dash"/>
+<path d="M396.3 203.9L405 205L400.0 197.8" class="ln"/>
+<path d="M405 150L298 200" class="ln dash"/>
+<path d="M303.7 193.4L298 200L306.8 199.9" class="ln"/>
+<circle cx="326" cy="156" r="9" class="ln fillsoft"/><text x="326" y="160" class="mono" text-anchor="middle">1</text>
+<circle cx="374" cy="160" r="9" class="ln fillsoft"/><text x="374" y="164" class="mono" text-anchor="middle">2</text>
+<circle cx="30" cy="304" r="9" class="ln fillsoft"/><text x="30" y="308" class="mono" text-anchor="middle">1</text>
+<text x="46" y="308" class="pt" text-anchor="start">você copia a pública para o servidor (ssh-copy-id)</text><text x="46" y="308" class="en" text-anchor="start">you copy the public key to the server (ssh-copy-id)</text>
+<circle cx="30" cy="330" r="9" class="ln fillsoft"/><text x="30" y="334" class="mono" text-anchor="middle">2</text>
+<text x="46" y="334" class="pt" text-anchor="start">na 1ª conexão você aceita a impressão do servidor</text><text x="46" y="334" class="en" text-anchor="start">on the 1st connection you accept the server’s fingerprint</text>
+</svg></div><figcaption><span class="pt">Dois sentidos de confiança: known_hosts (você confere o servidor) e authorized_keys (o servidor confere você). Cada lado guarda a PÚBLICA do outro.</span><span class="en">Two directions of trust: known_hosts (you check the server) and authorized_keys (the server checks you). Each side keeps the other’s PUBLIC key.</span></figcaption></figure>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Quem verifica</span><span class="en">Who checks</span></th><th><span class="pt">Arquivo</span><span class="en">File</span></th><th><span class="pt">Se falhar</span><span class="en">If it fails</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt">“Este servidor é mesmo o servidor?”</span><span class="en">“Is this server really the server?”</span></td><td><span class="pt">Você (cliente)</span><span class="en">You (client)</span></td><td><span class="pt"><code>~/.ssh/known_hosts</code></span><span class="en"><code>~/.ssh/known_hosts</code></span></td><td><span class="pt">Aviso “REMOTE HOST IDENTIFICATION HAS CHANGED”</span><span class="en">“REMOTE HOST IDENTIFICATION HAS CHANGED” warning</span></td></tr>
+                <tr><td><span class="pt">“Esta pessoa pode entrar?”</span><span class="en">“May this person log in?”</span></td><td><span class="pt">Servidor</span><span class="en">Server</span></td><td><span class="pt"><code>~/.ssh/authorized_keys</code></span><span class="en"><code>~/.ssh/authorized_keys</code></span></td><td><span class="pt"><code>Permission denied (publickey)</code></span><span class="en"><code>Permission denied (publickey)</code></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="pt">O handshake, passo a passo</span><span class="en">The handshake, step by step</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 516" role="img" aria-label="Handshake SSH passo a passo / SSH handshake step by step" style="min-width:560px">
+<rect x="55" y="8" width="110" height="32" rx="4" class="ln"/>
+<text x="110.0" y="28.5" class="pt" text-anchor="middle">Cliente</text><text x="110.0" y="28.5" class="en" text-anchor="middle">Client</text>
+<rect x="535" y="8" width="110" height="32" rx="4" class="ln"/>
+<text x="590.0" y="28.5" class="pt" text-anchor="middle">Servidor</text><text x="590.0" y="28.5" class="en" text-anchor="middle">Server</text>
+<path d="M110 40L110 506" class="ln dash"/>
+<path d="M590 40L590 506" class="ln dash"/>
+<rect x="12" y="50" width="676" height="96" rx="4" class="ln fillsoft"/>
+<text x="22" y="66" class="pt mut" text-anchor="start">em claro</text><text x="22" y="66" class="en mut" text-anchor="start">in the clear</text>
+<rect x="12" y="152" width="676" height="110" rx="4" class="brandfill"/>
+<text x="22" y="168" class="pt mut" text-anchor="start">troca de chaves (autentica o servidor)</text><text x="22" y="168" class="en mut" text-anchor="start">key exchange (authenticates the server)</text>
+<rect x="12" y="268" width="676" height="230" rx="4" class="ln"/>
+<text x="22" y="284" class="pt mut" text-anchor="start">TUDO daqui para baixo vai cifrado</text><text x="22" y="284" class="en mut" text-anchor="start">EVERYTHING below this line is encrypted</text>
+<path d="M114 88L586 88" class="ln"/>
+<path d="M578.0 91.6L586 88L578.0 84.4" class="ln"/>
+<path d="M122.0 84.4L114 88L122.0 91.6" class="ln"/>
+<text x="350" y="82" class="pt" text-anchor="middle">① conecta na porta 22 · versões</text><text x="350" y="82" class="en" text-anchor="middle">① connects to port 22 · versions</text>
+<text x="350" y="102" class="pt mut" text-anchor="middle">SSH-2.0-OpenSSH_…</text><text x="350" y="102" class="en mut" text-anchor="middle">SSH-2.0-OpenSSH_…</text>
+<path d="M114 130L586 130" class="ln"/>
+<path d="M578.0 133.6L586 130L578.0 126.4" class="ln"/>
+<path d="M122.0 126.4L114 130L122.0 133.6" class="ln"/>
+<text x="350" y="124" class="pt" text-anchor="middle">② lista de algoritmos aceitos (KEXINIT)</text><text x="350" y="124" class="en" text-anchor="middle">② lists of accepted algorithms (KEXINIT)</text>
+<path d="M114 196L586 196" class="ln"/>
+<path d="M578.0 199.6L586 196L578.0 192.4" class="ln"/>
+<text x="350" y="190" class="pt" text-anchor="middle">③ metade pública efêmera do cliente</text><text x="350" y="190" class="en" text-anchor="middle">③ client’s ephemeral public half</text>
+<path d="M586 238L114 238" class="ln"/>
+<path d="M122.0 234.4L114 238L122.0 241.6" class="ln"/>
+<text x="350" y="232" class="pt" text-anchor="middle">④ metade do servidor + chave pública do host + assinatura</text><text x="350" y="232" class="en" text-anchor="middle">④ server’s half + host public key + signature</text>
+<path d="M114 318L586 318" class="ln"/>
+<path d="M578.0 321.6L586 318L578.0 314.4" class="ln"/>
+<text x="350" y="312" class="pt" text-anchor="middle">⑤ usuário "ana" + chave pública id_ed25519.pub</text><text x="350" y="312" class="en" text-anchor="middle">⑤ user "ana" + public key id_ed25519.pub</text>
+<path d="M586 356L114 356" class="ln"/>
+<path d="M122.0 352.4L114 356L122.0 359.6" class="ln"/>
+<text x="350" y="350" class="pt" text-anchor="middle">⑥ essa chave está em authorized_keys? sim</text><text x="350" y="350" class="en" text-anchor="middle">⑥ is that key in authorized_keys? yes</text>
+<path d="M114 394L586 394" class="ln"/>
+<path d="M578.0 397.6L586 394L578.0 390.4" class="ln"/>
+<text x="350" y="388" class="pt" text-anchor="middle">⑦ assinatura (com a privada) sobre o ID da sessão</text><text x="350" y="388" class="en" text-anchor="middle">⑦ signature (with the private key) over the session ID</text>
+<path d="M586 432L114 432" class="ln"/>
+<path d="M122.0 428.4L114 432L122.0 435.6" class="ln"/>
+<text x="350" y="426" class="pt" text-anchor="middle">⑧ servidor verifica com a pública → autenticado</text><text x="350" y="426" class="en" text-anchor="middle">⑧ server verifies with the public key → authenticated</text>
+<path d="M114 478L586 478" class="ln"/>
+<path d="M578.0 481.6L586 478L578.0 474.4" class="ln"/>
+<path d="M122.0 474.4L114 478L122.0 481.6" class="ln"/>
+<text x="350" y="472" class="pt" text-anchor="middle">⑨ abre canal: shell, comando, sftp, túnel</text><text x="350" y="472" class="en" text-anchor="middle">⑨ opens channel: shell, command, sftp, tunnel</text>
+</svg></div><figcaption><span class="pt">Primeiro o cliente confere o servidor (passos 3 e 4, com known_hosts); depois, já dentro do túnel cifrado, o servidor confere o cliente (passos 5 a 8).</span><span class="en">First the client checks the server (steps 3 and 4, with known_hosts); then, already inside the encrypted tunnel, the server checks the client (steps 5 to 8).</span></figcaption></figure>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>A primeira conexão é um ato de fé (TOFU, “trust on first use”).</b> Na primeira vez o SSH mostra a impressão da chave do servidor e pergunta se você confia. Se você aceitar sem conferir, um intermediário na primeira conexão passa despercebido. Em servidores importantes, confira a impressão por outro canal (console do provedor, quem administra).</span><span class="en"><b>The first connection is an act of faith (TOFU, “trust on first use”).</b> The first time, SSH shows the server key’s fingerprint and asks whether you trust it. If you accept without checking, a man in the middle on the first connection goes unnoticed. For important servers, check the fingerprint through another channel (provider console, the administrator).</span></div>
+          <h3><span class="pt">Mão na massa</span><span class="en">Hands-on</span></h3>
+          <pre><code><span class="tok-c"># 1. generate the pair: id_ed25519 (private) and id_ed25519.pub (public)</span>
+ssh-keygen -t ed25519 -C &quot;gustavo@laptop&quot;
+
+<span class="tok-c"># 2. show the fingerprint of the public key</span>
+ssh-keygen -lf ~/.ssh/id_ed25519.pub
+
+<span class="tok-c"># 3. install the public key on the server (it goes into ~/.ssh/authorized_keys)</span>
+ssh-copy-id -i ~/.ssh/id_ed25519.pub ana@server.example.com
+
+<span class="tok-c"># 4. sign in: the private key signs the challenge, it is never sent</span>
+ssh ana@server.example.com
+
+<span class="tok-c"># 5. debug: -v shows every key offered and every step</span>
+ssh -v ana@server.example.com</code></pre>
+          <ul class="ds-list">
+            <li><span class="pt"><b>Defina uma passphrase</b> ao gerar a chave: ela cifra o arquivo da privada no disco. Sem ela, quem copiar o arquivo ganha o acesso.</span><span class="en"><b>Set a passphrase</b> when generating the key: it encrypts the private-key file on disk. Without it, whoever copies the file gets the access.</span></li>
+            <li><span class="pt"><b>Permissões importam</b>: <code>chmod 700 ~/.ssh</code> e <code>chmod 600</code> na privada e no <code>authorized_keys</code>. O SSH recusa chaves legíveis por outros.</span><span class="en"><b>Permissions matter</b>: <code>chmod 700 ~/.ssh</code> and <code>chmod 600</code> on the private key and on <code>authorized_keys</code>. SSH refuses keys readable by others.</span></li>
+            <li><span class="pt"><b>Uma chave por aparelho</b>: assim, perdeu o notebook, remova só a pública dele dos servidores.</span><span class="en"><b>One key per device</b>: that way, if you lose the laptop, you remove only its public key from the servers.</span></li>
+          </ul>
+          <h3><span class="pt">Endurecendo o servidor</span><span class="en">Hardening the server</span></h3>
+          <pre><code><span class="tok-c"># /etc/ssh/sshd_config  (check the manual for your distribution)</span>
+PubkeyAuthentication yes
+PasswordAuthentication no<span class="tok-c">     # keys only: removes password guessing</span>
+PermitRootLogin no<span class="tok-c">            # sign in as a normal user, then use sudo</span></code></pre>
+          <p><span class="pt">Depois de alterar, recarregue o serviço (<code>sshd</code> ou <code>ssh</code>, conforme a distribuição) e <b>teste numa segunda sessão antes de fechar a primeira</b>: um erro aqui pode trancar você fora.</span><span class="en">After changing it, reload the service (<code>sshd</code> or <code>ssh</code>, depending on the distribution) and <b>test in a second session before closing the first</b>: a mistake here can lock you out.</span></p>
+          <h3><span class="pt">ssh-agent, bastion e ProxyJump</span><span class="en">ssh-agent, bastion and ProxyJump</span></h3>
+          <figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 334" role="img" aria-label="ssh-agent e ProxyJump / ssh-agent and ProxyJump" style="min-width:560px">
+<rect x="15" y="15" width="250" height="175" rx="4" class="ln"/>
+<text x="140" y="36" class="pt" text-anchor="middle" style="font-weight:600">Seu computador</text><text x="140" y="36" class="en" text-anchor="middle" style="font-weight:600">Your computer</text>
+<rect x="35" y="52" width="210" height="52" rx="4" class="brandfill"/>
+<text x="140.0" y="74.0" class="pt" text-anchor="middle">ssh-agent</text><text x="140.0" y="74.0" class="en" text-anchor="middle">ssh-agent</text>
+<text x="140.0" y="91.0" class="pt mut" text-anchor="middle">guarda a chave já destravada</text><text x="140.0" y="91.0" class="en mut" text-anchor="middle">holds the already unlocked key</text>
+<rect x="35" y="126" width="210" height="50" rx="4" class="ln fillsoft"/>
+<text x="140.0" y="147.0" class="pt" text-anchor="middle">cliente ssh</text><text x="140.0" y="147.0" class="en" text-anchor="middle">ssh client</text>
+<text x="140.0" y="164.0" class="pt mut" text-anchor="middle">pede: "assine isto"</text><text x="140.0" y="164.0" class="en mut" text-anchor="middle">asks: "sign this"</text>
+<path d="M140 126L140 106" class="ln"/>
+<path d="M143.6 114.0L140 106L136.4 114.0" class="ln"/>
+<path d="M136.4 118.0L140 126L143.6 118.0" class="ln"/>
+<rect x="320" y="60" width="150" height="80" rx="4" class="ln fillsoft"/>
+<text x="395.0" y="96.0" class="pt" text-anchor="middle">Bastion</text><text x="395.0" y="96.0" class="en" text-anchor="middle">Bastion</text>
+<text x="395.0" y="113.0" class="pt mut" text-anchor="middle">(jump host)</text><text x="395.0" y="113.0" class="en mut" text-anchor="middle">(jump host)</text>
+<rect x="530" y="60" width="155" height="80" rx="4" class="ln fillsoft"/>
+<text x="607.5" y="96.0" class="pt" text-anchor="middle">Servidor interno</text><text x="607.5" y="96.0" class="en" text-anchor="middle">Internal server</text>
+<text x="607.5" y="113.0" class="pt mut" text-anchor="middle">sem IP público</text><text x="607.5" y="113.0" class="en mut" text-anchor="middle">no public IP</text>
+<path d="M265 100L320 100" class="ln"/>
+<path d="M312.0 103.6L320 100L312.0 96.4" class="ln"/>
+<text x="292" y="90" class="pt mut mono" text-anchor="middle">1</text><text x="292" y="90" class="en mut mono" text-anchor="middle">1</text>
+<path d="M470 100L530 100" class="ln"/>
+<path d="M522.0 103.6L530 100L522.0 96.4" class="ln"/>
+<text x="500" y="90" class="pt mut mono" text-anchor="middle">2</text><text x="500" y="90" class="en mut mono" text-anchor="middle">2</text>
+<text x="477" y="40" class="mono" text-anchor="middle">ssh -J bastion internal</text>
+<text x="350" y="220" class="pt" text-anchor="middle">A assinatura acontece no seu computador; a chave não vai para o bastion.</text><text x="350" y="220" class="en" text-anchor="middle">Signing happens on your computer; the key does not go to the bastion.</text>
+<text x="350" y="242" class="pt mut" text-anchor="middle">O túnel 2 passa DENTRO da conexão 1, cifrado de ponta a ponta até o servidor interno.</text><text x="350" y="242" class="en mut" text-anchor="middle">Tunnel 2 runs INSIDE connection 1, encrypted end to end to the internal server.</text>
+<rect x="60" y="262" width="580" height="56" rx="4" class="ln dash"/>
+<text x="350.0" y="286.0" class="pt" text-anchor="middle">Prefira -J (ProxyJump). Evite o agent forwarding (-A) em hosts que você não controla:</text><text x="350.0" y="286.0" class="en" text-anchor="middle">Prefer -J (ProxyJump). Avoid agent forwarding (-A) on hosts you do not control:</text>
+<text x="350.0" y="303.0" class="pt mut" text-anchor="middle">quem é root lá pode usar seu agent enquanto você estiver conectado.</text><text x="350.0" y="303.0" class="en mut" text-anchor="middle">anyone who is root there can use your agent while you are connected.</text>
+</svg></div><figcaption><span class="pt">O agent digita a passphrase uma única vez e assina por você. Com ProxyJump você chega a servidores internos sem expor a chave privada.</span><span class="en">The agent unlocks the passphrase once and signs for you. With ProxyJump you reach internal servers without exposing the private key.</span></figcaption></figure>
+          <pre><code><span class="tok-c"># start an agent and load the key (the passphrase is asked once)</span>
+eval &quot;$(ssh-agent -s)&quot;
+ssh-add ~/.ssh/id_ed25519
+ssh-add -l<span class="tok-c">                       # lists the keys the agent holds</span>
+
+<span class="tok-c"># reach an internal server through a bastion, without forwarding the agent</span>
+ssh -J ana@bastion.example.com ana@10.0.1.20</code></pre>
+          <h3><span class="pt">SSH com o GitHub</span><span class="en">SSH with GitHub</span></h3>
+          <p><span class="pt">Cadastre a <b>pública</b> em <i>Settings → SSH and GPG keys</i> e teste com <code>ssh -T git@github.com</code>. O mesmo par pode também <b>assinar commits</b> (Git 2.34 ou mais novo).</span><span class="en">Register the <b>public</b> key under <i>Settings → SSH and GPG keys</i> and test with <code>ssh -T git@github.com</code>. The same pair can also <b>sign commits</b> (Git 2.34 or newer).</span></p>
+          <pre><code>git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true</code></pre>
+        </section>
+
+        <section class="content-section" aria-labelledby="where">
+          <h2 id="where"><span class="pt">Onde isso aparece no dia a dia</span><span class="en">Where this shows up day to day</span></h2>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Situação</span><span class="en">Situation</span></th><th><span class="pt">Quem tem a privada</span><span class="en">Who holds the private key</span></th><th><span class="pt">O que a pública faz</span><span class="en">What the public key does</span></th><th><span class="pt">Parte simétrica</span><span class="en">Symmetric part</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt"><b>HTTPS</b></span><span class="en"><b>HTTPS</b></span></td><td><span class="pt">O servidor (chave do certificado)</span><span class="en">The server (certificate key)</span></td><td><span class="pt">Navegador verifica a assinatura do handshake</span><span class="en">Browser verifies the handshake signature</span></td><td><span class="pt">Chave de sessão do TLS (AES-GCM, ChaCha20)</span><span class="en">TLS session key (AES-GCM, ChaCha20)</span></td></tr>
+                <tr><td><span class="pt"><b>SSH</b></span><span class="en"><b>SSH</b></span></td><td><span class="pt">Você (login) e o servidor (host key)</span><span class="en">You (login) and the server (host key)</span></td><td><span class="pt"><code>authorized_keys</code> e <code>known_hosts</code></span><span class="en"><code>authorized_keys</code> and <code>known_hosts</code></span></td><td><span class="pt">Túnel cifrado da sessão</span><span class="en">The session’s encrypted tunnel</span></td></tr>
+                <tr><td><span class="pt"><b>Passkey / app de banco</b></span><span class="en"><b>Passkey / banking app</b></span></td><td><span class="pt">O chip do seu aparelho</span><span class="en">Your device’s chip</span></td><td><span class="pt">O servidor verifica a assinatura do desafio</span><span class="en">The server verifies the challenge signature</span></td><td><span class="pt">Sessão (cookie/token) e TLS</span><span class="en">Session (cookie/token) and TLS</span></td></tr>
+                <tr><td><span class="pt"><b>JWT / OIDC</b></span><span class="en"><b>JWT / OIDC</b></span></td><td><span class="pt">O provedor de identidade (GitHub, Google)</span><span class="en">The identity provider (GitHub, Google)</span></td><td><span class="pt">Quem recebe o token baixa a pública (JWKS) e verifica</span><span class="en">Whoever receives the token downloads the public key (JWKS) and verifies</span></td><td><span class="pt">TLS na chamada</span><span class="en">TLS on the call</span></td></tr>
+                <tr><td><span class="pt"><b>Commit assinado</b></span><span class="en"><b>Signed commit</b></span></td><td><span class="pt">Você</span><span class="en">You</span></td><td><span class="pt">GitHub verifica e mostra “Verified”</span><span class="en">GitHub verifies and shows “Verified”</span></td><td><span class="pt">—</span><span class="en">—</span></td></tr>
+                <tr><td><span class="pt"><b>Chaves de acesso da AWS</b></span><span class="en"><b>AWS access keys</b></span></td><td><span class="pt">Ninguém: é <b>simétrico</b> (HMAC). A secret key fica em dois lugares.</span><span class="en">Nobody: it is <b>symmetric</b> (HMAC). The secret key lives in two places.</span></td><td><span class="pt">—</span><span class="en">—</span></td><td><span class="pt">A requisição é assinada com HMAC-SHA-256 (SigV4)</span><span class="en">The request is signed with HMAC-SHA-256 (SigV4)</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout good"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Por que o OIDC do GitHub Actions é melhor que chaves da AWS.</b> As chaves de acesso são simétricas: quem as copia assina como você, para sempre. No OIDC, o GitHub assina cada token com uma chave privada que só ele tem, e a AWS só precisa da pública para verificar; o job recebe credenciais temporárias que expiram. Veja <a href="../github-aws-oidc/index.html">GitHub para AWS com OIDC</a>.</span><span class="en"><b>Why GitHub Actions OIDC beats AWS access keys.</b> Access keys are symmetric: whoever copies them signs as you, forever. With OIDC, GitHub signs each token with a private key only it holds, and AWS needs only the public key to verify; the job gets temporary credentials that expire. See <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a>.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="glossary">
+          <h2 id="glossary"><span class="pt">Glossário</span><span class="en">Glossary</span></h2>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Termo</span><span class="en">Term</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>Criptografia</b></td><td><span class="pt">Técnicas matemáticas para proteger sigilo, integridade e autenticidade.</span><span class="en">Mathematical techniques to protect secrecy, integrity and authenticity.</span></td></tr>
+                <tr><td><b>Texto claro / texto cifrado</b></td><td><span class="pt">O dado legível e o dado embaralhado pela cifra.</span><span class="en">The readable data and the data scrambled by the cipher.</span></td></tr>
+                <tr><td><b>Chave</b></td><td><span class="pt">Um número (ou bytes) que controla a cifra. Quem tem a chave certa desfaz o embaralhamento.</span><span class="en">A number (or bytes) that controls the cipher. Whoever holds the right key undoes the scrambling.</span></td></tr>
+                <tr><td><b>Chave pública / privada</b></td><td><span class="pt">As duas metades de um par. A pública pode ser distribuída; a privada nunca sai do dono.</span><span class="en">The two halves of a pair. The public one may be shared; the private one never leaves its owner.</span></td></tr>
+                <tr><td><b>Hash / resumo (digest)</b></td><td><span class="pt">Impressão digital de tamanho fixo, sem volta. Ex.: SHA-256.</span><span class="en">Fixed-size fingerprint, no way back. E.g. SHA-256.</span></td></tr>
+                <tr><td><b>Assinatura digital</b></td><td><span class="pt">Prova de autoria e integridade feita com a chave privada e conferida com a pública.</span><span class="en">Proof of authorship and integrity made with the private key and checked with the public one.</span></td></tr>
+                <tr><td><b>Certificado (X.509)</b></td><td><span class="pt">Chave pública + identidade (domínio), assinada por uma CA.</span><span class="en">Public key + identity (domain), signed by a CA.</span></td></tr>
+                <tr><td><b>CA</b> (autoridade certificadora)</td><td><span class="pt">Entidade em quem o sistema confia para assinar certificados. Ex.: Let’s Encrypt.</span><span class="en">Entity the system trusts to sign certificates. E.g. Let’s Encrypt.</span></td></tr>
+                <tr><td><b>Desafio (nonce)</b></td><td><span class="pt">Valor aleatório usado uma única vez para que a resposta não possa ser reaproveitada.</span><span class="en">Random value used only once so the answer cannot be reused.</span></td></tr>
+                <tr><td><b>Chave efêmera / forward secrecy</b></td><td><span class="pt">Chave criada só para uma conexão. Garante que roubar chaves futuras não decifra conversas passadas.</span><span class="en">Key created just for one connection. Ensures that stealing later keys does not decrypt past conversations.</span></td></tr>
+                <tr><td><b>Impressão digital (fingerprint)</b></td><td><span class="pt">Hash curto de uma chave pública, para conferir a olho. Ex.: <code>SHA256:…</code> no SSH.</span><span class="en">Short hash of a public key, for checking by eye. E.g. <code>SHA256:…</code> in SSH.</span></td></tr>
+                <tr><td><b>Passphrase</b></td><td><span class="pt">Senha que cifra o arquivo da chave privada no disco.</span><span class="en">Password that encrypts the private-key file on disk.</span></td></tr>
+                <tr><td><b>Enclave / TPM / StrongBox</b></td><td><span class="pt">Hardware seguro que guarda a chave privada e assina sem entregá-la.</span><span class="en">Secure hardware that keeps the private key and signs without handing it out.</span></td></tr>
+                <tr><td><b>Sessão</b></td><td><span class="pt">Estado “você já entrou”, guardado no servidor ou num token, que dispensa nova prova a cada requisição.</span><span class="en">The “you are already in” state, kept on the server or in a token, which avoids a new proof on every request.</span></td></tr>
+                <tr><td><b>TOFU</b></td><td><span class="pt"><i>Trust on first use</i>: confiar na chave vista na primeira conexão e alertar se mudar depois.</span><span class="en"><i>Trust on first use</i>: trust the key seen on the first connection and warn if it changes later.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="errors">
+          <h2 id="errors"><span class="pt">Erros comuns e como resolver</span><span class="en">Common errors and how to fix them</span></h2>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Causa provável</span><span class="en">Likely cause</span></th><th><span class="pt">O que fazer</span><span class="en">What to do</span></th></tr></thead>
+              <tbody>
+                <tr><td><code>Permission denied (publickey)</code></td><td><span class="pt">A pública não está no servidor, o usuário está errado ou o SSH ofereceu outra chave.</span><span class="en">The public key is not on the server, the user is wrong, or SSH offered another key.</span></td><td><span class="pt">Rode <code>ssh -v</code> e veja as chaves oferecidas; confira <code>authorized_keys</code>, o nome do usuário e use <code>-i</code> ou <code>IdentityFile</code>.</span><span class="en">Run <code>ssh -v</code> and look at the keys offered; check <code>authorized_keys</code>, the user name and use <code>-i</code> or <code>IdentityFile</code>.</span></td></tr>
+                <tr><td><code>UNPROTECTED PRIVATE KEY FILE!</code></td><td><span class="pt">A privada está legível por outros usuários.</span><span class="en">The private key is readable by other users.</span></td><td><span class="pt"><code>chmod 600 ~/.ssh/id_ed25519</code> e <code>chmod 700 ~/.ssh</code>.</span><span class="en"><code>chmod 600 ~/.ssh/id_ed25519</code> and <code>chmod 700 ~/.ssh</code>.</span></td></tr>
+                <tr><td><code>REMOTE HOST IDENTIFICATION HAS CHANGED!</code></td><td><span class="pt">A chave do servidor mudou: reinstalação, IP reaproveitado... ou um intermediário.</span><span class="en">The server key changed: reinstall, reused IP... or a man in the middle.</span></td><td><span class="pt">Não ignore. Confirme com quem administra o servidor; só então <code>ssh-keygen -R host</code> e reconecte.</span><span class="en">Do not ignore it. Confirm with whoever runs the server; only then <code>ssh-keygen -R host</code> and reconnect.</span></td></tr>
+                <tr><td><code>Too many authentication failures</code></td><td><span class="pt">O agent oferece chaves demais antes da certa.</span><span class="en">The agent offers too many keys before the right one.</span></td><td><span class="pt">Use <code>IdentitiesOnly yes</code> e <code>IdentityFile</code> no <code>~/.ssh/config</code>.</span><span class="en">Use <code>IdentitiesOnly yes</code> and <code>IdentityFile</code> in <code>~/.ssh/config</code>.</span></td></tr>
+                <tr><td>Colei a <b>pública</b> no lugar da privada (ou o contrário)</td><td><span class="pt">Confusão entre <code>id_ed25519</code> e <code>.pub</code>.</span><span class="en">Mixing up <code>id_ed25519</code> and <code>.pub</code>.</span></td><td><span class="pt">A <code>.pub</code> é a que se compartilha. Para conferir se um par combina: <code>ssh-keygen -y -f id_ed25519</code> imprime a pública correspondente.</span><span class="en">The <code>.pub</code> is the one you share. To check a pair matches: <code>ssh-keygen -y -f id_ed25519</code> prints the matching public key.</span></td></tr>
+                <tr><td><code>Load key … invalid format</code></td><td><span class="pt">Arquivo da privada corrompido: quebra de linha trocada, cabeçalho cortado, falta a linha final.</span><span class="en">Corrupted private-key file: changed line endings, cut header, missing final newline.</span></td><td><span class="pt">Recopie o arquivo inteiro, sem editar, ou gere um novo par.</span><span class="en">Copy the whole file again, unedited, or generate a new pair.</span></td></tr>
+                <tr><td>A <b>privada foi parar no repositório</b>, num chat ou num log</td><td><span class="pt">Vazamento: considere-a comprometida.</span><span class="en">Leak: consider it compromised.</span></td><td><span class="pt">Remova a pública dos servidores e da conta do GitHub, gere um par novo. Apagar o commit não basta: o histórico e os clones guardam a cópia.</span><span class="en">Remove the public key from servers and the GitHub account, generate a new pair. Deleting the commit is not enough: history and clones keep the copy.</span></td></tr>
+                <tr><td>Navegador: <code>NET::ERR_CERT_COMMON_NAME_INVALID</code> ou certificado expirado</td><td><span class="pt">O nome no certificado não cobre o domínio acessado, ou a validade acabou.</span><span class="en">The name in the certificate does not cover the domain visited, or the validity ended.</span></td><td><span class="pt">Confira os nomes (SAN) e a data; renove; instale também o certificado intermediário.</span><span class="en">Check the names (SAN) and the date; renew; also install the intermediate certificate.</span></td></tr>
+                <tr><td>Tentei “cifrar com a privada” para proteger dados</td><td><span class="pt">Confundir assinatura com cifragem.</span><span class="en">Mixing up signing with encrypting.</span></td><td><span class="pt">Para sigilo, cifre com a pública do destinatário (ou use uma chave simétrica). Para provar autoria, assine.</span><span class="en">For secrecy, encrypt with the recipient’s public key (or use a symmetric key). To prove authorship, sign.</span></td></tr>
+                <tr><td>JWT aceito mesmo com a assinatura alterada</td><td><span class="pt">O verificador aceita <code>alg: none</code> ou troca <code>RS256</code> por <code>HS256</code> usando a pública como segredo.</span><span class="en">The verifier accepts <code>alg: none</code> or swaps <code>RS256</code> for <code>HS256</code> using the public key as the secret.</span></td><td><span class="pt">Fixe o algoritmo esperado na verificação e use bibliotecas mantidas (RFC 8725).</span><span class="en">Pin the expected algorithm when verifying and use maintained libraries (RFC 8725).</span></td></tr>
+                <tr><td>Perdi o celular com a passkey</td><td><span class="pt">A privada ficou no aparelho.</span><span class="en">The private key was on the device.</span></td><td><span class="pt">Use outra passkey ou os códigos de backup, e revogue a credencial antiga no servidor.</span><span class="en">Use another passkey or the backup codes, and revoke the old credential on the server.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="cheat-cry">
+          <h2 id="cheat-cry"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+          <h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Faça</span><span class="en">Do</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt">que ninguém leia os dados no caminho</span><span class="en">nobody to read the data on the way</span></td><td><span class="pt">Cifre: TLS no tráfego, AES-GCM em dados em repouso.</span><span class="en">Encrypt: TLS for traffic, AES-GCM for data at rest.</span></td></tr>
+                <tr><td><span class="pt">provar que um arquivo ou token veio de mim</span><span class="en">to prove a file or token came from me</span></td><td><span class="pt">Assine com a privada; quem recebe verifica com a pública.</span><span class="en">Sign with the private key; the receiver verifies with the public one.</span></td></tr>
+                <tr><td><span class="pt">detectar se algo foi alterado</span><span class="en">to detect tampering</span></td><td><span class="pt">Compare hashes (ou use assinatura/MAC se houver adversário).</span><span class="en">Compare hashes (or use a signature/MAC if there is an adversary).</span></td></tr>
+                <tr><td><span class="pt">entrar num servidor por SSH</span><span class="en">to log in to a server over SSH</span></td><td><span class="pt"><code>ssh-keygen -t ed25519</code>, <code>ssh-copy-id</code>, desligar senha no servidor.</span><span class="en"><code>ssh-keygen -t ed25519</code>, <code>ssh-copy-id</code>, turn passwords off on the server.</span></td></tr>
+                <tr><td><span class="pt">login sem senha em um app</span><span class="en">password-free sign-in in an app</span></td><td><span class="pt">Passkey/WebAuthn: o aparelho assina um desafio; guarde só a pública.</span><span class="en">Passkey/WebAuthn: the device signs a challenge; store only the public key.</span></td></tr>
+                <tr><td><span class="pt">manter o usuário logado sem pedir assinatura sempre</span><span class="en">to keep the user signed in without asking for a signature every time</span></td><td><span class="pt">Sessão com cookie seguro ou token curto + refresh; reautentique em ações sensíveis.</span><span class="en">Session with a secure cookie or short token + refresh; re-authenticate on sensitive actions.</span></td></tr>
+                <tr><td><span class="pt">conferir um servidor SSH novo</span><span class="en">to check a new SSH server</span></td><td><span class="pt">Compare a impressão (fingerprint) por outro canal antes de aceitar.</span><span class="en">Compare the fingerprint over another channel before accepting.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt">Por que o TLS e o SSH combinam criptografia assimétrica e simétrica?</span><span class="en">Why do TLS and SSH combine asymmetric and symmetric cryptography?</span></td><td><span class="pt">A assimétrica resolve combinar uma chave em público (e prova identidade), mas é lenta; a simétrica é rápida para o volume de dados. Usa-se a primeira para acordar a chave e a segunda para os dados.</span><span class="en">Asymmetric solves agreeing on a key in public (and proves identity) but is slow; symmetric is fast for the volume of data. The first agrees on the key, the second carries the data.</span></td></tr>
+                <tr><td><span class="pt">Num login por chave no aparelho, o que trafega e o que nunca sai do aparelho?</span><span class="en">In a device-key sign-in, what travels and what never leaves the device?</span></td><td><span class="pt">Trafegam o desafio e a assinatura (e, no cadastro, a chave pública). A chave privada e a biometria nunca saem do aparelho; o servidor só verifica com a pública.</span><span class="en">The challenge and the signature travel (and, at enrollment, the public key). The private key and the biometric never leave the device; the server only verifies with the public key.</span></td></tr>
+                <tr><td><span class="pt">Por que existe a sessão depois da assinatura, e qual o risco dela?</span><span class="en">Why does the session exist after the signature, and what is its risk?</span></td><td><span class="pt">Para não assinar a cada requisição. O risco: é um portador, e um cookie ou token roubado vale até expirar; por isso prazos curtos, revogação e step-up.</span><span class="en">To avoid signing on every request. The risk: it is a bearer, and a stolen cookie or token works until it expires; hence short lifetimes, revocation and step-up.</span></td></tr>
+                <tr><td><span class="pt">O que <code>known_hosts</code> e <code>authorized_keys</code> provam, cada um?</span><span class="en">What do <code>known_hosts</code> and <code>authorized_keys</code> each prove?</span></td><td><span class="pt"><code>known_hosts</code>: você confere que o servidor é o mesmo de antes. <code>authorized_keys</code>: o servidor confere que a sua chave está autorizada a entrar.</span><span class="en"><code>known_hosts</code>: you check that the server is the same as before. <code>authorized_keys</code>: the server checks that your key is allowed in.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://datatracker.ietf.org/doc/html/rfc8446" rel="noopener">RFC 8446 · TLS 1.3</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc5280" rel="noopener">RFC 5280 · Internet X.509 PKI Certificate and CRL Profile</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7748" rel="noopener">RFC 7748 · Elliptic Curves for Security (X25519)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8032" rel="noopener">RFC 8032 · Edwards-Curve Digital Signature Algorithm (Ed25519)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8017" rel="noopener">RFC 8017 · PKCS #1: RSA Cryptography Specifications</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4251" rel="noopener">RFC 4251 · The Secure Shell (SSH) Protocol Architecture</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4252" rel="noopener">RFC 4252 · The SSH Authentication Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4253" rel="noopener">RFC 4253 · The SSH Transport Layer Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4254" rel="noopener">RFC 4254 · The SSH Connection Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8725" rel="noopener">RFC 8725 · JSON Web Token Best Current Practices</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc9449" rel="noopener">RFC 9449 · OAuth 2.0 Demonstrating Proof of Possession (DPoP)</a></li><li><a href="https://www.w3.org/TR/webauthn-2/" rel="noopener">W3C · Web Authentication (WebAuthn)</a></li><li><a href="https://www.openssh.com/manual.html" rel="noopener">OpenSSH · Manual pages</a></li><li><a href="https://docs.github.com/en/authentication/connecting-to-github-with-ssh" rel="noopener">GitHub Docs · Connecting to GitHub with SSH</a></li><li><a href="https://developer.apple.com/documentation/security/protecting-keys-with-the-secure-enclave" rel="noopener">Apple · Protecting keys with the Secure Enclave</a></li><li><a href="https://developer.android.com/privacy-and-security/keystore" rel="noopener">Android · Keystore system</a></li><li><a href="https://letsencrypt.org/how-it-works/" rel="noopener">Let’s Encrypt · How it works</a></li><li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html" rel="noopener">OWASP · Session Management Cheat Sheet</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
