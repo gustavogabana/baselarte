@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="llm.metaTitle">Open-source LLMs and AI agents: run, connect and deploy | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:llm.metaDescription" content="A practical guide to open-source LLMs and AI agents: how much memory a model needs, running models with Ollama, llama.cpp and vLLM, writing an agent loop with tool calling, connecting agent and model through the OpenAI-compatible API and MCP, and renting a GPU in the cloud securely. Eight activities with expected results.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/llm-agents-open-source/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/llm-agents-open-source/">
+  <meta property="og:title" data-i18n-attributes="content:llm.metaTitle" content="Open-source LLMs and AI agents: run, connect and deploy | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:llm.metaDescription" content="A practical guide to open-source LLMs and AI agents: how much memory a model needs, running models with Ollama, llama.cpp and vLLM, writing an agent loop with tool calling, connecting agent and model through the OpenAI-compatible API and MCP, and renting a GPU in the cloud securely. Eight activities with expected results.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:llm.metaTitle" content="Open-source LLMs and AI agents: run, connect and deploy | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:llm.metaDescription" content="A practical guide to open-source LLMs and AI agents: how much memory a model needs, running models with Ollama, llama.cpp and vLLM, writing an agent loop with tool calling, connecting agent and model through the OpenAI-compatible API and MCP, and renting a GPU in the cloud securely. Eight activities with expected results.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
+        <ul data-sidebar-group>
+          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
+          <li><a href="../llm-agents-open-source/index.html" aria-current="page"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
+        <ul data-sidebar-group>
+          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#map"><span class="pt">O mapa das peças</span><span class="en">The map of the pieces</span></a></li>
+<li><a href="#hardware"><span class="pt">Cabe na minha máquina?</span><span class="en">Will it fit on my machine?</span></a></li>
+<li><a href="#run"><span class="pt">Rodar localmente</span><span class="en">Run it locally</span></a></li>
+<li><a href="#agent"><span class="pt">Seu primeiro agente</span><span class="en">Your first agent</span></a></li>
+<li><a href="#connect"><span class="pt">Conectar agente, modelo e ferramentas</span><span class="en">Connect agent, model and tools</span></a></li>
+<li><a href="#cloud"><span class="pt">Subir na nuvem</span><span class="en">Move to the cloud</span></a></li>
+<li><a href="#security"><span class="pt">Segurança</span><span class="en">Security</span></a></li>
+<li><a href="#cheat-llm"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="llm.kicker">Hands-on guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="llm.heroTitle">Open-source LLMs and agents, <em>on your machine or in the cloud.</em></h1>
+  <p class="hero-lede" data-i18n="llm.heroLede">What a model, a server and an agent each are, how much hardware you need, how to run and connect them with open-source tools, and how to rent a GPU safely when your computer falls short. With exercises and expected results.</p>
+</section>
+<section class="content-section" aria-labelledby="map">
+<h2 id="map"><span class="pt">O mapa: modelo, servidor, agente e ferramentas</span><span class="en">The map: model, server, agent and tools</span></h2>
+<p><span class="pt">Quase toda confusão sobre “rodar IA” vem de misturar quatro coisas diferentes. Separe-as e o resto fica simples.</span><span class="en">Almost all the confusion about “running AI” comes from mixing four different things. Separate them and the rest gets simple.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Peça</span><span class="en">Piece</span></th><th><span class="pt">O que é, em uma frase</span><span class="en">What it is, in one sentence</span></th><th><span class="pt">Exemplos open-source</span><span class="en">Open-source examples</span></th></tr></thead><tbody><tr><td><span class="pt"><strong>Modelo</strong> (pesos)</span><span class="en"><strong>Model</strong> (weights)</span></td><td><span class="pt">Um arquivo grande de números que guarda o que o modelo “aprendeu”. Sozinho, não faz nada.</span><span class="en">A large file of numbers that stores what the model “learned”. On its own it does nothing.</span></td><td>Qwen, Llama, Gemma, Mistral, gpt-oss</td></tr><tr><td><span class="pt"><strong>Servidor</strong> de inferência</span><span class="en"><strong>Inference server</strong></span></td><td><span class="pt">Programa que carrega os pesos na memória e responde a pedidos HTTP: manda texto, recebe texto.</span><span class="en">A program that loads the weights into memory and answers HTTP requests: text in, text out.</span></td><td>Ollama, llama.cpp, vLLM</td></tr><tr><td><span class="pt"><strong>Agente</strong></span><span class="en"><strong>Agent</strong></span></td><td><span class="pt">Um programa seu que chama o servidor <em>em laço</em>, deixando o modelo escolher ferramentas até terminar a tarefa.</span><span class="en">A program of yours that calls the server <em>in a loop</em>, letting the model pick tools until the task is done.</span></td><td><span class="pt">o <code>agent.py</code> desta nota, smolagents, LangGraph</span><span class="en">the <code>agent.py</code> in this note, smolagents, LangGraph</span></td></tr><tr><td><span class="pt"><strong>Ferramentas</strong></span><span class="en"><strong>Tools</strong></span></td><td><span class="pt">Funções que o agente executa no mundo real: ler arquivo, buscar na web, consultar um banco.</span><span class="en">Functions the agent runs in the real world: read a file, search the web, query a database.</span></td><td><span class="pt">funções Python, servidores MCP</span><span class="en">Python functions, MCP servers</span></td></tr></tbody></table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 300" role="img" aria-label="Camadas de um agente de IA / Layers of an AI agent" style="min-width:620px">
+<rect x="10" y="125" width="120" height="50" rx="4" class="ln"/>
+<text x="70" y="147" class="pt" text-anchor="middle">Você</text><text x="70" y="147" class="en" text-anchor="middle">You</text>
+<text x="70" y="164" class="pt mut" text-anchor="middle">terminal · chat</text><text x="70" y="164" class="en mut" text-anchor="middle">terminal · chat</text>
+<rect x="180" y="105" width="140" height="90" rx="4" class="brandfill"/>
+<text x="250" y="135" class="pt" text-anchor="middle">Agente</text><text x="250" y="135" class="en" text-anchor="middle">Agent</text>
+<text x="250" y="153" class="pt mut" text-anchor="middle">laço + ferramentas</text><text x="250" y="153" class="en mut" text-anchor="middle">loop + tools</text>
+<text x="250" y="171" class="mono" text-anchor="middle">agent.py · smolagents</text>
+<rect x="370" y="105" width="150" height="90" rx="4" class="ln"/>
+<text x="445" y="135" class="pt" text-anchor="middle">Servidor de LLM</text><text x="445" y="135" class="en" text-anchor="middle">LLM server</text>
+<text x="445" y="153" class="pt mut" text-anchor="middle">API HTTP</text><text x="445" y="153" class="en mut" text-anchor="middle">HTTP API</text>
+<text x="445" y="171" class="mono" text-anchor="middle">Ollama · llama.cpp · vLLM</text>
+<rect x="570" y="105" width="120" height="90" rx="4" class="ln fillsoft"/>
+<text x="630" y="135" class="pt" text-anchor="middle">Pesos</text><text x="630" y="135" class="en" text-anchor="middle">Weights</text>
+<text x="630" y="153" class="pt mut" text-anchor="middle">arquivo GGUF</text><text x="630" y="153" class="en mut" text-anchor="middle">GGUF file</text>
+<text x="630" y="171" class="mono" text-anchor="middle">GPU / CPU</text>
+<rect x="180" y="235" width="140" height="50" rx="4" class="ln"/>
+<text x="250" y="257" class="pt" text-anchor="middle">Ferramentas</text><text x="250" y="257" class="en" text-anchor="middle">Tools</text>
+<text x="250" y="274" class="pt mut" text-anchor="middle">arquivos · web · bancos</text><text x="250" y="274" class="en mut" text-anchor="middle">files · web · databases</text>
+<path d="M130 150L180 150" class="ln"/><path d="M173.7 153.0L180 150L173.7 147.0" class="ln"/>
+<path d="M320 150L370 150" class="ln"/><path d="M363.7 153.0L370 150L363.7 147.0" class="ln"/>
+<path d="M520 150L570 150" class="ln"/><path d="M563.7 153.0L570 150L563.7 147.0" class="ln"/>
+<path d="M250 195L250 235" class="ln"/><path d="M247.0 228.7L250 235L253.0 228.7" class="ln"/>
+<text x="345" y="216" class="mut mono" text-anchor="middle">/v1/chat/completions</text>
+<text x="258" y="222" class="mono" text-anchor="start">MCP</text>
+<text x="370" y="55" class="pt mut" text-anchor="start">Camada 1: o modelo é só um arquivo de números.</text><text x="370" y="55" class="en mut" text-anchor="start">Layer 1: the model is just a file of numbers.</text>
+<text x="370" y="75" class="pt mut" text-anchor="start">Camada 2: o servidor o carrega e abre uma API.</text><text x="370" y="75" class="en mut" text-anchor="start">Layer 2: the server loads it and opens an API.</text>
+<text x="370" y="95" class="pt mut" text-anchor="start">Camada 3: o agente chama a API em laço.</text><text x="370" y="95" class="en mut" text-anchor="start">Layer 3: the agent calls the API in a loop.</text>
+</svg></div><figcaption><span class="pt">Quatro peças: você fala com o agente; o agente fala com o servidor pela API e com as ferramentas pelo MCP; o servidor carrega os pesos.</span><span class="en">Four pieces: you talk to the agent; the agent talks to the server over the API and to tools over MCP; the server loads the weights.</span></figcaption></figure>
+<p><span class="pt">A Anthropic, no guia <em>Building effective agents</em>, define a diferença com precisão: em um <em>workflow</em>, o código decide a ordem dos passos; em um <strong>agente</strong>, é o próprio modelo que decide os próximos passos e quais ferramentas usar, usando o retorno do ambiente em um laço. O mesmo guia dá um conselho valioso: comece com a solução mais simples possível; muitas vezes, uma única chamada ao modelo já basta.</span><span class="en">Anthropic, in the guide <em>Building effective agents</em>, defines the difference precisely: in a <em>workflow</em>, code decides the order of the steps; in an <strong>agent</strong>, the model itself decides the next steps and which tools to use, using feedback from the environment in a loop. The same guide gives valuable advice: start with the simplest solution possible; often a single call to the model is enough.</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Por que open-source? Três razões práticas: <strong>privacidade</strong> (os dados não saem da sua máquina), <strong>custo previsível</strong> (sem cobrança por token) e <strong>controle</strong> (você escolhe a versão e ela não muda sozinha). O preço é que você cuida do hardware e os melhores modelos fechados costumam ser mais capazes.</span><span class="en">Why open-source? Three practical reasons: <strong>privacy</strong> (data never leaves your machine), <strong>predictable cost</strong> (no per-token billing) and <strong>control</strong> (you pick the version and it does not change on its own). The price is that you look after the hardware, and the best closed models are usually more capable.</span></div>
+</section>
+<section class="content-section" aria-labelledby="hardware">
+<h2 id="hardware"><span class="pt">Cabe na minha máquina? A conta da memória</span><span class="en">Will it fit on my machine? The memory maths</span></h2>
+<p><span class="pt">Um modelo é medido em <strong>parâmetros</strong> (os números dentro do arquivo). “8B” significa 8 bilhões. Cada parâmetro ocupa alguns bits, e quantos bits depende da <strong>quantização</strong>: reduzir a precisão dos números (de 16 bits para 8 ou 4) para o modelo ocupar menos memória, com uma perda pequena de qualidade. Pesquisa de Dettmers e Zettlemoyer (2022) mostra que, para uma mesma memória, modelos maiores quantizados em 4 bits tendem a superar modelos menores em precisão maior, e por isso 4 bits virou o padrão no uso local.</span><span class="en">A model is measured in <strong>parameters</strong> (the numbers inside the file). “8B” means 8 billion. Each parameter takes a few bits, and how many depends on <strong>quantization</strong>: lowering the precision of the numbers (from 16 bits to 8 or 4) so the model takes less memory, with a small loss of quality. Research by Dettmers and Zettlemoyer (2022) shows that, for the same memory, larger models quantized to 4 bits tend to beat smaller models at higher precision, which is why 4 bits became the default for local use.</span></p>
+<p><span class="pt">A regra de bolso: <strong>memória dos pesos ≈ parâmetros × bits ÷ 8</strong>. Some ainda 1 a 3 GB de folga para o <em>contexto</em> (o “cache KV”, que cresce com o tamanho da conversa) e para o sistema.</span><span class="en">The rule of thumb: <strong>weights memory ≈ parameters × bits ÷ 8</strong>. Add 1 to 3 GB of headroom for the <em>context</em> (the “KV cache”, which grows with conversation length) and for the system.</span></p>
+<pre><code>def gb(params_billion, bits):
+    return params_billion * bits / 8
+
+for size in (3, 8, 14, 32):
+    print(f"{size:&gt;3}B  fp16={gb(size,16):5.1f} GB   int8={gb(size,8):5.1f} GB   int4={gb(size,4):5.1f} GB")</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o programa imprime 3B → 6,0 / 3,0 / 1,5 GB; 8B → 16 / 8 / 4 GB; 14B → 28 / 14 / 7 GB; 32B → 64 / 32 / 16 GB. Na prática, arquivos “4 bits” ficam perto de 5 bits por parâmetro: a página do Qwen3 no Ollama lista 5,2 GB para o 8b, 9,3 GB para o 14b e 20 GB para o 32b.</span><span class="en"><strong>Expected result:</strong> the program prints 3B → 6.0 / 3.0 / 1.5 GB; 8B → 16 / 8 / 4 GB; 14B → 28 / 14 / 7 GB; 32B → 64 / 32 / 16 GB. In practice “4-bit” files land near 5 bits per parameter: the Qwen3 page on Ollama lists 5.2 GB for 8b, 9.3 GB for 14b and 20 GB for 32b.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Seu hardware</span><span class="en">Your hardware</span></th><th><span class="pt">Memória que conta</span><span class="en">Memory that counts</span></th><th><span class="pt">Modelo realista (4 bits)</span><span class="en">Realistic model (4-bit)</span></th></tr></thead><tbody><tr><td><span class="pt">Sem GPU, 8 GB de RAM</span><span class="en">No GPU, 8 GB RAM</span></td><td><span class="pt">RAM (lento)</span><span class="en">RAM (slow)</span></td><td><span class="pt">1B a 4B</span><span class="en">1B to 4B</span></td></tr><tr><td><span class="pt">Sem GPU, 16 GB de RAM</span><span class="en">No GPU, 16 GB RAM</span></td><td><span class="pt">RAM (lento, mas funciona)</span><span class="en">RAM (slow, but works)</span></td><td><span class="pt">até 8B</span><span class="en">up to 8B</span></td></tr><tr><td><span class="pt">GPU NVIDIA com 8 GB de VRAM</span><span class="en">NVIDIA GPU with 8 GB VRAM</span></td><td>VRAM</td><td><span class="pt">até 8B</span><span class="en">up to 8B</span></td></tr><tr><td><span class="pt">GPU com 24 GB de VRAM</span><span class="en">GPU with 24 GB VRAM</span></td><td>VRAM</td><td><span class="pt">14B a 32B</span><span class="en">14B to 32B</span></td></tr><tr><td><span class="pt">Mac com chip Apple Silicon (memória unificada)</span><span class="en">Mac with Apple Silicon (unified memory)</span></td><td><span class="pt">a RAM toda, menos uns 25%</span><span class="en">most of the RAM, minus about 25%</span></td><td><span class="pt">conforme a RAM: 16 GB → 8B; 32 GB → 14B a 32B</span><span class="en">by RAM: 16 GB → 8B; 32 GB → 14B to 32B</span></td></tr></tbody></table></div>
+<p><span class="pt">Se o modelo não cabe na VRAM, o servidor despeja parte das camadas na RAM e a velocidade despenca. É o sinal de que está na hora de reduzir o modelo ou ir para a nuvem (seção 6).</span><span class="en">If the model does not fit in VRAM, the server spills some layers into RAM and speed collapses. That is the sign to pick a smaller model or move to the cloud (section 6).</span></p>
+<h3><span class="pt">Atividade 1: meça o seu hardware</span><span class="en">Activity 1: measure your hardware</span></h3>
+<pre><code># Linux
+free -h                 # RAM total and available
+nvidia-smi              # NVIDIA GPU, VRAM (skip if you have no NVIDIA GPU)
+lscpu | grep "Model name"
+
+# macOS
+sysctl -n hw.memsize | awk '{print $1/1024/1024/1024 " GB"}'</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> você consegue completar a frase “tenho X GB de VRAM (ou de RAM)”. Com X, escolha na tabela o maior modelo que cabe e anote o nome. Esse é o seu alvo para as próximas atividades; se X for pequeno, use um modelo de 1B a 4B, como <code>llama3.2:3b</code>.</span><span class="en"><strong>Expected result:</strong> you can complete the sentence “I have X GB of VRAM (or RAM)”. With X, pick the largest model in the table that fits and write down its name. That is your target for the next activities; if X is small, use a 1B to 4B model such as <code>llama3.2:3b</code>.</span></p>
+</section>
+<section class="content-section" aria-labelledby="run">
+<h2 id="run"><span class="pt">Rodar na sua máquina: Ollama, llama.cpp e vLLM</span><span class="en">Run it on your machine: Ollama, llama.cpp and vLLM</span></h2>
+<p><span class="pt">Os três são open-source e expõem uma API compatível com a da OpenAI. A diferença é o público.</span><span class="en">All three are open-source and expose an OpenAI-compatible API. The difference is the audience.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Quando usar</span><span class="en">When to use</span></th><th><span class="pt">Porta padrão</span><span class="en">Default port</span></th></tr></thead><tbody><tr><td><strong>Ollama</strong></td><td><span class="pt">O caminho mais curto: baixa o modelo, gerencia a memória e já traz uma API. Ideal para começar e para uso pessoal.</span><span class="en">The shortest path: it downloads the model, manages memory and ships with an API. Ideal to start and for personal use.</span></td><td>11434</td></tr><tr><td><strong>llama.cpp</strong> (<code>llama-server</code>)</td><td><span class="pt">Mais controle: roda arquivos GGUF direto, em CPU, GPU ou Apple Silicon, com muitas opções de quantização.</span><span class="en">More control: runs GGUF files directly on CPU, GPU or Apple Silicon, with many quantization options.</span></td><td><span class="pt">você define (use <code>--port 8080</code>)</span><span class="en">you set it (use <code>--port 8080</code>)</span></td></tr><tr><td><strong>vLLM</strong></td><td><span class="pt">Servidor de produção em GPU: atende muitos usuários ao mesmo tempo. Usa o PagedAttention (Kwon et al., 2023) para aproveitar melhor a memória. É a escolha para a nuvem.</span><span class="en">Production server on GPU: serves many users at once. It uses PagedAttention (Kwon et al., 2023) to make better use of memory. It is the pick for the cloud.</span></td><td>8000</td></tr></tbody></table></div>
+<h3><span class="pt">Atividade 2: Ollama, do zero a uma conversa</span><span class="en">Activity 2: Ollama, from zero to a conversation</span></h3>
+<p><span class="pt">No Linux, o instalador oficial é um script (leia-o antes de executar, como com qualquer <code>curl | sh</code>). No macOS e no Windows, baixe o instalador em ollama.com.</span><span class="en">On Linux, the official installer is a script (read it before running, as with any <code>curl | sh</code>). On macOS and Windows, download the installer from ollama.com.</span></p>
+<pre><code>curl -fsSL https://ollama.com/install.sh | sh
+
+ollama pull qwen3:8b          # download (about 5.2 GB); pick the size from Activity 1
+ollama run qwen3:8b --verbose # chat in the terminal; --verbose prints speed at the end
+&gt;&gt;&gt; Explain what a GPU does in two sentences.
+&gt;&gt;&gt; /bye
+
+ollama ps                     # which models are loaded, and on GPU or CPU</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o modelo responde em português ou inglês (o Qwen3 pode mostrar um trecho de “raciocínio” antes da resposta). Com <code>--verbose</code> aparece a linha <code>eval rate</code>, em tokens por segundo. Em GPU, espere dezenas de tokens por segundo; só em CPU, de 2 a 10. O <code>ollama ps</code> mostra a coluna <code>PROCESSOR</code>: <code>100% GPU</code> é o ideal; <code>100% CPU</code> ou divisões como <code>40%/60% CPU/GPU</code> indicam que faltou VRAM.</span><span class="en"><strong>Expected result:</strong> the model replies (Qwen3 may show a “thinking” section before the answer). With <code>--verbose</code> you get an <code>eval rate</code> line, in tokens per second. On a GPU expect tens of tokens per second; on CPU only, 2 to 10. <code>ollama ps</code> shows a <code>PROCESSOR</code> column: <code>100% GPU</code> is ideal; <code>100% CPU</code> or splits such as <code>40%/60% CPU/GPU</code> mean VRAM ran short.</span></p>
+<h3><span class="pt">Atividade 3: a API HTTP por trás do chat</span><span class="en">Activity 3: the HTTP API behind the chat</span></h3>
+<p><span class="pt">O terminal é só um cliente. O servidor do Ollama escuta em <code>127.0.0.1:11434</code> e, segundo a documentação, oferece o endpoint compatível <code>/v1/chat/completions</code>, com suporte a streaming e a ferramentas.</span><span class="en">The terminal is just a client. The Ollama server listens on <code>127.0.0.1:11434</code> and, per its documentation, offers the compatible <code>/v1/chat/completions</code> endpoint, with streaming and tool support.</span></p>
+<pre><code>curl http://localhost:11434/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "qwen3:8b",
+    "messages": [{"role": "user", "content": "Say hello in five words."}]
+  }' </code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> um JSON com <code>choices[0].message.content</code> contendo a resposta, mais <code>usage</code> com a contagem de tokens. Esse é todo o “segredo”: conversar com um modelo é um <code>POST</code>. Tudo o que vem depois (agentes, interfaces, frameworks) apenas chama esse endereço.</span><span class="en"><strong>Expected result:</strong> a JSON with <code>choices[0].message.content</code> holding the reply, plus <code>usage</code> with the token counts. That is the whole “secret”: talking to a model is a <code>POST</code>. Everything that follows (agents, interfaces, frameworks) just calls this address.</span></p>
+<h3><span class="pt">Atividade 4: o mesmo, com llama.cpp</span><span class="en">Activity 4: the same, with llama.cpp</span></h3>
+<p><span class="pt">Instale o <code>llama.cpp</code> (pacotes, binários e Docker estão no README do projeto) e suba o servidor com um modelo do Hugging Face. A opção <code>-hf</code> baixa o arquivo GGUF; <code>--jinja</code> liga o template de chat necessário para chamada de ferramentas; <code>--api-key</code> exige uma chave.</span><span class="en">Install <code>llama.cpp</code> (packages, binaries and Docker are in the project README) and start the server with a Hugging Face model. The <code>-hf</code> option downloads the GGUF file; <code>--jinja</code> turns on the chat template needed for tool calling; <code>--api-key</code> requires a key.</span></p>
+<pre><code>llama-server -hf ggml-org/gemma-3-4b-it-GGUF --port 8080 --jinja --api-key my-secret-key
+
+# in another terminal
+curl http://127.0.0.1:8080/v1/chat/completions \
+  -H "Authorization: Bearer my-secret-key" -H "Content-Type: application/json" \
+  -d '{"messages": [{"role": "user", "content": "Say hello in five words."}]}' </code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> a primeira execução baixa o modelo e depois o log diz que o servidor está escutando em 127.0.0.1:8080. A resposta do <code>curl</code> tem o mesmo formato da Atividade 3. Sem o cabeçalho <code>Authorization</code>, o servidor responde <code>401</code>: a chave funciona.</span><span class="en"><strong>Expected result:</strong> the first run downloads the model, then the log says the server is listening on 127.0.0.1:8080. The <code>curl</code> reply has the same shape as in Activity 3. Without the <code>Authorization</code> header the server answers <code>401</code>: the key works.</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O vLLM, o terceiro da lista, precisa de GPU NVIDIA e é o que usaremos na nuvem. Os comandos estão na seção 6.</span><span class="en">vLLM, the third on the list, needs an NVIDIA GPU and is what we will use in the cloud. The commands are in section 6.</span></div>
+</section>
+<section class="content-section" aria-labelledby="agent">
+<h2 id="agent"><span class="pt">Seu primeiro agente: um laço de 70 linhas</span><span class="en">Your first agent: a 70-line loop</span></h2>
+<p><span class="pt">Um agente parece mágico até você ver o código. O truque se chama <strong>chamada de ferramentas</strong> (<em>tool calling</em>): junto com a pergunta, você descreve funções que o modelo pode pedir. Se ele quiser usar uma, em vez de texto ele devolve um <code>tool_calls</code> com o nome da função e os argumentos. <strong>Quem executa é o seu código</strong>, não o modelo; o resultado volta como uma mensagem <code>role: "tool"</code>, e o modelo continua. A ideia combina raciocínio e ação em passos alternados, como no artigo <em>ReAct</em> (Yao et al., 2022).</span><span class="en">An agent feels like magic until you see the code. The trick is called <strong>tool calling</strong>: along with the question, you describe functions the model may ask for. If it wants one, instead of text it returns a <code>tool_calls</code> with the function name and arguments. <strong>Your code runs it</strong>, not the model; the result goes back as a <code>role: "tool"</code> message, and the model continues. The idea mixes reasoning and acting in alternating steps, as in the <em>ReAct</em> paper (Yao et al., 2022).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="Laço do agente / Agent loop" style="min-width:620px">
+<rect x="10" y="100" width="130" height="50" rx="4" class="ln"/>
+<text x="75" y="122" class="pt" text-anchor="middle">Pergunta</text><text x="75" y="122" class="en" text-anchor="middle">Question</text>
+<text x="75" y="139" class="pt mut" text-anchor="middle">do usuário</text><text x="75" y="139" class="en mut" text-anchor="middle">from the user</text>
+<rect x="190" y="90" width="150" height="70" rx="4" class="brandfill"/>
+<text x="265" y="120" class="pt" text-anchor="middle">Modelo (LLM)</text><text x="265" y="120" class="en" text-anchor="middle">Model (LLM)</text>
+<text x="265" y="138" class="pt mut" text-anchor="middle">decide o próximo passo</text><text x="265" y="138" class="en mut" text-anchor="middle">decides the next step</text>
+<rect x="400" y="20" width="150" height="56" rx="4" class="ln"/>
+<text x="475" y="44" class="pt" text-anchor="middle">Executa a ferramenta</text><text x="475" y="44" class="en" text-anchor="middle">Runs the tool</text>
+<text x="475" y="62" class="mono" text-anchor="middle">calc · read_file</text>
+<rect x="400" y="175" width="150" height="56" rx="4" class="ln"/>
+<text x="475" y="199" class="pt" text-anchor="middle">Resposta final</text><text x="475" y="199" class="en" text-anchor="middle">Final answer</text>
+<text x="475" y="217" class="pt mut" text-anchor="middle">sem tool_calls</text><text x="475" y="217" class="en mut" text-anchor="middle">no tool_calls</text>
+<path d="M140 125L190 125" class="ln"/><path d="M183.7 128.0L190 125L183.7 122.0" class="ln"/>
+<path d="M340 105L400 58" class="ln"/><path d="M396.9 64.3L400 58L393.2 59.5" class="ln"/>
+<path d="M340 145L400 195" class="ln"/><path d="M393.2 193.3L400 195L397.1 188.6" class="ln"/>
+<text x="372" y="70" class="pt mut" text-anchor="end">pede ferramenta</text><text x="372" y="70" class="en mut" text-anchor="end">asks for a tool</text>
+<text x="372" y="196" class="pt mut" text-anchor="end">termina</text><text x="372" y="196" class="en mut" text-anchor="end">finishes</text>
+<path d="M550 48L650 48" class="ln"/>
+<path d="M650 48L650 125" class="ln"/>
+<path d="M650 125L345 125" class="ln dash"/><path d="M351.3 122.0L345 125L351.3 128.0" class="ln"/>
+<text x="500" y="146" class="pt mut" text-anchor="middle">resultado volta como mensagem</text><text x="500" y="146" class="en mut" text-anchor="middle">result goes back as a message</text>
+<text x="500" y="118" class="mono" text-anchor="middle">role: tool</text>
+</svg></div><figcaption><span class="pt">O laço do agente: o modelo pede uma ferramenta, o seu código a executa, o resultado volta ao modelo; repete até o modelo responder sem pedir nada.</span><span class="en">The agent loop: the model asks for a tool, your code runs it, the result goes back to the model; repeat until the model answers without asking for anything.</span></figcaption></figure>
+<h3><span class="pt">Atividade 5: escreva e rode o agente</span><span class="en">Activity 5: write and run the agent</span></h3>
+<p><span class="pt">Só usa a biblioteca padrão do Python (3.9 ou mais novo). Duas ferramentas: <code>calc</code> (faz contas sem usar <code>eval</code>) e <code>read_file</code> (lê arquivos, mas só dentro da pasta <code>workspace</code>). Salve como <code>agent.py</code>.</span><span class="en">It uses only the Python standard library (3.9 or newer). Two tools: <code>calc</code> (does maths without using <code>eval</code>) and <code>read_file</code> (reads files, but only inside the <code>workspace</code> folder). Save it as <code>agent.py</code>.</span></p>
+<p><code>agent.py</code></p>
+<pre><code>import ast, json, operator, os, sys, urllib.request
+
+BASE_URL = os.environ.get("LLM_BASE_URL", "http://localhost:11434/v1")
+MODEL = os.environ.get("LLM_MODEL", "qwen3:8b")
+API_KEY = os.environ.get("LLM_API_KEY", "not-needed")
+WORKDIR = os.path.abspath("workspace")
+MAX_STEPS = 6
+
+# ---- tools: plain Python functions -------------------------------------
+OPS = {ast.Add: operator.add, ast.Sub: operator.sub, ast.Mult: operator.mul,
+       ast.Div: operator.truediv, ast.Pow: operator.pow, ast.USub: operator.neg}
+
+def calc(expression):
+    def ev(n):
+        if isinstance(n, ast.Constant) and isinstance(n.value, (int, float)):
+            return n.value
+        if isinstance(n, ast.BinOp) and type(n.op) in OPS:
+            return OPS[type(n.op)](ev(n.left), ev(n.right))
+        if isinstance(n, ast.UnaryOp) and type(n.op) in OPS:
+            return OPS[type(n.op)](ev(n.operand))
+        raise ValueError("only numbers and + - * / ** are allowed")
+    return str(ev(ast.parse(expression, mode="eval").body))
+
+def read_file(path):
+    full = os.path.abspath(os.path.join(WORKDIR, path))
+    if not full.startswith(WORKDIR + os.sep):          # never leave the workspace
+        raise ValueError("path outside workspace")
+    with open(full, encoding="utf-8") as f:
+        return f.read()[:4000]                          # cap what goes back to the model
+
+TOOLS = {"calc": calc, "read_file": read_file}
+SCHEMAS = [
+    {"type": "function", "function": {
+        "name": "calc", "description": "Evaluate an arithmetic expression, e.g. 12*(3+4)",
+        "parameters": {"type": "object", "required": ["expression"],
+                       "properties": {"expression": {"type": "string"}}}}},
+    {"type": "function", "function": {
+        "name": "read_file", "description": "Read a text file from the workspace folder",
+        "parameters": {"type": "object", "required": ["path"],
+                       "properties": {"path": {"type": "string"}}}}},
+]
+
+# ---- the model call: one HTTP POST ---------------------------------------
+def chat(messages):
+    body = json.dumps({"model": MODEL, "messages": messages, "tools": SCHEMAS}).encode()
+    req = urllib.request.Request(f"{BASE_URL}/chat/completions", data=body, headers={
+        "Content-Type": "application/json", "Authorization": f"Bearer {API_KEY}"})
+    with urllib.request.urlopen(req, timeout=300) as resp:
+        return json.load(resp)["choices"][0]["message"]
+
+# ---- the agent loop --------------------------------------------------------
+def run(task):
+    messages = [{"role": "system", "content": "You are a careful assistant. Use tools when needed."},
+                {"role": "user", "content": task}]
+    for step in range(1, MAX_STEPS + 1):
+        msg = chat(messages)
+        messages.append(msg)
+        calls = msg.get("tool_calls") or []
+        if not calls:                                   # no tool requested: this is the answer
+            return msg["content"]
+        for call in calls:
+            name = call["function"]["name"]
+            args = json.loads(call["function"]["arguments"])
+            print(f"[step {step}] {name}({args})", file=sys.stderr)
+            try:
+                result = TOOLS[name](**args)
+            except Exception as e:                      # give the error back so the model can recover
+                result = f"error: {e}"
+            messages.append({"role": "tool", "tool_call_id": call["id"], "content": result})
+    return "stopped: step limit reached"
+
+if __name__ == "__main__":
+    print(run(" ".join(sys.argv[1:]) or "What is 17% of 2350?"))</code></pre>
+<pre><code>mkdir workspace &amp;&amp; echo "The deploy key rotates every 90 days." &gt; workspace/notes.txt
+
+python3 agent.py "What is 17% of 2350?"
+python3 agent.py "Read notes.txt and tell me how often the deploy key rotates."
+python3 agent.py "Read ../../etc/passwd"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> na primeira, o terminal mostra em <code>stderr</code> uma linha como <code>[step 1] calc({'expression': '2350*0.17'})</code> e a resposta final cita <strong>399,5</strong> (o modelo pode escrever “399.5”). Na segunda, aparece <code>read_file</code> e a resposta é “a cada 90 dias”. Na terceira, o seu código bloqueia: a ferramenta devolve <code>error: path outside workspace</code>, o modelo lê o erro e explica que não pôde ler. O laço funcionou como mostrado na figura, e a trava de segurança está no <em>seu</em> código, não na boa vontade do modelo. Modelos muito pequenos às vezes erram o formato da chamada: se acontecer, troque por um que liste “tools” (como o <code>qwen3</code>).</span><span class="en"><strong>Expected result:</strong> on the first, the terminal shows on <code>stderr</code> a line like <code>[step 1] calc({'expression': '2350*0.17'})</code> and the final answer cites <strong>399.5</strong>. On the second, <code>read_file</code> appears and the answer is “every 90 days”. On the third, your code blocks it: the tool returns <code>error: path outside workspace</code>, the model reads the error and explains it could not read the file. The loop worked as in the figure, and the safety guard lives in <em>your</em> code, not in the model’s goodwill. Very small models sometimes get the call format wrong: if that happens, switch to one that lists “tools” (such as <code>qwen3</code>).</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Por que o <code>try/except</code> devolve o erro ao modelo em vez de parar? Porque um agente útil se recupera: ele lê “file not found”, tenta outro nome e segue. O <code>MAX_STEPS</code> impede um laço infinito (e uma conta inesperada, se o modelo for pago).</span><span class="en">Why does the <code>try/except</code> hand the error back to the model instead of stopping? Because a useful agent recovers: it reads “file not found”, tries another name and moves on. <code>MAX_STEPS</code> prevents an infinite loop (and a surprise bill, if the model is paid).</span></div>
+</section>
+<section class="content-section" aria-labelledby="connect">
+<h2 id="connect"><span class="pt">Conectando agente, modelo e ferramentas</span><span class="en">Connecting agent, model and tools</span></h2>
+<p><span class="pt">Há <strong>duas conexões</strong> diferentes, e cada uma tem o seu padrão aberto.</span><span class="en">There are <strong>two different connections</strong>, and each has its own open standard.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Conexão</span><span class="en">Connection</span></th><th><span class="pt">Padrão</span><span class="en">Standard</span></th><th><span class="pt">Na prática</span><span class="en">In practice</span></th></tr></thead><tbody><tr><td><span class="pt">Agente ↔ modelo</span><span class="en">Agent ↔ model</span></td><td><span class="pt">API compatível com a da OpenAI</span><span class="en">OpenAI-compatible API</span></td><td><span class="pt">Você só troca a <code>base_url</code> (e a chave). Ollama, llama.cpp e vLLM falam o mesmo dialeto.</span><span class="en">You only change the <code>base_url</code> (and the key). Ollama, llama.cpp and vLLM speak the same dialect.</span></td></tr><tr><td><span class="pt">Agente ↔ ferramentas</span><span class="en">Agent ↔ tools</span></td><td>MCP (Model Context Protocol)</td><td><span class="pt">Um servidor MCP expõe ferramentas, dados e prompts; qualquer agente que fale MCP os usa sem código novo.</span><span class="en">An MCP server exposes tools, data and prompts; any agent that speaks MCP uses them with no new code.</span></td></tr></tbody></table></div>
+<p><span class="pt">A documentação do MCP o descreve como um padrão aberto para conectar aplicações de IA a sistemas externos, e usa a analogia de uma porta USB-C: um conector único em vez de uma integração sob medida para cada par agente-ferramenta. É por isso que o agente da seção anterior, com funções Python escritas à mão, é só o começo: em projetos maiores você troca essas funções por servidores MCP prontos (arquivos, bancos, repositórios, navegador).</span><span class="en">The MCP documentation describes it as an open standard for connecting AI applications to external systems, and uses the USB-C analogy: one connector instead of a custom integration for every agent-tool pair. That is why the agent in the previous section, with hand-written Python functions, is only the start: in larger projects you swap those functions for ready-made MCP servers (files, databases, repositories, browser).</span></p>
+<h3><span class="pt">Atividade 6: troque o modelo sem mexer no agente</span><span class="en">Activity 6: swap the model without touching the agent</span></h3>
+<p><span class="pt">O <code>agent.py</code> lê a <code>base_url</code>, o modelo e a chave de variáveis de ambiente. Rode a mesma tarefa contra cada servidor:</span><span class="en">The <code>agent.py</code> reads the <code>base_url</code>, the model and the key from environment variables. Run the same task against each server:</span></p>
+<pre><code># 1) Ollama (defaults)
+python3 agent.py "What is 17% of 2350?"
+
+# 2) llama.cpp, from Activity 4
+LLM_BASE_URL=http://127.0.0.1:8080/v1 LLM_API_KEY=my-secret-key LLM_MODEL=gemma-3-4b-it \
+  python3 agent.py "What is 17% of 2350?"
+
+# 3) any other OpenAI-compatible server (cloud, in Section 6)
+LLM_BASE_URL=http://localhost:8000/v1 LLM_API_KEY=$VLLM_TOKEN LLM_MODEL=Qwen/Qwen2.5-7B-Instruct \
+  python3 agent.py "What is 17% of 2350?"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> as respostas têm o mesmo formato e chegam ao mesmo número, mesmo com modelos e servidores diferentes. O texto exato muda (modelos são probabilísticos), o contrato não. Esse desacoplamento é o que permite desenvolver no notebook e rodar na nuvem sem reescrever nada.</span><span class="en"><strong>Expected result:</strong> the answers have the same shape and reach the same number, even with different models and servers. The exact wording changes (models are probabilistic), the contract does not. This decoupling is what lets you develop on a laptop and run in the cloud without rewriting anything.</span></p>
+<h3><span class="pt">E se eu não quiser escrever o laço?</span><span class="en">What if I do not want to write the loop?</span></h3>
+<ul><li><span class="pt"><strong>smolagents</strong> (Hugging Face): biblioteca open-source minúscula, com agentes que escrevem código como ação (<code>CodeAgent</code>) ou chamam ferramentas em JSON (<code>ToolCallingAgent</code>). Funciona com modelos locais, via Ollama, e aceita ferramentas de servidores MCP.</span><span class="en"><strong>smolagents</strong> (Hugging Face): a tiny open-source library, with agents that write code as their action (<code>CodeAgent</code>) or call tools in JSON (<code>ToolCallingAgent</code>). It works with local models through Ollama and accepts tools from MCP servers.</span></li><li><span class="pt"><strong>LangGraph</strong>: modela o agente como um grafo de estados, útil quando o fluxo tem ramificações, repetições e pontos de aprovação humana.</span><span class="en"><strong>LangGraph</strong>: models the agent as a state graph, useful when the flow has branches, repeats and human-approval points.</span></li><li><span class="pt"><strong>Open WebUI</strong>: uma interface de chat web, open-source, que se conecta a Ollama ou a qualquer API compatível com a da OpenAI.</span><span class="en"><strong>Open WebUI</strong>: an open-source web chat interface that connects to Ollama or to any OpenAI-compatible API.</span></li></ul>
+<p><span class="pt">Aprenda primeiro o laço de 70 linhas: com ele entendido, qualquer framework deixa de ser caixa-preta, e você sabe depurar quando algo der errado.</span><span class="en">Learn the 70-line loop first: once you understand it, any framework stops being a black box, and you know how to debug when something goes wrong.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cloud">
+<h2 id="cloud"><span class="pt">Quando o seu computador não basta: subir na nuvem</span><span class="en">When your computer is not enough: move to the cloud</span></h2>
+<p><span class="pt">Sinais de que chegou a hora: o modelo que você precisa não cabe na memória (o <code>ollama ps</code> mostra divisão CPU/GPU), a velocidade é pequena demais para trabalhar (poucos tokens por segundo), ou várias pessoas precisam usar o mesmo modelo. Existem três caminhos:</span><span class="en">Signs it is time: the model you need does not fit in memory (<code>ollama ps</code> shows a CPU/GPU split), the speed is too low to work with (few tokens per second), or several people need the same model. There are three paths:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Caminho</span><span class="en">Path</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Quando escolher</span><span class="en">When to choose it</span></th></tr></thead><tbody><tr><td><span class="pt"><strong>Alugar uma VM com GPU</strong></span><span class="en"><strong>Rent a GPU VM</strong></span></td><td><span class="pt">Você liga uma máquina com GPU (AWS EC2, ou provedores especializados), instala Ollama ou vLLM e paga por hora enquanto ela estiver ligada.</span><span class="en">You start a GPU machine (AWS EC2, or specialised providers), install Ollama or vLLM and pay by the hour while it is on.</span></td><td><span class="pt">Mais controle, mesmo software do local. <strong>É o caminho desta nota.</strong></span><span class="en">Most control, same software as local. <strong>This is the path in this note.</strong></span></td></tr><tr><td><span class="pt">Endpoint gerenciado</span><span class="en">Managed endpoint</span></td><td><span class="pt">O provedor hospeda o modelo aberto e cobra por uso ou por hora (por exemplo, Amazon Bedrock ou Hugging Face Inference Endpoints).</span><span class="en">The provider hosts the open model and bills per use or per hour (for example Amazon Bedrock or Hugging Face Inference Endpoints).</span></td><td><span class="pt">Você não quer administrar servidor.</span><span class="en">You do not want to run a server.</span></td></tr><tr><td><span class="pt">Híbrido</span><span class="en">Hybrid</span></td><td><span class="pt">O agente roda no notebook e só o modelo vai para a nuvem (a Atividade 7).</span><span class="en">The agent runs on the laptop and only the model goes to the cloud (Activity 7).</span></td><td><span class="pt">Quer manter ferramentas e arquivos locais.</span><span class="en">You want tools and files to stay local.</span></td></tr></tbody></table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="Túnel SSH para GPU / SSH tunnel to a GPU" style="min-width:620px">
+<rect x="10" y="70" width="200" height="110" rx="4" class="ln"/>
+<text x="110" y="98" class="pt" text-anchor="middle">Seu notebook</text><text x="110" y="98" class="en" text-anchor="middle">Your laptop</text>
+<text x="110" y="120" class="mono" text-anchor="middle">agent.py</text>
+<text x="110" y="140" class="mono" text-anchor="middle">localhost:11434</text>
+<text x="110" y="162" class="pt mut" text-anchor="middle">sem GPU</text><text x="110" y="162" class="en mut" text-anchor="middle">no GPU</text>
+<rect x="300" y="85" width="120" height="80" rx="4" class="ln fillsoft"/>
+<text x="360" y="112" class="pt" text-anchor="middle">Túnel SSH</text><text x="360" y="112" class="en" text-anchor="middle">SSH tunnel</text>
+<text x="360" y="132" class="pt mut" text-anchor="middle">criptografado</text><text x="360" y="132" class="en mut" text-anchor="middle">encrypted</text>
+<text x="360" y="150" class="pt mut" text-anchor="middle">porta 22</text><text x="360" y="150" class="en mut" text-anchor="middle">port 22</text>
+<rect x="480" y="40" width="210" height="170" rx="4" class="brandfill"/>
+<text x="585" y="68" class="pt" text-anchor="middle">VM com GPU</text><text x="585" y="68" class="en" text-anchor="middle">GPU VM</text>
+<text x="585" y="90" class="pt mut" text-anchor="middle">ex.: g5.xlarge (A10G, 24 GB)</text><text x="585" y="90" class="en mut" text-anchor="middle">e.g. g5.xlarge (A10G, 24 GB)</text>
+<text x="585" y="120" class="mono" text-anchor="middle">Ollama / vLLM</text>
+<text x="585" y="140" class="mono" text-anchor="middle">127.0.0.1:11434</text>
+<text x="585" y="168" class="pt mut" text-anchor="middle">só aceita conexão local</text><text x="585" y="168" class="en mut" text-anchor="middle">accepts local connections only</text>
+<text x="585" y="188" class="pt mut" text-anchor="middle">firewall: só o SSH, só o seu IP</text><text x="585" y="188" class="en mut" text-anchor="middle">firewall: SSH only, your IP only</text>
+<path d="M210 125L300 125" class="ln"/><path d="M293.7 128.0L300 125L293.7 122.0" class="ln"/>
+<path d="M420 125L480 125" class="ln"/><path d="M473.7 128.0L480 125L473.7 122.0" class="ln"/>
+</svg></div><figcaption><span class="pt">O agente continua no seu notebook e acha que o modelo é local; o túnel SSH leva a porta 11434 até a GPU alugada, que nunca é exposta à internet.</span><span class="en">The agent stays on your laptop and thinks the model is local; the SSH tunnel carries port 11434 to the rented GPU, which is never exposed to the internet.</span></figcaption></figure>
+<p><span class="pt">Como referência de tamanho, a instância <strong>g5.xlarge</strong> da AWS traz uma GPU NVIDIA A10G com 24 GB de memória, 4 vCPUs e 16 GiB de RAM (página oficial da família G5): dá para um modelo de até 14B a 32B em 4 bits, conforme a tabela da seção 2. Os preços mudam por região e por tempo; consulte a página de preços da AWS antes de ligar, e leia a nota de <a href="../aws/index.html">AWS</a> deste site para criar a conta, os alertas de orçamento e o acesso seguro.</span><span class="en">As a size reference, the AWS <strong>g5.xlarge</strong> instance has an NVIDIA A10G GPU with 24 GB of memory, 4 vCPUs and 16 GiB of RAM (official G5 family page): enough for a model of 14B to 32B in 4 bits, per the table in section 2. Prices vary by region and time; check the AWS pricing page before you start, and read the <a href="../aws/index.html">AWS</a> note on this site to set up the account, budget alerts and secure access.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Antes de ligar qualquer GPU:</strong> crie um alerta de orçamento (AWS Budgets) e anote como desligar a máquina. Uma GPU esquecida ligada é a forma mais comum de levar um susto na fatura.</span><span class="en"><strong>Before starting any GPU:</strong> create a budget alert (AWS Budgets) and note how to stop the machine. A GPU left running is the most common way to get a surprise bill.</span></div>
+<h3><span class="pt">Atividade 7: Ollama numa GPU alugada, acessado por túnel SSH</span><span class="en">Activity 7: Ollama on a rented GPU, reached through an SSH tunnel</span></h3>
+<ol class="ds-steps"><li><span class="pt"><strong>Ligue a máquina.</strong> No console da AWS, inicie uma instância g5.xlarge com uma imagem que já traga os drivers NVIDIA (por exemplo, uma Deep Learning AMI de Ubuntu) e disco de 100 GB. No grupo de segurança, libere <em>apenas</em> a porta 22 (SSH) e <em>apenas</em> para o seu IP.</span><span class="en"><strong>Start the machine.</strong> In the AWS console, launch a g5.xlarge instance with an image that already includes NVIDIA drivers (for example an Ubuntu Deep Learning AMI) and a 100 GB disk. In the security group, open <em>only</em> port 22 (SSH) and <em>only</em> to your IP.</span></li><li><span class="pt"><strong>Entre e confirme a GPU:</strong> <code>ssh -i key.pem ubuntu@IP_DA_MAQUINA</code> e depois <code>nvidia-smi</code>. Deve listar a A10G com cerca de 24 GB.</span><span class="en"><strong>Log in and confirm the GPU:</strong> <code>ssh -i key.pem ubuntu@MACHINE_IP</code> and then <code>nvidia-smi</code>. It should list the A10G with about 24 GB.</span></li><li><span class="pt"><strong>Instale o Docker e o NVIDIA Container Toolkit</strong> (a documentação do Ollama indica este kit para usar GPU em contêiner) e suba o Ollama <em>preso ao localhost da VM</em>:</span><span class="en"><strong>Install Docker and the NVIDIA Container Toolkit</strong> (the Ollama documentation points to this toolkit for GPU in containers) and start Ollama <em>bound to the VM’s localhost</em>:</span></li></ol>
+<pre><code># on the GPU VM
+docker run -d --gpus=all -v ollama:/root/.ollama -p 127.0.0.1:11434:11434 --name ollama ollama/ollama
+docker exec ollama ollama pull qwen3:32b
+docker exec ollama ollama ps</code></pre>
+<ol class="ds-steps"><li><span class="pt"><strong>Abra o túnel no seu notebook</strong> e rode o mesmo agente:</span><span class="en"><strong>Open the tunnel on your laptop</strong> and run the same agent:</span></li></ol>
+<pre><code># on your laptop, terminal 1 (leave it open)
+ssh -i key.pem -N -L 11434:127.0.0.1:11434 ubuntu@MACHINE_IP
+
+# terminal 2: the agent does not change, it still talks to localhost:11434
+LLM_MODEL=qwen3:32b python3 agent.py "What is 17% of 2350?"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o <code>nvidia-smi</code> da VM mostra o processo do Ollama usando a VRAM durante a resposta, o <code>ollama ps</code> mostra <code>100% GPU</code> e a resposta do agente chega mais rápida do que no notebook, com um modelo maior. Do ponto de vista do <code>agent.py</code>, nada mudou: a porta local 11434 agora é o túnel até a GPU.</span><span class="en"><strong>Expected result:</strong> the VM’s <code>nvidia-smi</code> shows the Ollama process using VRAM during the answer, <code>ollama ps</code> shows <code>100% GPU</code>, and the agent’s answer arrives faster than on the laptop, with a larger model. From <code>agent.py</code>’s point of view nothing changed: local port 11434 is now the tunnel to the GPU.</span></p>
+<h3><span class="pt">Alternativa para vários usuários: vLLM</span><span class="en">Alternative for several users: vLLM</span></h3>
+<p><span class="pt">Para atender uma equipe, o vLLM é mais eficiente. Na VM, instale-o (<code>pip install vllm</code>, de preferência num ambiente virtual) e suba o servidor. Segundo a documentação, ligar a chamada de ferramentas exige <code>--enable-auto-tool-choice</code> e um <code>--tool-call-parser</code> que combine com o modelo (para o Qwen2.5, o <code>hermes</code>):</span><span class="en">To serve a team, vLLM is more efficient. On the VM, install it (<code>pip install vllm</code>, preferably in a virtual environment) and start the server. Per the documentation, enabling tool calling requires <code>--enable-auto-tool-choice</code> and a <code>--tool-call-parser</code> that matches the model (for Qwen2.5, <code>hermes</code>):</span></p>
+<pre><code># on the GPU VM
+export VLLM_TOKEN=$(openssl rand -hex 24)      # a long random key; save it
+vllm serve Qwen/Qwen2.5-7B-Instruct \
+  --enable-auto-tool-choice --tool-call-parser hermes \
+  --host 127.0.0.1 --port 8000 --api-key "$VLLM_TOKEN"
+
+# on your laptop
+ssh -i key.pem -N -L 8000:127.0.0.1:8000 ubuntu@MACHINE_IP
+LLM_BASE_URL=http://localhost:8000/v1 LLM_API_KEY=&lt;the-token&gt; LLM_MODEL=Qwen/Qwen2.5-7B-Instruct \
+  python3 agent.py "What is 17% of 2350?"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> o log do vLLM termina com o servidor escutando em 127.0.0.1:8000. Uma chamada sem a chave devolve <code>401</code>, e com a chave o agente responde como antes. Duas camadas de proteção: o servidor só escuta no localhost da VM e ainda exige a chave.</span><span class="en"><strong>Expected result:</strong> the vLLM log ends with the server listening on 127.0.0.1:8000. A call without the key returns <code>401</code>, and with the key the agent answers as before. Two layers of protection: the server only listens on the VM’s localhost and still requires the key.</span></p>
+<h3><span class="pt">Atividade 8: desligue e confirme</span><span class="en">Activity 8: shut down and confirm</span></h3>
+<p><span class="pt">Terminou? Encerre o túnel (<kbd>Ctrl+C</kbd>), e no console da AWS <strong>encerre (terminate)</strong> a instância, ou <em>pare</em> (stop) se quiser voltar depois. Parar interrompe a cobrança da computação, mas o disco continua cobrado; encerrar apaga tudo.</span><span class="en">Done? Close the tunnel (<kbd>Ctrl+C</kbd>), and in the AWS console <strong>terminate</strong> the instance, or <em>stop</em> it if you want to return later. Stopping ends compute billing, but the disk is still billed; terminating deletes everything.</span></p>
+<p><span class="pt"><strong>Resultado esperado:</strong> no console, a instância aparece como <code>terminated</code> (ou <code>stopped</code>), a lista de volumes está vazia quando encerrada, e o painel de custos deixa de somar horas de GPU. Seu agente continua funcionando no notebook com um modelo local menor.</span><span class="en"><strong>Expected result:</strong> in the console the instance shows as <code>terminated</code> (or <code>stopped</code>), the volume list is empty when terminated, and the cost dashboard stops adding GPU hours. Your agent keeps working on the laptop with a smaller local model.</span></p>
+</section>
+<section class="content-section" aria-labelledby="security">
+<h2 id="security"><span class="pt">Segurança: o que muda quando o modelo tem “mãos”</span><span class="en">Security: what changes when the model has “hands”</span></h2>
+<ul><li><span class="pt"><strong>Nunca exponha o servidor à internet.</strong> A documentação do Ollama explica que ele escuta só em <code>127.0.0.1</code> por padrão e que mudar o <code>OLLAMA_HOST</code> para <code>0.0.0.0</code> não adiciona nenhuma autenticação. Use túnel SSH, VPN ou um proxy reverso com autenticação.</span><span class="en"><strong>Never expose the server to the internet.</strong> The Ollama documentation explains it listens only on <code>127.0.0.1</code> by default and that changing <code>OLLAMA_HOST</code> to <code>0.0.0.0</code> adds no authentication. Use an SSH tunnel, a VPN or an authenticated reverse proxy.</span></li><li><span class="pt"><strong>Menor privilégio nas ferramentas.</strong> Dê ao agente só o que a tarefa exige: uma pasta, não o disco inteiro (como o <code>read_file</code> faz); leitura, não escrita; uma conta de banco somente leitura.</span><span class="en"><strong>Least privilege on tools.</strong> Give the agent only what the task needs: one folder, not the whole disk (as <code>read_file</code> does); read, not write; a read-only database account.</span></li><li><span class="pt"><strong>Injeção de prompt.</strong> Qualquer texto que o agente leia (página web, e-mail, arquivo) pode conter instruções escondidas. O OWASP lista a injeção de prompt e o excesso de autonomia entre os principais riscos de aplicações com LLMs. Peça confirmação humana antes de ações irreversíveis (apagar, enviar, pagar).</span><span class="en"><strong>Prompt injection.</strong> Any text the agent reads (a web page, an email, a file) may carry hidden instructions. OWASP lists prompt injection and excessive agency among the top risks of LLM applications. Ask for human confirmation before irreversible actions (delete, send, pay).</span></li><li><span class="pt"><strong>Segredos fora do código.</strong> Chaves em variáveis de ambiente ou no gerenciador de segredos, nunca no repositório.</span><span class="en"><strong>Secrets out of code.</strong> Keys in environment variables or a secrets manager, never in the repository.</span></li></ul>
+<p><span class="pt">Para ir mais fundo, veja a nota <a href="../web-app-security/index.html">Secure web apps: headers, auth and AI agents</a> deste site.</span><span class="en">To go deeper, see the <a href="../web-app-security/index.html">Secure web apps: headers, auth and AI agents</a> note on this site.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-llm">
+<h2 id="cheat-llm"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th><span class="pt">Uso</span><span class="en">I use</span></th></tr></thead><tbody><tr><td><span class="pt">estimar a memória</span><span class="en">estimate memory</span></td><td><code><span class="pt">parâmetros × bits ÷ 8, mais 1–3 GB</span><span class="en">parameters × bits ÷ 8, plus 1–3 GB</span></code></td></tr><tr><td><span class="pt">rodar um modelo rápido</span><span class="en">run a model quickly</span></td><td><code>ollama run qwen3:8b</code></td></tr><tr><td><span class="pt">ver se está na GPU</span><span class="en">see if it is on the GPU</span></td><td><code>ollama ps</code></td></tr><tr><td><span class="pt">chamar por HTTP</span><span class="en">call over HTTP</span></td><td><code>POST /v1/chat/completions</code></td></tr><tr><td><span class="pt">servir GGUF com chave</span><span class="en">serve GGUF with a key</span></td><td><code>llama-server -hf … --port 8080 --api-key …</code></td></tr><tr><td><span class="pt">servir vários usuários na GPU</span><span class="en">serve several users on GPU</span></td><td><code>vllm serve … --enable-auto-tool-choice --tool-call-parser …</code></td></tr><tr><td><span class="pt">trocar de servidor</span><span class="en">switch server</span></td><td><code>LLM_BASE_URL</code>, <code>LLM_MODEL</code>, <code>LLM_API_KEY</code></td></tr><tr><td><span class="pt">usar a GPU da nuvem sem expô-la</span><span class="en">use the cloud GPU without exposing it</span></td><td><code>ssh -N -L 11434:127.0.0.1:11434 user@ip</code></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Qual a diferença entre modelo, servidor e agente? Qual deles é “só um arquivo”?</span><span class="en">What is the difference between model, server and agent? Which one is “just a file”?</span></li><li><span class="pt">Por que um modelo de 8B em 4 bits ocupa perto de 5 GB e não 16 GB?</span><span class="en">Why does an 8B model in 4 bits take close to 5 GB and not 16 GB?</span></li><li><span class="pt">No laço do agente, quem executa a ferramenta: o modelo ou o seu código? Por que isso importa para a segurança?</span><span class="en">In the agent loop, who runs the tool: the model or your code? Why does that matter for security?</span></li><li><span class="pt">O que muda no <code>agent.py</code> ao sair do Ollama local para o vLLM na nuvem?</span><span class="en">What changes in <code>agent.py</code> when moving from local Ollama to vLLM in the cloud?</span></li><li><span class="pt">Por que usar um túnel SSH em vez de abrir a porta 11434 para a internet?</span><span class="en">Why use an SSH tunnel instead of opening port 11434 to the internet?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://docs.ollama.com/api/openai-compatibility" rel="noopener">Ollama docs: OpenAI compatibility</a></li>
+<li><a href="https://docs.ollama.com/capabilities/tool-calling" rel="noopener">Ollama docs: Tool calling</a></li>
+<li><a href="https://docs.ollama.com/faq" rel="noopener">Ollama docs: FAQ (OLLAMA_HOST, keep-alive, context length, GPU, Docker)</a></li>
+<li><a href="https://ollama.com/library/qwen3" rel="noopener">Ollama library: Qwen3 (sizes and tags)</a></li>
+<li><a href="https://github.com/ggml-org/llama.cpp/blob/master/tools/server/README.md" rel="noopener">llama.cpp: llama-server README</a></li>
+<li><a href="https://docs.vllm.ai/en/latest/serving/online_serving/" rel="noopener">vLLM docs: OpenAI-compatible server</a> · <a href="https://docs.vllm.ai/en/stable/features/tool_calling.html" rel="noopener">Tool calling</a></li>
+<li><a href="https://arxiv.org/abs/2309.06180" rel="noopener">Kwon et al. (2023): Efficient Memory Management for LLM Serving with PagedAttention (vLLM)</a></li>
+<li><a href="https://arxiv.org/abs/2212.09720" rel="noopener">Dettmers and Zettlemoyer (2022): The case for 4-bit precision: k-bit inference scaling laws</a></li>
+<li><a href="https://arxiv.org/abs/2210.03629" rel="noopener">Yao et al. (2022): ReAct: Synergizing Reasoning and Acting in Language Models</a></li>
+<li><a href="https://www.anthropic.com/engineering/building-effective-agents" rel="noopener">Anthropic: Building effective agents</a></li>
+<li><a href="https://modelcontextprotocol.io/docs/getting-started/intro" rel="noopener">Model Context Protocol: What is MCP?</a></li>
+<li><a href="https://huggingface.co/docs/smolagents/index" rel="noopener">Hugging Face: smolagents docs</a></li>
+<li><a href="https://langchain-ai.github.io/langgraph/" rel="noopener">LangGraph docs</a></li>
+<li><a href="https://docs.openwebui.com/" rel="noopener">Open WebUI docs</a></li>
+<li><a href="https://aws.amazon.com/ec2/instance-types/g5/" rel="noopener">AWS: Amazon EC2 G5 instances</a></li>
+<li><a href="https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html" rel="noopener">AWS: Managing your costs with AWS Budgets</a></li>
+<li><a href="https://genai.owasp.org/llm-top-10/" rel="noopener">OWASP: Top 10 for LLM Applications</a></li>
+</ul></div>
+</article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
