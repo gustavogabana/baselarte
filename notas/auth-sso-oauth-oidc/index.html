@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="auth.metaTitle">Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/auth-sso-oauth-oidc/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/auth-sso-oauth-oidc/">
+  <meta property="og:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+          <li><a href="../auth-sso-oauth-oidc/index.html" aria-current="page"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
+        <ul data-sidebar-group>
+          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
+          <li><a href="../llm-agents-open-source/index.html"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
+        <ul data-sidebar-group>
+          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#tldr"><span class="pt">Resumo (TL;DR)</span><span class="en">Summary (TL;DR)</span></a></li>
+        <li><a href="#authn-authz"><span class="pt">Autenticação vs. autorização</span><span class="en">Authentication vs. authorization</span></a></li>
+        <li><a href="#prove"><span class="pt">Formas de provar identidade</span><span class="en">Ways to prove identity</span></a></li>
+        <li><a href="#protocols"><span class="pt">Protocolos e padrões</span><span class="en">Protocols and standards</span></a></li>
+        <li><a href="#glossary"><span class="pt">Glossário</span><span class="en">Glossary</span></a></li>
+        <li><a href="#flow"><span class="pt">Fluxo completo: “Entrar com Google”</span><span class="en">Full flow: “Sign in with Google”</span></a></li>
+        <li><a href="#rule"><span class="pt">Regra de bolso</span><span class="en">Rule of thumb</span></a></li>
+        <li><a href="#actions-aws"><span class="pt">Prática: OIDC no GitHub Actions → AWS</span><span class="en">Practice: OIDC from GitHub Actions → AWS</span></a></li>
+        <li><a href="#errors"><span class="pt">Erros comuns e como resolver</span><span class="en">Common errors and how to fix them</span></a></li>
+        <li><a href="#refs"><span class="pt">Links de referência oficiais</span><span class="en">Official reference links</span></a></li>
+        <li><a href="#review"><span class="pt">Para revisar depois</span><span class="en">To review later</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></li></ol></nav>
+    <section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="auth.kicker">Identity and access</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="auth.heroTitle">Sign-in and authentication: <em>SSO, OAuth, OIDC and friends.</em></h1>
+      <p class="hero-lede" data-i18n="auth.heroLede">Who you are, what you may do, and how the standards fit together, ending with GitHub Actions signing in to AWS without stored keys.</p>
+      <p class="monospace-label"><span class="pt">Status: rascunho · criada em 2026-10-22 · tags: auth, sso, oidc, oauth, aws, github-actions</span><span class="en">Status: draft · created 2026-10-22 · tags: auth, sso, oidc, oauth, aws, github-actions</span></p>
+    </section>
+        <section class="content-section" aria-labelledby="tldr">
+          <h2 id="tldr"><span class="pt">Resumo (TL;DR)</span><span class="en">Summary (TL;DR)</span></h2>
+          <ol class="ds-steps">
+            <li><span class="pt"><b>Autenticar</b> é provar quem você é; <b>autorizar</b> é decidir o que você pode fazer. São perguntas diferentes e protocolos diferentes.</span><span class="en"><b>Authenticating</b> is proving who you are; <b>authorizing</b> is deciding what you may do. They are different questions with different protocols.</span></li>
+            <li><span class="pt"><b>OAuth 2.0</b> cuida de autorização (tokens com escopo); <b>OIDC</b> e <b>SAML</b> cuidam de autenticação; <b>SSO</b> é a experiência de entrar uma vez só; <b>MFA</b> reforça a prova de identidade.</span><span class="en"><b>OAuth 2.0</b> handles authorization (scoped tokens); <b>OIDC</b> and <b>SAML</b> handle authentication; <b>SSO</b> is the log-in-once experience; <b>MFA</b> strengthens the proof of identity.</span></li>
+            <li><span class="pt">Em CI/CD, use <b>OIDC</b> para o GitHub Actions entrar na AWS com credenciais temporárias, sem chaves de acesso fixas guardadas em secrets.</span><span class="en">In CI/CD, use <b>OIDC</b> so GitHub Actions signs in to AWS with temporary credentials, with no fixed access keys stored in secrets.</span></li>
+          </ol>
+          <div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Status: rascunho.</strong> Os detalhes técnicos vêm de especificações e documentações oficiais (links no fim); onde houver dúvida, a nota pede para conferir na documentação. Nomes de campos, formatos e telas mudam: valide antes de aplicar em produção.</span><span class="en"><strong>Status: draft.</strong> The technical details come from official specifications and documentation (links at the end); where in doubt, the note says to check the documentation. Field names, formats and screens change: validate before applying in production.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="authn-authz">
+          <h2 id="authn-authz"><span class="pt">Autenticação vs. autorização</span><span class="en">Authentication vs. authorization</span></h2>
+          <p><span class="pt">Dois conceitos que parecem um só e são a fonte da maior parte da confusão nesta área.</span><span class="en">Two concepts that look like one and cause most of the confusion in this area.</span></p>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Nome</span><span class="en">Name</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt">Quem é você?</span><span class="en">Who are you?</span></td><td><span class="pt"><b>Autenticação</b> (AuthN)</span><span class="en"><b>Authentication</b> (AuthN)</span></td><td><span class="pt">Senha + código do app autenticador</span><span class="en">Password + authenticator-app code</span></td></tr>
+                <tr><td><span class="pt">O que você pode fazer?</span><span class="en">What may you do?</span></td><td><span class="pt"><b>Autorização</b> (AuthZ)</span><span class="en"><b>Authorization</b> (AuthZ)</span></td><td><span class="pt">Pode ler o bucket, mas não apagar</span><span class="en">May read the bucket, but not delete it</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="callout good"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Analogia do hotel.</b> Na recepção você mostra o documento (autenticação). Em troca, recebe um cartão que abre só o seu quarto e a academia, não os outros quartos (autorização). O cartão não diz o seu nome; só diz o que abre.</span><span class="en"><b>Hotel analogy.</b> At the front desk you show your ID (authentication). In return you get a key card that opens only your room and the gym, not the other rooms (authorization). The card does not say your name; it only says what it opens.</span></div>
+          <p><span class="pt">A ordem importa: primeiro se autentica, depois se autoriza. Um sistema que autoriza sem autenticar libera acesso para qualquer um; um que autentica sem autorizar deixa todo mundo logado ver tudo.</span><span class="en">Order matters: authenticate first, then authorize. A system that authorizes without authenticating gives access to anyone; one that authenticates without authorizing lets every logged-in user see everything.</span></p>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Regra para o resto da nota:</b> toda vez que aparecer OAuth, lembre que ele é sobre <b>autorização</b> (delegar acesso com um token). Saber <i>quem</i> é o usuário é trabalho do OpenID Connect, que roda por cima do OAuth.</span><span class="en"><b>Rule for the rest of the note:</b> whenever OAuth appears, remember it is about <b>authorization</b> (delegating access with a token). Knowing <i>who</i> the user is is the job of OpenID Connect, which runs on top of OAuth.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="prove">
+          <h2 id="prove"><span class="pt">Formas de provar identidade</span><span class="en">Ways to prove identity</span></h2>
+          <p><span class="pt">Os métodos se agrupam em três tipos de fator: algo que você <b>sabe</b>, algo que você <b>tem</b> e algo que você <b>é</b>.</span><span class="en">Methods fall into three kinds of factor: something you <b>know</b>, something you <b>have</b> and something you <b>are</b>.</span></p>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Método</span><span class="en">Method</span></th><th><span class="pt">Fator</span><span class="en">Factor</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Ponto de atenção</span><span class="en">Watch out for</span></th></tr></thead>
+              <tbody>
+                <tr><td><span class="pt"><b>Senha</b></span><span class="en"><b>Password</b></span></td><td><span class="pt">Sabe</span><span class="en">Know</span></td><td><span class="pt">Segredo compartilhado: você e o servidor conhecem o mesmo valor (o servidor guarda um hash).</span><span class="en">Shared secret: you and the server know the same value (the server stores a hash).</span></td><td><span class="pt">Reuso, vazamento e phishing. Sozinha é o elo mais fraco.</span><span class="en">Reuse, leaks and phishing. Alone, it is the weakest link.</span></td></tr>
+                <tr><td><span class="pt"><b>MFA / 2FA</b></span><span class="en"><b>MFA / 2FA</b></span></td><td><span class="pt">Combina fatores</span><span class="en">Combines factors</span></td><td><span class="pt">Exige dois ou mais fatores de tipos diferentes (MFA = múltiplos; 2FA = exatamente dois). Ex.: senha + código TOTP (RFC 6238) ou chave de segurança.</span><span class="en">Requires two or more factors of different kinds (MFA = multiple; 2FA = exactly two). E.g. password + TOTP code (RFC 6238) or a security key.</span></td><td><span class="pt">SMS é o mais fraco (troca de chip, interceptação). Prefira app autenticador ou chave física.</span><span class="en">SMS is the weakest (SIM swap, interception). Prefer an authenticator app or a hardware key.</span></td></tr>
+                <tr><td><span class="pt"><b>Passwordless</b></span><span class="en"><b>Passwordless</b></span></td><td><span class="pt">Tem / É</span><span class="en">Have / Are</span></td><td><span class="pt">Entrar sem digitar senha: link ou código por e-mail, notificação no celular ou passkey.</span><span class="en">Signing in without typing a password: emailed link or code, phone prompt or passkey.</span></td><td><span class="pt">Link e código por e-mail só são tão seguros quanto a caixa de e-mail.</span><span class="en">Emailed link and code are only as safe as the mailbox.</span></td></tr>
+                <tr><td><span class="pt"><b>Passkeys</b></span><span class="en"><b>Passkeys</b></span></td><td><span class="pt">Tem + (É ou Sabe)</span><span class="en">Have + (Are or Know)</span></td><td><span class="pt">Par de chaves: a privada fica no seu dispositivo (ou no gerenciador de senhas), o site guarda só a pública. Você desbloqueia com biometria ou PIN do aparelho.</span><span class="en">Key pair: the private key stays on your device (or password manager), the site stores only the public one. You unlock with the device biometrics or PIN.</span></td><td><span class="pt">Resistente a phishing, porque a credencial só funciona no domínio para o qual foi criada. Planeje a recuperação de conta.</span><span class="en">Phishing-resistant, because the credential only works on the domain it was created for. Plan account recovery.</span></td></tr>
+                <tr><td><span class="pt"><b>Biometria</b></span><span class="en"><b>Biometrics</b></span></td><td><span class="pt">É</span><span class="en">Are</span></td><td><span class="pt">Impressão digital, rosto. Em geral só desbloqueia uma chave guardada no aparelho; a digital não vai para o servidor.</span><span class="en">Fingerprint, face. It usually only unlocks a key stored on the device; the fingerprint is not sent to the server.</span></td><td><span class="pt">Não dá para trocar uma digital vazada. Por isso costuma ser um desbloqueio local, não a credencial em si.</span><span class="en">You cannot replace a leaked fingerprint. That is why it is usually a local unlock, not the credential itself.</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="pt">WebAuthn, FIDO2 e passkeys: quem é quem</span><span class="en">WebAuthn, FIDO2 and passkeys: who is who</span></h3>
+          <ul class="ds-list">
+            <li><span class="pt"><b>WebAuthn</b>: API do navegador (padrão do W3C) que cria e usa as credenciais de chave pública.</span><span class="en"><b>WebAuthn</b>: the browser API (a W3C standard) that creates and uses public-key credentials.</span></li>
+            <li><span class="pt"><b>FIDO2</b>: conjunto da FIDO Alliance formado por WebAuthn (navegador ↔ site) e CTAP (navegador ↔ chave de segurança).</span><span class="en"><b>FIDO2</b>: the FIDO Alliance set made of WebAuthn (browser ↔ site) and CTAP (browser ↔ security key).</span></li>
+            <li><span class="pt"><b>Passkey</b>: o nome amigável de uma credencial FIDO/WebAuthn, muitas vezes sincronizada entre os dispositivos do usuário.</span><span class="en"><b>Passkey</b>: the friendly name for a FIDO/WebAuthn credential, often synced across the user’s devices.</span></li>
+          </ul>
+        </section>
+
+        <section class="content-section" aria-labelledby="protocols">
+          <h2 id="protocols"><span class="pt">Protocolos e padrões</span><span class="en">Protocols and standards</span></h2>
+          <h3><span class="pt">SSO: um conceito, não um protocolo</span><span class="en">SSO: a concept, not a protocol</span></h3>
+          <p><span class="pt"><b>Single Sign-On</b> é a experiência de entrar uma vez e usar vários sistemas sem digitar a senha de novo. Não existe um “protocolo SSO”: ele é implementado com OIDC, SAML ou Kerberos. O que as apps têm em comum é confiar no mesmo provedor de identidade.</span><span class="en"><b>Single Sign-On</b> is the experience of signing in once and using several systems without typing the password again. There is no “SSO protocol”: it is implemented with OIDC, SAML or Kerberos. What the apps share is trusting the same identity provider.</span></p>
+          <h3><span class="pt">OAuth 2.0 (autorização)</span><span class="en">OAuth 2.0 (authorization)</span></h3>
+          <p><span class="pt">Framework (RFC 6749) para um app obter <b>acesso limitado</b> a algo seu sem receber a sua senha. É a analogia da chave de manobrista: ela liga o carro, mas não abre o porta-malas. O resultado é um <b>access token</b> com <b>escopos</b>.</span><span class="en">A framework (RFC 6749) for an app to get <b>limited access</b> to something of yours without receiving your password. Think of a valet key: it starts the car but does not open the trunk. The result is an <b>access token</b> with <b>scopes</b>.</span></p>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>OAuth é autorização, não autenticação.</b> O access token diz “quem o carrega pode fazer X”; ele não é uma prova padronizada de quem é o usuário. Usar só OAuth para “fazer login” é um erro clássico: para isso existe o OIDC.</span><span class="en"><b>OAuth is authorization, not authentication.</b> The access token says “whoever holds it may do X”; it is not a standardized proof of who the user is. Using plain OAuth to “log in” is a classic mistake: that is what OIDC is for.</span></div>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Fluxo (grant)</span><span class="en">Flow (grant)</span></th><th><span class="pt">Quando usar</span><span class="en">When to use</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>Authorization Code + PKCE</b></td><td><span class="pt">Apps web, mobile e SPAs com usuário. É o recomendado hoje (PKCE: RFC 7636).</span><span class="en">Web, mobile and SPA apps with a user. The recommended one today (PKCE: RFC 7636).</span></td></tr>
+                <tr><td><b>Client Credentials</b></td><td><span class="pt">Máquina para máquina, sem usuário (um serviço chamando outro).</span><span class="en">Machine to machine, no user (one service calling another).</span></td></tr>
+                <tr><td><b>Device Code</b></td><td><span class="pt">TVs e CLIs, sem teclado confortável (RFC 8628).</span><span class="en">TVs and CLIs, without a comfortable keyboard (RFC 8628).</span></td></tr>
+                <tr><td><b>Implicit</b> e <b>Password</b></td><td><span class="pt">Evite: são desencorajados pelas práticas atuais de segurança do OAuth (RFC 9700).</span><span class="en">Avoid: discouraged by current OAuth security practice (RFC 9700).</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <h3><span class="pt">OpenID Connect, OIDC (autenticação)</span><span class="en">OpenID Connect, OIDC (authentication)</span></h3>
+          <p><span class="pt">Camada de identidade <b>sobre o OAuth 2.0</b>. Acrescenta o escopo <code>openid</code>, o <b>ID token</b> (um JWT com claims sobre o usuário e sobre o login), o endpoint <code>userinfo</code> e um documento de descoberta em <code>/.well-known/openid-configuration</code>. Responde “quem é este usuário?”.</span><span class="en">An identity layer <b>on top of OAuth 2.0</b>. It adds the <code>openid</code> scope, the <b>ID token</b> (a JWT with claims about the user and the login), the <code>userinfo</code> endpoint and a discovery document at <code>/.well-known/openid-configuration</code>. It answers “who is this user?”.</span></p>
+          <h3><span class="pt">SAML 2.0 (autenticação, mundo corporativo)</span><span class="en">SAML 2.0 (authentication, enterprise world)</span></h3>
+          <p><span class="pt">Padrão mais antigo, baseado em <b>XML</b>. O provedor de identidade devolve uma <b>assertion</b> assinada ao app via navegador. Muito comum em ferramentas corporativas (SaaS B2B). Faz o mesmo papel do OIDC; apps novas costumam preferir OIDC por ser mais simples (JSON/JWT).</span><span class="en">An older standard based on <b>XML</b>. The identity provider returns a signed <b>assertion</b> to the app through the browser. Very common in enterprise tools (B2B SaaS). It plays the same role as OIDC; new apps usually prefer OIDC because it is simpler (JSON/JWT).</span></p>
+          <h3><span class="pt">LDAP e Active Directory</span><span class="en">LDAP and Active Directory</span></h3>
+          <p><span class="pt"><b>LDAP</b> (RFC 4511) é um protocolo para consultar e autenticar contra um <b>diretório</b> de usuários, grupos e dispositivos. <b>Active Directory (AD)</b> é o serviço de diretório da Microsoft, que fala LDAP e Kerberos; <b>Microsoft Entra ID</b> (antigo Azure AD) é a versão em nuvem, acessada com OIDC e SAML.</span><span class="en"><b>LDAP</b> (RFC 4511) is a protocol to query and authenticate against a <b>directory</b> of users, groups and devices. <b>Active Directory (AD)</b> is Microsoft’s directory service, which speaks LDAP and Kerberos; <b>Microsoft Entra ID</b> (formerly Azure AD) is the cloud version, reached with OIDC and SAML.</span></p>
+          <h3><span class="pt">Kerberos</span><span class="en">Kerberos</span></h3>
+          <p><span class="pt">Autenticação por <b>tickets</b> dentro de uma rede corporativa (RFC 4120). Você prova a identidade uma vez a um servidor central (o KDC) e recebe um ticket que as outras máquinas aceitam. É a base do “login do Windows que vale para tudo” em domínios AD.</span><span class="en">Authentication by <b>tickets</b> inside a corporate network (RFC 4120). You prove your identity once to a central server (the KDC) and get a ticket that other machines accept. It is the base of the “Windows login that works everywhere” in AD domains.</span></p>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Padrão</span><span class="en">Standard</span></th><th><span class="pt">Responde</span><span class="en">Answers</span></th><th><span class="pt">Formato</span><span class="en">Format</span></th><th><span class="pt">Onde aparece</span><span class="en">Where you see it</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>OAuth 2.0</b></td><td><span class="pt">O que posso acessar?</span><span class="en">What may I access?</span></td><td>Access token</td><td><span class="pt">APIs, “Permitir que o app acesse seu GitHub”</span><span class="en">APIs, “Allow the app to access your GitHub”</span></td></tr>
+                <tr><td><b>OIDC</b></td><td><span class="pt">Quem é o usuário?</span><span class="en">Who is the user?</span></td><td>ID token (JWT)</td><td><span class="pt">“Entrar com Google”, GitHub Actions → AWS</span><span class="en">“Sign in with Google”, GitHub Actions → AWS</span></td></tr>
+                <tr><td><b>SAML 2.0</b></td><td><span class="pt">Quem é o usuário?</span><span class="en">Who is the user?</span></td><td>Assertion (XML)</td><td><span class="pt">SaaS corporativo, SSO da empresa</span><span class="en">Enterprise SaaS, company SSO</span></td></tr>
+                <tr><td><b>LDAP</b></td><td><span class="pt">Quem existe e em quais grupos?</span><span class="en">Who exists and in which groups?</span></td><td><span class="pt">Consultas ao diretório</span><span class="en">Directory queries</span></td><td><span class="pt">Servidores Linux, VPN, apps internas</span><span class="en">Linux servers, VPN, internal apps</span></td></tr>
+                <tr><td><b>Kerberos</b></td><td><span class="pt">Quem é o usuário na rede?</span><span class="en">Who is the user on the network?</span></td><td>Tickets</td><td><span class="pt">Domínio Windows/AD</span><span class="en">Windows/AD domain</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="glossary">
+          <h2 id="glossary"><span class="pt">Glossário</span><span class="en">Glossary</span></h2>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Termo</span><span class="en">Term</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th></tr></thead>
+              <tbody>
+                <tr><td><b>IdP</b> (Identity Provider)</td><td><span class="pt">Quem autentica o usuário e emite a prova de identidade. Ex.: Google, Okta, Entra ID, e o GitHub Actions para os jobs.</span><span class="en">Who authenticates the user and issues the proof of identity. E.g. Google, Okta, Entra ID, and GitHub Actions for jobs.</span></td></tr>
+                <tr><td><b>SP</b> / <b>Relying Party</b> (RP)</td><td><span class="pt">O app que confia no IdP. “SP” (Service Provider) é o termo do SAML; “Relying Party” é o do OIDC. Na AWS, o papel de RP é do IAM/STS.</span><span class="en">The app that trusts the IdP. “SP” (Service Provider) is the SAML term; “Relying Party” is the OIDC one. In the GitHub-to-AWS case, AWS IAM/STS plays the RP.</span></td></tr>
+                <tr><td><b>Token</b></td><td><span class="pt">Texto que representa uma prova ou uma permissão, com prazo. <i>Access token</i>: autoriza chamar uma API. <i>ID token</i>: diz quem é o usuário. <i>Refresh token</i>: obtém novos access tokens.</span><span class="en">Text that represents a proof or a permission, with an expiry. <i>Access token</i>: authorizes calling an API. <i>ID token</i>: says who the user is. <i>Refresh token</i>: gets new access tokens.</span></td></tr>
+                <tr><td><b>JWT</b> (JSON Web Token)</td><td><span class="pt">Formato de token (RFC 7519): três partes em Base64URL separadas por ponto (cabeçalho, payload, assinatura). Fica <b>assinado</b>, não escondido: qualquer um lê o conteúdo, só quem tem a chave o forja.</span><span class="en">Token format (RFC 7519): three Base64URL parts separated by dots (header, payload, signature). It is <b>signed</b>, not hidden: anyone can read the content, only the key holder can forge it.</span></td></tr>
+                <tr><td><b>Sessão</b> / <b>cookie</b></td><td><span class="pt">Depois do login, o app cria uma sessão e guarda um identificador num cookie. Os requests seguintes mostram o cookie em vez de pedir login de novo. Use <code>HttpOnly</code>, <code>Secure</code> e <code>SameSite</code>.</span><span class="en">After login, the app creates a session and stores an identifier in a cookie. Later requests show the cookie instead of asking for login again. Use <code>HttpOnly</code>, <code>Secure</code> and <code>SameSite</code>.</span></td></tr>
+                <tr><td><b>API key</b></td><td><span class="pt">Segredo fixo que identifica um app ou projeto. Simples, mas não tem usuário, prazo nem escopo por padrão: se vazar, vale até alguém revogar.</span><span class="en">Fixed secret that identifies an app or project. Simple, but has no user, expiry or scope by default: if leaked, it works until someone revokes it.</span></td></tr>
+                <tr><td><b>RBAC</b> (Role-Based Access Control)</td><td><span class="pt">Autorização por papéis: você recebe um papel (ex.: <i>deploy</i>) e o papel concede as permissões. Na AWS, o equivalente são as <b>roles</b> do IAM.</span><span class="en">Authorization by roles: you get a role (e.g. <i>deploy</i>) and the role grants the permissions. On AWS, the equivalent is IAM <b>roles</b>.</span></td></tr>
+                <tr><td><b>Scope</b> (escopo)</td><td><span class="pt">Permissão pedida num token OAuth. Ex.: <code>read:user</code>, <code>email</code>, <code>openid</code>. O usuário vê e aprova na tela de consentimento.</span><span class="en">Permission requested in an OAuth token. E.g. <code>read:user</code>, <code>email</code>, <code>openid</code>. The user sees and approves it on the consent screen.</span></td></tr>
+                <tr><td><b>Claim</b></td><td><span class="pt">Uma afirmação dentro do token: um par nome/valor. Ex.: <code>sub</code> (quem), <code>iss</code> (quem emitiu), <code>aud</code> (para quem), <code>exp</code> (quando expira).</span><span class="en">A statement inside the token: a name/value pair. E.g. <code>sub</code> (who), <code>iss</code> (who issued it), <code>aud</code> (for whom), <code>exp</code> (when it expires).</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="flow">
+          <h2 id="flow"><span class="pt">Fluxo completo: “Entrar com Google”</span><span class="en">Full flow: “Sign in with Google”</span></h2>
+          <p><span class="pt">Usa OIDC sobre OAuth 2.0, com o fluxo Authorization Code + PKCE. O app é a Relying Party; o Google, o IdP.</span><span class="en">Uses OIDC on top of OAuth 2.0, with the Authorization Code + PKCE flow. The app is the Relying Party; Google is the IdP.</span></p>
+          <ol class="ds-steps">
+            <li><span class="pt">O usuário clica em <b>Entrar com Google</b> no app.</span><span class="en">The user clicks <b>Sign in with Google</b> in the app.</span></li>
+            <li><span class="pt">O app gera <code>state</code> (anti-CSRF), <code>nonce</code> (anti-replay do ID token) e um par PKCE (<code>code_verifier</code> secreto e <code>code_challenge</code> derivado).</span><span class="en">The app generates <code>state</code> (anti-CSRF), <code>nonce</code> (ID-token anti-replay) and a PKCE pair (secret <code>code_verifier</code> and derived <code>code_challenge</code>).</span></li>
+            <li><span class="pt">O app redireciona o navegador para o endpoint de autorização do Google com <code>client_id</code>, <code>redirect_uri</code>, <code>response_type=code</code>, <code>scope=openid email profile</code>, <code>state</code>, <code>nonce</code> e <code>code_challenge</code>.</span><span class="en">The app redirects the browser to Google’s authorization endpoint with <code>client_id</code>, <code>redirect_uri</code>, <code>response_type=code</code>, <code>scope=openid email profile</code>, <code>state</code>, <code>nonce</code> and <code>code_challenge</code>.</span></li>
+            <li><span class="pt"><b>[Autenticação]</b> O Google verifica quem é o usuário: senha, MFA ou passkey. Se já há sessão ativa no Google, é aqui que o SSO acontece e nada é digitado.</span><span class="en"><b>[Authentication]</b> Google checks who the user is: password, MFA or passkey. If there is already an active Google session, this is where SSO happens and nothing is typed.</span></li>
+            <li><span class="pt"><b>[Autorização]</b> O Google mostra a tela de consentimento: “o app quer ver seu nome e e-mail”. O usuário aprova os escopos.</span><span class="en"><b>[Authorization]</b> Google shows the consent screen: “the app wants to see your name and email”. The user approves the scopes.</span></li>
+            <li><span class="pt">O Google redireciona de volta ao <code>redirect_uri</code> com um <code>code</code> de uso único e o <code>state</code>.</span><span class="en">Google redirects back to the <code>redirect_uri</code> with a one-time <code>code</code> and the <code>state</code>.</span></li>
+            <li><span class="pt">O app confere que o <code>state</code> é o mesmo que enviou. Se não for, aborta.</span><span class="en">The app checks that <code>state</code> is the one it sent. If not, it aborts.</span></li>
+            <li><span class="pt">O <b>backend</b> do app troca o <code>code</code> por tokens no endpoint de token do Google, enviando também o <code>code_verifier</code>.</span><span class="en">The app’s <b>backend</b> exchanges the <code>code</code> for tokens at Google’s token endpoint, also sending the <code>code_verifier</code>.</span></li>
+            <li><span class="pt">O Google devolve o <b>ID token</b> (JWT, diz quem é), o <b>access token</b> (autoriza chamar APIs do Google) e, às vezes, um refresh token.</span><span class="en">Google returns the <b>ID token</b> (JWT, says who it is), the <b>access token</b> (authorizes calling Google APIs) and, sometimes, a refresh token.</span></li>
+            <li><span class="pt">O app <b>valida o ID token</b>: assinatura (chaves públicas do IdP), <code>iss</code>, <code>aud</code> igual ao seu <code>client_id</code>, <code>exp</code> e <code>nonce</code>.</span><span class="en">The app <b>validates the ID token</b>: signature (the IdP’s public keys), <code>iss</code>, <code>aud</code> equal to your <code>client_id</code>, <code>exp</code> and <code>nonce</code>.</span></li>
+            <li><span class="pt">O app cria a <b>sessão</b> própria (cookie <code>HttpOnly</code>). A partir daí o Google já saiu de cena; o access token só é usado se o app precisar chamar APIs do Google.</span><span class="en">The app creates its own <b>session</b> (<code>HttpOnly</code> cookie). From then on Google is out of the picture; the access token is only used if the app needs to call Google APIs.</span></li>
+          </ol>
+          <div class="callout "><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Os endpoints exatos (autorização, token, chaves públicas) estão no documento de descoberta do IdP. Para o Google, confira a documentação oficial de OpenID Connect.</span><span class="en">The exact endpoints (authorization, token, public keys) are in the IdP’s discovery document. For Google, check the official OpenID Connect documentation.</span></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="rule">
+          <h2 id="rule"><span class="pt">Regra de bolso</span><span class="en">Rule of thumb</span></h2>
+          <ul class="ds-list">
+            <li><span class="pt"><b>OAuth 2.0</b> = autorização. “Este app pode acessar isto, com estes escopos.”</span><span class="en"><b>OAuth 2.0</b> = authorization. “This app may access this, with these scopes.”</span></li>
+            <li><span class="pt"><b>OIDC</b> = autenticação, em cima do OAuth. “Este usuário é fulano.”</span><span class="en"><b>OIDC</b> = authentication, on top of OAuth. “This user is so-and-so.”</span></li>
+            <li><span class="pt"><b>SAML</b> = autenticação, com XML, no mundo corporativo.</span><span class="en"><b>SAML</b> = authentication, with XML, in the enterprise world.</span></li>
+            <li><span class="pt"><b>SSO</b> = experiência: entrar uma vez, usar várias apps. Implementado com OIDC, SAML ou Kerberos.</span><span class="en"><b>SSO</b> = experience: sign in once, use several apps. Implemented with OIDC, SAML or Kerberos.</span></li>
+            <li><span class="pt"><b>MFA</b> = reforço: mais de um fator para provar a identidade.</span><span class="en"><b>MFA</b> = reinforcement: more than one factor to prove identity.</span></li>
+            <li><span class="pt"><b>JWT</b> = formato do token, não um protocolo.</span><span class="en"><b>JWT</b> = the token format, not a protocol.</span></li>
+            <li><span class="pt"><b>LDAP / AD</b> = o diretório de usuários; <b>Kerberos</b> = tickets na rede interna.</span><span class="en"><b>LDAP / AD</b> = the user directory; <b>Kerberos</b> = tickets on the internal network.</span></li>
+          </ul>
+        </section>
+
+        <section class="content-section" aria-labelledby="actions-aws">
+          <h2 id="actions-aws"><span class="pt">Prática: OIDC no GitHub Actions → AWS</span><span class="en">Practice: OIDC from GitHub Actions → AWS</span></h2>
+          <p><span class="pt">Aqui o “usuário” é um job de CI/CD. O GitHub é o IdP, a AWS é quem confia, e o resultado são credenciais temporárias no lugar de uma chave de acesso fixa (<code>AWS_ACCESS_KEY_ID</code>/<code>AWS_SECRET_ACCESS_KEY</code>) guardada em secrets. A troca de credenciais é <b>autenticação</b> (o token prova qual repositório e branch pediram) seguida de <b>autorização</b> (a role define o que pode ser feito).</span><span class="en">Here the “user” is a CI/CD job. GitHub is the IdP, AWS is the one that trusts it, and the result is temporary credentials instead of a fixed access key (<code>AWS_ACCESS_KEY_ID</code>/<code>AWS_SECRET_ACCESS_KEY</code>) stored in secrets. The exchange is <b>authentication</b> (the token proves which repository and branch asked) followed by <b>authorization</b> (the role defines what may be done).</span></p>
+          <h3><span class="pt">Diagrama do fluxo</span><span class="en">Flow diagram</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="Fluxo OIDC do GitHub Actions para a AWS / GitHub Actions to AWS OIDC flow" style="min-width:560px">
+<rect x="10" y="100" width="140" height="50" rx="4" class="ln fillsoft"/>
+<text x="80" y="122" class="pt" text-anchor="middle">Job do Actions</text><text x="80" y="122" class="en" text-anchor="middle">Actions job</text>
+<text x="80" y="140" class="pt mut mono" text-anchor="middle">id-token: write</text><text x="80" y="140" class="en mut mono" text-anchor="middle">id-token: write</text>
+<rect x="260" y="10" width="200" height="50" rx="4" class="ln"/>
+<text x="360" y="32" class="pt" text-anchor="middle">GitHub OIDC (IdP)</text><text x="360" y="32" class="en" text-anchor="middle">GitHub OIDC (IdP)</text>
+<text x="360" y="50" class="pt mut" text-anchor="middle">emite o JWT assinado</text><text x="360" y="50" class="en mut" text-anchor="middle">issues the signed JWT</text>
+<rect x="540" y="100" width="150" height="50" rx="4" class="brandfill"/>
+<text x="615" y="122" class="pt" text-anchor="middle">AWS STS + IAM</text><text x="615" y="122" class="en" text-anchor="middle">AWS STS + IAM</text>
+<text x="615" y="140" class="pt" text-anchor="middle">role + trust policy</text><text x="615" y="140" class="en" text-anchor="middle">role + trust policy</text>
+<rect x="540" y="195" width="150" height="40" rx="4" class="ln"/>
+<text x="615" y="220" class="pt" text-anchor="middle">ECR / ECS / S3 ...</text><text x="615" y="220" class="en" text-anchor="middle">ECR / ECS / S3 ...</text>
+<path d="M95 100L260 45" class="ln"/><path d="M252.0 46.4L260 45L254.8 51.7" class="ln"/>
+<path d="M260 52L110 100" class="ln"/><path d="M118.3 98.6L110 100L115.4 93.3" class="ln"/>
+<text x="55" y="68" class="pt" text-anchor="start">1. pede o token</text><text x="55" y="68" class="en" text-anchor="start">1. asks for the token</text>
+<text x="270" y="82" class="pt mut" text-anchor="start">2. JWT assinado</text><text x="270" y="82" class="en mut" text-anchor="start">2. signed JWT</text>
+<path d="M150 118L540 118" class="ln"/><path d="M532.7 114.7L540 118L532.7 121.3" class="ln"/>
+<text x="345" y="112" class="pt" text-anchor="middle">3. AssumeRoleWithWebIdentity + JWT</text><text x="345" y="112" class="en" text-anchor="middle">3. AssumeRoleWithWebIdentity + JWT</text>
+<path d="M540 134L150 134" class="ln"/><path d="M157.3 130.7L150 134L157.3 137.3" class="ln"/>
+<text x="345" y="152" class="pt" text-anchor="middle">4. credenciais temporárias</text><text x="345" y="152" class="en" text-anchor="middle">4. temporary credentials</text>
+<path d="M600 100L470 55" class="ln dash"/>
+<text x="565" y="84" class="pt mut" text-anchor="start">valida a assinatura</text><text x="565" y="84" class="en mut" text-anchor="start">verifies the signature</text>
+<path d="M80 150L80 215L540 215" class="ln"/><path d="M532.7 211.7L540 215L532.7 218.3" class="ln"/>
+<text x="300" y="208" class="pt" text-anchor="middle">5. usa as credenciais (expiram sozinhas)</text><text x="300" y="208" class="en" text-anchor="middle">5. uses the credentials (they expire on their own)</text>
+</svg></div><figcaption><span class="pt">O job nunca guarda segredo: o GitHub assina uma prova de identidade por execução e a AWS troca essa prova por credenciais de curta duração.</span><span class="en">The job never stores a secret: GitHub signs a proof of identity per run and AWS swaps that proof for short-lived credentials.</span></figcaption></figure>
+          <h3><span class="pt">Passo 0: criar o provedor OIDC na AWS (uma vez por conta)</span><span class="en">Step 0: create the OIDC provider in AWS (once per account)</span></h3>
+          <ul class="ds-list">
+            <li><span class="pt"><b>Provider URL</b>: <code>https://token.actions.githubusercontent.com</code></span><span class="en"><b>Provider URL</b>: <code>https://token.actions.githubusercontent.com</code></span></li>
+            <li><span class="pt"><b>Audience</b>: <code>sts.amazonaws.com</code></span><span class="en"><b>Audience</b>: <code>sts.amazonaws.com</code></span></li>
+          </ul>
+          <p><span class="pt">O passo a passo completo (console e CLI, duas contas, environments, secrets) está na nota <a href="../github-aws-oidc/index.html">GitHub para AWS com OIDC</a>. Aqui ficam o mínimo e a teoria.</span><span class="en">The full walkthrough (console and CLI, two accounts, environments, secrets) is in the note <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a>. Here you get the minimum and the theory.</span></p>
+          <h3><span class="pt">Trust policy da role IAM</span><span class="en">IAM role trust policy</span></h3>
+          <p><span class="pt">A trust policy diz <b>quem pode assumir</b> a role. As duas condições são o coração da segurança: <code>aud</code> garante que o token foi feito para a AWS e <code>sub</code> garante que veio do seu repositório e da sua branch.</span><span class="en">The trust policy says <b>who may assume</b> the role. The two conditions are the heart of the security: <code>aud</code> makes sure the token was meant for AWS and <code>sub</code> makes sure it came from your repository and your branch.</span></p>
+          <pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: {
+        &quot;Federated&quot;: &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:oidc-provider/token.actions.githubusercontent.com&quot;
+      },
+      &quot;Action&quot;: &quot;sts:AssumeRoleWithWebIdentity&quot;,
+      &quot;Condition&quot;: {
+        &quot;StringEquals&quot;: {
+          &quot;token.actions.githubusercontent.com:aud&quot;: &quot;sts.amazonaws.com&quot;,
+          &quot;token.actions.githubusercontent.com:sub&quot;: &quot;repo:&lt;ORG&gt;/&lt;REPO&gt;:ref:refs/heads/main&quot;
+        }
+      }
+    }
+  ]
+}</code></pre>
+          <div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Nunca deixe o <code>sub</code> só com curinga. Sem ele restringido, outro repositório do GitHub poderia pedir a role. Se o job usa um <i>environment</i>, o <code>sub</code> muda para <code>repo:ORG/REPO:environment:NOME</code>. Repositórios novos podem usar um formato com IDs numéricos: confira os formatos atuais na documentação do GitHub.</span><span class="en">Never leave <code>sub</code> as just a wildcard. Without it restricted, another GitHub repository could request the role. If the job uses an <i>environment</i>, <code>sub</code> becomes <code>repo:ORG/REPO:environment:NAME</code>. New repositories may use a format with numeric IDs: check the current formats in the GitHub documentation.</span></div>
+          <h3><span class="pt">Workflow do GitHub Actions</span><span class="en">GitHub Actions workflow</span></h3>
+          <pre><code>name: deploy
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  id-token: write   # lets the job request the OIDC token
+  contents: read    # lets actions/checkout read the repo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v6
+        with:
+          role-to-assume: arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/github-deploy-main
+          aws-region: sa-east-1
+
+      - name: Who am I?
+        run: aws sts get-caller-identity</code></pre>
+          <p><span class="pt">Sem <code>permissions: id-token: write</code> o job não consegue pedir o token e a ação falha. A action <code>configure-aws-credentials</code> faz o passo 3 do diagrama e exporta as credenciais temporárias para os passos seguintes. Confira na página da action as versões e opções atuais.</span><span class="en">Without <code>permissions: id-token: write</code> the job cannot request the token and the action fails. The <code>configure-aws-credentials</code> action performs step 3 of the diagram and exports the temporary credentials to the following steps. Check the action’s page for current versions and options.</span></p>
+          <h3><span class="pt">Claims do token</span><span class="en">Token claims</span></h3>
+          <p><span class="pt">Esse é o <i>payload</i> de um token do GitHub (valores de exemplo). É isso que a AWS compara com a trust policy.</span><span class="en">This is the <i>payload</i> of a GitHub token (example values). This is what AWS compares against the trust policy.</span></p>
+          <pre><code>{
+  &quot;iss&quot;: &quot;https://token.actions.githubusercontent.com&quot;,
+  &quot;aud&quot;: &quot;sts.amazonaws.com&quot;,
+  &quot;sub&quot;: &quot;repo:&lt;ORG&gt;/&lt;REPO&gt;:ref:refs/heads/main&quot;,
+  &quot;repository&quot;: &quot;&lt;ORG&gt;/&lt;REPO&gt;&quot;,
+  &quot;repository_owner&quot;: &quot;&lt;ORG&gt;&quot;,
+  &quot;ref&quot;: &quot;refs/heads/main&quot;,
+  &quot;sha&quot;: &quot;&lt;commit sha&gt;&quot;,
+  &quot;workflow&quot;: &quot;deploy&quot;,
+  &quot;event_name&quot;: &quot;push&quot;,
+  &quot;actor&quot;: &quot;&lt;github user&gt;&quot;,
+  &quot;job_workflow_ref&quot;: &quot;&lt;ORG&gt;/&lt;REPO&gt;/.github/workflows/deploy.yml@refs/heads/main&quot;,
+  &quot;iat&quot;: 1760000000,
+  &quot;nbf&quot;: 1760000000,
+  &quot;exp&quot;: 1760003600
+}</code></pre>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Claim</span><span class="en">Claim</span></th><th><span class="pt">Significado</span><span class="en">Meaning</span></th><th><span class="pt">Uso na segurança</span><span class="en">Use in security</span></th></tr></thead>
+              <tbody>
+                <tr><td><code>iss</code></td><td><span class="pt">Quem emitiu (o GitHub)</span><span class="en">Who issued it (GitHub)</span></td><td><span class="pt">Identifica o provedor OIDC cadastrado na AWS</span><span class="en">Identifies the OIDC provider registered in AWS</span></td></tr>
+                <tr><td><code>aud</code></td><td><span class="pt">Para quem o token foi feito</span><span class="en">Who the token was made for</span></td><td><span class="pt">Condição obrigatória: <code>sts.amazonaws.com</code></span><span class="en">Required condition: <code>sts.amazonaws.com</code></span></td></tr>
+                <tr><td><code>sub</code></td><td><span class="pt">Quem pede: repositório + branch, tag, PR ou environment</span><span class="en">Who is asking: repository + branch, tag, PR or environment</span></td><td><span class="pt">Principal condição de restrição</span><span class="en">Main restricting condition</span></td></tr>
+                <tr><td><code>repository</code>, <code>repository_owner</code></td><td><span class="pt">Repositório e dono</span><span class="en">Repository and owner</span></td><td><span class="pt">Úteis em políticas por organização</span><span class="en">Useful in organization-wide policies</span></td></tr>
+                <tr><td><code>ref</code>, <code>sha</code></td><td><span class="pt">Branch/tag e commit</span><span class="en">Branch/tag and commit</span></td><td><span class="pt">Auditoria: qual código rodou</span><span class="en">Audit: which code ran</span></td></tr>
+                <tr><td><code>job_workflow_ref</code></td><td><span class="pt">Qual arquivo de workflow rodou</span><span class="en">Which workflow file ran</span></td><td><span class="pt">Permite amarrar a role a um workflow específico (verifique o suporte na documentação)</span><span class="en">Lets you tie the role to a specific workflow (check support in the documentation)</span></td></tr>
+                <tr><td><code>iat</code>, <code>nbf</code>, <code>exp</code></td><td><span class="pt">Emitido em, válido a partir de, expira em</span><span class="en">Issued at, not valid before, expires at</span></td><td><span class="pt">O token é de curta duração</span><span class="en">The token is short-lived</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p><span class="pt">Para ver os claims reais do seu job, decodifique o token em um passo de teste do workflow (o payload do JWT é Base64URL). Faça isso só em um repositório de teste, e não publique o token inteiro nos logs.</span><span class="en">To see the real claims of your job, decode the token in a test step of the workflow (the JWT payload is Base64URL). Do this only in a test repository, and do not publish the whole token in the logs.</span></p>
+          <h3><span class="pt">Boas práticas de segurança</span><span class="en">Security best practices</span></h3>
+          <ul class="ds-list">
+            <li><span class="pt"><b>Uma role por ambiente</b> (develop, production), cada uma com a sua trust policy e o mínimo de permissões (menor privilégio).</span><span class="en"><b>One role per environment</b> (develop, production), each with its own trust policy and minimum permissions (least privilege).</span></li>
+            <li><span class="pt"><b>Restrinja o <code>sub</code> ao máximo</b>: repositório e branch/environment exatos. Use <code>StringEquals</code> sempre que der.</span><span class="en"><b>Restrict <code>sub</code> as much as possible</b>: exact repository and branch/environment. Use <code>StringEquals</code> whenever you can.</span></li>
+            <li><span class="pt"><b>Environments com aprovação</b> para produção: o deploy só segue depois de um revisor aprovar.</span><span class="en"><b>Environments with approval</b> for production: the deploy only proceeds after a reviewer approves.</span></li>
+            <li><span class="pt"><b>Permissões mínimas no workflow</b>: declare <code>permissions</code> explicitamente em vez de herdar o padrão.</span><span class="en"><b>Minimal workflow permissions</b>: declare <code>permissions</code> explicitly instead of inheriting the default.</span></li>
+            <li><span class="pt"><b>Cuidado com PRs de forks e com <code>pull_request_target</code></b>: não dê a role de deploy para código que você não revisou.</span><span class="en"><b>Careful with fork PRs and <code>pull_request_target</code></b>: do not hand the deploy role to code you have not reviewed.</span></li>
+            <li><span class="pt"><b>Fixe versões de actions de terceiros</b> (por SHA do commit, quando possível), porque elas rodam no job que tem a role.</span><span class="en"><b>Pin third-party action versions</b> (by commit SHA when possible), because they run in the job that holds the role.</span></li>
+            <li><span class="pt"><b>Remova as chaves antigas</b>: depois de migrar, apague o usuário IAM e as chaves fixas que existiam.</span><span class="en"><b>Remove the old keys</b>: after migrating, delete the IAM user and the fixed keys that existed.</span></li>
+            <li><span class="pt"><b>Audite</b>: o CloudTrail registra <code>AssumeRoleWithWebIdentity</code> com o token usado; monitore usos inesperados.</span><span class="en"><b>Audit</b>: CloudTrail records <code>AssumeRoleWithWebIdentity</code> with the token used; monitor unexpected uses.</span></li>
+          </ul>
+        </section>
+
+        <section class="content-section" aria-labelledby="errors">
+          <h2 id="errors"><span class="pt">Erros comuns e como resolver</span><span class="en">Common errors and how to fix them</span></h2>
+          <div class="scroll-x">
+            <table class="ds-table">
+              <thead><tr><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Causa provável</span><span class="en">Likely cause</span></th><th><span class="pt">Como resolver</span><span class="en">How to fix</span></th></tr></thead>
+              <tbody>
+                <tr><td><code>Credentials could not be loaded</code> / falha ao pegar o token</td><td><span class="pt">Falta <code>permissions: id-token: write</code> (ou o <code>permissions</code> do workflow o removeu)</span><span class="en">Missing <code>permissions: id-token: write</code> (or the workflow <code>permissions</code> removed it)</span></td><td><span class="pt">Adicione a permissão no workflow ou no job</span><span class="en">Add the permission to the workflow or job</span></td></tr>
+                <tr><td><code>Not authorized to perform sts:AssumeRoleWithWebIdentity</code></td><td><span class="pt">O <code>sub</code> ou o <code>aud</code> do token não bate com a trust policy</span><span class="en">The token’s <code>sub</code> or <code>aud</code> does not match the trust policy</span></td><td><span class="pt">Compare os claims reais com a condição; confira branch × environment × PR e o formato do <code>sub</code></span><span class="en">Compare the real claims with the condition; check branch × environment × PR and the <code>sub</code> format</span></td></tr>
+                <tr><td>Funciona na <code>main</code>, falha no pull request</td><td><span class="pt">No PR o <code>sub</code> é <code>repo:ORG/REPO:pull_request</code></span><span class="en">On a PR, <code>sub</code> is <code>repo:ORG/REPO:pull_request</code></span></td><td><span class="pt">Use uma role separada, de leitura, para PRs; não afrouxe a de deploy</span><span class="en">Use a separate read-only role for PRs; do not loosen the deploy one</span></td></tr>
+                <tr><td><code>No OpenIDConnect provider found in your account</code></td><td><span class="pt">O provedor OIDC não existe na conta em que a role está</span><span class="en">The OIDC provider does not exist in the account that holds the role</span></td><td><span class="pt">Crie o provedor em cada conta que tem a role</span><span class="en">Create the provider in every account that has the role</span></td></tr>
+                <tr><td>Erro de audiência (<code>aud</code>)</td><td><span class="pt">A condição espera outro valor que o do token</span><span class="en">The condition expects a different value than the token</span></td><td><span class="pt">Use <code>sts.amazonaws.com</code> nos dois lados, a menos que você tenha mudado a audience de propósito</span><span class="en">Use <code>sts.amazonaws.com</code> on both sides, unless you changed the audience on purpose</span></td></tr>
+                <tr><td><code>redirect_uri_mismatch</code> (OAuth/OIDC com Google etc.)</td><td><span class="pt">A URL de retorno enviada difere da cadastrada no IdP</span><span class="en">The return URL sent differs from the one registered at the IdP</span></td><td><span class="pt">Cadastre a URL exata (protocolo, domínio, caminho e barra final)</span><span class="en">Register the exact URL (scheme, domain, path and trailing slash)</span></td></tr>
+                <tr><td><code>invalid_grant</code> na troca do code</td><td><span class="pt">Code expirado ou já usado, ou <code>code_verifier</code> não corresponde ao <code>code_challenge</code></span><span class="en">Code expired or already used, or <code>code_verifier</code> does not match the <code>code_challenge</code></span></td><td><span class="pt">Troque o code uma única vez, logo após o retorno; guarde o verifier por sessão</span><span class="en">Exchange the code only once, right after the return; keep the verifier per session</span></td></tr>
+                <tr><td>Login em loop / sessão some após o retorno</td><td><span class="pt">Cookie de sessão bloqueado (<code>SameSite</code>, <code>Secure</code> em HTTP, domínio errado)</span><span class="en">Session cookie blocked (<code>SameSite</code>, <code>Secure</code> over HTTP, wrong domain)</span></td><td><span class="pt">Revise os atributos do cookie e use HTTPS</span><span class="en">Review the cookie attributes and use HTTPS</span></td></tr>
+                <tr><td>Usar o access token para “saber quem é o usuário”</td><td><span class="pt">Confusão entre autorização e autenticação</span><span class="en">Mixing up authorization and authentication</span></td><td><span class="pt">Use o ID token (OIDC), validado, para identidade; o access token é para chamar APIs</span><span class="en">Use the validated ID token (OIDC) for identity; the access token is for calling APIs</span></td></tr>
+                <tr><td>Aceitar um JWT sem validar</td><td><span class="pt">Só decodificar o JWT não prova nada: qualquer um forja o payload</span><span class="en">Just decoding a JWT proves nothing: anyone can forge the payload</span></td><td><span class="pt">Valide assinatura, <code>iss</code>, <code>aud</code> e <code>exp</code> com uma biblioteca madura</span><span class="en">Validate signature, <code>iss</code>, <code>aud</code> and <code>exp</code> with a mature library</span></td></tr>
+                <tr><td>Tokens guardados em <code>localStorage</code></td><td><span class="pt">Qualquer XSS rouba o token</span><span class="en">Any XSS steals the token</span></td><td><span class="pt">Prefira cookie <code>HttpOnly</code> para a sessão</span><span class="en">Prefer an <code>HttpOnly</code> cookie for the session</span></td></tr>
+                <tr><td>Chave de acesso da AWS vazada em repositório ou log</td><td><span class="pt">Credencial fixa sem prazo</span><span class="en">Fixed credential with no expiry</span></td><td><span class="pt">Revogue a chave agora, rode a auditoria no CloudTrail e migre para OIDC</span><span class="en">Revoke the key now, audit CloudTrail and migrate to OIDC</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="content-section" aria-labelledby="refs">
+          <h2 id="refs"><span class="pt">Links de referência oficiais</span><span class="en">Official reference links</span></h2>
+          <div class="sources"><b><span class="pt">Fontes oficiais · confira a versão vigente de cada página</span><span class="en">Official sources · check the current version of each page</span></b><ul><li><a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749 · The OAuth 2.0 Authorization Framework</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc6750">RFC 6750 · OAuth 2.0 Bearer Token Usage</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7636">RFC 7636 · Proof Key for Code Exchange (PKCE)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8628">RFC 8628 · OAuth 2.0 Device Authorization Grant</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc9700">RFC 9700 · Best Current Practice for OAuth 2.0 Security</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7519">RFC 7519 · JSON Web Token (JWT)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8725">RFC 8725 · JWT Best Current Practices</a></li><li><a href="https://openid.net/specs/openid-connect-core-1_0.html">OpenID Connect Core 1.0</a></li><li><a href="https://openid.net/specs/openid-connect-discovery-1_0.html">OpenID Connect Discovery 1.0</a></li><li><a href="https://docs.oasis-open.org/security/saml/v2.0/">OASIS · SAML 2.0 specifications</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4120">RFC 4120 · The Kerberos Network Authentication Service (V5)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4511">RFC 4511 · LDAP: The Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc6238">RFC 6238 · TOTP: Time-Based One-Time Password</a></li><li><a href="https://www.w3.org/TR/webauthn-2/">W3C · Web Authentication (WebAuthn)</a></li><li><a href="https://fidoalliance.org/fido2/">FIDO Alliance · FIDO2</a></li><li><a href="https://pages.nist.gov/800-63-3/sp800-63b.html">NIST SP 800-63B · Authentication and Lifecycle Management</a></li><li><a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws">GitHub Docs · Configuring OpenID Connect in Amazon Web Services</a></li><li><a href="https://docs.github.com/en/actions/reference/security/oidc">GitHub Docs · OpenID Connect reference (claims and sub formats)</a></li><li><a href="https://github.com/aws-actions/configure-aws-credentials">GitHub · aws-actions/configure-aws-credentials</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc.html">AWS Docs · Create an OpenID Connect (OIDC) identity provider in IAM</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_oidc.html">AWS Docs · Create a role for OpenID Connect federation</a></li><li><a href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html">AWS Docs · AssumeRoleWithWebIdentity</a></li></ul></div>
+        </section>
+
+        <section class="content-section" aria-labelledby="review">
+          <h2 id="review"><span class="pt">Para revisar depois</span><span class="en">To review later</span></h2>
+          <ol class="ds-steps">
+            <li><span class="pt">Qual é a diferença entre autenticação e autorização, e por que dizemos que o OAuth 2.0 sozinho não serve para “fazer login”?</span><span class="en">What is the difference between authentication and authorization, and why do we say plain OAuth 2.0 is not meant for “logging in”?</span></li>
+            <li><span class="pt">No fluxo “Entrar com Google”, em que passo ocorre a autenticação, em que passo ocorre a autorização, e o que o app faz com o ID token?</span><span class="en">In the “Sign in with Google” flow, at which step does authentication happen, at which does authorization happen, and what does the app do with the ID token?</span></li>
+            <li><span class="pt">Na trust policy da role que o GitHub Actions assume, o que cada condição (<code>aud</code> e <code>sub</code>) protege, e o que pode dar errado se o <code>sub</code> estiver aberto demais?</span><span class="en">In the trust policy of the role GitHub Actions assumes, what does each condition (<code>aud</code> and <code>sub</code>) protect, and what can go wrong if <code>sub</code> is too open?</span></li>
+          </ol>
+        </section>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
