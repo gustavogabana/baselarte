@@ -2,7 +2,7 @@
    Baselarte — design system
    Modelled on the HashiCorp Helios / Terraform developer documentation:
    a white (or near-black) page, neutral text, one blue for actions and one
-   purple for the brand; system fonts; 5–6px radii; two-tier header, docs
+   navy blue for the brand; system fonts; 5–6px radii; two-tier header, docs
    sidebar, "On this page" column, cards, buttons and alerts.
 
    The theme (light / dark) is set on <html data-theme> by the visitor's local
@@ -35,17 +35,17 @@
   --action-active: #0046d1;
   --action-surface: #f2f8ff;
   --action-border: #cce3fe;
-  --visited: #a737ff;
+  --visited: #5a6a94;
   --focus-inner: #0c56e9;
   --focus-outer: #5990ff;
 
-  /* Brand (Terraform purple) */
-  --brand: #5b2d9e;
-  --brand-fg: #5b2d9e;
-  --brand-surface: #f3ecfc;
-  --brand-border: #dccdf3;
-  --brand-gradient-start: #faf7ff;
-  --brand-gradient-stop: #ece0fa;
+  /* Brand (navy blue) */
+  --brand: #1b3a6e;
+  --brand-fg: #1b3a6e;
+  --brand-surface: #eaf0f9;
+  --brand-border: #c3d2ea;
+  --brand-gradient-start: #f4f7fc;
+  --brand-gradient-stop: #dce7f6;
   --glass: color-mix(in srgb, var(--page) 72%, transparent);
   --glass-faint: color-mix(in srgb, var(--page-faint) 66%, transparent);
   --glass-blur: saturate(160%) blur(14px);
@@ -60,9 +60,9 @@
   --critical-fg: #c00005;
   --critical-surface: #fff5f5;
   --critical-border: #fbd4d4;
-  --highlight-fg: #911ced;
-  --highlight-surface: #f9f2ff;
-  --highlight-border: #ead2fe;
+  --highlight-fg: #1b3a6e;
+  --highlight-surface: #f0f4fb;
+  --highlight-border: #cbd8ee;
 
   /* Elevation */
   --shadow-low: 0 1px 1px 0 #6168750d, 0 2px 2px 0 #6168750d;
@@ -75,7 +75,7 @@
   --code-fg: #efeff1;
   --code-border: #2b303c;
   --code-faint: #8c909c;
-  --code-keyword: #d19cff;
+  --code-keyword: #9fbaf0;
   --code-string: #7fdca4;
   --code-number: #ffcc6a;
   --code-attr: #6bc1ff;
@@ -131,16 +131,16 @@
   --action-active: #4ca1ff;
   --action-surface: #111f37;
   --action-border: #1c345f;
-  --visited: #b457ff;
+  --visited: #a3b1d4;
   --focus-inner: #389aff;
   --focus-outer: #5990ff;
 
-  --brand: #8a5bd6;
-  --brand-fg: #b08be6;
-  --brand-surface: #1f1233;
-  --brand-border: #4a2b7c;
-  --brand-gradient-start: #26143f;
-  --brand-gradient-stop: #120c1e;
+  --brand: #5b83c9;
+  --brand-fg: #93b2e6;
+  --brand-surface: #0f1d38;
+  --brand-border: #264479;
+  --brand-gradient-start: #132647;
+  --brand-gradient-stop: #0a1120;
 
   --success-fg: #00ae4e;
   --success-surface: #042a15;
@@ -151,9 +151,9 @@
   --critical-fg: #f9381e;
   --critical-surface: #370b06;
   --critical-border: #62170d;
-  --highlight-fg: #b457ff;
-  --highlight-surface: #29123a;
-  --highlight-border: #42225b;
+  --highlight-fg: #93b2e6;
+  --highlight-surface: #0f1d38;
+  --highlight-border: #24407a;
 
   --shadow-low: 0 1px 1px 0 #656a760d, 0 2px 2px 0 #656a760d;
   --shadow-mid: 0 2px 3px 0 #656a761a, 0 8px 16px -10px #656a7633;
@@ -196,14 +196,14 @@
   --action-active: #4ca1ff;
   --action-surface: #111f37;
   --action-border: #1c345f;
-  --visited: #b457ff;
+  --visited: #a3b1d4;
   --focus-inner: #389aff;
   --focus-outer: #5990ff;
 
-  --brand: #8a5bd6;
-  --brand-fg: #b08be6;
-  --brand-surface: #1f1233;
-  --brand-border: #4a2b7c;
+  --brand: #5b83c9;
+  --brand-fg: #93b2e6;
+  --brand-surface: #0f1d38;
+  --brand-border: #264479;
 
   --shadow-low: 0 1px 1px 0 #656a760d, 0 2px 2px 0 #656a760d;
   --shadow-mid: 0 2px 3px 0 #656a761a, 0 8px 16px -10px #656a7633;
@@ -482,7 +482,7 @@ samp {
   stroke-linejoin: round;
 }
 
-/* Brand mark: a "b" monogram on a purple gradient tile (see favicon.svg). */
+/* Brand mark: a "b" monogram on a navy tile (see favicon.svg). */
 /* Brand mark: a five-petal flower, solid colour, no gradient (see favicon.svg).
    The header/footer are always dark, so the mark is drawn in the chrome's
    light ink colour, flat on the dark background. */
