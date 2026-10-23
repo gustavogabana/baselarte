@@ -84,7 +84,6 @@
         <h2 data-i18n="sidebar.groupWeb">Web development</h2>
         <ul data-sidebar-group>
           <li><a href="react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
-          <li><a href="full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
           <li><a href="idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
         </ul>
         <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
@@ -99,9 +98,11 @@
         <h2 data-i18n="sidebar.groupSecurity">Security</h2>
         <ul data-sidebar-group>
           <li><a href="cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
-          <li><a href="security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="network-attack-defense/index.html"><span data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span></a></li>
           <li><a href="web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
-          <li><a href="red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+          <li><a href="web-host-attack-defense/index.html"><span data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span></a></li>
+          <li><a href="social-engineering/index.html"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></a></li>
+          <li><a href="ethical-hacking-ceh-practice/index.html"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></a></li>
           <li><a href="auth-sso-oauth-oidc/index.html"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
           <li><a href="crypto-keys-ssh/index.html"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
         </ul>
@@ -170,16 +171,6 @@
               <span class="note-text">
                 <span class="note-title" data-i18n="notes.rs.title">React state: Context API and Zustand</span>
                 <span class="note-description" data-i18n="notes.rs.description">From the official docs: prop drilling, createContext and useContext, the reducer + context pattern, Zustand stores and selectors, per-request stores in Next.js, and when to use each.</span>
-              </span>
-              <span class="note-arrow" aria-hidden="true">→</span>
-            </a>
-          </li>
-          <li>
-            <a class="note-link" href="full-stack-engineering/index.html">
-              <svg class="icon note-icon" aria-hidden="true"><use href="#i-stack"/></svg>
-              <span class="note-text">
-                <span class="note-title" data-i18n="notes.fs.title">Anatomy of a full-stack platform</span>
-                <span class="note-description" data-i18n="notes.fs.description">Case study of a real front end and back end: API-first, layered caching, security, direct uploads, batched analytics and tests.</span>
               </span>
               <span class="note-arrow" aria-hidden="true">→</span>
             </a>
@@ -265,21 +256,41 @@
             </a>
           </li>
           <li>
-            <a class="note-link" href="security-lab/index.html">
+            <a class="note-link" href="network-attack-defense/index.html">
               <svg class="icon note-icon" aria-hidden="true"><use href="#i-shield"/></svg>
               <span class="note-text">
-                <span class="note-title" data-i18n="notes.sec.title">Security and networking lab</span>
-                <span class="note-description" data-i18n="notes.sec.description">Hands-on exercises on your own machines: sessions, stateful vs. stateless, nmap, SSH, WireGuard VPNs you host yourself, Wireshark, firewalls and basic recon tools, plus Docker networking explained.</span>
+                <span class="note-title" data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span>
+                <span class="note-description" data-i18n="notes.net.description">Tutorial with exercises on your own machines: how TCP/UDP sessions, nmap, Wireshark, SSH tunnels, WireGuard, ARP spoofing and brute force work, and the Linux firewall (ufw/nftables), fail2ban and monitoring that stop them.</span>
               </span>
               <span class="note-arrow" aria-hidden="true">→</span>
             </a>
           </li>
           <li>
-            <a class="note-link" href="red-team-80-20/index.html">
+            <a class="note-link" href="web-host-attack-defense/index.html">
               <svg class="icon note-icon" aria-hidden="true"><use href="#i-target"/></svg>
               <span class="note-text">
-                <span class="note-title" data-i18n="notes.rt.title">Red team 80/20</span>
-                <span class="note-description" data-i18n="notes.rt.description">Offensive concepts and defences: the attack lifecycle, social engineering and phishing simulation, SQL injection and XSS, reverse shells, all in a safe Docker lab, each technique paired with its defence.</span>
+                <span class="note-title" data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span>
+                <span class="note-description" data-i18n="notes.wh.description">The attack lifecycle in a Docker lab (DVWA, Juice Shop): recon, SQL injection, XSS, command injection and reverse shells, each paired with its defence, plus Linux host hardening and what the blue team sees.</span>
+              </span>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a class="note-link" href="social-engineering/index.html">
+              <svg class="icon note-icon" aria-hidden="true"><use href="#i-shield"/></svg>
+              <span class="note-text">
+                <span class="note-title" data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span>
+                <span class="note-description" data-i18n="notes.se.description">Why people are the most exploited link: Cialdini's principles, phishing, vishing, pretexting and physical tactics, how to spot them, the controls that stop them, and a Gophish simulation to run locally.</span>
+              </span>
+              <span class="note-arrow" aria-hidden="true">→</span>
+            </a>
+          </li>
+          <li>
+            <a class="note-link" href="ethical-hacking-ceh-practice/index.html">
+              <svg class="icon note-icon" aria-hidden="true"><use href="#i-target"/></svg>
+              <span class="note-text">
+                <span class="note-title" data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span>
+                <span class="note-description" data-i18n="notes.eh.description">A learning map: legal practice platforms (TryHackMe, Hack The Box, PortSwigger, OverTheWire), what the EC-Council CEH is, how to prepare for it or use it as a syllabus, and alternatives.</span>
               </span>
               <span class="note-arrow" aria-hidden="true">→</span>
             </a>

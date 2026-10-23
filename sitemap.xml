@@ -49,10 +49,16 @@
     <loc>https://baselarte.com/notas/cybersecurity-for-devs/</loc>
   </url>
   <url>
-    <loc>https://baselarte.com/notas/security-lab/</loc>
+    <loc>https://baselarte.com/notas/network-attack-defense/</loc>
   </url>
   <url>
-    <loc>https://baselarte.com/notas/red-team-80-20/</loc>
+    <loc>https://baselarte.com/notas/web-host-attack-defense/</loc>
+  </url>
+  <url>
+    <loc>https://baselarte.com/notas/social-engineering/</loc>
+  </url>
+  <url>
+    <loc>https://baselarte.com/notas/ethical-hacking-ceh-practice/</loc>
   </url>
   <url>
     <loc>https://baselarte.com/notas/auth-sso-oauth-oidc/</loc>
@@ -71,8 +77,5 @@
   </url>
   <url>
     <loc>https://baselarte.com/notas/postgres-for-devs/</loc>
-  </url>
-  <url>
-    <loc>https://baselarte.com/notas/full-stack-engineering/</loc>
   </url>
 </urlset>
