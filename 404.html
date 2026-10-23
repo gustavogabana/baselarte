@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title data-i18n="notFound.metaTitle">Not found — Baselarte</title>
+  <title data-i18n="notFound.metaTitle">Not found</title>
   <meta name="robots" content="noindex">
   <meta name="color-scheme" content="light dark">
   <meta name="theme-color" content="#0d0e12">
@@ -11,24 +11,21 @@
   <!-- Sets theme (by local time) and language before first paint. -->
   <script src="/boot.js"></script>
 
-  <link rel="icon" href="/favicon.svg?v=4" type="image/svg+xml">
-  <link rel="icon" href="/favicon.ico?v=4" sizes="any">
+  <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico?v=5" sizes="any">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+  <header class="site-header">
+    <a class="site-wordmark" href="/" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
   <main id="main" class="not-found">
-    <p class="monospace-label hero-kicker not-found-code">404</p>
     <h1 class="hero-title" data-i18n="notFound.title">Nothing <em>here, yet.</em></h1>
     <p class="hero-lede">
-      <a class="btn btn-primary" href="/" data-i18n="notFound.backHome">Back to baselarte.com</a>
+      <a href="/"><span aria-hidden="true">← </span><span data-i18n="notFound.backHome">Back home</span></a>
     </p>
   </main>
 
   <script src="/i18n.js"></script>
-  <script>
-    // No Motion on this page, so show everything straight away.
-    window.siteBoot.markMotionStarted();
-    window.siteBoot.revealWithoutMotion();
-  </script>
 </body>
 </html>

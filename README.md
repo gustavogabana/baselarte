@@ -12,16 +12,16 @@ Site of **Baselarte Ltda.**, a software engineering and creative technology comp
  git push ─▶ main ─▶ GitHub Pages ─▶ baselarte.com            ● live
 ```
 
-Static site: plain HTML, CSS and JavaScript. No build step, no `node_modules`. The only runtime dependency is [Motion](https://motion.dev), loaded from jsDelivr.
+Static site: plain HTML, CSS and JavaScript. No build step, no `node_modules`. Only the AWS note loads [Motion](https://motion.dev) (from jsDelivr) for its own diagrams.
 
 ## Structure
 
 ```
-index.html   landing page (SEO, Open Graph, JSON-LD)
-boot.js      runs in <head>: day/night theme, language, saved preferences
-styles.css   design system: tokens, layout, components
+index.html   home: IBM quote and list of notes (SEO, Open Graph, JSON-LD)
+boot.js      runs in <head>: theme, language, saved preferences
+styles.css   tokens, page chrome, prose components
 i18n.js      English / Brazilian Portuguese strings
-main.js      local time, docs navigation, code copy buttons, animations
+main.js      theme switch, code copy buttons, footer year
 notas/       notes: index plus one folder per note
 assets/      PNG icons (favicon.svg and favicon.ico live at the root)
 ```
@@ -30,9 +30,10 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 
 ## Behaviour
 
-- **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock; hours are defined only in `boot.js`), or pinned to light or dark with the switch in the header. The choice is remembered. The header and footer are always dark, independent of the content theme: `.site-header, .site-footer` in `styles.css` redeclare the colour tokens to fixed dark values, so every rule that already reads `var(--page)`, `var(--glass)`, `var(--fg-strong)`... resolves to dark automatically.
-- **Design system:** modelled on the HashiCorp Helios / Terraform developer docs: white or near-black page, neutral text, blue actions, navy-blue brand, system fonts, a single sticky header, a docs sidebar, an "On this page" column, cards, buttons, alerts and dark code blocks. All colours are tokens at the top of `styles.css`; the dark theme only redefines the tokens. Translucent "glass" surfaces (header, cards, menus, the back-to-top button) blur what's behind them. The logo is an original mark — a five-petal flower, no gradient (`favicon.svg`) — not HashiCorp's. The favicon is a white flower with navy details (outline, veins, centre), transparent background; in the installable app icons (`assets/icon-*.png`) the same flower sits on a navy tile; in the header/footer (always dark) it is monochrome with a light-blue outline.
-- **Language:** English or Brazilian Portuguese, chosen from the browser and the PT / EN button. All copy lives in `i18n.js`; add each `data-i18n` key to both tables and keep the English in `index.html` in sync.
+- **Layout:** one narrow column, system fonts, no cards, gradients or animations. Home is the IBM quote followed by the list of notes; each note has the flower (link home), a "← Notes" link, an inline "On this page" list and a plain footer. Style references: [openmymind.net](https://www.openmymind.net/) and [abc.xyz](https://abc.xyz/).
+- **Logo:** the five-petal flower in `favicon.svg`, drawn with white petals and a black outline (the inline copy uses the `petal`/`vein`/`heart` classes, so the outline follows the theme ink). The installable icons in `assets/` are the same flower on a black tile.
+- **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock, defined only in `boot.js`), or pinned with the `auto / light / dark` links in the footer. All colours are tokens at the top of `styles.css`; the dark theme only redefines them.
+- **Language:** English or Brazilian Portuguese, chosen from the browser and the footer links. All copy lives in `i18n.js`; keep the English in the HTML in sync.
 - **Preferences** are saved in `localStorage`, a cookie and `window.name`.
 - Works without JavaScript (English text is in the HTML) and from `file://`.
 

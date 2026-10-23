@@ -13,8 +13,6 @@
   const DEFAULT_THEME_MODE = "auto";
   const THEME_MODE_STORAGE_KEY = "baselarte:theme";
   const PREFERENCE_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 24 * 365;
-  // If the animation library has not started by then, reveal the page without it.
-  const MOTION_LOAD_TIMEOUT_MS = 2500;
 
   const documentRoot = document.documentElement;
 
@@ -100,15 +98,9 @@
     return /^pt\b/i.test(browserLanguage) ? "pt-BR" : DEFAULT_LANGUAGE;
   }
 
-  function revealWithoutMotion() {
-    documentRoot.classList.remove("motion-pending");
-  }
-
   documentRoot.dataset.theme = resolveTheme(readThemeMode(), new Date());
   documentRoot.lang = detectInitialLanguage();
-  documentRoot.classList.add("js-enabled", "motion-pending");
-
-  const motionFallbackTimer = setTimeout(revealWithoutMotion, MOTION_LOAD_TIMEOUT_MS);
+  documentRoot.classList.add("js-enabled");
 
   window.siteBoot = {
     SUPPORTED_LANGUAGES,
@@ -119,9 +111,5 @@
     storeThemeMode,
     THEME_MODE_STORAGE_KEY,
     storeLanguage,
-    revealWithoutMotion,
-    markMotionStarted() {
-      clearTimeout(motionFallbackTimer);
-    },
   };
 })();

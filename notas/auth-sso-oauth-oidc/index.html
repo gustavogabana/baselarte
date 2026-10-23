@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 
-  <title data-i18n="auth.metaTitle">Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte</title>
+  <title data-i18n="auth.metaTitle">Sign-in and authentication: SSO, OAuth, OIDC and friends</title>
   <meta name="description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
   <meta name="author" content="Baselarte Ltda.">
@@ -20,23 +20,21 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Baselarte">
   <meta property="og:url" content="https://baselarte.com/notas/auth-sso-oauth-oidc/">
-  <meta property="og:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte">
+  <meta property="og:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends">
   <meta property="og:description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
   <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
   <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends | Baselarte">
+  <meta name="twitter:title" data-i18n-attributes="content:auth.metaTitle" content="Sign-in and authentication: SSO, OAuth, OIDC and friends">
   <meta name="twitter:description" data-i18n-attributes="content:auth.metaDescription" content="Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full "Sign in with Google" flow, and OIDC from GitHub Actions to AWS without stored keys.">
 
   <!-- Icons & manifest -->
-  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
-  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
-
-  <!-- Performance -->
   <link rel="stylesheet" href="../../styles.css">
 
 </head>
@@ -49,82 +47,19 @@
   <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
 
   <header class="site-header">
-    <div class="header-top">
-      <a class="site-wordmark" href="../../" aria-label="Baselarte">
-        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
-        <span>baselarte</span>
-      </a>
-      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
-        <a href="../../index.html#about" data-i18n="nav.about">About</a>
-        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
-        <a href="../index.html" data-i18n="nav.notes">Notes</a>
-      </nav>
-      <div class="header-tools">
-        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
-          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
-          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
-          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
-        </div>
-        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
-          <span data-i18n="languageToggle.label">PT</span>
-        </button>
-      </div>
-    </div>
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
   </header>
 
 
   <main id="main">
-    <div class="page-layout">
-      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
-        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
-        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
-        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
-        <ul data-sidebar-group>
-          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
-          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
-        <ul data-sidebar-group>
-          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
-          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
-        <ul data-sidebar-group>
-          <li><a href="../aws/index.html">AWS</a></li>
-          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
-          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
-          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
-          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
-          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
-        <ul data-sidebar-group>
-          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
-          <li><a href="../network-attack-defense/index.html"><span data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span></a></li>
-          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
-          <li><a href="../web-host-attack-defense/index.html"><span data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span></a></li>
-          <li><a href="../social-engineering/index.html"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></a></li>
-          <li><a href="../ethical-hacking-ceh-practice/index.html"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></a></li>
-          <li><a href="../auth-sso-oauth-oidc/index.html" aria-current="page"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
-          <li><a href="../crypto-keys-ssh/index.html"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
-        <ul data-sidebar-group>
-          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
-          <li><a href="../llm-agents-open-source/index.html"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
-        <ul data-sidebar-group>
-          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
-        </ul>
-        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
-        <ul data-sidebar-group>
-          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
-          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
-          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
-        </ul>
-      </nav>
-      <aside class="side-nav" id="side-nav">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="auth.kicker">Study guide</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="auth.heroTitle">Sign-in and authentication: <em>SSO, OAuth, OIDC and friends.</em></h1>
+      <p class="hero-lede" data-i18n="auth.heroLede">Who you are, what you may do, and how the standards fit together, ending with GitHub Actions signing in to AWS without stored keys.</p>
+    </section>
+<aside class="side-nav" id="side-nav">
         <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
           <h2 data-i18n="sideNav.onThisPage">On this page</h2>
           <ul>
@@ -141,13 +76,6 @@
           </ul>
         </nav>
       </aside>
-      <article class="reading-column ds-guide">
-<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></li></ol></nav>
-    <section class="hero" aria-labelledby="hero-title">
-      <p class="monospace-label hero-kicker" data-i18n="auth.kicker">Study guide</p>
-      <h1 id="hero-title" class="hero-title" data-i18n="auth.heroTitle">Sign-in and authentication: <em>SSO, OAuth, OIDC and friends.</em></h1>
-      <p class="hero-lede" data-i18n="auth.heroLede">Who you are, what you may do, and how the standards fit together, ending with GitHub Actions signing in to AWS without stored keys.</p>
-    </section>
         <section class="content-section" aria-labelledby="tldr">
           <h2 id="tldr"><span class="pt">Resumo (TL;DR)</span><span class="en">Summary (TL;DR)</span></h2>
           <div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Onde esta nota se encaixa: é o mapa de conceitos de identidade e acesso. Sessões, cookies e JWT do lado de quem constrói o app estão na <a href="../web-app-security/index.html">nota de apps web seguros</a>; o passo a passo completo do deploy está em <a href="../github-aws-oidc/index.html">GitHub para AWS com OIDC</a>; o panorama da área, na <a href="../cybersecurity-for-devs/index.html">trilha de cibersegurança</a>.</span><span class="en">Where this note fits: it is the concept map for identity and access. Sessions, cookies and JWT from the app builder’s side are in the <a href="../web-app-security/index.html">secure web apps note</a>; the full deploy walkthrough is in <a href="../github-aws-oidc/index.html">GitHub to AWS with OIDC</a>; the big picture of the field is in the <a href="../cybersecurity-for-devs/index.html">cybersecurity path</a>.</span></div>
@@ -451,42 +379,21 @@ jobs:
           <div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://datatracker.ietf.org/doc/html/rfc6749" rel="noopener">RFC 6749 · The OAuth 2.0 Authorization Framework</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc6750" rel="noopener">RFC 6750 · OAuth 2.0 Bearer Token Usage</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7636" rel="noopener">RFC 7636 · Proof Key for Code Exchange (PKCE)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8628" rel="noopener">RFC 8628 · OAuth 2.0 Device Authorization Grant</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc9700" rel="noopener">RFC 9700 · Best Current Practice for OAuth 2.0 Security</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7519" rel="noopener">RFC 7519 · JSON Web Token (JWT)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc8725" rel="noopener">RFC 8725 · JWT Best Current Practices</a></li><li><a href="https://openid.net/specs/openid-connect-core-1_0.html" rel="noopener">OpenID Connect Core 1.0</a></li><li><a href="https://openid.net/specs/openid-connect-discovery-1_0.html" rel="noopener">OpenID Connect Discovery 1.0</a></li><li><a href="https://docs.oasis-open.org/security/saml/v2.0/" rel="noopener">OASIS · SAML 2.0 specifications</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4120" rel="noopener">RFC 4120 · The Kerberos Network Authentication Service (V5)</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc4511" rel="noopener">RFC 4511 · LDAP: The Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc6238" rel="noopener">RFC 6238 · TOTP: Time-Based One-Time Password</a></li><li><a href="https://www.w3.org/TR/webauthn-2/" rel="noopener">W3C · Web Authentication (WebAuthn)</a></li><li><a href="https://fidoalliance.org/fido2/" rel="noopener">FIDO Alliance · FIDO2</a></li><li><a href="https://pages.nist.gov/800-63-3/sp800-63b.html" rel="noopener">NIST SP 800-63B · Authentication and Lifecycle Management</a></li><li><a href="https://docs.github.com/en/actions/how-tos/secure-your-work/security-harden-deployments/oidc-in-aws" rel="noopener">GitHub Docs · Configuring OpenID Connect in Amazon Web Services</a></li><li><a href="https://docs.github.com/en/actions/reference/security/oidc" rel="noopener">GitHub Docs · OpenID Connect reference (claims and sub formats)</a></li><li><a href="https://github.com/aws-actions/configure-aws-credentials" rel="noopener">GitHub · aws-actions/configure-aws-credentials</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc.html" rel="noopener">AWS Docs · Create an OpenID Connect (OIDC) identity provider in IAM</a></li><li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_oidc.html" rel="noopener">AWS Docs · Create a role for OpenID Connect federation</a></li><li><a href="https://docs.aws.amazon.com/STS/latest/APIReference/API_AssumeRoleWithWebIdentity.html" rel="noopener">AWS Docs · AssumeRoleWithWebIdentity</a></li></ul></div>
 
       </article>
-    </div>
   </main>
 
   <footer class="site-footer">
-    <div class="site-footer-grid">
-      <div class="footer-brand">
-        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
-        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
       </div>
-
-      <nav class="footer-column" aria-labelledby="footer-company-heading">
-        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
-        <a href="../../index.html#about" data-i18n="nav.about">About</a>
-        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
-        <a href="../index.html" data-i18n="nav.notes">Notes</a>
-      </nav>
-
-      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
-        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
         <button type="button" data-language-option="en" lang="en">English</button>
-        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
-      </div>
-
-      <nav class="footer-column" aria-labelledby="footer-index-heading">
-        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
-        <a href="../../sitemap.xml">Sitemap</a>
-        <a href="../../llms.txt">llms.txt</a>
-      </nav>
-
-      <div class="footer-column requires-js">
-        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
-        <p><time data-local-time></time> · <span data-day-period></span></p>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
       </div>
     </div>
-
-    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
   </footer>
 
   <script src="../../i18n.js"></script>

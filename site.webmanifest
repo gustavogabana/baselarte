@@ -1,13 +1,13 @@
 {
   "name": "Baselarte",
   "short_name": "Baselarte",
-  "description": "Software engineering and creative technology company.",
+  "description": "Study notes on software engineering, cloud, security and AI.",
   "lang": "en",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0d0e12",
-  "theme_color": "#1b3a6e",
+  "theme_color": "#000000",
   "icons": [
     { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml" },
     { "src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
