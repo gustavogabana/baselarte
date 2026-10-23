@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="eh.metaTitle">Ethical hacking: where to practise, TryHackMe and the CEH | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:eh.metaDescription" content="A learning map: legal practice platforms (TryHackMe, Hack The Box, PortSwigger, OverTheWire), what the EC-Council CEH is, how to prepare for it or use it as a syllabus, and alternatives.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/ethical-hacking-ceh-practice/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/ethical-hacking-ceh-practice/">
+  <meta property="og:title" data-i18n-attributes="content:eh.metaTitle" content="Ethical hacking: where to practise, TryHackMe and the CEH | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:eh.metaDescription" content="A learning map: legal practice platforms (TryHackMe, Hack The Box, PortSwigger, OverTheWire), what the EC-Council CEH is, how to prepare for it or use it as a syllabus, and alternatives.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:eh.metaTitle" content="Ethical hacking: where to practise, TryHackMe and the CEH | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:eh.metaDescription" content="A learning map: legal practice platforms (TryHackMe, Hack The Box, PortSwigger, OverTheWire), what the EC-Council CEH is, how to prepare for it or use it as a syllabus, and alternatives.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../network-attack-defense/index.html"><span data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../web-host-attack-defense/index.html"><span data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span></a></li>
+          <li><a href="../social-engineering/index.html"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></a></li>
+          <li><a href="../ethical-hacking-ceh-practice/index.html" aria-current="page"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></a></li>
+          <li><a href="../auth-sso-oauth-oidc/index.html"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
+          <li><a href="../crypto-keys-ssh/index.html"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
+        <ul data-sidebar-group>
+          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
+          <li><a href="../llm-agents-open-source/index.html"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
+        <ul data-sidebar-group>
+          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#intro-eh"><span class="pt">Antes de começar: pratique antes de certificar</span><span class="en">Before you start: practise before you certify</span></a></li>
+<li><a href="#platforms"><span class="pt">Onde praticar, de forma legal</span><span class="en">Where to practise, legally</span></a></li>
+<li><a href="#ceh"><span class="pt">O que é a CEH do EC-Council</span><span class="en">What the EC-Council CEH is</span></a></li>
+<li><a href="#ceh-prep"><span class="pt">Como se preparar, ou só usá-la como currículo</span><span class="en">How to prepare, or just use it as a syllabus</span></a></li>
+<li><a href="#alternatives"><span class="pt">Alternativas: Security+, eJPT, PNPT, OSCP</span><span class="en">Alternatives: Security+, eJPT, PNPT, OSCP</span></a></li>
+<li><a href="#cheat-eh"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="eh.kicker">Learning path</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="eh.heroTitle">Ethical hacking: <em>practise, then certify.</em></h1>
+  <p class="hero-lede" data-i18n="eh.heroLede">Where to practise legally, in which order, what the EC-Council CEH is and how to prepare for it (or just use it as a syllabus), and the other certifications worth comparing.</p>
+</section>
+<section class="content-section" aria-labelledby="intro-eh">
+<h2 id="intro-eh"><span class="pt">Antes de começar: pratique antes de certificar</span><span class="en">Before you start: practise before you certify</span></h2>
+
+<p><span class="pt">As notas anteriores desta trilha (<a href="../network-attack-defense/index.html">ataque e defesa em redes</a>, <a href="../web-host-attack-defense/index.html">ataque e defesa web e de servidor</a>, <a href="../social-engineering/index.html">engenharia social</a>) ensinam as técnicas num laboratório Docker seu. Esta nota é diferente: é um mapa de <em>onde continuar praticando</em>, de forma legal e estruturada, e de <em>como a indústria mede</em> esse conhecimento através de certificações — com a <a href="https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/" rel="noopener">Certified Ethical Hacker (CEH)</a> do EC-Council como referência central, por ser a certificação de "hacking ético" mais reconhecida fora do círculo técnico (RH, editais públicos, muitos países exigem-na para cargos de segurança governamentais).</span><span class="en">The previous notes in this path (<a href="../network-attack-defense/index.html">network attack and defence</a>, <a href="../web-host-attack-defense/index.html">web and host attack and defence</a>, <a href="../social-engineering/index.html">social engineering</a>) teach the techniques in a Docker lab of your own. This note is different: it is a map of <em>where to keep practising</em>, legally and in a structured way, and of <em>how the industry measures</em> that knowledge through certifications — with the EC-Council's <a href="https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/" rel="noopener">Certified Ethical Hacker (CEH)</a> as the central reference, since it is the best-known "ethical hacking" certification outside technical circles (HR, public job postings, and several countries require it for government security roles).</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">"Hacking ético" significa sempre a mesma coisa: autorização explícita por escrito, ou uma plataforma que a dá de propósito (as desta nota). A certificação não muda essa regra — ela avalia conhecimento, não concede permissão para testar sistemas de terceiros.</span><span class="en">"Ethical hacking" always means the same thing: explicit written authorization, or a platform that grants it on purpose (the ones in this note). The certification does not change that rule — it assesses knowledge, it does not grant permission to test third-party systems.</span></div>
+</section>
+<section class="content-section" aria-labelledby="platforms">
+<h2 id="platforms"><span class="pt">Onde praticar, de forma legal</span><span class="en">Where to practise, legally</span></h2>
+
+<p><span class="pt">Todas as plataformas abaixo dão alvos feitos de propósito para serem atacados, de forma legal. A ordem sugerida vai do mais guiado ao mais livre.</span><span class="en">Every platform below gives you purpose-built targets to attack, legally. The suggested order goes from most guided to most open-ended.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Plataforma</span><span class="en">Platform</span></th><th><span class="pt">Formato</span><span class="en">Format</span></th><th><span class="pt">Melhor para</span><span class="en">Best for</span></th></tr></thead><tbody><tr><td><a href="https://overthewire.org/wargames/" rel="noopener">OverTheWire Wargames</a></td><td><span class="pt">desafios de linha de comando via SSH, gratuitos</span><span class="en">free SSH command-line challenges</span></td><td><span class="pt">fundamentos de Linux e lógica de exploração, antes de tudo</span><span class="en">Linux fundamentals and exploitation logic, before anything else</span></td></tr><tr><td><a href="https://portswigger.net/web-security" rel="noopener">PortSwigger Web Security Academy</a></td><td><span class="pt">labs interativos, gratuitos, com o Burp Suite</span><span class="en">free, interactive labs with Burp Suite</span></td><td><span class="pt">falhas de aplicação web em profundidade (o que a nota de web e host cobre no 80/20)</span><span class="en">web application flaws in depth (the 80/20 the web-and-host note covers)</span></td></tr><tr><td><a href="https://tryhackme.com" rel="noopener">TryHackMe</a></td><td><span class="pt">salas guiadas, passo a passo, com teoria embutida</span><span class="en">guided, step-by-step rooms with built-in theory</span></td><td><span class="pt">quem está começando: o caminho "Jr Penetration Tester" é a continuação natural desta trilha</span><span class="en">beginners: the "Jr Penetration Tester" path is the natural continuation of this track</span></td></tr><tr><td><a href="https://www.hackthebox.com" rel="noopener">Hack The Box</a></td><td><span class="pt">máquinas inteiras, menos guiadas, estilo CTF</span><span class="en">whole machines, less guided, CTF-style</span></td><td><span class="pt">depois do TryHackMe: menos teoria, mais "descubra você mesmo"</span><span class="en">after TryHackMe: less theory, more "figure it out yourself"</span></td></tr><tr><td><a href="https://ctftime.org" rel="noopener">CTFtime</a></td><td><span class="pt">calendário de competições CTF (Capture The Flag) ao vivo, em equipe</span><span class="en">calendar of live, team-based CTF (Capture The Flag) competitions</span></td><td><span class="pt">praticar sob pressão de tempo e junto de outras pessoas</span><span class="en">practising under time pressure, alongside other people</span></td></tr></tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Todas essas plataformas são o mesmo princípio desta trilha, só escaladas: alvos feitos para ter falhas, autorização dada de propósito, nenhuma delas substitui as outras — combine OverTheWire/PortSwigger para teoria aplicada e TryHackMe/HTB para prática livre.</span><span class="en">All of these platforms follow the same principle as this path, just scaled up: targets built to have flaws, authorization given on purpose, none of them replaces the others — combine OverTheWire/PortSwigger for applied theory and TryHackMe/HTB for open-ended practice.</span></div>
+</section>
+<section class="content-section" aria-labelledby="ceh">
+<h2 id="ceh"><span class="pt">O que é a CEH do EC-Council</span><span class="en">What the EC-Council CEH is</span></h2>
+
+<p><span class="pt">A <strong>Certified Ethical Hacker (CEH)</strong>, hoje na versão CEH v13 (também vendida como "CEH AI"), é a certificação de hacking ético do <a href="https://www.eccouncil.org" rel="noopener">EC-Council</a>. Ela segue um framework próprio de quatro etapas: <strong>Learn</strong> (20 módulos e 221 laboratórios práticos), <strong>Certify</strong> (os exames abaixo), <strong>Engage</strong> (um exercício simulado de quatro fases num cyber range) e <strong>Compete</strong> (acesso a 12 desafios de CTF por um ano).</span><span class="en">The <strong>Certified Ethical Hacker (CEH)</strong>, currently version CEH v13 (also marketed as "CEH AI"), is the <a href="https://www.eccouncil.org" rel="noopener">EC-Council</a>'s ethical hacking certification. It follows its own four-stage framework: <strong>Learn</strong> (20 modules and 221 hands-on labs), <strong>Certify</strong> (the exams below), <strong>Engage</strong> (a simulated four-phase exercise in a cyber range) and <strong>Compete</strong> (a year of access to 12 CTF challenges).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Item</span><span class="en">Item</span></th><th><span class="pt">Exame de conhecimento</span><span class="en">Knowledge exam</span></th><th><span class="pt">Exame prático (opcional)</span><span class="en">Practical exam (optional)</span></th></tr></thead><tbody><tr><td><span class="pt">Formato</span><span class="en">Format</span></td><td><span class="pt">125 questões de múltipla escolha</span><span class="en">125 multiple-choice questions</span></td><td><span class="pt">20 desafios práticos reais</span><span class="en">20 real-world practical challenges</span></td></tr><tr><td><span class="pt">Duração</span><span class="en">Duration</span></td><td>4 horas</td><td>6 horas</td></tr><tr><td><span class="pt">Onde</span><span class="en">Where</span></td><td><span class="pt">online, pelo portal de exames do EC-Council</span><span class="en">online, via the EC-Council's exam portal</span></td><td><span class="pt">cyber range iLabs</span><span class="en">iLabs cyber range</span></td></tr><tr><td><span class="pt">Nota de corte</span><span class="en">Passing score</span></td><td>60%–85%</td><td>60%–85%</td></tr></tbody></table></div>
+<p><span class="pt">Passar só no exame de conhecimento já concede a certificação CEH; passar também no exame prático concede o título de <strong>CEH Master</strong>. Não há pré-requisito formal, mas o EC-Council recomenda fortemente pelo menos dois anos de experiência em segurança de TI; quem não os tem é direcionado à sua "Cybersecurity Essentials Series" introdutória.</span><span class="en">Passing just the knowledge exam already grants the CEH certification; passing the practical exam too grants the <strong>CEH Master</strong> title. There is no formal prerequisite, but the EC-Council strongly recommends at least two years of IT security experience; those without it are pointed to its introductory "Cybersecurity Essentials Series".</span></p>
+</section>
+<section class="content-section" aria-labelledby="ceh-prep">
+<h2 id="ceh-prep"><span class="pt">Como se preparar, ou só usá-la como currículo</span><span class="en">How to prepare, or just use it as a syllabus</span></h2>
+
+<p><span class="pt">Você não precisa pagar pela CEH para se beneficiar dela: os 20 módulos do seu currículo público (reconhecimento, varredura, enumeração, hacking de sistema, malware, sniffing, engenharia social, negação de serviço, sequestro de sessão, evasão de IDS/firewall, hacking de servidores e aplicações web, SQL injection, redes sem fio, mobile, IoT, computação em nuvem e criptografia) cobrem quase exatamente o que as notas desta trilha ensinam, na mesma ordem. Use-o como um checklist de lacunas.</span><span class="en">You do not need to pay for the CEH to benefit from it: the 20 modules of its public syllabus (reconnaissance, scanning, enumeration, system hacking, malware, sniffing, social engineering, denial of service, session hijacking, evading IDS/firewalls, hacking web servers and applications, SQL injection, wireless networks, mobile, IoT, cloud computing and cryptography) cover almost exactly what this path's notes teach, in the same order. Use it as a gap checklist.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Módulo típico da CEH</span><span class="en">Typical CEH module</span></th><th><span class="pt">Onde esta trilha já cobre</span><span class="en">Where this path already covers it</span></th></tr></thead><tbody><tr><td><span class="pt">Reconhecimento, varredura, enumeração</span><span class="en">Reconnaissance, scanning, enumeration</span></td><td><a href="../network-attack-defense/index.html"><span class="pt">Ataque e defesa em redes</span><span class="en">Network attack and defence</span></a></td></tr><tr><td><span class="pt">Sniffing, hacking de sistema, sequestro de sessão</span><span class="en">Sniffing, system hacking, session hijacking</span></td><td><a href="../network-attack-defense/index.html"><span class="pt">Ataque e defesa em redes</span><span class="en">Network attack and defence</span></a> + <a href="../crypto-keys-ssh/index.html"><span class="pt">Criptografia e chaves</span><span class="en">Cryptography and keys</span></a></td></tr><tr><td><span class="pt">Hacking de servidores/aplicações web, SQL injection</span><span class="en">Hacking web servers/applications, SQL injection</span></td><td><a href="../web-host-attack-defense/index.html"><span class="pt">Ataque e defesa web e de servidor</span><span class="en">Web and host attack and defence</span></a></td></tr><tr><td><span class="pt">Engenharia social</span><span class="en">Social engineering</span></td><td><a href="../social-engineering/index.html"><span class="pt">Engenharia social</span><span class="en">Social engineering</span></a></td></tr><tr><td><span class="pt">Evasão de IDS/firewall, negação de serviço</span><span class="en">Evading IDS/firewalls, denial of service</span></td><td><a href="../network-attack-defense/index.html"><span class="pt">Ataque e defesa em redes</span><span class="en">Network attack and defence</span></a> (firewall e monitoramento)</td></tr><tr><td><span class="pt">Computação em nuvem, mobile, IoT, sem fio</span><span class="en">Cloud computing, mobile, IoT, wireless</span></td><td><span class="pt">fora do escopo desta trilha; procure cursos dedicados por área</span><span class="en">outside this path's scope; look for dedicated courses per area</span></td></tr></tbody></table></div>
+<p><span class="pt">Se a meta for de fato o certificado (exigência de vaga, edital público, mercado de outro país), o caminho prático é: treine nas plataformas da seção anterior, use o currículo acima para achar lacunas específicas (nuvem, mobile, wireless), e só então pague pelo exame — o EC-Council vende o treinamento oficial, mas ele não é obrigatório para fazer a prova.</span><span class="en">If the certificate itself is the actual goal (a job requirement, a public tender, another country's job market), the practical path is: train on the previous section's platforms, use the syllabus above to find specific gaps (cloud, mobile, wireless), and only then pay for the exam — the EC-Council sells official training, but it is not required to sit the exam.</span></p>
+</section>
+<section class="content-section" aria-labelledby="alternatives">
+<h2 id="alternatives"><span class="pt">Alternativas: Security+, eJPT, PNPT, OSCP</span><span class="en">Alternatives: Security+, eJPT, PNPT, OSCP</span></h2>
+
+<p><span class="pt">A CEH é majoritariamente teórica (múltipla escolha, mais o exame prático opcional). Quem quer uma prova 100% prática, mais respeitada tecnicamente, costuma olhar para estas outras.</span><span class="en">The CEH is mostly theoretical (multiple choice, plus the optional practical exam). Those who want a 100% hands-on exam, more technically respected, usually look at these instead.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Certificação</span><span class="en">Certification</span></th><th><span class="pt">Formato</span><span class="en">Format</span></th><th><span class="pt">Nível</span><span class="en">Level</span></th></tr></thead><tbody><tr><td><a href="https://www.comptia.org/certifications/security" rel="noopener">CompTIA Security+</a></td><td><span class="pt">múltipla escolha, conceitos gerais de segurança</span><span class="en">multiple choice, general security concepts</span></td><td><span class="pt">iniciante, sem pré-requisitos</span><span class="en">entry-level, no prerequisites</span></td></tr><tr><td><a href="https://www.ine.com/certifications/ejpt-certification" rel="noopener">eJPT (INE)</a></td><td><span class="pt">prática, num ambiente controlado, mais barata</span><span class="en">hands-on, in a controlled environment, cheaper</span></td><td><span class="pt">iniciante-intermediário</span><span class="en">beginner-to-intermediate</span></td></tr><tr><td><a href="https://www.thecybermentor.com/pnpt" rel="noopener">PNPT (TCM Security)</a></td><td><span class="pt">um pentest completo simulado, com relatório escrito avaliado</span><span class="en">a full simulated pentest, with a written report that gets graded</span></td><td><span class="pt">intermediário</span><span class="en">intermediate</span></td></tr><tr><td><a href="https://www.offsec.com/courses/pen-200/" rel="noopener">OSCP (OffSec)</a></td><td><span class="pt">24 horas de exame prático contra várias máquinas reais</span><span class="en">24-hour practical exam against several real machines</span></td><td><span class="pt">avançado, referência do mercado de pentest</span><span class="en">advanced, the pentest market's benchmark</span></td></tr></tbody></table></div>
+<p><span class="pt">Uma progressão razoável para quem vem desta trilha: Security+ (vocabulário e conceitos, se ainda faltar), depois eJPT ou a CEH (conhecimento amplo, com ou sem o exame prático), depois PNPT ou OSCP quando já tiver prática real acumulada nas plataformas da seção "Onde praticar".</span><span class="en">A reasonable progression coming from this path: Security+ (vocabulary and concepts, if still missing), then eJPT or the CEH (broad knowledge, with or without the practical exam), then PNPT or OSCP once you have real practice accumulated on the "Where to practise" platforms.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-eh">
+<h2 id="cheat-eh"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+
+<h3><span class="pt">Cola: qual caminho seguir</span><span class="en">Cheat sheet: which path to follow</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Se você…</span><span class="en">If you…</span></th><th><span class="pt">Comece por</span><span class="en">Start with</span></th></tr></thead><tbody><tr><td><span class="pt">nunca usou a linha de comando do Linux de verdade</span><span class="en">have never really used the Linux command line</span></td><td>OverTheWire Wargames</td></tr><tr><td><span class="pt">quer aprofundar falhas de aplicação web</span><span class="en">wants to go deep on web application flaws</span></td><td>PortSwigger Web Security Academy</td></tr><tr><td><span class="pt">quer um currículo guiado, passo a passo</span><span class="en">wants a guided, step-by-step syllabus</span></td><td>TryHackMe</td></tr><tr><td><span class="pt">já tem alguma base e quer "descobrir sozinho"</span><span class="en">already has some base and wants to "figure it out alone"</span></td><td>Hack The Box</td></tr><tr><td><span class="pt">precisa de um certificado reconhecido por RH/edital</span><span class="en">needs a certificate recognised by HR/a public tender</span></td><td>CEH</td></tr><tr><td><span class="pt">quer a prova mais respeitada tecnicamente</span><span class="en">wants the most technically respected exam</span></td><td>OSCP</td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">A CEH exige experiência prévia?</span><span class="en">Does the CEH require prior experience?</span></td><td><span class="pt">Não formalmente; o EC-Council recomenda dois anos de experiência e direciona quem não os tem a um curso introdutório.</span><span class="en">Not formally; the EC-Council recommends two years of experience and points those without it to an introductory course.</span></td></tr><tr><td><span class="pt">Qual a diferença entre CEH e CEH Master?</span><span class="en">What is the difference between CEH and CEH Master?</span></td><td><span class="pt">CEH exige só o exame de conhecimento; CEH Master exige também passar no exame prático de 20 desafios.</span><span class="en">CEH requires only the knowledge exam; CEH Master also requires passing the 20-challenge practical exam.</span></td></tr><tr><td><span class="pt">Por que praticar em TryHackMe/HTB antes de pagar por uma certificação?</span><span class="en">Why practise on TryHackMe/HTB before paying for a certification?</span></td><td><span class="pt">São gratuitos ou baratos, dão prática real e ajudam a identificar lacunas antes de investir num exame.</span><span class="en">They are free or cheap, give real practice and help identify gaps before investing in an exam.</span></td></tr><tr><td><span class="pt">Qual certificação é mais prática: CEH ou OSCP?</span><span class="en">Which certification is more hands-on: CEH or OSCP?</span></td><td><span class="pt">OSCP: um exame prático de 24 horas contra máquinas reais, sem componente de múltipla escolha.</span><span class="en">OSCP: a 24-hour practical exam against real machines, with no multiple-choice component.</span></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/" rel="noopener">EC-Council. Certified Ethical Hacker (CEH) — official program page.</a></li><li><a href="https://tryhackme.com" rel="noopener">TryHackMe. Guided, hands-on security training rooms.</a></li><li><a href="https://www.hackthebox.com" rel="noopener">Hack The Box. CTF-style penetration testing labs.</a></li><li><a href="https://portswigger.net/web-security" rel="noopener">PortSwigger Web Security Academy. Free web security training.</a></li><li><a href="https://overthewire.org/wargames/" rel="noopener">OverTheWire. Wargames for learning security concepts via SSH.</a></li><li><a href="https://www.offsec.com/courses/pen-200/" rel="noopener">OffSec. PEN-200 / OSCP certification.</a></li><li><a href="https://www.comptia.org/certifications/security" rel="noopener">CompTIA Security+ certification.</a></li><li><a href="https://ctftime.org" rel="noopener">CTFtime. Calendar and archive of CTF competitions.</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>

@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="se.metaTitle">Social engineering: attacks, defences and a phishing-simulation lab | Baselarte</title>
+  <meta name="description" data-i18n-attributes="content:se.metaDescription" content="Why people are the most exploited link: Cialdini's principles, phishing, vishing, pretexting and physical tactics, how to spot them, the controls that stop them, and a Gophish simulation to run locally.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/social-engineering/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/social-engineering/">
+  <meta property="og:title" data-i18n-attributes="content:se.metaTitle" content="Social engineering: attacks, defences and a phishing-simulation lab | Baselarte">
+  <meta property="og:description" data-i18n-attributes="content:se.metaDescription" content="Why people are the most exploited link: Cialdini's principles, phishing, vishing, pretexting and physical tactics, how to spot them, the controls that stop them, and a Gophish simulation to run locally.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:se.metaTitle" content="Social engineering: attacks, defences and a phishing-simulation lab | Baselarte">
+  <meta name="twitter:description" data-i18n-attributes="content:se.metaDescription" content="Why people are the most exploited link: Cialdini's principles, phishing, vishing, pretexting and physical tactics, how to spot them, the controls that stop them, and a Gophish simulation to run locally.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=4" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=4" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+
+  <!-- Performance -->
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <div class="header-top">
+      <a class="site-wordmark" href="../../" aria-label="Baselarte">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <span>baselarte</span>
+      </a>
+      <nav class="site-nav" data-i18n-attributes="aria-label:nav.label" aria-label="Main">
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+      <div class="header-tools">
+        <div class="theme-switch requires-js" role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+          <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n-attributes="title:theme.auto;aria-label:theme.auto" title="Automatic: dark from 18:00 to 06:00 by your clock" aria-label="Automatic: dark from 18:00 to 06:00 by your clock"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="10"/><path d="M16 6a10 10 0 0 1 0 20z" fill="currentColor"/></svg></button>
+          <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n-attributes="title:theme.light;aria-label:theme.light" title="Light theme" aria-label="Light theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="5"/><path d="M16 3v4M16 25v4M3 16h4M25 16h4M6.8 6.8l2.8 2.8M22.4 22.4l2.8 2.8M6.8 25.2l2.8-2.8M22.4 9.6l2.8-2.8"/></svg></button>
+          <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n-attributes="title:theme.dark;aria-label:theme.dark" title="Dark theme" aria-label="Dark theme"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M26 19.5A11 11 0 0 1 12.5 6 11 11 0 1 0 26 19.5z"/></svg></button>
+        </div>
+        <button class="language-toggle requires-js" type="button" data-language-toggle data-i18n-attributes="aria-label:languageToggle.description" aria-label="Ver em português">
+          <span data-i18n="languageToggle.label">PT</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main">
+    <div class="page-layout">
+      <nav class="docs-sidebar" id="docs-sidebar" data-i18n-attributes="aria-label:nav.section" aria-label="Notes">
+        <a class="sidebar-home" href="../index.html"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><path d="M20 6 10 16l10 10"/></svg><span data-i18n="sidebar.home">Notes home</span></a>
+        <div class="sidebar-filter"><svg class="icon" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="m20 20 8 8"/></svg><input type="search" data-sidebar-filter placeholder="Filter notes" data-i18n-attributes="placeholder:sidebar.filter;aria-label:sidebar.filter" aria-label="Filter notes"></div>
+        <h2 data-i18n="sidebar.groupSystems">Systems</h2>
+        <ul data-sidebar-group>
+          <li><a href="../linux/index.html"><span data-i18n="notes.lx.title">How Linux works</span></a></li>
+          <li><a href="../postgres-for-devs/index.html"><span data-i18n="notes.pg.title">Postgres for developers</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupWeb">Web development</h2>
+        <ul data-sidebar-group>
+          <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
+          <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
+        <ul data-sidebar-group>
+          <li><a href="../aws/index.html">AWS</a></li>
+          <li><a href="../cloudflare/index.html"><span data-i18n="notes.cf.title">Cloudflare: domain, R2 and SSL</span></a></li>
+          <li><a href="../terraform/index.html"><span data-i18n="notes.tf.title">Terraform 80/20</span></a></li>
+          <li><a href="../kubernetes/index.html"><span data-i18n="notes.k8s.title">Kubernetes from zero: concepts, security and AWS</span></a></li>
+          <li><a href="../observability/index.html"><span data-i18n="notes.obs.title">Observability: metrics, p95/p99, logs and traces</span></a></li>
+          <li><a href="../github-aws-oidc/index.html"><span data-i18n="notes.oidc.title">GitHub to AWS with OIDC</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupSecurity">Security</h2>
+        <ul data-sidebar-group>
+          <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
+          <li><a href="../network-attack-defense/index.html"><span data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span></a></li>
+          <li><a href="../web-app-security/index.html"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
+          <li><a href="../web-host-attack-defense/index.html"><span data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span></a></li>
+          <li><a href="../social-engineering/index.html" aria-current="page"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></a></li>
+          <li><a href="../ethical-hacking-ceh-practice/index.html"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></a></li>
+          <li><a href="../auth-sso-oauth-oidc/index.html"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
+          <li><a href="../crypto-keys-ssh/index.html"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupAI">Artificial intelligence</h2>
+        <ul data-sidebar-group>
+          <li><a href="../attention-is-all-you-need/index.html"><span data-i18n="notes.att.title">Attention Is All You Need, explained</span></a></li>
+          <li><a href="../llm-agents-open-source/index.html"><span data-i18n="notes.llm.title">Open-source LLMs and AI agents: run, connect and deploy</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupMind">Mind and habits</h2>
+        <ul data-sidebar-group>
+          <li><a href="../focus-and-attention/index.html"><span data-i18n="notes.foc.title">Focus and attention: recovering from brain rot</span></a></li>
+        </ul>
+        <h2 data-i18n="sidebar.groupBooks">Book notes</h2>
+        <ul data-sidebar-group>
+          <li><a href="../entendendo-algoritmos/index.html"><span data-i18n="notes.alg.title">Grokking Algorithms</span></a></li>
+          <li><a href="../software-engineering-at-google/index.html"><span data-i18n="notes.seg.title">Software Engineering at Google</span></a></li>
+          <li><a href="../ai-engineering/index.html"><span data-i18n="notes.aie.title">AI Engineering</span></a></li>
+        </ul>
+      </nav>
+      <aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#intro-se"><span class="pt">Antes de começar: por que o fator humano importa mais</span><span class="en">Before you start: why the human factor matters most</span></a></li>
+<li><a href="#principles"><span class="pt">Os seis princípios de influência (Cialdini)</span><span class="en">The six principles of influence (Cialdini)</span></a></li>
+<li><a href="#tactics"><span class="pt">As táticas mais comuns, e como reconhecê-las</span><span class="en">The most common tactics, and how to spot them</span></a></li>
+<li><a href="#email-auth"><span class="pt">Defesa de domínio: SPF, DKIM e DMARC</span><span class="en">Domain defence: SPF, DKIM and DMARC</span></a></li>
+<li><a href="#gophish-lab"><span class="pt">Laboratório: uma campanha de phishing simulada</span><span class="en">Lab: a simulated phishing campaign</span></a></li>
+<li><a href="#human-defense"><span class="pt">Defesa: processo, cultura e controles técnicos</span><span class="en">Defence: process, culture and technical controls</span></a></li>
+<li><a href="#cheat-se"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+      <article class="reading-column ds-guide">
+<nav class="breadcrumbs" data-i18n-attributes="aria-label:breadcrumb.label" aria-label="Breadcrumb"><ol><li><a href="../../">Baselarte</a></li><li><a href="../index.html" data-i18n="nav.notes">Notes</a></li><li aria-current="page"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></li></ol></nav>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="se.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="se.heroTitle">Social engineering: <em>attack and defence.</em></h1>
+  <p class="hero-lede" data-i18n="se.heroLede">How attackers manipulate trust, the tactics you will actually meet, the signs that give them away, and the technical and human controls that stop them, with a safe phishing simulation to run on your own machine.</p>
+</section>
+<section class="content-section" aria-labelledby="intro-se">
+<h2 id="intro-se"><span class="pt">Antes de começar: por que o fator humano importa mais</span><span class="en">Before you start: why the human factor matters most</span></h2>
+
+<p><span class="pt">A maioria das invasões reais não começa com um exploit técnico: começa com uma pessoa confiando em quem não devia. <em>Engenharia social</em> é a técnica de manipular essa confiança para obter acesso, informação ou dinheiro. Segundo relatórios anuais de resposta a incidentes (como o Verizon DBIR), é o vetor inicial mais comum de violação de dados — mais do que qualquer vulnerabilidade de software isolada, porque explora algo que nenhum patch corrige: confiança humana.</span><span class="en">Most real breaches do not start with a technical exploit: they start with a person trusting someone they should not have. <em>Social engineering</em> is the technique of manipulating that trust to gain access, information or money. According to annual incident-response reports (like the Verizon DBIR), it is the most common initial breach vector — more than any single software vulnerability, because it exploits something no patch fixes: human trust.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Esta nota explica o ataque para que você o reconheça e o defenda — não é um roteiro para manipular pessoas reais. O laboratório de phishing usa e-mails fictícios seus, interceptados por um servidor de teste, nunca alvos reais sem consentimento. Simular phishing contra colegas ou terceiros sem autorização explícita da organização é, no mínimo, uma violação ética, e pode ser crime.</span><span class="en">This note explains the attack so you can recognise and defend against it — it is not a script for manipulating real people. The phishing lab uses fictional emails of your own, intercepted by a test server, never real targets without consent. Simulating phishing against colleagues or third parties without an organisation's explicit authorization is, at minimum, an ethical violation, and can be a crime.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Onde esta nota se encaixa: é o complemento humano da <a href="../web-host-attack-defense/index.html">nota de ataque e defesa web e de servidor</a> — a mesma trilha da <a href="../cybersecurity-for-devs/index.html">cibersegurança para quem programa</a>, só que do lado de quem nunca escreve uma linha de SQL malicioso e ainda assim entra.</span><span class="en">Where this note fits: it is the human counterpart to the <a href="../web-host-attack-defense/index.html">web and host attack and defence note</a> — the same path as <a href="../cybersecurity-for-devs/index.html">cybersecurity for developers</a>, just from the side of someone who never writes a line of malicious SQL and still gets in.</span></div>
+</section>
+<section class="content-section" aria-labelledby="principles">
+<h2 id="principles"><span class="pt">Os seis princípios de influência (Cialdini)</span><span class="en">The six principles of influence (Cialdini)</span></h2>
+
+<p><span class="pt">O psicólogo Robert Cialdini catalogou os gatilhos que fazem pessoas dizerem "sim" — e são exatamente os que um pretexto de engenharia social explora. Reconhecer o gatilho, no momento em que ele é usado contra você, já é metade da defesa.</span><span class="en">Psychologist Robert Cialdini catalogued the triggers that make people say "yes" — and they are exactly the ones a social-engineering pretext exploits. Recognising the trigger, at the moment it is used against you, is already half the defence.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Princípio</span><span class="en">Principle</span></th><th><span class="pt">Como aparece num ataque</span><span class="en">How it shows up in an attack</span></th></tr></thead><tbody><tr><td><span class="pt">Autoridade</span><span class="en">Authority</span></td><td><span class="pt">"Sou do suporte de TI / da diretoria" — um crachá falso, um e-mail que parece do chefe</span><span class="en">"I'm from IT support / from the board" — a fake badge, an email that looks like it's from the boss</span></td></tr><tr><td><span class="pt">Urgência/escassez</span><span class="en">Urgency/scarcity</span></td><td><span class="pt">"Sua conta será bloqueada em 1 hora" — não dá tempo de pensar ou confirmar</span><span class="en">"Your account will be locked in 1 hour" — no time to think or verify</span></td></tr><tr><td><span class="pt">Prova social</span><span class="en">Social proof</span></td><td><span class="pt">"Todo o seu time já preencheu isso" — nomes reais de colegas aumentam a credibilidade</span><span class="en">"Your whole team already filled this out" — real colleagues' names boost credibility</span></td></tr><tr><td><span class="pt">Simpatia/afinidade</span><span class="en">Liking</span></td><td><span class="pt">um perfil falso que parece interessado nos mesmos hobbies, antes de pedir algo</span><span class="en">a fake profile that seems interested in the same hobbies, before asking for something</span></td></tr><tr><td><span class="pt">Reciprocidade</span><span class="en">Reciprocity</span></td><td><span class="pt">um "favor" pequeno antes (segurar a porta, ajudar com algo) antes do pedido real</span><span class="en">a small "favour" first (holding the door, helping with something) before the real ask</span></td></tr><tr><td><span class="pt">Compromisso/coerência</span><span class="en">Commitment/consistency</span></td><td><span class="pt">fazer a pessoa concordar com algo pequeno primeiro, depois pedir mais</span><span class="en">getting the person to agree to something small first, then asking for more</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="tactics">
+<h2 id="tactics"><span class="pt">As táticas mais comuns, e como reconhecê-las</span><span class="en">The most common tactics, and how to spot them</span></h2>
+
+<p><span class="pt">Cada tática combina um ou mais dos princípios acima com um canal específico (e-mail, telefone, presença física). Saber o nome ajuda a reconhecer o padrão rápido, antes de reagir ao conteúdo.</span><span class="en">Each tactic combines one or more of the principles above with a specific channel (email, phone, physical presence). Knowing the name helps you spot the pattern quickly, before reacting to the content.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tática</span><span class="en">Tactic</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Sinal de alerta</span><span class="en">Red flag</span></th></tr></thead><tbody><tr><td><span class="pt">Phishing</span><span class="en">Phishing</span></td><td><span class="pt">e-mail em massa fingindo ser de um serviço confiável, com um link ou anexo malicioso</span><span class="en">mass email pretending to be from a trusted service, with a malicious link or attachment</span></td><td><span class="pt">domínio do remetente quase certo, mas não exatamente igual</span><span class="en">sender domain almost right, but not exactly matching</span></td></tr><tr><td><span class="pt">Spear phishing</span><span class="en">Spear phishing</span></td><td><span class="pt">phishing dirigido a UMA pessoa, com detalhes reais sobre ela (cargo, projetos, colegas) para parecer legítimo</span><span class="en">phishing aimed at ONE person, with real details about them (role, projects, colleagues) to look legitimate</span></td><td><span class="pt">um pedido fora do padrão, mesmo vindo de alguém conhecido</span><span class="en">an out-of-the-ordinary request, even from someone known</span></td></tr><tr><td><span class="pt">Vishing</span><span class="en">Vishing</span></td><td><span class="pt">a mesma ideia, por telefone — "sou do banco, preciso confirmar seu código"</span><span class="en">the same idea, by phone — "I'm from the bank, I need to confirm your code"</span></td><td><span class="pt">pedido de um código de uso único por telefone — nenhuma instituição legítima faz isso</span><span class="en">asking for a one-time code by phone — no legitimate institution does this</span></td></tr><tr><td><span class="pt">Pretexting</span><span class="en">Pretexting</span></td><td><span class="pt">uma história inventada e consistente (um técnico, um auditor, um novo funcionário) para justificar um pedido fora do comum</span><span class="en">a made-up, consistent story (a technician, an auditor, a new hire) to justify an out-of-the-ordinary request</span></td><td><span class="pt">a história muda levemente se você pedir para confirmar um detalhe</span><span class="en">the story shifts slightly if you ask to confirm one detail</span></td></tr><tr><td><span class="pt">Baiting</span><span class="en">Baiting</span></td><td><span class="pt">deixar um pendrive "esquecido" no estacionamento, esperando que alguém o conecte por curiosidade</span><span class="en">leaving a "lost" USB drive in the parking lot, hoping someone plugs it in out of curiosity</span></td><td><span class="pt">qualquer mídia física não solicitada</span><span class="en">any unsolicited physical media</span></td></tr><tr><td><span class="pt">Tailgating</span><span class="en">Tailgating</span></td><td><span class="pt">seguir alguém por uma porta com controle de acesso, sem crachá próprio, confiando na educação da pessoa</span><span class="en">following someone through an access-controlled door with no badge of their own, relying on politeness</span></td><td><span class="pt">alguém sem crachá visível pedindo para "só passar rapidinho"</span><span class="en">someone with no visible badge asking to "just slip through"</span></td></tr><tr><td><span class="pt">MFA fatigue</span><span class="en">MFA fatigue</span></td><td><span class="pt">disparar vários pedidos de aprovação de MFA seguidos, na esperança de que a vítima aprove um por cansaço</span><span class="en">firing several MFA approval prompts in a row, hoping the victim approves one out of fatigue</span></td><td><span class="pt">prompts de MFA que você não solicitou, em sequência</span><span class="en">MFA prompts you did not request, in a row</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="email-auth">
+<h2 id="email-auth"><span class="pt">Defesa de domínio: SPF, DKIM e DMARC</span><span class="en">Domain defence: SPF, DKIM and DMARC</span></h2>
+
+<p><span class="pt">Antes de chegar à caixa de entrada de alguém, o phishing geralmente tenta forjar o campo "De" de um e-mail. Três registros DNS, usados juntos, fecham essa porta na maior parte dos provedores modernos.</span><span class="en">Before it reaches someone's inbox, phishing usually tries to forge an email's "From" field. Three DNS records, used together, close that door on most modern providers.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Registro</span><span class="en">Record</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody><tr><td>SPF</td><td><span class="pt">lista quais servidores têm permissão de enviar e-mail "em nome" do seu domínio</span><span class="en">lists which servers are allowed to send mail "on behalf of" your domain</span></td></tr><tr><td>DKIM</td><td><span class="pt">assina criptograficamente cada e-mail enviado, provando que não foi alterado no caminho</span><span class="en">cryptographically signs each outgoing email, proving it was not altered in transit</span></td></tr><tr><td>DMARC</td><td><span class="pt">diz ao servidor de quem recebe o que fazer quando SPF ou DKIM falham (rejeitar, colocar em quarentena) e manda relatórios</span><span class="en">tells the receiving server what to do when SPF or DKIM fail (reject, quarantine) and sends reports</span></td></tr></tbody></table></div>
+<pre><code><span class="tok-c"># checar os três registros de um domínio (seu, ou qualquer um público)</span>
+dig TXT +short exemplo.com | grep spf
+dig TXT +short _dmarc.exemplo.com
+dig TXT +short default._domainkey.exemplo.com   <span class="tok-c"># o seletor DKIM varia por provedor</span></code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> um domínio bem configurado mostra uma linha <code>v=spf1 ...</code>, uma <code>v=DMARC1; p=reject;</code> (ou <code>quarantine</code>) e um registro DKIM de pelo menos uma chave. A ausência de qualquer um deles é o tipo de falha que um relatório de postura de segurança aponta primeiro.</span><span class="en"><strong>Expected result:</strong> a well-configured domain shows a <code>v=spf1 ...</code> line, a <code>v=DMARC1; p=reject;</code> (or <code>quarantine</code>) one, and a DKIM record for at least one key. The absence of any of them is the kind of gap a security-posture report flags first.</span></p>
+</section>
+<section class="content-section" aria-labelledby="gophish-lab">
+<h2 id="gophish-lab"><span class="pt">Laboratório: uma campanha de phishing simulada</span><span class="en">Lab: a simulated phishing campaign</span></h2>
+
+<p><span class="pt"><code>Gophish</code> é um framework de código aberto feito exatamente para isso: equipes de segurança o usam para treinar a própria organização, enviando phishing simulado e medindo quem clicou — sem nenhum dado real sendo roubado.</span><span class="en"><code>Gophish</code> is an open-source framework built exactly for this: security teams use it to train their own organisation, sending simulated phishing and measuring who clicked — with no real data ever stolen.</span></p>
+<pre><code>docker run -d --name gophish -p 127.0.0.1:3333:3333 -p 127.0.0.1:8080:80 gophish/gophish
+docker logs gophish 2&gt;&amp;1 | grep -i <span class="tok-s">"password"</span>   <span class="tok-c"># a senha inicial do admin fica nos logs do container</span>
+<span class="tok-c"># abra https://localhost:3333 (aceite o certificado autoassinado) e entre com admin / a senha acima</span></code></pre>
+<p><span class="pt">No painel, crie: um "Sending Profile" (um servidor SMTP de teste, como o <a href="https://mailtrap.io" rel="noopener">Mailtrap</a>, que captura e-mails sem enviá-los de verdade), um "Landing Page" (uma cópia visual de uma tela de login, só para medir cliques) e um grupo de "alvos" com e-mails fictícios seus. Dispare a campanha e veja o painel mostrar, em tempo real, quem abriu o e-mail e quem clicou — é exatamente essa métrica que times de segurança usam para medir o risco humano da própria empresa.</span><span class="en">In the panel, create: a "Sending Profile" (a test SMTP server, like <a href="https://mailtrap.io" rel="noopener">Mailtrap</a>, which captures emails without really sending them), a "Landing Page" (a visual copy of a login screen, just to measure clicks) and a "targets" group with fictional emails of your own. Launch the campaign and watch the panel show, in real time, who opened the email and who clicked — this is exactly the metric security teams use to measure their own company's human risk.</span></p>
+<p><span class="pt"><strong>Resultado esperado:</strong> o painel do Gophish mostra uma linha do tempo com "Email Sent" → "Email Opened" → "Clicked Link" para cada alvo de teste, sem que nenhum e-mail real tenha saído (o Mailtrap intercepta tudo). É assim que uma empresa mede sua taxa de cliques antes e depois de um treinamento de conscientização.</span><span class="en"><strong>Expected result:</strong> the Gophish dashboard shows a timeline with "Email Sent" → "Email Opened" → "Clicked Link" for each test target, with no real email ever leaving (Mailtrap intercepts everything). This is how a company measures its click rate before and after an awareness training.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Use só e-mails e "targets" fictícios seus (contas de teste, endereços que você controla). Rodar uma campanha do Gophish contra pessoas reais sem o consentimento explícito delas e da organização é o mesmo phishing que esta nota ensina a identificar — só que feito por você.</span><span class="en">Only use fictional emails and "targets" of your own (test accounts, addresses you control). Running a Gophish campaign against real people without their and the organisation's explicit consent is the same phishing this note teaches you to spot — just done by you.</span></div>
+</section>
+<section class="content-section" aria-labelledby="human-defense">
+<h2 id="human-defense"><span class="pt">Defesa: processo, cultura e controles técnicos</span><span class="en">Defence: process, culture and technical controls</span></h2>
+
+<p><span class="pt">Nenhum controle único resolve engenharia social — é uma combinação de tecnologia (que reduz o volume que chega) e cultura (que reduz a chance de alguém cair no que passa).</span><span class="en">No single control solves social engineering — it is a combination of technology (which reduces the volume that gets through) and culture (which reduces the odds that someone falls for what does).</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Controle</span><span class="en">Control</span></th><th><span class="pt">Reduz</span><span class="en">Reduces</span></th></tr></thead><tbody><tr><td><span class="pt">SPF, DKIM e DMARC no domínio (acima)</span><span class="en">SPF, DKIM and DMARC on the domain (above)</span></td><td><span class="pt">e-mails forjados "de" o seu próprio domínio chegando a outras empresas, e vice-versa</span><span class="en">emails forged "from" your own domain reaching other companies, and vice versa</span></td></tr><tr><td><span class="pt">MFA resistente a phishing (chaves FIDO2/passkeys)</span><span class="en">Phishing-resistant MFA (FIDO2 keys/passkeys)</span></td><td><span class="pt">uma senha roubada sozinha não é mais suficiente para entrar — veja a nota de criptografia e chaves</span><span class="en">a stolen password alone is no longer enough to log in — see the cryptography and keys note</span></td></tr><tr><td><span class="pt">Cultura de verificação ("ligue de volta pelo número oficial")</span><span class="en">A verification culture ("call back on the official number")</span></td><td><span class="pt">pedidos urgentes e fora do padrão por e-mail/telefone sozinho</span><span class="en">urgent, out-of-the-ordinary requests by email/phone alone</span></td></tr><tr><td><span class="pt">Treinamento recorrente + campanhas simuladas (como a do Gophish acima)</span><span class="en">Recurring training + simulated campaigns (like the Gophish one above)</span></td><td><span class="pt">a taxa de cliques cai de forma mensurável com prática</span><span class="en">the click rate measurably drops with practice</span></td></tr><tr><td><span class="pt">Crachá visível + política de "sem exceção" para tailgating</span><span class="en">Visible badge + a "no exceptions" tailgating policy</span></td><td><span class="pt">acesso físico não autorizado</span><span class="en">unauthorised physical access</span></td></tr><tr><td><span class="pt">Desabilitar USB autorun; política de "achou, entregue, não conecte"</span><span class="en">Disable USB autorun; a "found it, hand it in, don't plug it in" policy</span></td><td><span class="pt">ataques de baiting com pendrive</span><span class="en">USB baiting attacks</span></td></tr><tr><td><span class="pt">Limitar o número de pedidos de MFA por janela de tempo</span><span class="en">Rate-limiting MFA prompts per time window</span></td><td><span class="pt">ataques de MFA fatigue</span><span class="en">MFA-fatigue attacks</span></td></tr></tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="cheat-se">
+<h2 id="cheat-se"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+
+<h3><span class="pt">Cola: tática, sinal e defesa</span><span class="en">Cheat sheet: tactic, signal and defence</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tática</span><span class="en">Tactic</span></th><th><span class="pt">Sinal de alerta</span><span class="en">Red flag</span></th><th><span class="pt">Defesa principal</span><span class="en">Main defence</span></th></tr></thead><tbody><tr><td>Phishing</td><td><span class="pt">domínio quase certo</span><span class="en">near-right domain</span></td><td>SPF/DKIM/DMARC + treinamento</td></tr><tr><td>Vishing</td><td><span class="pt">pedido de código por telefone</span><span class="en">code requested by phone</span></td><td><span class="pt">cultura de callback</span><span class="en">callback culture</span></td></tr><tr><td>Pretexting</td><td><span class="pt">história que muda com detalhe</span><span class="en">story shifts under detail</span></td><td><span class="pt">verificação de identidade por canal oficial</span><span class="en">identity check via an official channel</span></td></tr><tr><td>Baiting</td><td><span class="pt">mídia física não solicitada</span><span class="en">unsolicited physical media</span></td><td><span class="pt">desabilitar autorun, política de entrega</span><span class="en">disable autorun, hand-in policy</span></td></tr><tr><td>Tailgating</td><td><span class="pt">sem crachá, pedindo passagem</span><span class="en">no badge, asking to be let through</span></td><td><span class="pt">crachá obrigatório, sem exceções</span><span class="en">mandatory badge, no exceptions</span></td></tr><tr><td>MFA fatigue</td><td><span class="pt">prompts não solicitados em série</span><span class="en">unsolicited prompts in a row</span></td><td><span class="pt">MFA resistente a phishing, rate limit</span><span class="en">phishing-resistant MFA, rate limit</span></td></tr></tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Resposta</span><span class="en">Answer</span></th></tr></thead><tbody><tr><td><span class="pt">Por que o phishing é o vetor inicial mais comum, segundo os relatórios do setor?</span><span class="en">Why is phishing the most common initial vector, per industry reports?</span></td><td><span class="pt">Explora confiança humana, que é mais difícil de corrigir com uma atualização do que uma falha de software.</span><span class="en">It exploits human trust, which is harder to patch than a software flaw.</span></td></tr><tr><td><span class="pt">Qual princípio de Cialdini um e-mail de "sua conta será bloqueada em 1 hora" usa?</span><span class="en">Which Cialdini principle does a "your account will be locked in 1 hour" email use?</span></td><td><span class="pt">Urgência/escassez: não dá tempo de verificar antes de agir.</span><span class="en">Urgency/scarcity: it gives no time to verify before acting.</span></td></tr><tr><td><span class="pt">O que o DMARC adiciona que SPF e DKIM sozinhos não dão?</span><span class="en">What does DMARC add that SPF and DKIM alone do not?</span></td><td><span class="pt">Diz ao servidor de quem recebe o que fazer quando um dos dois falha, e manda relatórios de abuso.</span><span class="en">It tells the receiving server what to do when one of them fails, and sends abuse reports.</span></td></tr><tr><td><span class="pt">Cite dois controles que reduzem o risco de engenharia social sem depender só do usuário perceber.</span><span class="en">Name two controls that reduce social-engineering risk without relying solely on the user noticing.</span></td><td><span class="pt">MFA resistente a phishing e SPF/DKIM/DMARC no domínio (entre outros: rate limit de MFA, políticas físicas).</span><span class="en">Phishing-resistant MFA and SPF/DKIM/DMARC on the domain (among others: MFA rate limiting, physical policies).</span></td></tr></tbody></table></div>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://www.social-engineer.org/" rel="noopener">Christopher Hadnagy. Social Engineering: The Science of Human Hacking, 2nd edition. Wiley, 2018 (and the Social-Engineer.org framework).</a></li><li><a href="https://www.influenceatwork.com/principles-of-persuasion/" rel="noopener">Robert Cialdini. The Science of Persuasion (official summary of the six principles).</a></li><li><a href="https://www.getgophish.com/" rel="noopener">Gophish documentation. Open-source phishing simulation framework.</a></li><li><a href="https://www.verizon.com/business/resources/reports/dbir/" rel="noopener">Verizon. Data Breach Investigations Report (DBIR), annual.</a></li><li><a href="https://datatracker.ietf.org/doc/html/rfc7489" rel="noopener">RFC 7489. Domain-based Message Authentication, Reporting and Conformance (DMARC).</a></li><li><a href="https://www.cisa.gov/stopransomware/phishing-and-social-engineering" rel="noopener">CISA. Phishing and Social Engineering guidance.</a></li><li><a href="https://attack.mitre.org/techniques/T1566/" rel="noopener">MITRE ATT&CK, T1566: Phishing.</a></li></ul></div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-grid">
+      <div class="footer-brand">
+        <svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" fill="currentColor" stroke="#6b94dc" stroke-width="0.8" stroke-linejoin="round" transform="rotate(198.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-90.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(-18.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(54.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(126.0 16 16) translate(16 16)"/><path d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" fill="none" stroke="#6b94dc" stroke-width="0.65" stroke-linecap="round" transform="rotate(198.0 16 16) translate(16 16)"/><circle cx="16" cy="16" r="1.9" fill="#6b94dc"/></svg>
+        <p class="motto"><em>Non desistas. Non exieris.</em></p>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-company-heading">
+        <h2 id="footer-company-heading" class="monospace-label" data-i18n="footer.company">Company</h2>
+        <a href="../../index.html#about" data-i18n="nav.about">About</a>
+        <a href="../../index.html#principles" data-i18n="nav.principles">Principles</a>
+        <a href="../index.html" data-i18n="nav.notes">Notes</a>
+      </nav>
+
+      <div class="footer-column requires-js" role="group" aria-labelledby="footer-language-heading">
+        <h2 id="footer-language-heading" class="monospace-label" data-i18n="footer.language">Language</h2>
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português (Brasil)</button>
+      </div>
+
+      <nav class="footer-column" aria-labelledby="footer-index-heading">
+        <h2 id="footer-index-heading" class="monospace-label" data-i18n="footer.index">Index</h2>
+        <a href="../../sitemap.xml">Sitemap</a>
+        <a href="../../llms.txt">llms.txt</a>
+      </nav>
+
+      <div class="footer-column requires-js">
+        <h2 class="monospace-label" data-i18n="footer.localTime">Local time</h2>
+        <p><time data-local-time></time> · <span data-day-period></span></p>
+      </div>
+    </div>
+
+    <p class="footer-legal monospace-label">Baselarte Ltda. © <span data-current-year></span></p>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>

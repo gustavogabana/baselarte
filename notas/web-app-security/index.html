@@ -84,7 +84,6 @@
         <h2 data-i18n="sidebar.groupWeb">Web development</h2>
         <ul data-sidebar-group>
           <li><a href="../react-state/index.html"><span data-i18n="notes.rs.title">React state: Context API and Zustand</span></a></li>
-          <li><a href="../full-stack-engineering/index.html"><span data-i18n="notes.fs.title">Anatomy of a full-stack platform</span></a></li>
           <li><a href="../idempotency/index.html"><span data-i18n="notes.id.title">Idempotency: safe retries for APIs and queues</span></a></li>
         </ul>
         <h2 data-i18n="sidebar.groupCloud">Cloud and infrastructure</h2>
@@ -99,9 +98,11 @@
         <h2 data-i18n="sidebar.groupSecurity">Security</h2>
         <ul data-sidebar-group>
           <li><a href="../cybersecurity-for-devs/index.html"><span data-i18n="notes.cs.title">Cybersecurity for developers: where to start</span></a></li>
-          <li><a href="../security-lab/index.html"><span data-i18n="notes.sec.title">Security and networking lab</span></a></li>
+          <li><a href="../network-attack-defense/index.html"><span data-i18n="notes.net.title">Network attack and defence lab: scan, sniff, tunnel, firewall</span></a></li>
           <li><a href="../web-app-security/index.html" aria-current="page"><span data-i18n="notes.wa.title">Secure web apps: headers, auth and AI agents</span></a></li>
-          <li><a href="../red-team-80-20/index.html"><span data-i18n="notes.rt.title">Red team 80/20</span></a></li>
+          <li><a href="../web-host-attack-defense/index.html"><span data-i18n="notes.wh.title">Web and host attack and defence: SQL injection, XSS, shells, hardening</span></a></li>
+          <li><a href="../social-engineering/index.html"><span data-i18n="notes.se.title">Social engineering: attacks, defences and a phishing-simulation lab</span></a></li>
+          <li><a href="../ethical-hacking-ceh-practice/index.html"><span data-i18n="notes.eh.title">Ethical hacking: where to practise, TryHackMe and the CEH</span></a></li>
           <li><a href="../auth-sso-oauth-oidc/index.html"><span data-i18n="notes.auth.title">Sign-in and authentication: SSO, OAuth, OIDC and friends</span></a></li>
           <li><a href="../crypto-keys-ssh/index.html"><span data-i18n="notes.crypto.title">Cryptography, keys and SSH: how public and private keys work</span></a></li>
         </ul>
@@ -147,7 +148,7 @@
 </section>
 <section class="content-section" aria-labelledby="http-https">
 <h2 id="http-https"><span class="pt">HTTP e HTTPS: a base</span><span class="en">HTTP and HTTPS: the base</span></h2>
-<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Onde esta nota se encaixa: é a <strong>etapa 1</strong> da <a href="../cybersecurity-for-devs/index.html">trilha de cibersegurança para quem programa</a> (segurança de aplicações, o ponto de partida recomendado para um dev). Para ver as mesmas falhas do lado de quem ataca, siga para a <a href="../red-team-80-20/index.html">nota de red team</a>; as bases de rede estão na <a href="../security-lab/index.html">nota de segurança e redes</a>.</span><span class="en">Where this note fits: it is <strong>stage 1</strong> of the <a href="../cybersecurity-for-devs/index.html">cybersecurity path for developers</a> (application security, the recommended starting point for a developer). To see the same flaws from the attacker's side, go on to the <a href="../red-team-80-20/index.html">red team note</a>; the network fundamentals are in the <a href="../security-lab/index.html">security and networking note</a>.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Onde esta nota se encaixa: é a <strong>etapa 1</strong> da <a href="../cybersecurity-for-devs/index.html">trilha de cibersegurança para quem programa</a> (segurança de aplicações, o ponto de partida recomendado para um dev). Para ver as mesmas falhas do lado de quem ataca, siga para a <a href="../web-host-attack-defense/index.html">nota de red team</a>; as bases de rede estão na <a href="../network-attack-defense/index.html">nota de segurança e redes</a>.</span><span class="en">Where this note fits: it is <strong>stage 1</strong> of the <a href="../cybersecurity-for-devs/index.html">cybersecurity path for developers</a> (application security, the recommended starting point for a developer). To see the same flaws from the attacker's side, go on to the <a href="../web-host-attack-defense/index.html">red team note</a>; the network fundamentals are in the <a href="../network-attack-defense/index.html">security and networking note</a>.</span></div>
 
 <p><span class="pt">Esta nota é o lado de dentro da muralha: como proteger a aplicação web que você constrói, não como atacar a de outra pessoa (isso fica na nota de Red Team). O fio condutor é simples: HTTP é um protocolo de texto, sem memória entre uma requisição e a próxima; tudo que chamamos de "segurança de app web" é uma camada de proteções em cima dessa base simples — cifrar o transporte, autenticar quem está do outro lado, lembrar quem é quem entre requisições, e desconfiar de qualquer dado que entra.</span><span class="en">This note is the inside of the wall: how to protect the web app you build, not how to attack someone else's (that is the Red Team note). The thread running through it is simple: HTTP is a text protocol with no memory between one request and the next; everything we call "web app security" is a layer of protections on top of that simple base — encrypting the transport, authenticating who is on the other side, remembering who is who between requests, and distrusting any data that comes in.</span></p>
 <h3><span class="pt">HTTP e HTTPS: a mesma coisa, uma delas cifrada</span><span class="en">HTTP and HTTPS: the same thing, one of them encrypted</span></h3>
