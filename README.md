@@ -30,7 +30,7 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 
 ## Behaviour
 
-- **Layout:** one narrow column, system fonts, no cards, gradients or animations. Home is the IBM quote followed by the list of notes; each note has the flower (link home), a "← Notes" link, an inline "On this page" list and a plain footer. Style references: [openmymind.net](https://www.openmymind.net/) and [abc.xyz](https://abc.xyz/).
+- **Layout:** one narrow column, system fonts, no cards, gradients or animations. Home is the IBM quote followed by the list of notes; each note has the flower (link home), a "← Notes" link, a bulleted "On this page" list (to the right of the text on wide screens), a thin reading-progress bar at the top and a plain footer. Style references: [openmymind.net](https://www.openmymind.net/) and [abc.xyz](https://abc.xyz/).
 - **Logo:** the five-petal flower in `favicon.svg`, drawn with white petals and a black outline (the inline copy uses the `petal`/`vein`/`heart` classes, so the outline follows the theme ink). The installable icons in `assets/` are the same flower on a black tile.
 - **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock, defined only in `boot.js`), or pinned with the `auto / light / dark` links in the footer. All colours are tokens at the top of `styles.css`; the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer links. All copy lives in `i18n.js`; keep the English in the HTML in sync.

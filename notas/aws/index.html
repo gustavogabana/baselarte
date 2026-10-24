@@ -123,6 +123,7 @@
     <h2><span class="pt">Contas</span><span class="en">Accounts</span></h2>
     <ul>
       <li><a href="#organizations"><span class="pt">Organizations (dev e prod)</span><span class="en">Organizations (dev and prod)</span></a></li>
+      <li><a href="#accounts-roles"><span class="pt">Contas, usuários, roles e ARN</span><span class="en">Accounts, users, roles and ARNs</span></a></li>
       <li><a href="#budget"><span class="pt">Orçamento e cobrança</span><span class="en">Budget &amp; billing</span></a></li>
     </ul>
     <h2><span class="pt">Visão geral</span><span class="en">Overview</span></h2>
@@ -247,7 +248,7 @@
     <ul>
       <li><span class="pt"><b>“Organization still initializing” ou limite excedido logo após criar a organização:</b> espere cerca de uma hora e tente de novo; se persistir, fale com o AWS Support. Contas fechadas ou excluídas continuam contando para o limite de contas.</span><span class="en"><b>“Organization still initializing” or limit exceeded right after creating the organization:</b> wait about an hour and try again; if it persists, contact AWS Support. Closed or deleted accounts still count toward the account limit.</span></li>
       <li><span class="pt"><b>Forma de pagamento:</b> conta criada pelo Organizations <b>não</b> coleta sozinha os dados para operar como conta avulsa (por exemplo, meio de pagamento). Quem paga é a management (fatura consolidada), mas se um dia você precisar <i>remover</i> a conta da organização, terá de informar esses dados antes.</span><span class="en"><b>Payment method:</b> an account created through Organizations does <b>not</b> collect on its own the information needed to run as a standalone account (for example, a payment method). The management account pays (consolidated billing), but if you ever need to <i>remove</i> the account from the organization, you must provide that information first.</span></li>
-      <li><span class="pt"><b>Root da conta nova:</b> não há senha de root definida. Se um dia precisar dele, use “Forgot password” com o e-mail da conta e ative MFA. No dia a dia você não usa o root.</span><span class="en"><b>Root of the new account:</b> no root password is set. If you ever need it, use “Forgot password” with the account email and enable MFA. Day to day you do not use root.</span></li>
+      <li><span class="pt"><b>Root da conta nova:</b> contas criadas pelo Organizations nascem sem credenciais de root e, por padrão, não conseguem entrar como root nem recuperar a senha (a menos que a recuperação de conta esteja habilitada). Se uma tarefa exigir root numa conta-membro, fale com o administrador da organização. No dia a dia você não usa o root.</span><span class="en"><b>Root of the new account:</b> accounts created through Organizations are born with no root credentials and, by default, cannot sign in as root or recover the password (unless account recovery is enabled). If a task requires root in a member account, ask the organization’s administrator. Day to day you do not use root.</span></li>
       <li><span class="pt"><b>Acesso do IAM ao billing:</b> a API tem o parâmetro <code>IamUserAccessToBilling</code> (padrão <code>ALLOW</code>: usuários e roles com a permissão adequada podem ver o billing da conta). Com <code>DENY</code>, só o root vê.</span><span class="en"><b>IAM access to billing:</b> the API has the <code>IamUserAccessToBilling</code> parameter (default <code>ALLOW</code>: users and roles with the right permission can see the account’s billing). With <code>DENY</code>, only root can.</span></li>
     </ul>
   </div>
@@ -305,7 +306,7 @@ sso_region = us-east-1
 sso_start_url = https://&lt;seu-portal&gt;.awsapps.com/start
 sso_registration_scopes = sso:account:access</code></pre>
   <ul>
-    <li><span class="pt"><b>Alternativa rápida, sem Identity Center:</b> na management, use <b>Switch role</b> no console com o ID da conta e a role <code>OrganizationAccountAccessRole</code>. Serve para testar, mas dá administrador total e não escala para uma equipe.</span><span class="en"><b>Quick alternative, without Identity Center:</b> in the management account, use <b>Switch role</b> in the console with the account ID and the <code>OrganizationAccountAccessRole</code> role. Fine for testing, but it grants full administrator and does not scale to a team.</span></li>
+    <li><span class="pt"><b>Alternativa rápida, sem Identity Center:</b> entre na management como um <b>usuário não-root</b> com permissão <code>sts:AssumeRole</code> sobre a role (o root não troca de role) e use <b>Switch role</b> no console com o ID da conta e a role <code>OrganizationAccountAccessRole</code>; veja <a href="#accounts-roles">Contas, usuários, roles e ARN</a>. Serve para testar, mas dá administrador total e não escala para uma equipe.</span><span class="en"><b>Quick alternative, without Identity Center:</b> sign in to the management account as a <b>non-root user</b> with the <code>sts:AssumeRole</code> permission on the role (root cannot switch roles) and use <b>Switch role</b> in the console with the account ID and the <code>OrganizationAccountAccessRole</code> role; see <a href="#accounts-roles">Accounts, users, roles and ARNs</a>. Fine for testing, but it grants full administrator and does not scale to a team.</span></li>
     <li><span class="pt">Quando as credenciais expiram, rode <code>aws sso login --profile dev</code> de novo; <code>aws sso logout</code> apaga as credenciais em cache.</span><span class="en">When credentials expire, run <code>aws sso login --profile dev</code> again; <code>aws sso logout</code> deletes the cached credentials.</span></li>
   </ul>
 
@@ -456,6 +457,292 @@ aws organizations move-account --account-id 111111111111 \
       <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html" rel="noopener">IAM: Policy evaluation logic</a></li>
     </ul>
     <p><span class="pt"><b>Removido por falta de fonte oficial:</b> a anotação sobre descontos por volume e compartilhamento de Savings Plans/Reservas na fatura consolidada. Consulte a documentação de billing antes de afirmar isso.</span><span class="en"><b>Removed for lack of an official source:</b> the note on volume discounts and Savings Plans/Reservations sharing under consolidated billing. Check the billing docs before claiming it.</span></p>
+  </div>
+</section>
+
+<!-- ============ ACCOUNTS, USERS, ROLES AND ARNS ============ -->
+<section class="topic" id="accounts-roles">
+  <header>
+    <span class="tag"><span class="pt">Contas</span><span class="en">Accounts</span></span>
+    <h2><span class="pt">Contas, usuários, roles e ARN</span><span class="en">Accounts, users, roles and ARNs</span></h2>
+    <p class="lead"><span class="pt">O que cada nome significa (e-mail do root, nome da conta, username), como criar uma identidade que não é root e como uma conta dá acesso a outra por role.</span><span class="en">What each name means (root email, account name, username), how to create an identity that is not root and how one account grants access to another through a role.</span></p>
+  </header>
+
+<div class="grid">
+<div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-crown"/></svg> Root user</h4><span class="pt">É a identidade criada com a conta. Entra com o <b>e-mail da conta</b> e a senha. Tem acesso completo a todos os serviços e recursos. Use só nas tarefas que exigem root e proteja com MFA.</span><span class="en">It is the identity created with the account. It signs in with the <b>account email</b> and password. It has complete access to all services and resources. Use it only for tasks that require root and protect it with MFA.</span></div>
+<div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-building"/></svg> Account name</h4><span class="pt">Um <b>rótulo</b> para humanos (por exemplo <code>dev</code>), mostrado em faturas e consoles como o Billing e o Organizations. Não é usado para entrar e não é um identificador: quem identifica a conta é o ID de 12 dígitos.</span><span class="en">A <b>label</b> for humans (for example <code>dev</code>), shown on invoices and in consoles such as Billing and Organizations. It is not used to sign in and it is not an identifier: the 12-digit ID identifies the account.</span></div>
+<div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-user"/></svg> Username</h4><span class="pt">Nome de uma identidade <b>que não é root</b>: um usuário IAM ou um usuário do Identity Center. Só faz sentido <i>dentro</i> de uma conta (ou de um portal) e vem sempre acompanhado de uma senha.</span><span class="en">The name of an identity that <b>is not root</b>: an IAM user or an Identity Center user. It only makes sense <i>inside</i> an account (or a portal) and always comes with a password.</span></div>
+<div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> ARN</h4><span class="pt">Amazon Resource Name: o endereço único de um recurso da AWS (um usuário, uma role, um bucket). É assim que políticas dizem “sobre quem” e “sobre o quê”.</span><span class="en">Amazon Resource Name: the unique address of an AWS resource (a user, a role, a bucket). It is how policies say “about whom” and “about what”.</span></div>
+</div>
+
+<h3><span class="pt">Quem é quem: root, nome da conta e username</span><span class="en">Who is who: root, account name and username</span></h3>
+<p><span class="pt">Uma conta AWS tem <b>um</b> root e quantas identidades não-root você criar. Cada tipo de identidade entra por uma porta diferente, com dados diferentes:</span><span class="en">An AWS account has <b>one</b> root and as many non-root identities as you create. Each kind of identity signs in through a different door, with different data:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 300" role="img" aria-label="Quem entra como quem / Who signs in as whom" style="min-width:620px">
+<rect x="330" y="14" width="360" height="272" rx="6" class="ln dash"/>
+<text x="344" y="34" class="pt mut" text-anchor="start">Conta AWS · ID de 12 dígitos</text><text x="344" y="34" class="en mut" text-anchor="start">AWS account · 12-digit ID</text>
+<text x="344" y="52" class="pt mut" text-anchor="start">account name = só um rótulo</text><text x="344" y="52" class="en mut" text-anchor="start">account name = just a label</text>
+<rect x="10" y="70" width="280" height="54" rx="4" class="ln fillsoft"/>
+<text x="150" y="92" class="pt" text-anchor="middle">Entrar como root</text><text x="150" y="92" class="en" text-anchor="middle">Sign in as root</text>
+<text x="150" y="112" class="pt mut" text-anchor="middle">e-mail da conta + senha</text><text x="150" y="112" class="en mut" text-anchor="middle">account email + password</text>
+<path d="M290 97L350 97" class="ln"/>
+<path d="M342.8 100.5L350 97L342.8 93.5" class="ln"/>
+<rect x="350" y="70" width="320" height="54" rx="4" class="ln brandfill"/>
+<text x="510" y="92" class="pt" text-anchor="middle">Root user</text><text x="510" y="92" class="en" text-anchor="middle">Root user</text>
+<text x="510" y="112" class="pt mut" text-anchor="middle">acesso total · só tarefas raras</text><text x="510" y="112" class="en mut" text-anchor="middle">full access · rare tasks only</text>
+<rect x="10" y="142" width="280" height="54" rx="4" class="ln fillsoft"/>
+<text x="150" y="164" class="pt" text-anchor="middle">Entrar como usuário IAM</text><text x="150" y="164" class="en" text-anchor="middle">Sign in as an IAM user</text>
+<text x="150" y="184" class="pt mut" text-anchor="middle">ID ou alias da conta + username + senha</text><text x="150" y="184" class="en mut" text-anchor="middle">account ID or alias + username + password</text>
+<path d="M290 169L350 169" class="ln"/>
+<path d="M342.8 172.5L350 169L342.8 165.5" class="ln"/>
+<rect x="350" y="142" width="320" height="54" rx="4" class="ln fillsoft"/>
+<text x="510" y="164" class="pt" text-anchor="middle">IAM user</text><text x="510" y="164" class="en" text-anchor="middle">IAM user</text>
+<text x="510" y="184" class="pt mut" text-anchor="middle">credencial de longo prazo</text><text x="510" y="184" class="en mut" text-anchor="middle">long-term credentials</text>
+<rect x="10" y="214" width="280" height="54" rx="4" class="ln fillsoft"/>
+<text x="150" y="236" class="pt" text-anchor="middle">Entrar pelo portal</text><text x="150" y="236" class="en" text-anchor="middle">Sign in via the portal</text>
+<text x="150" y="256" class="pt mut" text-anchor="middle">URL do portal + username (+ MFA)</text><text x="150" y="256" class="en mut" text-anchor="middle">portal URL + username (+ MFA)</text>
+<path d="M290 241L350 241" class="ln"/>
+<path d="M342.8 244.5L350 241L342.8 237.5" class="ln"/>
+<rect x="350" y="214" width="320" height="54" rx="4" class="ln fillsoft"/>
+<text x="510" y="236" class="pt" text-anchor="middle">Identity Center user → role</text><text x="510" y="236" class="en" text-anchor="middle">Identity Center user → role</text>
+<text x="510" y="256" class="pt mut" text-anchor="middle">credenciais temporárias</text><text x="510" y="256" class="en mut" text-anchor="middle">temporary credentials</text>
+</svg></div><figcaption><span class="pt">Três portas para a mesma conta. O e-mail é do root; o username é de quem não é root; o nome da conta não entra em nenhum login.</span><span class="en">Three doors into the same account. The email belongs to root; the username belongs to non-root identities; the account name is not part of any sign-in.</span></figcaption></figure>
+<div class="scroll-x">
+<table>
+<thead><tr><th><span class="pt">Nome</span><span class="en">Name</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th><th><span class="pt">Para que serve</span><span class="en">What it is for</span></th><th><span class="pt">Regras (documentação)</span><span class="en">Rules (documentation)</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><b>E-mail do root</b></span><span class="en"><b>Root email</b></span></td><td><span class="pt">Definido ao criar a conta</span><span class="en">Set when the account is created</span></td><td><span class="pt">É o login do root, junto com a senha. Também é por onde a senha do root é recuperada, então precisa ser uma caixa que você controla.</span><span class="en">It is the root’s login, together with the password. It is also how the root password is recovered, so it must be a mailbox you control.</span></td><td><span class="pt">Único no mundo entre contas (veja o Passo 4 de Organizations).</span><span class="en">Globally unique across accounts (see Step 4 of Organizations).</span></td></tr>
+<tr><td><span class="pt"><b>Account name</b></span><span class="en"><b>Account name</b></span></td><td><span class="pt">Rótulo da conta</span><span class="en">The account’s label</span></td><td><span class="pt">Aparece na fatura e em consoles como o Billing e o Organizations. Nenhuma política nem login depende dele.</span><span class="en">It appears on the invoice and in consoles such as Billing and Organizations. No policy or sign-in depends on it.</span></td><td><span class="pt">Pode ser alterado depois (permissão <code>account:PutAccountName</code>; o root também pode). A documentação sugere um padrão como <code>organização-finalidade-ambiente</code> e evitar dados pessoais.</span><span class="en">It can be changed later (<code>account:PutAccountName</code> permission; root can too). The documentation suggests a pattern such as <code>organization-purpose-environment</code> and avoiding personal data.</span></td></tr>
+<tr><td><span class="pt"><b>ID da conta</b></span><span class="en"><b>Account ID</b></span></td><td><span class="pt">12 dígitos, gerado pela AWS</span><span class="en">12 digits, generated by AWS</span></td><td><span class="pt">É o identificador de verdade: vai nos ARNs, nas trust policies e nos perfis da CLI.</span><span class="en">It is the real identifier: it goes in ARNs, trust policies and CLI profiles.</span></td><td><span class="pt">Não muda.</span><span class="en">It does not change.</span></td></tr>
+<tr><td><span class="pt"><b>Alias da conta</b></span><span class="en"><b>Account alias</b></span></td><td><span class="pt">Apelido opcional do ID</span><span class="en">Optional nickname for the ID</span></td><td><span class="pt">Deixa o link de login dos usuários IAM legível: <code>https://&lt;alias&gt;.signin.aws.amazon.com/console/</code>.</span><span class="en">Makes IAM users’ sign-in link readable: <code>https://&lt;alias&gt;.signin.aws.amazon.com/console/</code>.</span></td><td><span class="pt">De 3 a 63 caracteres; minúsculas, dígitos e hífens (sem hífen no começo ou no fim, sem dois seguidos, e não pode ser um número de 12 dígitos); único na AWS; só um por conta; não é secreto.</span><span class="en">3 to 63 characters; lowercase, digits and hyphens (no hyphen at the start or end, no two in a row, and it cannot be a 12-digit number); unique across AWS; only one per account; not secret.</span></td></tr>
+<tr><td><span class="pt"><b>Username do usuário IAM</b></span><span class="en"><b>IAM user name</b></span></td><td><span class="pt">Nome do usuário dentro da conta</span><span class="en">The user’s name inside the account</span></td><td><span class="pt">Junto com o ID (ou alias) e a senha, é o login de quem não é root. Também aparece no ARN: <code>arn:aws:iam::&lt;ID&gt;:user/maria</code>.</span><span class="en">Together with the ID (or alias) and the password, it is the login of someone who is not root. It also appears in the ARN: <code>arn:aws:iam::&lt;ID&gt;:user/maria</code>.</span></td><td><span class="pt">Até 64 caracteres; letras, números e <code>+ = , . @ _ -</code>; único na conta, sem distinguir maiúsculas (no login e na unicidade). Em políticas e ARNs, distingue.</span><span class="en">Up to 64 characters; letters, numbers and <code>+ = , . @ _ -</code>; unique in the account, case-insensitive (at sign-in and for uniqueness). In policies and ARNs, case matters.</span></td></tr>
+<tr><td><span class="pt"><b>Username do Identity Center</b></span><span class="en"><b>Identity Center username</b></span></td><td><span class="pt">Nome do usuário no portal</span><span class="en">The user’s name in the portal</span></td><td><span class="pt">Login no portal de acesso. Quem usa é a pessoa; as contas aparecem como opções depois.</span><span class="en">Login to the access portal. The person uses it; the accounts show up as options afterwards.</span></td><td><span class="pt">De 1 a 100 caracteres; definido ao criar o usuário e não pode ser mudado depois (veja o Passo 5 de Organizations).</span><span class="en">1 to 100 characters; set when the user is created and cannot be changed later (see Step 5 of Organizations).</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn"><strong><span class="pt">Resumindo a diferença que você perguntou</span><span class="en">The difference you asked about</span></strong>
+    <span class="pt">O <b>e-mail do root</b> prova que você é o dono da conta e é único por conta. O <b>account name</b> é só um rótulo, e o <b>username</b> pertence a uma identidade não-root que você cria depois, dentro da conta. Nenhum dos três substitui o <b>ID da conta</b>, que é o que a AWS usa por baixo.</span><span class="en">The <b>root email</b> proves you own the account and is unique per account. The <b>account name</b> is only a label, and the <b>username</b> belongs to a non-root identity you create later, inside the account. None of the three replaces the <b>account ID</b>, which is what AWS uses underneath.</span>
+  </div>
+<h3><span class="pt">ARN: a sigla e como ler</span><span class="en">ARN: the acronym and how to read it</span></h3>
+<p><span class="pt"><b>ARN</b> é <b>Amazon Resource Name</b>. Segundo a documentação, ARNs identificam recursos de forma única em toda a AWS e são exigidos quando você precisa apontar um recurso sem ambiguidade, como em políticas do IAM e em chamadas de API. Um ARN não é considerado segredo, mas deve ser compartilhado com cuidado.</span><span class="en"><b>ARN</b> stands for <b>Amazon Resource Name</b>. According to the documentation, ARNs uniquely identify resources across all of AWS and are required when you must point to a resource unambiguously, such as in IAM policies and API calls. An ARN is not considered secret, but should be shared with care.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 200" role="img" aria-label="Anatomia de um ARN / Anatomy of an ARN" style="min-width:620px">
+<rect x="24" y="30" width="56" height="38" rx="4" class="ln fillsoft"/>
+<text x="52.0" y="54" class="mono" text-anchor="middle">arn</text>
+<text x="90" y="54" class="mono" text-anchor="middle">:</text>
+<rect x="100" y="30" width="56" height="38" rx="4" class="ln fillsoft"/>
+<text x="128.0" y="54" class="mono" text-anchor="middle">aws</text>
+<text x="166" y="54" class="mono" text-anchor="middle">:</text>
+<rect x="176" y="30" width="56" height="38" rx="4" class="ln fillsoft"/>
+<text x="204.0" y="54" class="mono" text-anchor="middle">iam</text>
+<text x="242" y="54" class="mono" text-anchor="middle">:</text>
+<rect x="252" y="30" width="70" height="38" rx="4" class="ln fillsoft"/>
+<text x="287.0" y="54" class="mono mut" text-anchor="middle">(vazio)</text>
+<text x="332" y="54" class="mono" text-anchor="middle">:</text>
+<rect x="342" y="30" width="150" height="38" rx="4" class="ln fillsoft"/>
+<text x="417.0" y="54" class="mono" text-anchor="middle">111122223333</text>
+<text x="502" y="54" class="mono" text-anchor="middle">:</text>
+<rect x="512" y="30" width="150" height="38" rx="4" class="ln brandfill"/>
+<text x="587.0" y="54" class="mono" text-anchor="middle">role/deploy</text>
+<path d="M52.0 68L52.0 86" class="ln dash"/>
+<text x="52.0" y="100" class="pt mut" text-anchor="middle">prefixo fixo</text><text x="52.0" y="100" class="en mut" text-anchor="middle">fixed prefix</text>
+<path d="M128.0 68L128.0 126" class="ln dash"/>
+<text x="128.0" y="140" class="pt mut" text-anchor="middle">partição</text><text x="128.0" y="140" class="en mut" text-anchor="middle">partition</text>
+<path d="M204.0 68L204.0 86" class="ln dash"/>
+<text x="204.0" y="100" class="pt mut" text-anchor="middle">serviço</text><text x="204.0" y="100" class="en mut" text-anchor="middle">service</text>
+<path d="M287.0 68L287.0 126" class="ln dash"/>
+<text x="287.0" y="140" class="pt mut" text-anchor="middle">região (vazia no IAM)</text><text x="287.0" y="140" class="en mut" text-anchor="middle">Region (empty in IAM)</text>
+<path d="M417.0 68L417.0 86" class="ln dash"/>
+<text x="417.0" y="100" class="pt mut" text-anchor="middle">ID da conta (12 dígitos)</text><text x="417.0" y="100" class="en mut" text-anchor="middle">account ID (12 digits)</text>
+<path d="M587.0 68L587.0 126" class="ln dash"/>
+<text x="587.0" y="140" class="pt mut" text-anchor="middle">recurso: tipo/nome</text><text x="587.0" y="140" class="en mut" text-anchor="middle">resource: type/name</text>
+<text x="24" y="186" class="pt mut mono" text-anchor="start">Alguns ARNs omitem região e conta, como o de um bucket S3: arn:aws:s3:::meu-bucket</text><text x="24" y="186" class="en mut mono" text-anchor="start">Some ARNs omit the Region and account, like an S3 bucket’s: arn:aws:s3:::my-bucket</text>
+</svg></div><figcaption><span class="pt">ARN é a sigla de Amazon Resource Name: o endereço único de qualquer recurso da AWS.</span><span class="en">ARN stands for Amazon Resource Name: the unique address of any AWS resource.</span></figcaption></figure>
+<div class="scroll-x">
+<table>
+<thead><tr><th><span class="pt">Recurso</span><span class="en">Resource</span></th><th><span class="pt">ARN de exemplo</span><span class="en">Example ARN</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Usuário IAM</span><span class="en">IAM user</span></td><td><code>arn:aws:iam::111122223333:user/maria</code></td></tr>
+<tr><td><span class="pt">Role</span><span class="en">Role</span></td><td><code>arn:aws:iam::111122223333:role/PowerUserFromMgmt</code></td></tr>
+<tr><td><span class="pt">“Qualquer identidade desta conta” (usado em trust policies)</span><span class="en">“Any identity in this account” (used in trust policies)</span></td><td><code>arn:aws:iam::111122223333:root</code></td></tr>
+<tr><td><span class="pt">Repositório ECR</span><span class="en">ECR repository</span></td><td><code>arn:aws:ecr:sa-east-1:111122223333:repository/meu-app</code></td></tr>
+<tr><td><span class="pt">Bucket S3</span><span class="en">S3 bucket</span></td><td><code>arn:aws:s3:::meu-bucket</code></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">A partição é <code>aws</code> nas regiões comuns (<code>aws-cn</code> na China, <code>aws-us-gov</code> no GovCloud). Para achar o formato de qualquer recurso, a documentação indica a <i>Service Authorization Reference</i>. Curingas (<code>*</code>) valem no <code>Resource</code> (por exemplo <code>role/*</code>), mas não no <code>Principal</code>.</span><span class="en">The partition is <code>aws</code> in the regular Regions (<code>aws-cn</code> in China, <code>aws-us-gov</code> in GovCloud). To find any resource’s format, the documentation points to the <i>Service Authorization Reference</i>. Wildcards (<code>*</code>) work in <code>Resource</code> (for example <code>role/*</code>), but not in <code>Principal</code>.</span></p>
+<h3><span class="pt">Como uma conta dá acesso à outra</span><span class="en">How one account grants access to another</span></h3>
+<p><span class="pt">A conta root (management) <b>não</b> empresta o root dela. O acesso entre contas sempre passa por uma <b>role</b>, que entrega credenciais temporárias. Há três caminhos, do mais pronto ao mais controlado:</span><span class="en">The root (management) account does <b>not</b> lend its root. Cross-account access always goes through a <b>role</b>, which hands out temporary credentials. There are three paths, from the most ready-made to the most controlled:</span></p>
+<div class="scroll-x">
+<table>
+<thead><tr><th><span class="pt">Caminho</span><span class="en">Path</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Quando usar</span><span class="en">When to use</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><b>1 · Já vem pronta</b></span><span class="en"><b>1 · Ready-made</b></span></td><td><span class="pt">A AWS cria a role <code>OrganizationAccountAccessRole</code> dentro de toda conta criada pelo Organizations. Ela confia na management e dá administrador.</span><span class="en">AWS creates the <code>OrganizationAccountAccessRole</code> role inside every account created through Organizations. It trusts the management account and grants administrator.</span></td><td><span class="pt">Testes e emergência. É administrador total.</span><span class="en">Tests and emergencies. It is full administrator.</span></td></tr>
+<tr><td><span class="pt"><b>2 · Role própria</b></span><span class="en"><b>2 · Your own role</b></span></td><td><span class="pt">Você cria uma role na conta destino, com a trust policy apontando para a origem e só as permissões necessárias. É o que o passo a passo abaixo faz.</span><span class="en">You create a role in the destination account, with the trust policy pointing to the source and only the needed permissions. It is what the step by step below does.</span></td><td><span class="pt">Acesso mínimo e nomeado, por exemplo “só leitura em prod”.</span><span class="en">Minimal, named access, for example “read-only in prod”.</span></td></tr>
+<tr><td><span class="pt"><b>3 · Identity Center</b></span><span class="en"><b>3 · Identity Center</b></span></td><td><span class="pt">Você atribui um permission set a um grupo em cada conta; o serviço cria e gerencia as roles.</span><span class="en">You assign a permission set to a group in each account; the service creates and manages the roles.</span></td><td><span class="pt">O dia a dia de pessoas (recomendado pela AWS). Passo 5 de Organizations.</span><span class="en">People’s daily use (recommended by AWS). Step 5 of Organizations.</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">O caminho 2 precisa de <b>duas chaves</b>, uma em cada conta. É o desenho que a documentação chama de conta confiável (<i>trusted</i>, onde ficam os usuários) e conta confiante (<i>trusting</i>, onde está o recurso):</span><span class="en">Path 2 needs <b>two keys</b>, one in each account. It is the design the documentation calls the trusted account (where the users are) and the trusting account (where the resource is):</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 356" role="img" aria-label="Acesso entre contas com uma role / Cross-account access with a role" style="min-width:620px">
+<rect x="10" y="14" width="260" height="300" rx="4" class="ln"/>
+<text x="22" y="34" class="pt mut mono" text-anchor="start">Conta management · origem</text><text x="22" y="34" class="en mut mono" text-anchor="start">Management · source</text>
+<rect x="430" y="14" width="260" height="300" rx="4" class="ln"/>
+<text x="442" y="34" class="pt mut mono" text-anchor="start">Conta dev · destino</text><text x="442" y="34" class="en mut mono" text-anchor="start">Dev · destination</text>
+<rect x="30" y="56" width="220" height="62" rx="4" class="ln fillsoft"/>
+<text x="140" y="82" class="pt" text-anchor="middle">Quem entra</text><text x="140" y="82" class="en" text-anchor="middle">Who signs in</text>
+<text x="140" y="102" class="pt mut" text-anchor="middle">usuário IAM ou Identity Center</text><text x="140" y="102" class="en mut" text-anchor="middle">IAM user or Identity Center</text>
+<rect x="30" y="150" width="220" height="110" rx="4" class="ln brandfill"/>
+<text x="140" y="174" class="pt" text-anchor="middle">2 · Permissão na origem</text><text x="140" y="174" class="en" text-anchor="middle">2 · Permission at the source</text>
+<text x="140" y="198" class="mono" text-anchor="middle">Action: sts:AssumeRole</text>
+<text x="140" y="218" class="mono" text-anchor="middle">Resource: ARN da role</text>
+<text x="140" y="242" class="pt mut" text-anchor="middle">(política do usuário ou do grupo)</text><text x="140" y="242" class="en mut" text-anchor="middle">(user or group policy)</text>
+<rect x="450" y="56" width="220" height="40" rx="4" class="ln fillsoft"/>
+<text x="560" y="81" class="mono" text-anchor="middle">role/PowerUserFromMgmt</text>
+<rect x="450" y="112" width="220" height="70" rx="4" class="ln brandfill"/>
+<text x="560" y="136" class="pt" text-anchor="middle">1 · Trust policy</text><text x="560" y="136" class="en" text-anchor="middle">1 · Trust policy</text>
+<text x="560" y="156" class="pt mut" text-anchor="middle">quem pode assumir:</text><text x="560" y="156" class="en mut" text-anchor="middle">who may assume it:</text>
+<text x="560" y="172" class="pt mut" text-anchor="middle">a conta management</text><text x="560" y="172" class="en mut" text-anchor="middle">the management account</text>
+<rect x="450" y="198" width="220" height="62" rx="4" class="ln fillsoft"/>
+<text x="560" y="222" class="pt" text-anchor="middle">Permissions policy</text><text x="560" y="222" class="en" text-anchor="middle">Permissions policy</text>
+<text x="560" y="242" class="pt mut" text-anchor="middle">o que a role pode fazer</text><text x="560" y="242" class="en mut" text-anchor="middle">what the role can do</text>
+<rect x="300" y="56" width="100" height="62" rx="4" class="ln fillsoft"/>
+<text x="350" y="82" class="pt" text-anchor="middle">AWS STS</text><text x="350" y="82" class="en" text-anchor="middle">AWS STS</text>
+<text x="350" y="102" class="pt mut" text-anchor="middle">3 · assume</text><text x="350" y="102" class="en mut" text-anchor="middle">3 · assume</text>
+<path d="M250 78L300 78" class="ln"/>
+<path d="M292.8 81.5L300 78L292.8 74.5" class="ln"/>
+<path d="M400 78L450 76" class="ln"/>
+<path d="M442.9 79.8L450 76L442.7 72.8" class="ln"/>
+<path d="M300 104L250 104" class="ln dash"/>
+<path d="M257.2 100.5L250 104L257.2 107.5" class="ln"/>
+<text x="350" y="140" class="pt mut" text-anchor="middle">credenciais</text><text x="350" y="140" class="en mut" text-anchor="middle">credentials</text>
+<text x="350" y="156" class="pt mut" text-anchor="middle">temporárias</text><text x="350" y="156" class="en mut" text-anchor="middle">temporary</text>
+<text x="10" y="336" class="pt mut" text-anchor="start">Passos 1 e 2 são configuração (uma vez). O passo 3 acontece a cada sessão e dura, por padrão, 1 hora.</text><text x="10" y="336" class="en mut" text-anchor="start">Steps 1 and 2 are setup (once). Step 3 happens on every session and lasts 1 hour by default.</text>
+</svg></div><figcaption><span class="pt">Duas chaves, uma em cada conta: a trust policy no destino e a permissão sts:AssumeRole na origem. Sem as duas, nada acontece.</span><span class="en">Two keys, one in each account: the trust policy at the destination and the sts:AssumeRole permission at the source. Without both, nothing happens.</span></figcaption></figure>
+<div class="callout warn"><strong><span class="pt">Pegadinhas que travam o acesso</span><span class="en">Gotchas that block access</span></strong>
+    <span class="pt">O <b>root não consegue trocar de role</b>: a documentação diz que não dá para trocar de role entrando como root; só como usuário IAM, usuário do IAM Identity Center ou identidade federada. Entre como um admin não-root (veja abaixo). Além disso, a trust policy só <i>permite</i> que a conta confie; <b>cada usuário ou grupo</b> da origem ainda precisa da permissão <code>sts:AssumeRole</code> sobre o ARN da role. Se um ARN de usuário ou role citado no <code>Principal</code> for apagado e recriado, a trust policy precisa ser editada, porque a AWS guarda um ID interno.</span><span class="en">The <b>root cannot switch roles</b>: the documentation says you cannot switch roles when signed in as root; only as an IAM user, an IAM Identity Center user or a federated identity. Sign in as a non-root admin (see below). Also, the trust policy only <i>lets</i> the account trust; <b>each user or group</b> at the source still needs the <code>sts:AssumeRole</code> permission on the role’s ARN. If a user or role ARN named in <code>Principal</code> is deleted and recreated, the trust policy must be edited, because AWS stores an internal ID.</span>
+  </div>
+<h3><span class="pt">Passo a passo</span><span class="en">Step by step</span></h3>
+<p><span class="pt">Cenário: você tem a conta management (<code>&lt;ID_CONTA_MGMT&gt;</code>, só com o root) e a conta <code>dev</code> (<code>&lt;ID_CONTA_DEV&gt;</code>, criada pelo Organizations). Meta: uma pessoa não-root da management trabalhar na dev com permissão limitada.</span><span class="en">Scenario: you have the management account (<code>&lt;ID_CONTA_MGMT&gt;</code>, with only the root) and the <code>dev</code> account (<code>&lt;ID_CONTA_DEV&gt;</code>, created through Organizations). Goal: a non-root person in the management account works in dev with limited permissions.</span></p>
+<h4><span class="pt">Passo A · Criar uma identidade que não é root na management</span><span class="en">Step A · Create a non-root identity in the management account</span></h4>
+<div class="callout good"><strong><span class="pt">O caminho recomendado</span><span class="en">The recommended path</span></strong>
+    <span class="pt">A AWS recomenda que pessoas usem credenciais temporárias (federação) e reserva usuários IAM para os casos que isso não atende, como um acesso de emergência. Para pessoas, siga o <b>Passo 5 de Organizations</b> (IAM Identity Center). O roteiro abaixo, da documentação “Create an IAM user for emergency access”, cria um <b>usuário IAM</b>: serve para aprender e para ter um administrador não-root. Na nova experiência de console da AWS, usuários IAM com acesso ao console não podem ser criados.</span><span class="en">AWS recommends that people use temporary credentials (federation) and reserves IAM users for cases federation does not cover, such as emergency access. For people, follow <b>Step 5 of Organizations</b> (IAM Identity Center). The outline below, from the “Create an IAM user for emergency access” documentation, creates an <b>IAM user</b>: it is useful for learning and for having a non-root administrator. In AWS’s new console experience, IAM users with console access cannot be created.</span>
+  </div>
+<ol>
+<li><span class="pt">Entre na management como root (uma das raras vezes em que ele é necessário aqui) e, em <b>IAM</b>, escolha <b>Users → Create user</b>.</span><span class="en">Sign in to the management account as root (one of the rare times it is needed here) and, in <b>IAM</b>, choose <b>Users → Create user</b>.</span></li>
+<li><span class="pt">Em <b>Specify user details → User name</b>, escreva o <i>username</i> (por exemplo <code>maria</code>). É o nome de login dela. Marque <b>Provide user access to the AWS Management Console</b> e escolha <b>I want to create an IAM user</b>.</span><span class="en">Under <b>Specify user details → User name</b>, type the <i>username</i> (for example <code>maria</code>). It is her sign-in name. Check <b>Provide user access to the AWS Management Console</b> and choose <b>I want to create an IAM user</b>.</span></li>
+<li><span class="pt">Em <b>Console password</b>, escolha <b>Autogenerated password</b> (ou uma senha personalizada) e mantenha marcado <b>User must create a new password at next sign-in (recommended)</b>. Clique em <b>Next</b>.</span><span class="en">Under <b>Console password</b>, choose <b>Autogenerated password</b> (or a custom one) and keep <b>User must create a new password at next sign-in (recommended)</b> checked. Click <b>Next</b>.</span></li>
+<li><span class="pt">Em <b>Set permissions</b>, escolha <b>Add user to group → Create group</b>. Nome do grupo: <code>admins</code>; em <b>Permissions policies</b>, marque <code>AdministratorAccess</code> e clique em <b>Create user group</b>. De volta à lista, marque o grupo novo e clique em <b>Next</b>. Dê permissões ao grupo, não ao usuário.</span><span class="en">Under <b>Set permissions</b>, choose <b>Add user to group → Create group</b>. Group name: <code>admins</code>; under <b>Permissions policies</b>, check <code>AdministratorAccess</code> and click <b>Create user group</b>. Back on the list, check the new group and click <b>Next</b>. Give permissions to the group, not the user.</span></li>
+<li><span class="pt">Em <b>Review and create</b>, confira e clique em <b>Create user</b>. Na página <b>Retrieve password</b>, use <b>Download .csv file</b>: o arquivo traz a <i>Connection URL</i>, o username e a senha. Entregue por um canal seguro.</span><span class="en">On <b>Review and create</b>, check and click <b>Create user</b>. On the <b>Retrieve password</b> page, use <b>Download .csv file</b>: the file has the <i>Connection URL</i>, the username and the password. Hand it over through a secure channel.</span></li>
+<li><span class="pt">A pessoa entra em <code>https://&lt;ID_CONTA_MGMT&gt;.signin.aws.amazon.com/console/</code> (ou em <code>console.aws.amazon.com</code>, digitando o ID ou alias) com <b>ID da conta, username e senha</b>. A documentação recomenda digitar essa URL no favorito à mão, porque redirecionamentos podem esconder o endereço real.</span><span class="en">The person signs in at <code>https://&lt;ID_CONTA_MGMT&gt;.signin.aws.amazon.com/console/</code> (or at <code>console.aws.amazon.com</code>, typing the ID or alias) with the <b>account ID, username and password</b>. The documentation recommends typing that URL into the bookmark by hand, because redirects can hide the real address.</span></li>
+<li><span class="pt">Registre o <b>MFA</b>: <b>IAM → Users → maria → Security credentials → Multi-factor authentication (MFA) → Assign MFA device</b>, informe um nome, escolha <b>Authenticator app</b> e digite dois códigos seguidos. A AWS recomenda, quando possível, passkey ou chave de segurança no lugar do app. Depois disso, o root volta para o cofre.</span><span class="en">Register <b>MFA</b>: <b>IAM → Users → maria → Security credentials → Multi-factor authentication (MFA) → Assign MFA device</b>, enter a name, choose <b>Authenticator app</b> and type two consecutive codes. AWS recommends a passkey or security key instead of the app when possible. After that, the root goes back in the vault.</span></li>
+<li><span class="pt">(Opcional) Crie um <b>alias</b> para o link ficar legível: <b>IAM → Dashboard → AWS Account → Account Alias → Create</b> (exige <code>iam:CreateAccountAlias</code>). Só existe um alias por conta, e o link com o ID continua funcionando.</span><span class="en">(Optional) Create an <b>alias</b> so the link is readable: <b>IAM → Dashboard → AWS Account → Account Alias → Create</b> (requires <code>iam:CreateAccountAlias</code>). There is only one alias per account, and the link with the ID keeps working.</span></li>
+</ol>
+<p><span class="pt">O mesmo pela CLI, no padrão da documentação (a senha vai num arquivo JSON, não na linha de comando):</span><span class="en">The same from the CLI, following the documentation’s pattern (the password goes in a JSON file, not on the command line):</span></p>
+<pre><code>aws iam create-user --user-name maria
+
+aws iam create-login-profile --generate-cli-skeleton &gt; create-login-profile.json
+# edit the file: {&quot;UserName&quot;: &quot;maria&quot;, &quot;Password&quot;: &quot;&lt;password&gt;&quot;, &quot;PasswordResetRequired&quot;: true}
+aws iam create-login-profile --cli-input-json file://create-login-profile.json
+
+aws iam create-group --group-name admins
+aws iam attach-group-policy --group-name admins \
+  --policy-arn arn:aws:iam::aws:policy/AdministratorAccess
+aws iam add-user-to-group --user-name maria --group-name admins
+aws iam get-group --group-name admins
+
+aws iam create-account-alias --account-alias minha-empresa-mgmt   # optional</code></pre>
+<p><span class="pt">A senha precisa respeitar a política de senhas da conta; se não respeitar, o erro é <code>PasswordPolicyViolation</code>.</span><span class="en">The password must comply with the account’s password policy; if it does not, the error is <code>PasswordPolicyViolation</code>.</span></p>
+<h4><span class="pt">Passo B · Criar a role na conta dev (as chaves 1 e 2)</span><span class="en">Step B · Create the role in the dev account (keys 1 and 2)</span></h4>
+<p><span class="pt">Entre na <b>dev</b> como administrador. Como a conta foi criada pelo Organizations, ela tem a <code>OrganizationAccountAccessRole</code> (administrador total, confiando em toda a management) e <b>não tem credenciais de root</b>: contas-membro criadas assim não entram como root nem recuperam a senha, a menos que a recuperação esteja habilitada. Use a role a partir de um usuário não-root da management (ou o permission set de administrador do Identity Center).</span><span class="en">Sign in to <b>dev</b> as an administrator. Since the account was created by Organizations, it has the <code>OrganizationAccountAccessRole</code> (full administrator, trusting the whole management account) and <b>no root credentials</b>: member accounts created this way cannot sign in as root or recover the password unless recovery is enabled. Use the role from a non-root user of the management account (or the administrator permission set from Identity Center).</span></p>
+<ol>
+<li><span class="pt"><b>IAM → Roles → Create role</b>. Em <b>Trusted entity type</b>, escolha <b>AWS account</b> → <b>Another AWS account</b> e informe o ID da management (<code>&lt;ID_CONTA_MGMT&gt;</code>). Isso gera a <b>trust policy</b>: quem pode assumir a role.</span><span class="en"><b>IAM → Roles → Create role</b>. Under <b>Trusted entity type</b>, choose <b>AWS account</b> → <b>Another AWS account</b> and enter the management account ID (<code>&lt;ID_CONTA_MGMT&gt;</code>). This generates the <b>trust policy</b>: who may assume the role.</span></li>
+<li><span class="pt">Marque <b>Require MFA</b>: só entra quem fez login com MFA. (Não marque <i>Require external ID</i>: ela é para contas de terceiros e impede o uso pelo console.)</span><span class="en">Check <b>Require MFA</b>: only someone who signed in with MFA gets in. (Do not check <i>Require external ID</i>: it is for third-party accounts and blocks console use.)</span></li>
+<li><span class="pt">Em permissões, escolha o <b>mínimo</b> necessário (por exemplo <code>PowerUserAccess</code> ou <code>ReadOnlyAccess</code>). Por padrão, uma role não tem permissão nenhuma.</span><span class="en">Under permissions, pick the <b>minimum</b> needed (for example <code>PowerUserAccess</code> or <code>ReadOnlyAccess</code>). By default a role has no permissions at all.</span></li>
+<li><span class="pt">Em <b>Role name</b>, use <code>PowerUserFromMgmt</code> (até 64 caracteres; diferencia maiúsculas no ARN; não dá para renomear depois). Crie e copie o <b>ARN da role</b> (na página da role, <b>Summary</b>): <code>arn:aws:iam::&lt;ID_CONTA_DEV&gt;:role/PowerUserFromMgmt</code>. A mesma página mostra o link de <i>Switch role</i> já preenchido.</span><span class="en">Under <b>Role name</b>, use <code>PowerUserFromMgmt</code> (up to 64 characters; case-sensitive in the ARN; cannot be renamed later). Create it and copy the <b>role ARN</b> (on the role page, <b>Summary</b>): <code>arn:aws:iam::&lt;ID_CONTA_DEV&gt;:role/PowerUserFromMgmt</code>. The same page shows the prefilled <i>Switch role</i> link.</span></li>
+</ol>
+<p><span class="pt">A trust policy gerada tem esta forma. O <code>:root</code> no <code>Principal</code> significa “esta conta”, e não o usuário root: quem de fato pode assumir é decidido pelas permissões dentro da management (Passo C).</span><span class="en">The generated trust policy looks like this. The <code>:root</code> in <code>Principal</code> means “this account”, not the root user: who can actually assume it is decided by the permissions inside the management account (Step C).</span></p>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [
+    {
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Principal&quot;: { &quot;AWS&quot;: &quot;arn:aws:iam::&lt;ID_CONTA_MGMT&gt;:root&quot; },
+      &quot;Action&quot;: &quot;sts:AssumeRole&quot;,
+      &quot;Condition&quot;: { &quot;Bool&quot;: { &quot;aws:MultiFactorAuthPresent&quot;: &quot;true&quot; } }
+    }
+  ]
+}</code></pre>
+<pre><code># the same from the CLI, with the dev profile (trust.json = the policy above)
+aws iam create-role --role-name PowerUserFromMgmt \
+  --assume-role-policy-document file://trust.json --profile dev
+aws iam attach-role-policy --role-name PowerUserFromMgmt \
+  --policy-arn arn:aws:iam::aws:policy/PowerUserAccess --profile dev</code></pre>
+<h4><span class="pt">Passo C · Liberar a permissão na management (a chave 2)</span><span class="en">Step C · Grant the permission in the management account (key 2)</span></h4>
+<ol>
+<li><span class="pt">Na <b>management</b>: <b>IAM → Policies → Create policy → JSON</b>. Cole a política abaixo, com o ARN da role da dev, e salve como <code>assume-dev-poweruser</code>.</span><span class="en">In the <b>management</b> account: <b>IAM → Policies → Create policy → JSON</b>. Paste the policy below, with the dev role’s ARN, and save it as <code>assume-dev-poweruser</code>.</span></li>
+<li><span class="pt">Anexe a política ao grupo <code>admins</code> (ou a um grupo só para isso). Evite <code>Resource: "*"</code>: ele permitiria assumir qualquer role de qualquer conta que confie na sua. (Pelo editor visual: <b>Create policy → Visual</b>, serviço <b>STS</b>, ação <b>AssumeRole</b>, recurso <b>Specific → Add ARNs → Other account</b>, com o ID da dev e o nome da role.)</span><span class="en">Attach the policy to the <code>admins</code> group (or to a group just for this). Avoid <code>Resource: "*"</code>: it would allow assuming any role in any account that trusts yours. (In the visual editor: <b>Create policy → Visual</b>, service <b>STS</b>, action <b>AssumeRole</b>, resource <b>Specific → Add ARNs → Other account</b>, with the dev ID and the role name.)</span></li>
+</ol>
+<pre><code>{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: {
+    &quot;Effect&quot;: &quot;Allow&quot;,
+    &quot;Action&quot;: &quot;sts:AssumeRole&quot;,
+    &quot;Resource&quot;: &quot;arn:aws:iam::&lt;ID_CONTA_DEV&gt;:role/PowerUserFromMgmt&quot;
+  }
+}</code></pre>
+<h4><span class="pt">Passo D · Usar a role (a etapa 3 do diagrama)</span><span class="en">Step D · Use the role (step 3 of the diagram)</span></h4>
+<ul>
+<li><span class="pt"><b>Console.</b> A pessoa entra na management, clica no nome dela na barra superior e escolhe <b>Switch role</b>. Em <b>Account</b>, o ID (ou alias) da dev; em <b>Role</b>, <code>PowerUserFromMgmt</code>; opcionalmente um <b>Display name</b> e uma cor (por exemplo vermelho para prod). <b>Switch Role</b>. Ou usa o link <code>https://signin.aws.amazon.com/switchrole?account=&lt;ID_CONTA_DEV&gt;&amp;roleName=PowerUserFromMgmt</code>. Para voltar: o nome de exibição na barra → <b>Switch back</b>.</span><span class="en"><b>Console.</b> The person signs in to the management account, clicks their name in the top bar and chooses <b>Switch role</b>. Under <b>Account</b>, the dev ID (or alias); under <b>Role</b>, <code>PowerUserFromMgmt</code>; optionally a <b>Display name</b> and a color (for example red for prod). <b>Switch Role</b>. Or uses the link <code>https://signin.aws.amazon.com/switchrole?account=&lt;ID_CONTA_DEV&gt;&amp;roleName=PowerUserFromMgmt</code>. To go back: the display name in the bar → <b>Switch back</b>.</span></li>
+<li><span class="pt"><b>CLI.</b> Um perfil que usa as credenciais da management como origem e assume a role. Como a trust policy exige MFA, o perfil precisa do <code>mfa_serial</code> (o ARN do dispositivo de MFA do usuário); a CLI pede o código de 6 dígitos ao usar. Sem <code>mfa_serial</code>, a chamada falha com AccessDenied.</span><span class="en"><b>CLI.</b> A profile that uses the management credentials as the source and assumes the role. Because the trust policy requires MFA, the profile needs <code>mfa_serial</code> (the ARN of the user’s MFA device); the CLI asks for the 6-digit code on use. Without <code>mfa_serial</code>, the call fails with AccessDenied.</span></li>
+</ul>
+<pre><code># ~/.aws/config
+[profile mgmt-user]
+region = sa-east-1                 # the IAM user&#x27;s access keys (aws configure --profile mgmt-user)
+
+[profile dev-from-mgmt]
+role_arn = arn:aws:iam::&lt;ID_CONTA_DEV&gt;:role/PowerUserFromMgmt
+source_profile = mgmt-user
+mfa_serial = arn:aws:iam::&lt;ID_CONTA_MGMT&gt;:mfa/maria
+role_session_name = maria-dev
+region = sa-east-1</code></pre>
+<pre><code>aws sts get-caller-identity --profile dev-from-mgmt
+# Enter MFA code for arn:aws:iam::&lt;ID_CONTA_MGMT&gt;:mfa/maria:
+# &quot;Account&quot;: &quot;&lt;ID_CONTA_DEV&gt;&quot;
+# &quot;Arn&quot;: &quot;arn:aws:sts::&lt;ID_CONTA_DEV&gt;:assumed-role/PowerUserFromMgmt/maria-dev&quot;
+
+# or by hand, to see the temporary credentials:
+aws sts assume-role --role-arn arn:aws:iam::&lt;ID_CONTA_DEV&gt;:role/PowerUserFromMgmt \
+  --role-session-name maria-dev --profile mgmt-user \
+  --serial-number arn:aws:iam::&lt;ID_CONTA_MGMT&gt;:mfa/maria --token-code 123456</code></pre>
+<p><span class="pt">Repare no ARN devolvido: <code>assumed-role</code>, a conta <b>dev</b> e o nome da sessão (<code>role_session_name</code>), que também aparece nos logs do CloudTrail. É a prova de que a pessoa opera <b>na dev</b>. Só um conjunto de permissões vale por vez: ao assumir a role, ela deixa de lado as permissões do usuário e fica com as da role. A sessão da CLI dura 1 hora, salvo se você pedir outra duração (<code>--duration-seconds</code>, até o máximo configurado na role).</span><span class="en">Note the returned ARN: <code>assumed-role</code>, the <b>dev</b> account and the session name (<code>role_session_name</code>), which also shows up in CloudTrail logs. It is proof the person operates <b>in dev</b>. Only one set of permissions is in effect at a time: when assuming the role, they set aside the user’s permissions and keep the role’s. The CLI session lasts 1 hour, unless you request another duration (<code>--duration-seconds</code>, up to the role’s configured maximum).</span></p>
+<p><span class="pt">Este perfil usa as chaves de um usuário IAM como origem. Para quem entra pelo Identity Center, não encadeie roles: atribua um permission set na conta dev (caminho 3).</span><span class="en">This profile uses an IAM user’s keys as the source. For people who sign in through Identity Center, do not chain roles: assign a permission set in the dev account (path 3).</span></p>
+<div class="callout personal"><strong><span class="pt">Observação sobre a nota de Organizations</span><span class="en">A note about the Organizations section</span></strong>
+    <span class="pt">Os passos acima usam o root só para criar o primeiro administrador. Segundo a documentação do Organizations, para usar a <code>OrganizationAccountAccessRole</code> é preciso entrar como um usuário da management com permissão <code>sts:AssumeRole</code> sobre ela. Por isso, no Passo 5b de Organizations, entre como esse usuário não-root.</span><span class="en">The steps above use root only to create the first administrator. According to the Organizations documentation, to use <code>OrganizationAccountAccessRole</code> you must sign in as a user of the management account with the <code>sts:AssumeRole</code> permission on it. So, in Step 5b of Organizations, sign in as that non-root user.</span>
+  </div>
+<div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
+<details class="fc"><summary><span class="pt">O account name serve para entrar na conta?</span><span class="en">Is the account name used to sign in?</span></summary><div class="ans"><span class="pt">Não. É só um rótulo. O root entra com o e-mail; o usuário IAM, com o ID (ou alias) da conta, o username e a senha.</span><span class="en">No. It is just a label. Root signs in with the email; an IAM user, with the account ID (or alias), the username and the password.</span></div></details>
+<details class="fc"><summary><span class="pt">Por que só criar a role na dev não basta?</span><span class="en">Why is creating the role in dev not enough?</span></summary><div class="ans"><span class="pt">Falta a segunda chave: a permissão sts:AssumeRole sobre o ARN da role, dada a um usuário ou grupo na conta de origem.</span><span class="en">The second key is missing: the sts:AssumeRole permission on the role’s ARN, given to a user or group in the source account.</span></div></details>
+<details class="fc"><summary><span class="pt">O que significa ARN e onde ele aparece?</span><span class="en">What does ARN stand for and where does it appear?</span></summary><div class="ans"><span class="pt">Amazon Resource Name, o endereço único de um recurso. Aparece em Resource e Principal das políticas, em trust policies, em perfis da CLI e nas respostas de get-caller-identity.</span><span class="en">Amazon Resource Name, a resource’s unique address. It appears in the Resource and Principal of policies, in trust policies, in CLI profiles and in get-caller-identity responses.</span></div></details>
+<div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-24</span><span class="en">Official sources · verified on 2026-10-24</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference-arns.html" rel="noopener">IAM: Identify AWS resources with Amazon Resource Names (ARNs)</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_create.html" rel="noopener">IAM: Create an IAM user in your AWS account</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html" rel="noopener">IAM: Using an alias for your AWS account ID</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_iam-quotas.html" rel="noopener">IAM and AWS STS quotas (name requirements)</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/getting-started-emergency-iam-user.html" rel="noopener">IAM: Create an IAM user for emergency access (console and CLI steps)</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_users_sign-in.html" rel="noopener">IAM: How IAM users sign in to AWS</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/account-alias-create.html" rel="noopener">IAM: Creating an account alias</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_root-user.html" rel="noopener">IAM: AWS account root user</a></li>
+      <li><a href="https://docs.aws.amazon.com/accounts/latest/reference/manage-acct-update-acct-name.html" rel="noopener">Account Management: Update your AWS account name</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_mfa_enable_virtual.html" rel="noopener">IAM: Assign a virtual MFA device</a></li>
+      <li><a href="https://docs.aws.amazon.com/singlesignon/latest/userguide/addusers.html" rel="noopener">IAM Identity Center: Add users to your Identity Center directory</a></li>
+      <li><a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access.html" rel="noopener">Organizations: Accessing member accounts</a> · <a href="https://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_access-cross-account-role.html" rel="noopener">OrganizationAccountAccessRole</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-console.html" rel="noopener">IAM: Switch from a user to an IAM role (console)</a></li>
+      <li><a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-role.html" rel="noopener">AWS CLI: Using an IAM role in the AWS CLI</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user.html" rel="noopener">IAM: Create a role to give permissions to an IAM user</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_permissions-to-switch.html" rel="noopener">IAM: Grant a user permissions to switch roles</a></li>
+      <li><a href="https://docs.aws.amazon.com/IAM/latest/UserGuide/tutorial_cross-account-with-roles.html" rel="noopener">IAM tutorial: Delegate access across AWS accounts using IAM roles</a></li>
+    </ul>
+    <p><span class="pt">Os passos, as opções do console e os comandos seguem a documentação citada; nada foi executado numa conta real.</span><span class="en">The steps, console options and commands follow the cited documentation; nothing was run on a real account.</span></p>
   </div>
 </section>
 
