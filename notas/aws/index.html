@@ -127,21 +127,15 @@
       <li><a href="#budget"><span class="pt">Orçamento e cobrança</span><span class="en">Budget &amp; billing</span></a></li>
     </ul>
     <h2><span class="pt">Visão geral</span><span class="en">Overview</span></h2>
-    <ul><li><a href="#mapa"><span class="pt">Mapa da arquitetura</span><span class="en">Architecture map</span></a></li></ul>
+    <ul>
+      <li><a href="#mapa"><span class="pt">Mapa da arquitetura</span><span class="en">Architecture map</span></a></li>
+    </ul>
     <h2><span class="pt">Fundamentos</span><span class="en">Foundations</span></h2>
     <ul>
       <li><a href="#iam">IAM</a></li>
       <li><a href="#identity-center">IAM Identity Center</a></li>
       <li><a href="#oidc">OIDC &amp; GitHub Actions</a></li>
       <li><a href="#cli">AWS CLI</a></li>
-      <li><a href="#ssh">SSH</a></li>
-    </ul>
-    <h2><span class="pt">Computação</span><span class="en">Compute</span></h2>
-    <ul>
-      <li><a href="#ec2">EC2 &amp; Auto Scaling</a></li>
-      <li><a href="#eip"><span class="pt">IPs Elásticos</span><span class="en">Elastic IPs</span></a></li>
-      <li><a href="#ecr">ECR</a></li>
-      <li><a href="#ecs">ECS</a></li>
     </ul>
     <h2><span class="pt">Rede</span><span class="en">Networking</span></h2>
     <ul>
@@ -149,6 +143,14 @@
       <li><a href="#sg">Security Groups</a></li>
       <li><a href="#elb">Load Balancer (ALB)</a></li>
       <li><a href="#acm">ACM</a></li>
+    </ul>
+    <h2><span class="pt">Computação</span><span class="en">Compute</span></h2>
+    <ul>
+      <li><a href="#ec2">EC2 &amp; Auto Scaling</a></li>
+      <li><a href="#ssh">SSH</a></li>
+      <li><a href="#eip"><span class="pt">IPs Elásticos</span><span class="en">Elastic IPs</span></a></li>
+      <li><a href="#ecr">ECR</a></li>
+      <li><a href="#ecs">ECS</a></li>
     </ul>
     <h2><span class="pt">Segredos e acesso</span><span class="en">Secrets &amp; access</span></h2>
     <ul>
@@ -174,7 +176,7 @@
 <!-- ============ ORGANIZATIONS ============ -->
 <section class="topic" id="organizations">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 01</span><span class="en">Foundations · 01</span></span>
+    <span class="tag"><span class="pt">Contas</span><span class="en">Accounts</span></span>
     <h2>AWS Organizations</h2>
     <p class="lead"><span class="pt">Gerencie e governe várias contas AWS de forma central: criar contas, agrupá-las em OUs, aplicar políticas e ter uma fatura única.</span><span class="en">Centrally manage and govern many AWS accounts: create accounts, group them into OUs, apply policies and get a single bill.</span></p>
   </header>
@@ -867,7 +869,7 @@ aws cloudwatch put-metric-alarm --alarm-name cobranca-acima-de-20usd \
 <!-- ============ IAM ============ -->
 <section class="topic" id="iam">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 02</span><span class="en">Foundations · 02</span></span>
+    <span class="tag"><span class="pt">Fundamentos · 01</span><span class="en">Foundations · 01</span></span>
     <h2>IAM</h2>
     <p class="lead"><span class="pt">Identity and Access Management: o serviço que controla quem se autentica (login) e quem está autorizado (permissões) a usar os recursos da AWS.</span><span class="en">Identity and Access Management: the service that controls who is authenticated (signed in) and who is authorized (has permissions) to use AWS resources.</span></p>
   </header>
@@ -961,7 +963,7 @@ aws cloudwatch put-metric-alarm --alarm-name cobranca-acima-de-20usd \
 <!-- ============ IDENTITY CENTER ============ -->
 <section class="topic" id="identity-center">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 03</span><span class="en">Foundations · 03</span></span>
+    <span class="tag"><span class="pt">Fundamentos · 02</span><span class="en">Foundations · 02</span></span>
     <h2>IAM Identity Center</h2>
     <p class="lead"><span class="pt">Login único (SSO) para a força de trabalho: pessoas entram uma vez e acessam várias contas AWS e aplicações, com credenciais temporárias.</span><span class="en">Single sign-on (SSO) for your workforce: people sign in once and reach many AWS accounts and applications, using temporary credentials.</span></p>
   </header>
@@ -1018,7 +1020,7 @@ aws sso logout</code></pre>
 <!-- ============ OIDC ============ -->
 <section class="topic" id="oidc">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 04</span><span class="en">Foundations · 04</span></span>
+    <span class="tag"><span class="pt">Fundamentos · 03</span><span class="en">Foundations · 03</span></span>
     <h2>OIDC &amp; GitHub Actions</h2>
     <p class="lead"><span class="pt">Federação OIDC: um serviço externo (como o GitHub Actions) prova quem é com um token e troca por credenciais temporárias da AWS, sem guardar access keys.</span><span class="en">OIDC federation: an external service (such as GitHub Actions) proves who it is with a token and exchanges it for temporary AWS credentials, with no stored access keys.</span></p>
   </header>
@@ -1076,21 +1078,7 @@ aws sso logout</code></pre>
     <li><span class="pt">Dois-pontos dentro de valores aparecem como <code>%3A</code> no <code>sub</code>.</span><span class="en">Colons inside values appear as <code>%3A</code> in the <code>sub</code>.</span></li>
   </ul>
 
-  <h3><span class="pt">3 · Workflow com <code>aws-actions/configure-aws-credentials</code></span><span class="en">3 · Workflow with <code>aws-actions/configure-aws-credentials</code></span></h3>
-<pre><code>permissions:
-  id-token: write   # permite ao job pedir o JWT
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    environment: producao
-    steps:
-      - uses: aws-actions/configure-aws-credentials@v6   # fixe uma versão/SHA
-        with:
-          role-to-assume: arn:aws:iam::111122223333:role/github-deploy-prod
-          aws-region: us-east-1
-      - run: aws sts get-caller-identity</code></pre>
-  <p class="muted"><span class="pt">A região é sempre obrigatória na action. Ela também tem recomendações próprias: menor privilégio na role, cuidado com <code>pull_request_target</code> e com runners não efêmeros, e evitar <code>ForAllValues:</code> em statements <code>Allow</code>.</span><span class="en">The region is always required by the action. It also has its own advice: least privilege on the role, care with <code>pull_request_target</code> and non-ephemeral runners, and avoid <code>ForAllValues:</code> in <code>Allow</code> statements.</span></p>
+  <p><span class="pt"><b>E o workflow?</b> O arquivo completo (um para <code>develop</code> e <code>main</code>), os environments do GitHub, o build da imagem, o ECR e a troca no ECS estão na nota <a href="../github-aws-oidc/index.html">GitHub para AWS: OIDC, Docker, ECR e ECS</a>. Aqui ficam só os conceitos da AWS. A action usada é a <code>aws-actions/configure-aws-credentials</code> e o job precisa de <code>permissions: id-token: write</code>.</span><span class="en"><b>And the workflow?</b> The full file (one for <code>develop</code> and <code>main</code>), the GitHub environments, the image build, ECR and the ECS swap are in the <a href="../github-aws-oidc/index.html">GitHub to AWS: OIDC, Docker, ECR and ECS</a> note. This page keeps only the AWS concepts. The action used is <code>aws-actions/configure-aws-credentials</code> and the job needs <code>permissions: id-token: write</code>.</span></p>
 
   <div class="callout warn"><strong><span class="pt">Pegadinhas</span><span class="en">Gotchas</span></strong>
     <ul>
@@ -1125,7 +1113,7 @@ jobs:
 <!-- ============ CLI ============ -->
 <section class="topic" id="cli">
   <header>
-    <span class="tag"><span class="pt">Fundamentos · 05</span><span class="en">Foundations · 05</span></span>
+    <span class="tag"><span class="pt">Fundamentos · 04</span><span class="en">Foundations · 04</span></span>
     <h2>AWS CLI (Linux)</h2>
     <p class="lead"><span class="pt">Controle serviços da AWS pela linha de comando. Esta página usa a versão 2 do AWS CLI.</span><span class="en">Control AWS services from the command line. This page covers AWS CLI version 2.</span></p>
   </header>
@@ -1168,345 +1156,10 @@ aws --version</code></pre>
   </div>
 </section>
 
-<!-- ============ SSH ============ -->
-<section class="topic" id="ssh">
-  <header>
-    <span class="tag"><span class="pt">Fundamentos · 06</span><span class="en">Foundations · 06</span></span>
-    <h2>SSH (Secure Shell)</h2>
-    <p class="lead"><span class="pt">Forma clássica de abrir um terminal remoto em uma instância EC2 Linux, usando um par de chaves.</span><span class="en">The classic way to open a remote terminal on a Linux EC2 instance, using a key pair.</span></p>
-  </header>
-
-  <h3><span class="pt">Pré-requisitos segundo a documentação da EC2</span><span class="en">Prerequisites per the EC2 docs</span></h3>
-  <ul>
-    <li><span class="pt">A instância passou nas status checks (pode levar alguns minutos).</span><span class="en">The instance passed its status checks (it can take a few minutes).</span></li>
-    <li><span class="pt">Você tem a chave privada (<code>.pem</code>) do key pair e as permissões do arquivo configuradas (a página de pré-requisitos da EC2 detalha isso).</span><span class="en">You have the key pair's private key (<code>.pem</code>) with file permissions set (the EC2 prerequisites page explains this).</span></li>
-    <li><span class="pt">O <a href="#sg">Security Group</a> da instância libera SSH (porta 22) <b>só do seu IP</b>. Abrir 22 para <code>0.0.0.0/0</code> deixa qualquer um tentar entrar.</span><span class="en">The instance's <a href="#sg">Security Group</a> allows SSH (port 22) <b>only from your IP</b>. Opening 22 to <code>0.0.0.0/0</code> lets anyone try.</span></li>
-  </ul>
-  <h3><span class="pt">Conectar</span><span class="en">Connect</span></h3>
-<pre><code>ssh -i /caminho/minha-chave.pem usuario-da-instancia@dns-publico-da-instancia</code></pre>
-  <p><span class="pt">No primeiro acesso, o SSH mostra a impressão digital (fingerprint) do servidor. A documentação sugere conferi-la com a da instância: se não bater, pode ser um ataque man-in-the-middle.</span><span class="en">On first connection SSH shows the server fingerprint. The docs suggest checking it against the instance's: if it does not match, it may be a man-in-the-middle attack.</span></p>
-  <div class="callout good"><strong><span class="pt">Alternativa sem porta 22</span><span class="en">Alternative without port 22</span></strong>
-    <span class="pt">O Session Manager (Systems Manager) permite acessar nós sem abrir portas de entrada, sem bastion host e sem chaves SSH. Veja <a href="#ssm">Systems Manager</a>.</span>
-    <span class="en">Session Manager (Systems Manager) lets you access nodes with no inbound ports, no bastion hosts and no SSH keys. See <a href="#ssm">Systems Manager</a>.</span>
-  </div>
-
-  <div class="callout personal"><strong><span class="pt">Nota pessoal · sem fonte oficial da AWS</span><span class="en">Personal note · no official AWS source</span></strong>
-    <span class="pt">As explicações abaixo (handshake e camadas TCP/IP) são conteúdo didático geral sobre o protocolo SSH, mantido das anotações originais. Elas não vêm da documentação da AWS e não foram verificadas nela. Também ficaram como nota pessoal: <code>chmod 400</code> na chave e o usuário padrão <code>ec2-user</code> no Amazon Linux.</span>
-    <span class="en">The explanations below (handshake and TCP/IP layers) are general teaching content about the SSH protocol, kept from the original notes. They do not come from AWS documentation and were not verified there. Also left as personal notes: <code>chmod 400</code> on the key and the default <code>ec2-user</code> on Amazon Linux.</span>
-  </div>
-
-  <h3><span class="pt">Handshake passo a passo</span><span class="en">Handshake step by step</span></h3>
-  <div class="widget" data-stepper>
-    <div class="wtitle"><span class="pt">Animação</span><span class="en">Animation</span></div>
-    <div class="stage">
-      <div class="line"></div>
-      <span class="node c"><svg class="icon" aria-hidden="true"><use href="#i-client"/></svg> Client</span>
-      <span class="node s"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> Server</span>
-      <div class="dot"></div>
-    </div>
-    <ol class="steps">
-      <li data-dir="s2c"><span class="pt">O servidor envia sua chave pública de host (a "impressão digital" dele).</span><span class="en">The server sends its public host key (its "fingerprint").</span></li>
-      <li data-dir="none"><span class="pt">O cliente verifica se conhece essa chave, sabendo quem é o outro lado.</span><span class="en">The client checks whether it knows that key, knowing who is on the other side.</span></li>
-      <li data-dir="both" data-enc="1"><span class="pt">Ambos geram um segredo compartilhado pela matemática, sem transmiti-lo. O canal passa a ser criptografado.</span><span class="en">Both derive a shared secret through math, without ever sending it. The channel is now encrypted.</span></li>
-      <li data-dir="c2s" data-enc="1"><span class="pt">O cliente envia o usuário e sua chave pública (ou senha).</span><span class="en">The client sends the username and its public key (or password).</span></li>
-      <li data-dir="s2c" data-enc="1"><span class="pt">O servidor reconhece a chave e envia um desafio: uma mensagem aleatória trancada com a chave pública do cliente.</span><span class="en">The server recognizes the key and sends a challenge: a random message locked with the client's public key.</span></li>
-      <li data-dir="none" data-enc="1"><span class="pt">O cliente destranca a mensagem com a chave privada (só ela consegue) e a assina.</span><span class="en">The client unlocks the message with its private key (only it can) and signs it.</span></li>
-      <li data-dir="c2s" data-enc="1"><span class="pt">A assinatura volta ao servidor, provando a posse da chave privada.</span><span class="en">The signature goes back to the server, proving possession of the private key.</span></li>
-      <li data-dir="s2c" data-enc="1"><span class="pt">O servidor confirma e libera o terminal. Agora é possível executar comandos com segurança.</span><span class="en">The server confirms and opens the terminal. Now you can run commands securely.</span></li>
-    </ol>
-    <div class="row">
-      <button class="btn prev">◀</button><button class="btn primary next"><span class="pt">Próximo</span><span class="en">Next</span> ▶</button><button class="btn play">▶▶ Auto</button>
-    </div>
-  </div>
-
-  <h3><span class="pt">Protocolos e TCP/IP</span><span class="en">Protocols and TCP/IP</span></h3>
-  <p><span class="pt">Um protocolo é um contrato: regras de como os dados são formatados, transmitidos e recebidos. O SSH é da camada de <b>Aplicação</b> e roda sobre TCP/IP.</span><span class="en">A protocol is a contract: rules for how data is formatted, sent and received. SSH is an <b>Application</b>-layer protocol running on top of TCP/IP.</span></p>
-  <table>
-    <tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Função</span><span class="en">Role</span></th></tr>
-    <tr><td>4 · <span class="pt">Aplicação</span><span class="en">Application</span></td><td><span class="pt">Onde os programas trabalham: SSH, SMTP, HTTP.</span><span class="en">Where programs work: SSH, SMTP, HTTP.</span></td></tr>
-    <tr><td>3 · <span class="pt">Transporte (TCP)</span><span class="en">Transport (TCP)</span></td><td><span class="pt">Abre a conexão e garante que todos os pedaços cheguem sem erros.</span><span class="en">Opens the connection and ensures every piece arrives without errors.</span></td></tr>
-    <tr><td>2 · <span class="pt">Internet (IP)</span><span class="en">Internet (IP)</span></td><td><span class="pt">Endereçamento: garante que os pacotes cheguem ao destino.</span><span class="en">Addressing: ensures packets reach their destination.</span></td></tr>
-    <tr><td>1 · Link</td><td><span class="pt">Meio físico: cabos ethernet, wi-fi.</span><span class="en">Physical medium: ethernet cables, wi-fi.</span></td></tr>
-  </table>
-
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Depuração pontual em instâncias de teste, com porta 22 restrita ao seu IP.</span><span class="en">Occasional debugging on test instances, with port 22 limited to your IP.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Porta 22 aberta para a internet; acesso rotineiro em produção (prefira Session Manager).</span><span class="en">Port 22 open to the internet; routine production access (prefer Session Manager).</span></div>
-  </div>
-
-  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
-  <details class="fc"><summary><span class="pt">De onde deve vir o tráfego SSH liberado no Security Group?</span><span class="en">Where should the SSH traffic allowed in the Security Group come from?</span></summary><div class="ans"><span class="pt">Do seu IP (ou faixa) específico, nunca de <code>0.0.0.0/0</code>.</span><span class="en">From your specific IP (or range), never <code>0.0.0.0/0</code>.</span></div></details>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-linux-inst-ssh.html" rel="noopener">Connect to your Linux instance using an SSH client</a></li>
-      <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html" rel="noopener">AWS Systems Manager Session Manager</a></li>
-      <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html" rel="noopener">Security groups: best practices (portas 22/3389)</a></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ EC2 ============ -->
-<section class="topic" id="ec2">
-  <header>
-    <span class="tag"><span class="pt">Computação · 07</span><span class="en">Compute · 07</span></span>
-    <h2>EC2 &amp; Auto Scaling</h2>
-    <p class="lead"><span class="pt">Amazon EC2 entrega servidores virtuais na nuvem. O Auto Scaling mantém a quantidade certa de instâncias para a sua carga.</span><span class="en">Amazon EC2 provides virtual servers in the cloud. Auto Scaling keeps the right number of instances for your load.</span></p>
-  </header>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg> AMI</h4><span class="pt">Amazon Machine Image: fornece o software para iniciar a instância e um mapeamento de dispositivos de bloco (os discos a anexar). É específica de Region, sistema operacional, arquitetura de processador, tipo de volume raiz e tipo de virtualização. Dá para copiar para outra Region e compartilhar com outras contas.</span><span class="en">Amazon Machine Image: provides the software to boot the instance and a block device mapping (the disks to attach). It is specific to Region, operating system, processor architecture, root volume type and virtualization type. You can copy it to another Region and share it with other accounts.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg> Instance type</h4><span class="pt">Define o hardware (CPU, memória, armazenamento, rede). Os tipos são agrupados em famílias; os nomes seguem uma convenção (família, geração, processador, capacidades, tamanho). Há instâncias <i>burstable</i> (como a série T). Como o faturamento é por segundo, é barato testar vários tipos.</span><span class="en">Defines the hardware (CPU, memory, storage, network). Types are grouped into families; names follow a convention (family, generation, processor, capabilities, size). There are <i>burstable</i> instances (such as the T series). Since billing is per second, testing several types is cheap.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Public IPv4</h4><span class="pt">O IP público automático vem do pool da Amazon e <b>não</b> é seu: é liberado ao parar, hibernar ou encerrar, e a instância recebe outro ao iniciar de novo. Para um endereço fixo, use <a href="#eip">Elastic IP</a>. A AWS cobra por todo IPv4 público.</span><span class="en">The automatic public IP comes from Amazon's pool and is <b>not</b> yours: it is released on stop, hibernate or terminate, and the instance gets a new one on start. For a fixed address use an <a href="#eip">Elastic IP</a>. AWS charges for every public IPv4 address.</span></div>
-  </div>
-
-  <h3>Snapshot vs. <span class="pt">Imagem</span><span class="en">Image</span></h3>
-  <div class="scroll-x"><table>
-    <tr><th></th><th>Snapshot (EBS)</th><th><span class="pt">Imagem (AMI)</span><span class="en">Image (AMI)</span></th></tr>
-    <tr><td><b><span class="pt">O que é</span><span class="en">What it is</span></b></td><td><span class="pt">Cópia pontual (point-in-time) de um volume EBS, <b>incremental</b>: guarda só os blocos alterados desde o último snapshot.</span><span class="en">A point-in-time copy of an EBS volume, <b>incremental</b>: it stores only the blocks changed since the last snapshot.</span></td><td><span class="pt">Software de boot + mapeamento de discos, usado para lançar instâncias.</span><span class="en">Boot software + disk mapping, used to launch instances.</span></td></tr>
-    <tr><td><b><span class="pt">Uso</span><span class="en">Use</span></b></td><td><span class="pt">Backup e restauração: cria um volume novo idêntico ao original no momento do snapshot.</span><span class="en">Backup and restore: creates a new volume identical to the original at snapshot time.</span></td><td><span class="pt">Clonar a configuração de uma instância: lançar várias com a mesma base.</span><span class="en">Cloning an instance's setup: launch many from the same base.</span></td></tr>
-    <tr><td><b><span class="pt">Onde fica</span><span class="en">Where it lives</span></b></td><td><span class="pt">Em buckets do S3 que você não acessa diretamente; replicado entre as AZs da Region.</span><span class="en">In S3 buckets you cannot access directly; replicated across the Region's AZs.</span></td><td><span class="pt">Dentro da Region; pode ser copiada e compartilhada.</span><span class="en">Within a Region; can be copied and shared.</span></td></tr>
-  </table></div>
-  <div class="callout warn"><strong><span class="pt">Pegadinhas</span><span class="en">Gotchas</span></strong>
-    <span class="pt">A AWS <b>não</b> faz backup automático dos volumes EBS: criar snapshots (ou automatizá-los com Data Lifecycle Manager ou AWS Backup) é responsabilidade sua. Como snapshots são incrementais, apagar um nem sempre reduz o custo de armazenamento.</span>
-    <span class="en">AWS does <b>not</b> automatically back up EBS volumes: creating snapshots (or automating them with Data Lifecycle Manager or AWS Backup) is your responsibility. Because snapshots are incremental, deleting one does not always reduce storage cost.</span>
-  </div>
-  <div class="callout personal"><strong><span class="pt">Não verificado</span><span class="en">Not verified</span></strong>
-    <span class="pt">A anotação antiga dizia que "toda imagem contém um snapshot" e que "snapshot não cria instâncias". As páginas lidas confirmam o papel de cada um, mas não essa relação exata; consulte a documentação de criação de AMIs antes de depender dela.</span>
-    <span class="en">The old note said "every image contains a snapshot" and "a snapshot cannot launch instances". The pages read confirm each one's role but not that exact relation; check the AMI creation docs before relying on it.</span>
-  </div>
-
-  <h3>Launch Template</h3>
-  <p><span class="pt">Especifica a configuração de uma instância: ID da AMI, tipo de instância, key pair, security groups e outros parâmetros. Tem <b>versões</b>: dá para manter uma base e criar versões novas (por exemplo, com a AMI da última versão da aplicação). A AWS recomenda launch templates em vez de launch configurations, que não suportam recursos como misturar Spot e On-Demand ou vários tipos de instância.</span><span class="en">Specifies an instance's configuration: AMI ID, instance type, key pair, security groups and other parameters. It has <b>versions</b>: you can keep a base and create new versions (for example with the AMI of the latest app version). AWS recommends launch templates over launch configurations, which lack features such as mixing Spot and On-Demand or multiple instance types.</span></p>
-
-  <h3>Auto Scaling Group (ASG)</h3>
-  <p><span class="pt">Coleção de instâncias tratada como uma unidade. Você define:</span><span class="en">A collection of instances treated as one unit. You define:</span></p>
-  <ol>
-    <li><b>Minimum size:</b> <span class="pt">o grupo nunca fica abaixo disso.</span><span class="en">the group never goes below it.</span></li>
-    <li><b>Maximum size:</b> <span class="pt">o grupo nunca passa disso.</span><span class="en">the group never exceeds it.</span></li>
-    <li><b>Desired capacity:</b> <span class="pt">quantas instâncias você quer rodando agora (dentro do mínimo e máximo).</span><span class="en">how many instances you want running now (within the min and max).</span></li>
-  </ol>
-  <div class="callout good"><strong><span class="pt">Substituição automática de instâncias</span><span class="en">Automatic instance replacement</span></strong>
-    <span class="pt">O ASG monitora a saúde das instâncias (health checks do EC2, e opcionalmente os do load balancer ou checks próprios) e substitui as encerradas ou comprometidas para manter a capacidade desejada. Ele também distribui as instâncias entre as zonas de disponibilidade e registra/remove instâncias do <a href="#elb">load balancer</a> automaticamente.</span>
-    <span class="en">The ASG monitors instance health (EC2 health checks, and optionally the load balancer's or custom checks) and replaces terminated or impaired instances to keep the desired capacity. It also spreads instances across Availability Zones and registers/deregisters instances with the <a href="#elb">load balancer</a> automatically.</span>
-  </div>
-  <p class="muted"><span class="pt">Não há cobrança adicional pelo Auto Scaling; você paga pelos recursos usados (instâncias, volumes EBS, alarmes do CloudWatch).</span><span class="en">There is no additional charge for Auto Scaling; you pay for the resources used (instances, EBS volumes, CloudWatch alarms).</span></p>
-
-  <h3>Scaling policies</h3>
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg> Target tracking</h4><span class="pt">Escolhe uma métrica e um valor-alvo, como um termostato. Recomendada pela AWS; use métricas que variem de forma inversamente proporcional à capacidade (CPU média, requisições por target). O Auto Scaling cria os alarmes do CloudWatch por você.</span><span class="en">Pick a metric and a target value, like a thermostat. Recommended by AWS; use metrics that move inversely with capacity (average CPU, request count per target). Auto Scaling creates the CloudWatch alarms for you.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg> Step / simple</h4><span class="pt">Ajustes por faixa de violação do alarme (step) ou um único ajuste com cooldown (simple). Cuidado ao combinar com target tracking: conflitos podem causar comportamento indesejado.</span><span class="en">Adjustments by alarm-breach size (step) or one adjustment with a cooldown (simple). Be careful combining with target tracking: conflicts can cause unwanted behavior.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg> Scheduled</h4><span class="pt">Ações agendadas mudam a capacidade em horários definidos (única ou recorrente, com cron e fuso horário). Bom para picos previsíveis.</span><span class="en">Scheduled actions change capacity at set times (one-off or recurring, with cron and time zone). Good for predictable peaks.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Predictive</h4><span class="pt">Analisa a carga histórica para achar padrões diários ou semanais e prever a demanda, lançando capacidade antes do pico. Indicado para tráfego cíclico e aplicações lentas para iniciar.</span><span class="en">Analyzes historical load to detect daily or weekly patterns and forecast demand, launching capacity ahead of the peak. Suited to cyclical traffic and slow-starting apps.</span></div>
-  </div>
-  <p class="muted"><span class="pt">Sempre dentro do mínimo e do máximo do grupo. Se mais de uma política pedir mudança ao mesmo tempo, prevalece a que resulta em mais capacidade.</span><span class="en">Always within the group's min and max. If more than one policy asks for a change at once, the one giving the most capacity wins.</span></p>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicação com carga variável ou que precisa se recuperar sozinha de falhas; servidores idênticos atrás de um load balancer.</span><span class="en">Apps with variable load or that must self-heal from failures; identical servers behind a load balancer.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Servidor único com estado em disco local, sem automação de configuração; quando containers no <a href="#ecs">ECS</a> já resolvem o problema.</span><span class="en">A single server with state on local disk and no configuration automation; when containers on <a href="#ecs">ECS</a> already solve the problem.</span></div>
-  </div>
-
-  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
-  <details class="fc"><summary><span class="pt">O IP público automático de uma instância continua o mesmo depois de parar e iniciar?</span><span class="en">Does an instance's automatic public IP stay the same after stop and start?</span></summary><div class="ans"><span class="pt">Não. Ele é liberado ao parar e um novo é atribuído ao iniciar. Use Elastic IP para um endereço fixo.</span><span class="en">No. It is released on stop and a new one is assigned on start. Use an Elastic IP for a fixed address.</span></div></details>
-  <details class="fc"><summary><span class="pt">O que o ASG faz com uma instância comprometida?</span><span class="en">What does the ASG do with an impaired instance?</span></summary><div class="ans"><span class="pt">Substitui, para manter a capacidade desejada.</span><span class="en">Replaces it to keep the desired capacity.</span></div></details>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html" rel="noopener">Amazon EC2 instance types</a></li>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" rel="noopener">Amazon Machine Images in Amazon EC2</a></li>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html" rel="noopener">Amazon EC2 instance IP addressing</a></li>
-      <li><a href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html" rel="noopener">Amazon EBS snapshots</a></li>
-      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html" rel="noopener">What is Amazon EC2 Auto Scaling?</a></li>
-      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/launch-templates.html" rel="noopener">Auto Scaling launch templates</a></li>
-      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html" rel="noopener">Dynamic scaling</a> · <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-scheduled-scaling.html" rel="noopener">Scheduled scaling</a> · <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-predictive-scaling.html" rel="noopener">Predictive scaling</a></li>
-    </ul>
-    <p><span class="pt"><b>Corrigido:</b> a anotação antiga citava "t4.micro" como família; a documentação lida lista a série <code>T4g</code> (e <code>T3</code>), então os exemplos de tipos foram removidos. Valores como "launch template é gratuito" e o "CPU ou memória" no target tracking também saíram por falta de suporte nas páginas lidas.</span><span class="en"><b>Corrected:</b> the old note cited "t4.micro" as a family; the docs read list the <code>T4g</code> series (and <code>T3</code>), so type examples were removed. Claims like "launch templates are free" and "CPU or memory" for target tracking also left for lack of support in the pages read.</span></p>
-  </div>
-</section>
-
-<!-- ============ EIP ============ -->
-<section class="topic" id="eip">
-  <header>
-    <span class="tag"><span class="pt">Computação · 08</span><span class="en">Compute · 08</span></span>
-    <h2><span class="pt">IPs Elásticos</span><span class="en">Elastic IPs</span></h2>
-    <p class="lead"><span class="pt">Um endereço IPv4 público e estático, pensado para a computação em nuvem dinâmica.</span><span class="en">A static public IPv4 address designed for dynamic cloud computing.</span></p>
-  </header>
-  <p><span class="pt">O Elastic IP é alocado à sua conta e é seu até você liberá-lo. Você pode "mascarar" a falha de uma instância remapeando o endereço para outra instância da conta, ou usá-lo em um registro DNS do seu domínio.</span><span class="en">An Elastic IP is allocated to your account and stays yours until you release it. You can mask an instance failure by remapping the address to another instance in your account, or use it in a DNS record for your domain.</span></p>
-  <div class="flow">
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 A <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Elastic IP</span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 B <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
-  </div>
-  <ul>
-    <li><span class="pt">É específico de uma Region e não pode ser movido para outra. Não há Elastic IP para IPv6.</span><span class="en">It is specific to one Region and cannot be moved to another. There are no Elastic IPs for IPv6.</span></li>
-    <li><span class="pt">Ao associar um Elastic IP a uma instância que já tinha IP público automático, esse IP automático é liberado e não pode ser reaproveitado.</span><span class="en">When you associate an Elastic IP with an instance that had an automatic public IP, that automatic IP is released and cannot be reused.</span></li>
-    <li><span class="pt">Um Elastic IP desassociado continua alocado (e cobrado) até você liberá-lo.</span><span class="en">A disassociated Elastic IP stays allocated (and billed) until you release it.</span></li>
-    <li><span class="pt">Há uma cota padrão de Elastic IPs por Region, que pode ser aumentada no Service Quotas. Consulte a página oficial para o valor atual.</span><span class="en">There is a default quota of Elastic IPs per Region, which can be raised in Service Quotas. See the official page for the current value.</span></li>
-  </ul>
-  <div class="callout warn"><strong><span class="pt">Custo</span><span class="en">Cost</span></strong>
-    <span class="pt">A AWS cobra por <b>todos</b> os endereços IPv4 públicos, estejam em uso ou ociosos, incluindo os de instâncias em execução. Os valores estão na aba "Public IPv4 Address" da <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">página de preços da VPC</a>. A anotação antiga dizia que o IP era grátis enquanto associado, o que contradiz a documentação atual.</span>
-    <span class="en">AWS charges for <b>all</b> public IPv4 addresses, in use or idle, including those on running instances. Values are on the "Public IPv4 Address" tab of the <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">VPC pricing page</a>. The old note said it was free while associated, which contradicts the current docs.</span>
-  </div>
-  <p><span class="pt">A documentação ainda sugere reduzir o número de IPv4 públicos usando um load balancer na frente das instâncias, desligando o "auto-assign public IP" onde não for preciso.</span><span class="en">The docs also suggest reducing the number of public IPv4 addresses by putting a load balancer in front of the instances and turning off "auto-assign public IP" where not needed.</span></p>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Endereço fixo que precisa sobreviver à troca de instância e que alguém registra (DNS, allowlist de um parceiro).</span><span class="en">A fixed address that must survive an instance swap and that someone registers (DNS, a partner's allowlist).</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Quando um load balancer com nome DNS (<a href="#route53">Alias</a>) resolve; e o IP não deve ficar ocioso, pois é cobrado.</span><span class="en">When a load balancer with a DNS name (<a href="#route53">Alias</a>) solves it; and do not leave it idle, since it is billed.</span></div>
-  </div>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" rel="noopener">Elastic IP addresses</a></li>
-      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html" rel="noopener">Amazon EC2 instance IP addressing</a></li>
-      <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" rel="noopener">What is Amazon VPC? (seção de preços de IPv4 público)</a></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ ECR ============ -->
-<section class="topic" id="ecr">
-  <header>
-    <span class="tag"><span class="pt">Computação · 09</span><span class="en">Compute · 09</span></span>
-    <h2>ECR</h2>
-    <p class="lead"><span class="pt">Elastic Container Registry: registro gerenciado de imagens de container (Docker, OCI) dentro da AWS, com permissões via IAM.</span><span class="en">Elastic Container Registry: a managed registry for container images (Docker, OCI) inside AWS, with permissions through IAM.</span></p>
-  </header>
-
-  <div class="flow">
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg> CI <span class="pt">(build)</span><span class="en">(build)</span></span><span class="arrow">push →</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR <span class="pt">(conta tooling)</span><span class="en">(tooling account)</span></span><span class="arrow">← pull</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> ECS / EKS / EC2 <span class="pt">(staging, prod)</span><span class="en">(staging, prod)</span></span>
-  </div>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Repository</h4><span class="pt">Repositório privado com permissões baseadas em recurso. Ele precisa existir antes do push, ou você precisa de um <i>repository creation template</i>.</span><span class="en">A private repository with resource-based permissions. It must exist before the push, or you need a <i>repository creation template</i>.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> Auth</h4><span class="pt">O token de autenticação vale <b>12 horas</b> e é por registry. No <code>docker login</code> o usuário é <code>AWS</code>. A identidade precisa da permissão <code>ecr:GetAuthorizationToken</code> via política IAM.</span><span class="en">The authentication token is valid for <b>12 hours</b> and is per registry. In <code>docker login</code> the user is <code>AWS</code>. The identity needs <code>ecr:GetAuthorizationToken</code> via an IAM policy.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg> <span class="pt">Recursos</span><span class="en">Features</span></h4><span class="pt">Lifecycle policies (limpeza de imagens), scan de vulnerabilidades no push, replicação entre Regions e contas, pull through cache e assinatura gerenciada.</span><span class="en">Lifecycle policies (image cleanup), vulnerability scan on push, replication across Regions and accounts, pull through cache and managed signing.</span></div>
-  </div>
-
-  <h3><span class="pt">Push passo a passo</span><span class="en">Push step by step</span></h3>
-<pre><code>aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 111122223333.dkr.ecr.us-east-1.amazonaws.com
-docker tag minha-app:1.4.2 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2
-docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code></pre>
-  <p class="muted"><span class="pt">Se você omitir a tag no <code>docker tag</code>, a tag assumida é <code>latest</code>.</span><span class="en">If you omit the tag in <code>docker tag</code>, the assumed tag is <code>latest</code>.</span></p>
-
-  <h3><span class="pt">Acesso entre contas (repository policy)</span><span class="en">Cross-account access (repository policy)</span></h3>
-  <p><span class="pt">Para a conta de tooling guardar as imagens e as contas de staging e produção baixarem, anexe uma <b>repository policy</b> ao repositório. Exemplo de pull para uma conta (placeholder no lugar do ID real):</span><span class="en">For the tooling account to hold the images and the staging and production accounts to pull them, attach a <b>repository policy</b> to the repository. Example pull access for one account (placeholder instead of the real ID):</span></p>
-<pre><code>{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Sid": "AllowPullFromProd",
-      "Effect": "Allow",
-      "Principal": { "AWS": "arn:aws:iam::&lt;ID_CONTA_PROD&gt;:root" },
-      "Action": [
-        "ecr:BatchGetImage",
-        "ecr:GetDownloadUrlForLayer"
-      ]
-    }
-  ]
-}</code></pre>
-  <ul>
-    <li><span class="pt">O ECR exige que quem autentica tenha <code>ecr:GetAuthorizationToken</code> por política IAM antes de qualquer push ou pull. Essa permissão não vem da repository policy.</span><span class="en">ECR requires the caller to have <code>ecr:GetAuthorizationToken</code> through an IAM policy before any push or pull. That permission does not come from the repository policy.</span></li>
-    <li><span class="pt">A conta que recebe a permissão precisa ter a Region do repositório habilitada, senão a criação da policy dá erro.</span><span class="en">The account being granted access must have the repository's Region enabled, otherwise creating the policy fails.</span></li>
-    <li><span class="pt">Para ações de push, a documentação inclui também <code>BatchCheckLayerAvailability</code>, <code>InitiateLayerUpload</code>, <code>UploadLayerPart</code>, <code>CompleteLayerUpload</code> e <code>PutImage</code>.</span><span class="en">For push, the docs also include <code>BatchCheckLayerAvailability</code>, <code>InitiateLayerUpload</code>, <code>UploadLayerPart</code>, <code>CompleteLayerUpload</code> and <code>PutImage</code>.</span></li>
-  </ul>
-
-  <h3><span class="pt">Tags e digests</span><span class="en">Tags and digests</span></h3>
-  <ul>
-    <li><span class="pt"><b>Tag mutável</b>: o mesmo nome de tag pode ser sobrescrito por um novo push. Com <b>tag immutability</b> ligada, repetir uma tag retorna <code>ImageTagAlreadyExistsException</code>. A imutabilidade vale para todas as tags (com filtros de exceção opcionais).</span><span class="en"><b>Mutable tags</b>: the same tag name can be overwritten by a new push. With <b>tag immutability</b> on, reusing a tag returns <code>ImageTagAlreadyExistsException</code>. Immutability covers all tags (with optional exclusion filters).</span></li>
-    <li><span class="pt">O ECS, por padrão, resolve a tag da task definition para o <b>digest</b> da imagem no momento do deploy e usa o digest nas demais tarefas, para que todas rodem exatamente a mesma imagem. Veja <a href="#ecs">ECS</a>.</span><span class="en">By default ECS resolves the task definition's tag to the image <b>digest</b> at deploy time and uses the digest for the other tasks, so all of them run exactly the same image. See <a href="#ecs">ECS</a>.</span></li>
-  </ul>
-  <div class="callout personal"><strong><span class="pt">Nota pessoal · sem fonte oficial nesta rodada</span><span class="en">Personal note · no official source this round</span></strong>
-    <span class="pt">Boa prática de projeto: usar tags que identifiquem a versão (por exemplo, o hash do commit) em vez de <code>latest</code>. A ideia combina com a tag immutability, mas a recomendação em si não foi lida na documentação.</span>
-    <span class="en">A design habit: use tags that identify the version (for example the commit hash) instead of <code>latest</code>. It pairs well with tag immutability, but the recommendation itself was not read in the docs.</span>
-  </div>
-
-  <div class="callout">
-    <strong><span class="pt">Custos</span><span class="en">Costs</span></strong>
-    <span class="pt">Você paga pelos dados armazenados, pela transferência nos pushes e pulls e por ações opcionais (assinatura, replicação). Valores: <a href="https://aws.amazon.com/ecr/pricing/" rel="noopener">página de preços do ECR</a>. Os números da anotação antiga foram removidos.</span>
-    <span class="en">You pay for data stored, data transfer on pushes and pulls, and optional actions (signing, replication). Values: <a href="https://aws.amazon.com/ecr/pricing/" rel="noopener">ECR pricing page</a>. The numbers in the old note were removed.</span>
-  </div>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Imagens que rodam em ECS, EKS ou EC2 na AWS; repositório central em uma conta de tooling compartilhado entre ambientes.</span><span class="en">Images that run on ECS, EKS or EC2 in AWS; a central repository in a tooling account shared across environments.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Repository policy com <code>Principal: "*"</code> sem condição; tags mutáveis em produção quando você precisa saber exatamente qual imagem rodou; acumular imagens sem lifecycle policy.</span><span class="en">A repository policy with <code>Principal: "*"</code> and no condition; mutable tags in production when you must know exactly which image ran; piling up images with no lifecycle policy.</span></div>
-  </div>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html" rel="noopener">What is Amazon Elastic Container Registry?</a></li>
-      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html" rel="noopener">Pushing a Docker image to an Amazon ECR private repository</a></li>
-      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-policy-examples.html" rel="noopener">Private repository policy examples in Amazon ECR</a></li>
-      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html" rel="noopener">Preventing image tags from being overwritten</a></li>
-      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html" rel="noopener">ECS: Deploy services by replacing tasks (resolução de digest)</a></li>
-    </ul>
-  </div>
-</section>
-
-<!-- ============ ECS ============ -->
-<section class="topic" id="ecs">
-  <header>
-    <span class="tag"><span class="pt">Computação · 10</span><span class="en">Compute · 10</span></span>
-    <h2>ECS</h2>
-    <p class="lead"><span class="pt">Amazon Elastic Container Service: orquestrador totalmente gerenciado para implantar, gerenciar e escalar aplicações em containers.</span><span class="en">Amazon Elastic Container Service: a fully managed orchestrator to deploy, manage and scale containerized applications.</span></p>
-  </header>
-
-  <div class="flow">
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR</span><span class="arrow">→</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</span><span class="arrow">→</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</span><span class="arrow">→</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Tasks <span class="pt">no cluster</span><span class="en">in the cluster</span></span><span class="arrow">←</span>
-    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB</span>
-  </div>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</h4><span class="pt">O "projeto" da aplicação: quais containers rodam e como.</span><span class="en">The application's "blueprint": which containers run and how.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg> Cluster</h4><span class="pt">A infraestrutura onde a aplicação roda.</span><span class="en">The infrastructure the application runs on.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Task</h4><span class="pt">Uma execução da aplicação, como um job em lote que trabalha e termina.</span><span class="en">One run of the application, like a batch job that works and stops.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</h4><span class="pt">Aplicação de longa duração e sem estado: o ECS mantém o número desejado de tasks rodando e faz os deploys.</span><span class="en">A long-running stateless application: ECS keeps the desired number of tasks running and performs deployments.</span></div>
-  </div>
-  <p><span class="pt"><b>Capacidade</b> (onde os containers rodam): Fargate (serverless, sem gerenciar servidores), instâncias EC2 que você gerencia, ECS Managed Instances (EC2 com a infraestrutura gerenciada pela AWS) ou servidores externos com ECS Anywhere. O custo depende da capacidade escolhida; veja as páginas de preços do ECS e do Fargate.</span><span class="en"><b>Capacity</b> (where containers run): Fargate (serverless, no servers to manage), EC2 instances you manage, ECS Managed Instances (EC2 with AWS-managed infrastructure) or external servers with ECS Anywhere. Cost depends on the chosen capacity; see the ECS and Fargate pricing pages.</span></p>
-
-  <h3><span class="pt">Deploy com rolling update</span><span class="en">Rolling update deployment</span></h3>
-  <p><span class="pt">No tipo de deploy <i>rolling update</i>, o scheduler do ECS substitui as tasks em execução por tasks novas. Dois parâmetros do serviço controlam o ritmo:</span><span class="en">With the <i>rolling update</i> deployment type, the ECS scheduler replaces running tasks with new ones. Two service parameters control the pace:</span></p>
-  <div class="scroll-x"><table>
-    <tr><th><span class="pt">Parâmetro</span><span class="en">Parameter</span></th><th><span class="pt">Significado</span><span class="en">Meaning</span></th><th><span class="pt">Exemplo da documentação</span><span class="en">Docs example</span></th></tr>
-    <tr><td><code>minimumHealthyPercent</code></td><td><span class="pt">Mínimo de tasks saudáveis durante o deploy, em % do desejado (arredonda para cima).</span><span class="en">Minimum healthy tasks during the deployment, as a % of desired (rounded up).</span></td><td><span class="pt">50% com 4 tasks: pode parar 2 antes de iniciar 2 novas.</span><span class="en">50% with 4 tasks: it can stop 2 before starting 2 new ones.</span></td></tr>
-    <tr><td><code>maximumPercent</code></td><td><span class="pt">Máximo de tasks em execução durante o deploy, em % do desejado (arredonda para baixo).</span><span class="en">Maximum running tasks during the deployment, as a % of desired (rounded down).</span></td><td><span class="pt">200% com 4 tasks: pode iniciar 4 novas antes de parar as 4 antigas.</span><span class="en">200% with 4 tasks: it can start 4 new ones before stopping the 4 old ones.</span></td></tr>
-  </table></div>
-  <ul>
-    <li><span class="pt">Garanta que o scheduler consiga parar ou iniciar <b>pelo menos uma</b> task no deploy. Com 75% mínimo e 2 tasks, nada pode ser parado e o deploy trava.</span><span class="en">Make sure the scheduler can stop or start <b>at least one</b> task during a deployment. With 75% minimum and 2 tasks, nothing can be stopped and the deployment gets stuck.</span></li>
-    <li><span class="pt">Para detectar falha rápido, use o <b>deployment circuit breaker</b> (falha quando as tasks não conseguem iniciar) e/ou <b>alarmes do CloudWatch</b> (falha por métricas da aplicação). Ambos suportam <b>rollback</b> para a revisão anterior do serviço.</span><span class="en">To detect failure fast, use the <b>deployment circuit breaker</b> (fails when tasks cannot start) and/or <b>CloudWatch alarms</b> (fails on application metrics). Both support <b>rollback</b> to the previous service revision.</span></li>
-    <li><span class="pt">O ECS resolve a tag da imagem para o <b>digest</b> no início do deploy e usa o digest nas outras tasks, garantindo a mesma imagem em todas. Para pegar um digest atualizado, force um novo deploy (<code>forceNewDeployment</code>).</span><span class="en">ECS resolves the image tag to the <b>digest</b> at the start of the deployment and uses the digest for the other tasks, ensuring the same image everywhere. To pick up an updated digest, force a new deployment (<code>forceNewDeployment</code>).</span></li>
-    <li><span class="pt">Variáveis de ambiente vindas do Parameter Store são resolvidas quando a task inicia: uma task em execução só vê o valor novo após um novo deploy. Veja <a href="#ssm">Systems Manager</a> e <a href="#secrets">Secrets Manager</a>.</span><span class="en">Environment variables from Parameter Store are resolved when the task starts: a running task only sees the new value after a new deployment. See <a href="#ssm">Systems Manager</a> and <a href="#secrets">Secrets Manager</a>.</span></li>
-  </ul>
-<pre><code>aws ecs update-service --cluster meu-cluster --service minha-api --force-new-deployment</code></pre>
-
-  <h3><span class="pt">Com o load balancer</span><span class="en">With the load balancer</span></h3>
-  <p><span class="pt">O ALB consegue registrar tasks do ECS em um target group, inclusive escolhendo uma porta livre quando a task é agendada. Os health checks do target group definem se a task está saudável. Veja <a href="#elb">Load Balancer</a>.</span><span class="en">The ALB can register ECS tasks in a target group, even choosing an unused port when the task is scheduled. The target group's health checks decide whether a task is healthy. See <a href="#elb">Load Balancer</a>.</span></p>
-
-  <div class="grid">
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações em containers que precisam de deploy repetível, rollback e escala sem operar um plano de controle próprio.</span><span class="en">Containerized apps needing repeatable deploys, rollback and scaling without running your own control plane.</span></div>
-    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Cargas que não são containers; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> que impedem qualquer substituição; esperar que um valor mudado no Parameter Store apareça em tasks já rodando.</span><span class="en">Non-container workloads; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> values that block any replacement; expecting a changed Parameter Store value to show up in running tasks.</span></div>
-  </div>
-
-  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
-  <details class="fc"><summary><span class="pt">Qual a diferença entre task e service?</span><span class="en">What is the difference between a task and a service?</span></summary><div class="ans"><span class="pt">Task é uma execução (pode terminar). Service mantém um número desejado de tasks rodando continuamente.</span><span class="en">A task is one run (it may stop). A service keeps a desired number of tasks running continuously.</span></div></details>
-  <details class="fc"><summary><span class="pt">Como garantir que um deploy com problema volte sozinho?</span><span class="en">How do you make a bad deployment roll back by itself?</span></summary><div class="ans"><span class="pt">Habilite o circuit breaker e/ou alarmes do CloudWatch com rollback.</span><span class="en">Enable the circuit breaker and/or CloudWatch alarms with rollback.</span></div></details>
-
-  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
-    <ul>
-      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html" rel="noopener">What is Amazon Elastic Container Service?</a></li>
-      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html" rel="noopener">Deploy Amazon ECS services by replacing tasks</a></li>
-      <li><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html" rel="noopener">ALB: What is an Application Load Balancer? (integração com ECS)</a></li>
-      <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html" rel="noopener">Parameter Store (variáveis resolvidas na inicialização da task)</a></li>
-    </ul>
-  </div>
-</section>
-
 <!-- ============ VPC ============ -->
 <section class="topic" id="vpc">
   <header>
-    <span class="tag"><span class="pt">Rede · 11</span><span class="en">Networking · 11</span></span>
+    <span class="tag"><span class="pt">Rede · 05</span><span class="en">Networking · 05</span></span>
     <h2>VPC</h2>
     <p class="lead"><span class="pt">Amazon Virtual Private Cloud: uma rede virtual logicamente isolada, parecida com a de um data center tradicional, onde você lança seus recursos AWS.</span><span class="en">Amazon Virtual Private Cloud: a logically isolated virtual network, similar to a traditional data center network, where you launch your AWS resources.</span></p>
   </header>
@@ -1603,7 +1256,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ SG ============ -->
 <section class="topic" id="sg">
   <header>
-    <span class="tag"><span class="pt">Rede · 12</span><span class="en">Networking · 12</span></span>
+    <span class="tag"><span class="pt">Rede · 06</span><span class="en">Networking · 06</span></span>
     <h2>Security Groups &amp; Prefix Lists</h2>
     <p class="lead"><span class="pt">Security group: firewall virtual que controla o tráfego que pode chegar e sair dos recursos associados a ele. Prefix list: um conjunto de CIDRs reutilizável nas regras.</span><span class="en">Security group: a virtual firewall controlling the traffic allowed to reach and leave the resources it is associated with. Prefix list: a reusable set of CIDRs for your rules.</span></p>
   </header>
@@ -1691,7 +1344,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ ELB ============ -->
 <section class="topic" id="elb">
   <header>
-    <span class="tag"><span class="pt">Rede · 13</span><span class="en">Networking · 13</span></span>
+    <span class="tag"><span class="pt">Rede · 07</span><span class="en">Networking · 07</span></span>
     <h2>Application Load Balancer</h2>
     <p class="lead"><span class="pt">O Elastic Load Balancing distribui o tráfego entre vários destinos (instâncias EC2, containers, IPs) em uma ou mais zonas de disponibilidade e só envia para destinos saudáveis. O ALB faz isso na camada de aplicação (HTTP/HTTPS).</span><span class="en">Elastic Load Balancing distributes traffic across multiple targets (EC2 instances, containers, IPs) in one or more Availability Zones and only sends to healthy targets. The ALB does this at the application layer (HTTP/HTTPS).</span></p>
   </header>
@@ -1797,7 +1450,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ ACM ============ -->
 <section class="topic" id="acm">
   <header>
-    <span class="tag"><span class="pt">Rede · 14</span><span class="en">Networking · 14</span></span>
+    <span class="tag"><span class="pt">Rede · 08</span><span class="en">Networking · 08</span></span>
     <h2>ACM (Certificate Manager)</h2>
     <p class="lead"><span class="pt">AWS Certificate Manager emite e gerencia certificados SSL/TLS para usar com serviços integrados, como o Application Load Balancer. A validação por DNS prova que você controla o domínio.</span><span class="en">AWS Certificate Manager issues and manages SSL/TLS certificates for integrated services such as the Application Load Balancer. DNS validation proves you control the domain.</span></p>
   </header>
@@ -1847,10 +1500,351 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
   </div>
 </section>
 
+<!-- ============ EC2 ============ -->
+<section class="topic" id="ec2">
+  <header>
+    <span class="tag"><span class="pt">Computação · 09</span><span class="en">Compute · 09</span></span>
+    <h2>EC2 &amp; Auto Scaling</h2>
+    <p class="lead"><span class="pt">Amazon EC2 entrega servidores virtuais na nuvem. O Auto Scaling mantém a quantidade certa de instâncias para a sua carga.</span><span class="en">Amazon EC2 provides virtual servers in the cloud. Auto Scaling keeps the right number of instances for your load.</span></p>
+  </header>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-disc"/></svg> AMI</h4><span class="pt">Amazon Machine Image: fornece o software para iniciar a instância e um mapeamento de dispositivos de bloco (os discos a anexar). É específica de Region, sistema operacional, arquitetura de processador, tipo de volume raiz e tipo de virtualização. Dá para copiar para outra Region e compartilhar com outras contas.</span><span class="en">Amazon Machine Image: provides the software to boot the instance and a block device mapping (the disks to attach). It is specific to Region, operating system, processor architecture, root volume type and virtualization type. You can copy it to another Region and share it with other accounts.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-bolt"/></svg> Instance type</h4><span class="pt">Define o hardware (CPU, memória, armazenamento, rede). Os tipos são agrupados em famílias; os nomes seguem uma convenção (família, geração, processador, capacidades, tamanho). Há instâncias <i>burstable</i> (como a série T). Como o faturamento é por segundo, é barato testar vários tipos.</span><span class="en">Defines the hardware (CPU, memory, storage, network). Types are grouped into families; names follow a convention (family, generation, processor, capabilities, size). There are <i>burstable</i> instances (such as the T series). Since billing is per second, testing several types is cheap.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-globe"/></svg> Public IPv4</h4><span class="pt">O IP público automático vem do pool da Amazon e <b>não</b> é seu: é liberado ao parar, hibernar ou encerrar, e a instância recebe outro ao iniciar de novo. Para um endereço fixo, use <a href="#eip">Elastic IP</a>. A AWS cobra por todo IPv4 público.</span><span class="en">The automatic public IP comes from Amazon's pool and is <b>not</b> yours: it is released on stop, hibernate or terminate, and the instance gets a new one on start. For a fixed address use an <a href="#eip">Elastic IP</a>. AWS charges for every public IPv4 address.</span></div>
+  </div>
+
+  <h3>Snapshot vs. <span class="pt">Imagem</span><span class="en">Image</span></h3>
+  <div class="scroll-x"><table>
+    <tr><th></th><th>Snapshot (EBS)</th><th><span class="pt">Imagem (AMI)</span><span class="en">Image (AMI)</span></th></tr>
+    <tr><td><b><span class="pt">O que é</span><span class="en">What it is</span></b></td><td><span class="pt">Cópia pontual (point-in-time) de um volume EBS, <b>incremental</b>: guarda só os blocos alterados desde o último snapshot.</span><span class="en">A point-in-time copy of an EBS volume, <b>incremental</b>: it stores only the blocks changed since the last snapshot.</span></td><td><span class="pt">Software de boot + mapeamento de discos, usado para lançar instâncias.</span><span class="en">Boot software + disk mapping, used to launch instances.</span></td></tr>
+    <tr><td><b><span class="pt">Uso</span><span class="en">Use</span></b></td><td><span class="pt">Backup e restauração: cria um volume novo idêntico ao original no momento do snapshot.</span><span class="en">Backup and restore: creates a new volume identical to the original at snapshot time.</span></td><td><span class="pt">Clonar a configuração de uma instância: lançar várias com a mesma base.</span><span class="en">Cloning an instance's setup: launch many from the same base.</span></td></tr>
+    <tr><td><b><span class="pt">Onde fica</span><span class="en">Where it lives</span></b></td><td><span class="pt">Em buckets do S3 que você não acessa diretamente; replicado entre as AZs da Region.</span><span class="en">In S3 buckets you cannot access directly; replicated across the Region's AZs.</span></td><td><span class="pt">Dentro da Region; pode ser copiada e compartilhada.</span><span class="en">Within a Region; can be copied and shared.</span></td></tr>
+  </table></div>
+  <div class="callout warn"><strong><span class="pt">Pegadinhas</span><span class="en">Gotchas</span></strong>
+    <span class="pt">A AWS <b>não</b> faz backup automático dos volumes EBS: criar snapshots (ou automatizá-los com Data Lifecycle Manager ou AWS Backup) é responsabilidade sua. Como snapshots são incrementais, apagar um nem sempre reduz o custo de armazenamento.</span>
+    <span class="en">AWS does <b>not</b> automatically back up EBS volumes: creating snapshots (or automating them with Data Lifecycle Manager or AWS Backup) is your responsibility. Because snapshots are incremental, deleting one does not always reduce storage cost.</span>
+  </div>
+  <div class="callout personal"><strong><span class="pt">Não verificado</span><span class="en">Not verified</span></strong>
+    <span class="pt">A anotação antiga dizia que "toda imagem contém um snapshot" e que "snapshot não cria instâncias". As páginas lidas confirmam o papel de cada um, mas não essa relação exata; consulte a documentação de criação de AMIs antes de depender dela.</span>
+    <span class="en">The old note said "every image contains a snapshot" and "a snapshot cannot launch instances". The pages read confirm each one's role but not that exact relation; check the AMI creation docs before relying on it.</span>
+  </div>
+
+  <h3>Launch Template</h3>
+  <p><span class="pt">Especifica a configuração de uma instância: ID da AMI, tipo de instância, key pair, security groups e outros parâmetros. Tem <b>versões</b>: dá para manter uma base e criar versões novas (por exemplo, com a AMI da última versão da aplicação). A AWS recomenda launch templates em vez de launch configurations, que não suportam recursos como misturar Spot e On-Demand ou vários tipos de instância.</span><span class="en">Specifies an instance's configuration: AMI ID, instance type, key pair, security groups and other parameters. It has <b>versions</b>: you can keep a base and create new versions (for example with the AMI of the latest app version). AWS recommends launch templates over launch configurations, which lack features such as mixing Spot and On-Demand or multiple instance types.</span></p>
+
+  <h3>Auto Scaling Group (ASG)</h3>
+  <p><span class="pt">Coleção de instâncias tratada como uma unidade. Você define:</span><span class="en">A collection of instances treated as one unit. You define:</span></p>
+  <ol>
+    <li><b>Minimum size:</b> <span class="pt">o grupo nunca fica abaixo disso.</span><span class="en">the group never goes below it.</span></li>
+    <li><b>Maximum size:</b> <span class="pt">o grupo nunca passa disso.</span><span class="en">the group never exceeds it.</span></li>
+    <li><b>Desired capacity:</b> <span class="pt">quantas instâncias você quer rodando agora (dentro do mínimo e máximo).</span><span class="en">how many instances you want running now (within the min and max).</span></li>
+  </ol>
+  <div class="callout good"><strong><span class="pt">Substituição automática de instâncias</span><span class="en">Automatic instance replacement</span></strong>
+    <span class="pt">O ASG monitora a saúde das instâncias (health checks do EC2, e opcionalmente os do load balancer ou checks próprios) e substitui as encerradas ou comprometidas para manter a capacidade desejada. Ele também distribui as instâncias entre as zonas de disponibilidade e registra/remove instâncias do <a href="#elb">load balancer</a> automaticamente.</span>
+    <span class="en">The ASG monitors instance health (EC2 health checks, and optionally the load balancer's or custom checks) and replaces terminated or impaired instances to keep the desired capacity. It also spreads instances across Availability Zones and registers/deregisters instances with the <a href="#elb">load balancer</a> automatically.</span>
+  </div>
+  <p class="muted"><span class="pt">Não há cobrança adicional pelo Auto Scaling; você paga pelos recursos usados (instâncias, volumes EBS, alarmes do CloudWatch).</span><span class="en">There is no additional charge for Auto Scaling; you pay for the resources used (instances, EBS volumes, CloudWatch alarms).</span></p>
+
+  <h3>Scaling policies</h3>
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-target"/></svg> Target tracking</h4><span class="pt">Escolhe uma métrica e um valor-alvo, como um termostato. Recomendada pela AWS; use métricas que variem de forma inversamente proporcional à capacidade (CPU média, requisições por target). O Auto Scaling cria os alarmes do CloudWatch por você.</span><span class="en">Pick a metric and a target value, like a thermostat. Recommended by AWS; use metrics that move inversely with capacity (average CPU, request count per target). Auto Scaling creates the CloudWatch alarms for you.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-steps"/></svg> Step / simple</h4><span class="pt">Ajustes por faixa de violação do alarme (step) ou um único ajuste com cooldown (simple). Cuidado ao combinar com target tracking: conflitos podem causar comportamento indesejado.</span><span class="en">Adjustments by alarm-breach size (step) or one adjustment with a cooldown (simple). Be careful combining with target tracking: conflicts can cause unwanted behavior.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-calendar"/></svg> Scheduled</h4><span class="pt">Ações agendadas mudam a capacidade em horários definidos (única ou recorrente, com cron e fuso horário). Bom para picos previsíveis.</span><span class="en">Scheduled actions change capacity at set times (one-off or recurring, with cron and time zone). Good for predictable peaks.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-sparkle"/></svg> Predictive</h4><span class="pt">Analisa a carga histórica para achar padrões diários ou semanais e prever a demanda, lançando capacidade antes do pico. Indicado para tráfego cíclico e aplicações lentas para iniciar.</span><span class="en">Analyzes historical load to detect daily or weekly patterns and forecast demand, launching capacity ahead of the peak. Suited to cyclical traffic and slow-starting apps.</span></div>
+  </div>
+  <p class="muted"><span class="pt">Sempre dentro do mínimo e do máximo do grupo. Se mais de uma política pedir mudança ao mesmo tempo, prevalece a que resulta em mais capacidade.</span><span class="en">Always within the group's min and max. If more than one policy asks for a change at once, the one giving the most capacity wins.</span></p>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicação com carga variável ou que precisa se recuperar sozinha de falhas; servidores idênticos atrás de um load balancer.</span><span class="en">Apps with variable load or that must self-heal from failures; identical servers behind a load balancer.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Servidor único com estado em disco local, sem automação de configuração; quando containers no <a href="#ecs">ECS</a> já resolvem o problema.</span><span class="en">A single server with state on local disk and no configuration automation; when containers on <a href="#ecs">ECS</a> already solve the problem.</span></div>
+  </div>
+
+  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
+  <details class="fc"><summary><span class="pt">O IP público automático de uma instância continua o mesmo depois de parar e iniciar?</span><span class="en">Does an instance's automatic public IP stay the same after stop and start?</span></summary><div class="ans"><span class="pt">Não. Ele é liberado ao parar e um novo é atribuído ao iniciar. Use Elastic IP para um endereço fixo.</span><span class="en">No. It is released on stop and a new one is assigned on start. Use an Elastic IP for a fixed address.</span></div></details>
+  <details class="fc"><summary><span class="pt">O que o ASG faz com uma instância comprometida?</span><span class="en">What does the ASG do with an impaired instance?</span></summary><div class="ans"><span class="pt">Substitui, para manter a capacidade desejada.</span><span class="en">Replaces it to keep the desired capacity.</span></div></details>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-types.html" rel="noopener">Amazon EC2 instance types</a></li>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AMIs.html" rel="noopener">Amazon Machine Images in Amazon EC2</a></li>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html" rel="noopener">Amazon EC2 instance IP addressing</a></li>
+      <li><a href="https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html" rel="noopener">Amazon EBS snapshots</a></li>
+      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html" rel="noopener">What is Amazon EC2 Auto Scaling?</a></li>
+      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/launch-templates.html" rel="noopener">Auto Scaling launch templates</a></li>
+      <li><a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/as-scale-based-on-demand.html" rel="noopener">Dynamic scaling</a> · <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-scheduled-scaling.html" rel="noopener">Scheduled scaling</a> · <a href="https://docs.aws.amazon.com/autoscaling/ec2/userguide/ec2-auto-scaling-predictive-scaling.html" rel="noopener">Predictive scaling</a></li>
+    </ul>
+    <p><span class="pt"><b>Corrigido:</b> a anotação antiga citava "t4.micro" como família; a documentação lida lista a série <code>T4g</code> (e <code>T3</code>), então os exemplos de tipos foram removidos. Valores como "launch template é gratuito" e o "CPU ou memória" no target tracking também saíram por falta de suporte nas páginas lidas.</span><span class="en"><b>Corrected:</b> the old note cited "t4.micro" as a family; the docs read list the <code>T4g</code> series (and <code>T3</code>), so type examples were removed. Claims like "launch templates are free" and "CPU or memory" for target tracking also left for lack of support in the pages read.</span></p>
+  </div>
+</section>
+
+<!-- ============ SSH ============ -->
+<section class="topic" id="ssh">
+  <header>
+    <span class="tag"><span class="pt">Computação · 10</span><span class="en">Compute · 10</span></span>
+    <h2>SSH (Secure Shell)</h2>
+    <p class="lead"><span class="pt">Forma clássica de abrir um terminal remoto em uma instância EC2 Linux, usando um par de chaves.</span><span class="en">The classic way to open a remote terminal on a Linux EC2 instance, using a key pair.</span></p>
+  </header>
+
+  <h3><span class="pt">Pré-requisitos segundo a documentação da EC2</span><span class="en">Prerequisites per the EC2 docs</span></h3>
+  <ul>
+    <li><span class="pt">A instância passou nas status checks (pode levar alguns minutos).</span><span class="en">The instance passed its status checks (it can take a few minutes).</span></li>
+    <li><span class="pt">Você tem a chave privada (<code>.pem</code>) do key pair e as permissões do arquivo configuradas (a página de pré-requisitos da EC2 detalha isso).</span><span class="en">You have the key pair's private key (<code>.pem</code>) with file permissions set (the EC2 prerequisites page explains this).</span></li>
+    <li><span class="pt">O <a href="#sg">Security Group</a> da instância libera SSH (porta 22) <b>só do seu IP</b>. Abrir 22 para <code>0.0.0.0/0</code> deixa qualquer um tentar entrar.</span><span class="en">The instance's <a href="#sg">Security Group</a> allows SSH (port 22) <b>only from your IP</b>. Opening 22 to <code>0.0.0.0/0</code> lets anyone try.</span></li>
+  </ul>
+  <h3><span class="pt">Conectar</span><span class="en">Connect</span></h3>
+<pre><code>ssh -i /caminho/minha-chave.pem usuario-da-instancia@dns-publico-da-instancia</code></pre>
+  <p><span class="pt">No primeiro acesso, o SSH mostra a impressão digital (fingerprint) do servidor. A documentação sugere conferi-la com a da instância: se não bater, pode ser um ataque man-in-the-middle.</span><span class="en">On first connection SSH shows the server fingerprint. The docs suggest checking it against the instance's: if it does not match, it may be a man-in-the-middle attack.</span></p>
+  <div class="callout good"><strong><span class="pt">Alternativa sem porta 22</span><span class="en">Alternative without port 22</span></strong>
+    <span class="pt">O Session Manager (Systems Manager) permite acessar nós sem abrir portas de entrada, sem bastion host e sem chaves SSH. Veja <a href="#ssm">Systems Manager</a>.</span>
+    <span class="en">Session Manager (Systems Manager) lets you access nodes with no inbound ports, no bastion hosts and no SSH keys. See <a href="#ssm">Systems Manager</a>.</span>
+  </div>
+
+  <div class="callout personal"><strong><span class="pt">Nota pessoal · sem fonte oficial da AWS</span><span class="en">Personal note · no official AWS source</span></strong>
+    <span class="pt">As explicações abaixo (handshake e camadas TCP/IP) são conteúdo didático geral sobre o protocolo SSH, mantido das anotações originais. Elas não vêm da documentação da AWS e não foram verificadas nela. Também ficaram como nota pessoal: <code>chmod 400</code> na chave e o usuário padrão <code>ec2-user</code> no Amazon Linux.</span>
+    <span class="en">The explanations below (handshake and TCP/IP layers) are general teaching content about the SSH protocol, kept from the original notes. They do not come from AWS documentation and were not verified there. Also left as personal notes: <code>chmod 400</code> on the key and the default <code>ec2-user</code> on Amazon Linux.</span>
+  </div>
+
+  <h3><span class="pt">Handshake passo a passo</span><span class="en">Handshake step by step</span></h3>
+  <div class="widget" data-stepper>
+    <div class="wtitle"><span class="pt">Animação</span><span class="en">Animation</span></div>
+    <div class="stage">
+      <div class="line"></div>
+      <span class="node c"><svg class="icon" aria-hidden="true"><use href="#i-client"/></svg> Client</span>
+      <span class="node s"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> Server</span>
+      <div class="dot"></div>
+    </div>
+    <ol class="steps">
+      <li data-dir="s2c"><span class="pt">O servidor envia sua chave pública de host (a "impressão digital" dele).</span><span class="en">The server sends its public host key (its "fingerprint").</span></li>
+      <li data-dir="none"><span class="pt">O cliente verifica se conhece essa chave, sabendo quem é o outro lado.</span><span class="en">The client checks whether it knows that key, knowing who is on the other side.</span></li>
+      <li data-dir="both" data-enc="1"><span class="pt">Ambos geram um segredo compartilhado pela matemática, sem transmiti-lo. O canal passa a ser criptografado.</span><span class="en">Both derive a shared secret through math, without ever sending it. The channel is now encrypted.</span></li>
+      <li data-dir="c2s" data-enc="1"><span class="pt">O cliente envia o usuário e sua chave pública (ou senha).</span><span class="en">The client sends the username and its public key (or password).</span></li>
+      <li data-dir="s2c" data-enc="1"><span class="pt">O servidor reconhece a chave e envia um desafio: uma mensagem aleatória trancada com a chave pública do cliente.</span><span class="en">The server recognizes the key and sends a challenge: a random message locked with the client's public key.</span></li>
+      <li data-dir="none" data-enc="1"><span class="pt">O cliente destranca a mensagem com a chave privada (só ela consegue) e a assina.</span><span class="en">The client unlocks the message with its private key (only it can) and signs it.</span></li>
+      <li data-dir="c2s" data-enc="1"><span class="pt">A assinatura volta ao servidor, provando a posse da chave privada.</span><span class="en">The signature goes back to the server, proving possession of the private key.</span></li>
+      <li data-dir="s2c" data-enc="1"><span class="pt">O servidor confirma e libera o terminal. Agora é possível executar comandos com segurança.</span><span class="en">The server confirms and opens the terminal. Now you can run commands securely.</span></li>
+    </ol>
+    <div class="row">
+      <button class="btn prev">◀</button><button class="btn primary next"><span class="pt">Próximo</span><span class="en">Next</span> ▶</button><button class="btn play">▶▶ Auto</button>
+    </div>
+  </div>
+
+  <h3><span class="pt">Protocolos e TCP/IP</span><span class="en">Protocols and TCP/IP</span></h3>
+  <p><span class="pt">Um protocolo é um contrato: regras de como os dados são formatados, transmitidos e recebidos. O SSH é da camada de <b>Aplicação</b> e roda sobre TCP/IP.</span><span class="en">A protocol is a contract: rules for how data is formatted, sent and received. SSH is an <b>Application</b>-layer protocol running on top of TCP/IP.</span></p>
+  <table>
+    <tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Função</span><span class="en">Role</span></th></tr>
+    <tr><td>4 · <span class="pt">Aplicação</span><span class="en">Application</span></td><td><span class="pt">Onde os programas trabalham: SSH, SMTP, HTTP.</span><span class="en">Where programs work: SSH, SMTP, HTTP.</span></td></tr>
+    <tr><td>3 · <span class="pt">Transporte (TCP)</span><span class="en">Transport (TCP)</span></td><td><span class="pt">Abre a conexão e garante que todos os pedaços cheguem sem erros.</span><span class="en">Opens the connection and ensures every piece arrives without errors.</span></td></tr>
+    <tr><td>2 · <span class="pt">Internet (IP)</span><span class="en">Internet (IP)</span></td><td><span class="pt">Endereçamento: garante que os pacotes cheguem ao destino.</span><span class="en">Addressing: ensures packets reach their destination.</span></td></tr>
+    <tr><td>1 · Link</td><td><span class="pt">Meio físico: cabos ethernet, wi-fi.</span><span class="en">Physical medium: ethernet cables, wi-fi.</span></td></tr>
+  </table>
+
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Depuração pontual em instâncias de teste, com porta 22 restrita ao seu IP.</span><span class="en">Occasional debugging on test instances, with port 22 limited to your IP.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Porta 22 aberta para a internet; acesso rotineiro em produção (prefira Session Manager).</span><span class="en">Port 22 open to the internet; routine production access (prefer Session Manager).</span></div>
+  </div>
+
+  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
+  <details class="fc"><summary><span class="pt">De onde deve vir o tráfego SSH liberado no Security Group?</span><span class="en">Where should the SSH traffic allowed in the Security Group come from?</span></summary><div class="ans"><span class="pt">Do seu IP (ou faixa) específico, nunca de <code>0.0.0.0/0</code>.</span><span class="en">From your specific IP (or range), never <code>0.0.0.0/0</code>.</span></div></details>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/connect-linux-inst-ssh.html" rel="noopener">Connect to your Linux instance using an SSH client</a></li>
+      <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager.html" rel="noopener">AWS Systems Manager Session Manager</a></li>
+      <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html" rel="noopener">Security groups: best practices (portas 22/3389)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ EIP ============ -->
+<section class="topic" id="eip">
+  <header>
+    <span class="tag"><span class="pt">Computação · 11</span><span class="en">Compute · 11</span></span>
+    <h2><span class="pt">IPs Elásticos</span><span class="en">Elastic IPs</span></h2>
+    <p class="lead"><span class="pt">Um endereço IPv4 público e estático, pensado para a computação em nuvem dinâmica.</span><span class="en">A static public IPv4 address designed for dynamic cloud computing.</span></p>
+  </header>
+  <p><span class="pt">O Elastic IP é alocado à sua conta e é seu até você liberá-lo. Você pode "mascarar" a falha de uma instância remapeando o endereço para outra instância da conta, ou usá-lo em um registro DNS do seu domínio.</span><span class="en">An Elastic IP is allocated to your account and stays yours until you release it. You can mask an instance failure by remapping the address to another instance in your account, or use it in a DNS record for your domain.</span></p>
+  <div class="flow">
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 A <svg class="icon" aria-hidden="true"><use href="#i-x"/></svg></span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-pin"/></svg> Elastic IP</span><span class="arrow">⇢</span><span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> EC2 B <svg class="icon" aria-hidden="true"><use href="#i-check"/></svg></span>
+  </div>
+  <ul>
+    <li><span class="pt">É específico de uma Region e não pode ser movido para outra. Não há Elastic IP para IPv6.</span><span class="en">It is specific to one Region and cannot be moved to another. There are no Elastic IPs for IPv6.</span></li>
+    <li><span class="pt">Ao associar um Elastic IP a uma instância que já tinha IP público automático, esse IP automático é liberado e não pode ser reaproveitado.</span><span class="en">When you associate an Elastic IP with an instance that had an automatic public IP, that automatic IP is released and cannot be reused.</span></li>
+    <li><span class="pt">Um Elastic IP desassociado continua alocado (e cobrado) até você liberá-lo.</span><span class="en">A disassociated Elastic IP stays allocated (and billed) until you release it.</span></li>
+    <li><span class="pt">Há uma cota padrão de Elastic IPs por Region, que pode ser aumentada no Service Quotas. Consulte a página oficial para o valor atual.</span><span class="en">There is a default quota of Elastic IPs per Region, which can be raised in Service Quotas. See the official page for the current value.</span></li>
+  </ul>
+  <div class="callout warn"><strong><span class="pt">Custo</span><span class="en">Cost</span></strong>
+    <span class="pt">A AWS cobra por <b>todos</b> os endereços IPv4 públicos, estejam em uso ou ociosos, incluindo os de instâncias em execução. Os valores estão na aba "Public IPv4 Address" da <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">página de preços da VPC</a>. A anotação antiga dizia que o IP era grátis enquanto associado, o que contradiz a documentação atual.</span>
+    <span class="en">AWS charges for <b>all</b> public IPv4 addresses, in use or idle, including those on running instances. Values are on the "Public IPv4 Address" tab of the <a href="https://aws.amazon.com/vpc/pricing/" rel="noopener">VPC pricing page</a>. The old note said it was free while associated, which contradicts the current docs.</span>
+  </div>
+  <p><span class="pt">A documentação ainda sugere reduzir o número de IPv4 públicos usando um load balancer na frente das instâncias, desligando o "auto-assign public IP" onde não for preciso.</span><span class="en">The docs also suggest reducing the number of public IPv4 addresses by putting a load balancer in front of the instances and turning off "auto-assign public IP" where not needed.</span></p>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Endereço fixo que precisa sobreviver à troca de instância e que alguém registra (DNS, allowlist de um parceiro).</span><span class="en">A fixed address that must survive an instance swap and that someone registers (DNS, a partner's allowlist).</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Quando um load balancer com nome DNS (<a href="#route53">Alias</a>) resolve; e o IP não deve ficar ocioso, pois é cobrado.</span><span class="en">When a load balancer with a DNS name (<a href="#route53">Alias</a>) solves it; and do not leave it idle, since it is billed.</span></div>
+  </div>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/elastic-ip-addresses-eip.html" rel="noopener">Elastic IP addresses</a></li>
+      <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html" rel="noopener">Amazon EC2 instance IP addressing</a></li>
+      <li><a href="https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html" rel="noopener">What is Amazon VPC? (seção de preços de IPv4 público)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ ECR ============ -->
+<section class="topic" id="ecr">
+  <header>
+    <span class="tag"><span class="pt">Computação · 12</span><span class="en">Compute · 12</span></span>
+    <h2>ECR</h2>
+    <p class="lead"><span class="pt">Elastic Container Registry: registro gerenciado de imagens de container (Docker, OCI) dentro da AWS, com permissões via IAM.</span><span class="en">Elastic Container Registry: a managed registry for container images (Docker, OCI) inside AWS, with permissions through IAM.</span></p>
+  </header>
+
+  <p class="muted"><span class="pt">Para enviar a imagem automaticamente a cada push, com um repositório por conta e tags imutáveis, veja <a href="../github-aws-oidc/index.html#ecr">GitHub para AWS, etapa 6</a>.</span><span class="en">To push the image automatically on every push, with one repository per account and immutable tags, see <a href="../github-aws-oidc/index.html#ecr">GitHub to AWS, step 6</a>.</span></p>
+
+
+  <div class="flow">
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-gear"/></svg> CI <span class="pt">(build)</span><span class="en">(build)</span></span><span class="arrow">push →</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR <span class="pt">(conta tooling)</span><span class="en">(tooling account)</span></span><span class="arrow">← pull</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-server"/></svg> ECS / EKS / EC2 <span class="pt">(staging, prod)</span><span class="en">(staging, prod)</span></span>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-folder"/></svg> Repository</h4><span class="pt">Repositório privado com permissões baseadas em recurso. Ele precisa existir antes do push, ou você precisa de um <i>repository creation template</i>.</span><span class="en">A private repository with resource-based permissions. It must exist before the push, or you need a <i>repository creation template</i>.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-key"/></svg> Auth</h4><span class="pt">O token de autenticação vale <b>12 horas</b> e é por registry. No <code>docker login</code> o usuário é <code>AWS</code>. A identidade precisa da permissão <code>ecr:GetAuthorizationToken</code> via política IAM.</span><span class="en">The authentication token is valid for <b>12 hours</b> and is per registry. In <code>docker login</code> the user is <code>AWS</code>. The identity needs <code>ecr:GetAuthorizationToken</code> via an IAM policy.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-briefcase"/></svg> <span class="pt">Recursos</span><span class="en">Features</span></h4><span class="pt">Lifecycle policies (limpeza de imagens), scan de vulnerabilidades no push, replicação entre Regions e contas, pull through cache e assinatura gerenciada.</span><span class="en">Lifecycle policies (image cleanup), vulnerability scan on push, replication across Regions and accounts, pull through cache and managed signing.</span></div>
+  </div>
+
+  <h3><span class="pt">Push passo a passo</span><span class="en">Push step by step</span></h3>
+<pre><code>aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 111122223333.dkr.ecr.us-east-1.amazonaws.com
+docker tag minha-app:1.4.2 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2
+docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code></pre>
+  <p class="muted"><span class="pt">Se você omitir a tag no <code>docker tag</code>, a tag assumida é <code>latest</code>.</span><span class="en">If you omit the tag in <code>docker tag</code>, the assumed tag is <code>latest</code>.</span></p>
+
+  <h3><span class="pt">Acesso entre contas (repository policy)</span><span class="en">Cross-account access (repository policy)</span></h3>
+  <p><span class="pt">Para a conta de tooling guardar as imagens e as contas de staging e produção baixarem, anexe uma <b>repository policy</b> ao repositório. Exemplo de pull para uma conta (placeholder no lugar do ID real):</span><span class="en">For the tooling account to hold the images and the staging and production accounts to pull them, attach a <b>repository policy</b> to the repository. Example pull access for one account (placeholder instead of the real ID):</span></p>
+<pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPullFromProd",
+      "Effect": "Allow",
+      "Principal": { "AWS": "arn:aws:iam::&lt;ID_CONTA_PROD&gt;:root" },
+      "Action": [
+        "ecr:BatchGetImage",
+        "ecr:GetDownloadUrlForLayer"
+      ]
+    }
+  ]
+}</code></pre>
+  <ul>
+    <li><span class="pt">O ECR exige que quem autentica tenha <code>ecr:GetAuthorizationToken</code> por política IAM antes de qualquer push ou pull. Essa permissão não vem da repository policy.</span><span class="en">ECR requires the caller to have <code>ecr:GetAuthorizationToken</code> through an IAM policy before any push or pull. That permission does not come from the repository policy.</span></li>
+    <li><span class="pt">A conta que recebe a permissão precisa ter a Region do repositório habilitada, senão a criação da policy dá erro.</span><span class="en">The account being granted access must have the repository's Region enabled, otherwise creating the policy fails.</span></li>
+    <li><span class="pt">Para ações de push, a documentação inclui também <code>BatchCheckLayerAvailability</code>, <code>InitiateLayerUpload</code>, <code>UploadLayerPart</code>, <code>CompleteLayerUpload</code> e <code>PutImage</code>.</span><span class="en">For push, the docs also include <code>BatchCheckLayerAvailability</code>, <code>InitiateLayerUpload</code>, <code>UploadLayerPart</code>, <code>CompleteLayerUpload</code> and <code>PutImage</code>.</span></li>
+  </ul>
+
+  <h3><span class="pt">Tags e digests</span><span class="en">Tags and digests</span></h3>
+  <ul>
+    <li><span class="pt"><b>Tag mutável</b>: o mesmo nome de tag pode ser sobrescrito por um novo push. Com <b>tag immutability</b> ligada, repetir uma tag retorna <code>ImageTagAlreadyExistsException</code>. A imutabilidade vale para todas as tags (com filtros de exceção opcionais).</span><span class="en"><b>Mutable tags</b>: the same tag name can be overwritten by a new push. With <b>tag immutability</b> on, reusing a tag returns <code>ImageTagAlreadyExistsException</code>. Immutability covers all tags (with optional exclusion filters).</span></li>
+    <li><span class="pt">O ECS, por padrão, resolve a tag da task definition para o <b>digest</b> da imagem no momento do deploy e usa o digest nas demais tarefas, para que todas rodem exatamente a mesma imagem. Veja <a href="#ecs">ECS</a>.</span><span class="en">By default ECS resolves the task definition's tag to the image <b>digest</b> at deploy time and uses the digest for the other tasks, so all of them run exactly the same image. See <a href="#ecs">ECS</a>.</span></li>
+  </ul>
+  <div class="callout personal"><strong><span class="pt">Nota pessoal · sem fonte oficial nesta rodada</span><span class="en">Personal note · no official source this round</span></strong>
+    <span class="pt">Boa prática de projeto: usar tags que identifiquem a versão (por exemplo, o hash do commit) em vez de <code>latest</code>. A ideia combina com a tag immutability, mas a recomendação em si não foi lida na documentação.</span>
+    <span class="en">A design habit: use tags that identify the version (for example the commit hash) instead of <code>latest</code>. It pairs well with tag immutability, but the recommendation itself was not read in the docs.</span>
+  </div>
+
+  <div class="callout">
+    <strong><span class="pt">Custos</span><span class="en">Costs</span></strong>
+    <span class="pt">Você paga pelos dados armazenados, pela transferência nos pushes e pulls e por ações opcionais (assinatura, replicação). Valores: <a href="https://aws.amazon.com/ecr/pricing/" rel="noopener">página de preços do ECR</a>. Os números da anotação antiga foram removidos.</span>
+    <span class="en">You pay for data stored, data transfer on pushes and pulls, and optional actions (signing, replication). Values: <a href="https://aws.amazon.com/ecr/pricing/" rel="noopener">ECR pricing page</a>. The numbers in the old note were removed.</span>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Imagens que rodam em ECS, EKS ou EC2 na AWS; repositório central em uma conta de tooling compartilhado entre ambientes.</span><span class="en">Images that run on ECS, EKS or EC2 in AWS; a central repository in a tooling account shared across environments.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Repository policy com <code>Principal: "*"</code> sem condição; tags mutáveis em produção quando você precisa saber exatamente qual imagem rodou; acumular imagens sem lifecycle policy.</span><span class="en">A repository policy with <code>Principal: "*"</code> and no condition; mutable tags in production when you must know exactly which image ran; piling up images with no lifecycle policy.</span></div>
+  </div>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html" rel="noopener">What is Amazon Elastic Container Registry?</a></li>
+      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/docker-push-ecr-image.html" rel="noopener">Pushing a Docker image to an Amazon ECR private repository</a></li>
+      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/repository-policy-examples.html" rel="noopener">Private repository policy examples in Amazon ECR</a></li>
+      <li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-tag-mutability.html" rel="noopener">Preventing image tags from being overwritten</a></li>
+      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html" rel="noopener">ECS: Deploy services by replacing tasks (resolução de digest)</a></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ ECS ============ -->
+<section class="topic" id="ecs">
+  <header>
+    <span class="tag"><span class="pt">Computação · 13</span><span class="en">Compute · 13</span></span>
+    <h2>ECS</h2>
+    <p class="lead"><span class="pt">Amazon Elastic Container Service: orquestrador totalmente gerenciado para implantar, gerenciar e escalar aplicações em containers.</span><span class="en">Amazon Elastic Container Service: a fully managed orchestrator to deploy, manage and scale containerized applications.</span></p>
+  </header>
+
+  <p class="muted"><span class="pt">Para disparar o deploy a cada push em <code>develop</code> ou <code>main</code>, veja <a href="../github-aws-oidc/index.html#workflow">GitHub para AWS, etapa 8</a>.</span><span class="en">To trigger the deploy on every push to <code>develop</code> or <code>main</code>, see <a href="../github-aws-oidc/index.html#workflow">GitHub to AWS, step 8</a>.</span></p>
+
+
+  <div class="flow">
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-box"/></svg> ECR</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</span><span class="arrow">→</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Tasks <span class="pt">no cluster</span><span class="en">in the cluster</span></span><span class="arrow">←</span>
+    <span class="node"><svg class="icon" aria-hidden="true"><use href="#i-balance"/></svg> ALB</span>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-doc"/></svg> Task definition</h4><span class="pt">O "projeto" da aplicação: quais containers rodam e como.</span><span class="en">The application's "blueprint": which containers run and how.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-layers"/></svg> Cluster</h4><span class="pt">A infraestrutura onde a aplicação roda.</span><span class="en">The infrastructure the application runs on.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-play"/></svg> Task</h4><span class="pt">Uma execução da aplicação, como um job em lote que trabalha e termina.</span><span class="en">One run of the application, like a batch job that works and stops.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-grid"/></svg> Service</h4><span class="pt">Aplicação de longa duração e sem estado: o ECS mantém o número desejado de tasks rodando e faz os deploys.</span><span class="en">A long-running stateless application: ECS keeps the desired number of tasks running and performs deployments.</span></div>
+  </div>
+  <p><span class="pt"><b>Capacidade</b> (onde os containers rodam): Fargate (serverless, sem gerenciar servidores), instâncias EC2 que você gerencia, ECS Managed Instances (EC2 com a infraestrutura gerenciada pela AWS) ou servidores externos com ECS Anywhere. O custo depende da capacidade escolhida; veja as páginas de preços do ECS e do Fargate.</span><span class="en"><b>Capacity</b> (where containers run): Fargate (serverless, no servers to manage), EC2 instances you manage, ECS Managed Instances (EC2 with AWS-managed infrastructure) or external servers with ECS Anywhere. Cost depends on the chosen capacity; see the ECS and Fargate pricing pages.</span></p>
+
+  <h3><span class="pt">Deploy com rolling update</span><span class="en">Rolling update deployment</span></h3>
+  <p><span class="pt">No tipo de deploy <i>rolling update</i>, o scheduler do ECS substitui as tasks em execução por tasks novas. Dois parâmetros do serviço controlam o ritmo:</span><span class="en">With the <i>rolling update</i> deployment type, the ECS scheduler replaces running tasks with new ones. Two service parameters control the pace:</span></p>
+  <div class="scroll-x"><table>
+    <tr><th><span class="pt">Parâmetro</span><span class="en">Parameter</span></th><th><span class="pt">Significado</span><span class="en">Meaning</span></th><th><span class="pt">Exemplo da documentação</span><span class="en">Docs example</span></th></tr>
+    <tr><td><code>minimumHealthyPercent</code></td><td><span class="pt">Mínimo de tasks saudáveis durante o deploy, em % do desejado (arredonda para cima).</span><span class="en">Minimum healthy tasks during the deployment, as a % of desired (rounded up).</span></td><td><span class="pt">50% com 4 tasks: pode parar 2 antes de iniciar 2 novas.</span><span class="en">50% with 4 tasks: it can stop 2 before starting 2 new ones.</span></td></tr>
+    <tr><td><code>maximumPercent</code></td><td><span class="pt">Máximo de tasks em execução durante o deploy, em % do desejado (arredonda para baixo).</span><span class="en">Maximum running tasks during the deployment, as a % of desired (rounded down).</span></td><td><span class="pt">200% com 4 tasks: pode iniciar 4 novas antes de parar as 4 antigas.</span><span class="en">200% with 4 tasks: it can start 4 new ones before stopping the 4 old ones.</span></td></tr>
+  </table></div>
+  <ul>
+    <li><span class="pt">Garanta que o scheduler consiga parar ou iniciar <b>pelo menos uma</b> task no deploy. Com 75% mínimo e 2 tasks, nada pode ser parado e o deploy trava.</span><span class="en">Make sure the scheduler can stop or start <b>at least one</b> task during a deployment. With 75% minimum and 2 tasks, nothing can be stopped and the deployment gets stuck.</span></li>
+    <li><span class="pt">Para detectar falha rápido, use o <b>deployment circuit breaker</b> (falha quando as tasks não conseguem iniciar) e/ou <b>alarmes do CloudWatch</b> (falha por métricas da aplicação). Ambos suportam <b>rollback</b> para a revisão anterior do serviço.</span><span class="en">To detect failure fast, use the <b>deployment circuit breaker</b> (fails when tasks cannot start) and/or <b>CloudWatch alarms</b> (fails on application metrics). Both support <b>rollback</b> to the previous service revision.</span></li>
+    <li><span class="pt">O ECS resolve a tag da imagem para o <b>digest</b> no início do deploy e usa o digest nas outras tasks, garantindo a mesma imagem em todas. Para pegar um digest atualizado, force um novo deploy (<code>forceNewDeployment</code>).</span><span class="en">ECS resolves the image tag to the <b>digest</b> at the start of the deployment and uses the digest for the other tasks, ensuring the same image everywhere. To pick up an updated digest, force a new deployment (<code>forceNewDeployment</code>).</span></li>
+    <li><span class="pt">Variáveis de ambiente vindas do Parameter Store são resolvidas quando a task inicia: uma task em execução só vê o valor novo após um novo deploy. Veja <a href="#ssm">Systems Manager</a> e <a href="#secrets">Secrets Manager</a>.</span><span class="en">Environment variables from Parameter Store are resolved when the task starts: a running task only sees the new value after a new deployment. See <a href="#ssm">Systems Manager</a> and <a href="#secrets">Secrets Manager</a>.</span></li>
+  </ul>
+<pre><code>aws ecs update-service --cluster meu-cluster --service minha-api --force-new-deployment</code></pre>
+
+  <h3><span class="pt">Com o load balancer</span><span class="en">With the load balancer</span></h3>
+  <p><span class="pt">O ALB consegue registrar tasks do ECS em um target group, inclusive escolhendo uma porta livre quando a task é agendada. Os health checks do target group definem se a task está saudável. Veja <a href="#elb">Load Balancer</a>.</span><span class="en">The ALB can register ECS tasks in a target group, even choosing an unused port when the task is scheduled. The target group's health checks decide whether a task is healthy. See <a href="#elb">Load Balancer</a>.</span></p>
+
+  <div class="grid">
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Quando usar</span><span class="en">When to use</span></h4><span class="pt">Aplicações em containers que precisam de deploy repetível, rollback e escala sem operar um plano de controle próprio.</span><span class="en">Containerized apps needing repeatable deploys, rollback and scaling without running your own control plane.</span></div>
+    <div class="card"><h4><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Quando evitar</span><span class="en">When to avoid</span></h4><span class="pt">Cargas que não são containers; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> que impedem qualquer substituição; esperar que um valor mudado no Parameter Store apareça em tasks já rodando.</span><span class="en">Non-container workloads; <code>minimumHealthyPercent</code>/<code>maximumPercent</code> values that block any replacement; expecting a changed Parameter Store value to show up in running tasks.</span></div>
+  </div>
+
+  <div class="fc-title"><span class="pt">Teste-se</span><span class="en">Test yourself</span></div>
+  <details class="fc"><summary><span class="pt">Qual a diferença entre task e service?</span><span class="en">What is the difference between a task and a service?</span></summary><div class="ans"><span class="pt">Task é uma execução (pode terminar). Service mantém um número desejado de tasks rodando continuamente.</span><span class="en">A task is one run (it may stop). A service keeps a desired number of tasks running continuously.</span></div></details>
+  <details class="fc"><summary><span class="pt">Como garantir que um deploy com problema volte sozinho?</span><span class="en">How do you make a bad deployment roll back by itself?</span></summary><div class="ans"><span class="pt">Habilite o circuit breaker e/ou alarmes do CloudWatch com rollback.</span><span class="en">Enable the circuit breaker and/or CloudWatch alarms with rollback.</span></div></details>
+
+  <div class="sources"><b><span class="pt">Fontes oficiais · verificado em 2026-10-13</span><span class="en">Official sources · verified on 2026-10-13</span></b>
+    <ul>
+      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/Welcome.html" rel="noopener">What is Amazon Elastic Container Service?</a></li>
+      <li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/deployment-type-ecs.html" rel="noopener">Deploy Amazon ECS services by replacing tasks</a></li>
+      <li><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html" rel="noopener">ALB: What is an Application Load Balancer? (integração com ECS)</a></li>
+      <li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html" rel="noopener">Parameter Store (variáveis resolvidas na inicialização da task)</a></li>
+    </ul>
+  </div>
+</section>
+
 <!-- ============ SSM ============ -->
 <section class="topic" id="ssm">
   <header>
-    <span class="tag"><span class="pt">Segredos e acesso · 15</span><span class="en">Secrets &amp; access · 15</span></span>
+    <span class="tag"><span class="pt">Segredos e acesso · 14</span><span class="en">Secrets &amp; access · 14</span></span>
     <h2>Systems Manager</h2>
     <p class="lead"><span class="pt">Duas ferramentas do AWS Systems Manager muito usadas no dia a dia: o Session Manager (acesso a servidores sem SSH) e o Parameter Store (configuração centralizada).</span><span class="en">Two AWS Systems Manager tools used every day: Session Manager (server access without SSH) and Parameter Store (centralized configuration).</span></p>
   </header>
@@ -1929,7 +1923,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ SECRETS ============ -->
 <section class="topic" id="secrets">
   <header>
-    <span class="tag"><span class="pt">Segredos e acesso · 16</span><span class="en">Secrets &amp; access · 16</span></span>
+    <span class="tag"><span class="pt">Segredos e acesso · 15</span><span class="en">Secrets &amp; access · 15</span></span>
     <h2>Secrets Manager</h2>
     <p class="lead"><span class="pt">AWS Secrets Manager ajuda a gerenciar, recuperar e rotacionar credenciais de banco, credenciais de aplicação, tokens OAuth, chaves de API e outros segredos durante todo o ciclo de vida.</span><span class="en">AWS Secrets Manager helps you manage, retrieve and rotate database credentials, application credentials, OAuth tokens, API keys and other secrets throughout their lifecycle.</span></p>
   </header>
@@ -1979,7 +1973,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ RDS ============ -->
 <section class="topic" id="rds">
   <header>
-    <span class="tag"><span class="pt">Dados · 17</span><span class="en">Data · 17</span></span>
+    <span class="tag"><span class="pt">Dados · 16</span><span class="en">Data · 16</span></span>
     <h2>RDS</h2>
     <p class="lead"><span class="pt">Amazon Relational Database Service: facilita criar, operar e escalar bancos relacionais na nuvem, com a AWS cuidando de backups, patches, detecção de falhas e recuperação.</span><span class="en">Amazon Relational Database Service: makes it easier to set up, operate and scale relational databases in the cloud, with AWS handling backups, patching, failure detection and recovery.</span></p>
   </header>
@@ -2068,7 +2062,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ S3 ============ -->
 <section class="topic" id="s3">
   <header>
-    <span class="tag"><span class="pt">Dados · 18</span><span class="en">Data · 18</span></span>
+    <span class="tag"><span class="pt">Dados · 17</span><span class="en">Data · 17</span></span>
     <h2>S3</h2>
     <p class="lead"><span class="pt">Amazon Simple Storage Service: armazenamento de objetos com grande escala, disponibilidade, segurança e desempenho, para sites, backups, aplicações, data lakes e mais.</span><span class="en">Amazon Simple Storage Service: object storage with great scalability, availability, security and performance, for websites, backups, applications, data lakes and more.</span></p>
   </header>
@@ -2142,7 +2136,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ DOMINIOS ============ -->
 <section class="topic" id="dominios">
   <header>
-    <span class="tag">DNS · 19</span>
+    <span class="tag">DNS · 18</span>
     <h2><span class="pt">Domínios e DNS</span><span class="en">Domains &amp; DNS</span></h2>
     <p class="lead"><span class="pt">O DNS traduz nomes (<code>app.exemplo.com.br</code>) em destinos. Os <b>registros</b> de uma zona dizem para onde cada nome aponta; o domínio em si é só o nome registrado.</span><span class="en">DNS translates names (<code>app.example.com</code>) into destinations. A zone's <b>records</b> say where each name points; the domain itself is just the registered name.</span></p>
   </header>
@@ -2192,7 +2186,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 <!-- ============ ROUTE 53 ============ -->
 <section class="topic" id="route53">
   <header>
-    <span class="tag">DNS · 20</span>
+    <span class="tag">DNS · 19</span>
     <h2>Route 53</h2>
     <p class="lead"><span class="pt">Serviço de DNS da AWS. Você cria <b>hosted zones</b> com os registros dos seus domínios e aponta nomes para recursos como o load balancer.</span><span class="en">AWS's DNS service. You create <b>hosted zones</b> holding your domains' records and point names at resources such as the load balancer.</span></p>
   </header>
@@ -2240,6 +2234,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
     <p><span class="pt"><b>Movido:</b> o item "ACM" que ficava aqui agora tem sua própria seção. <b>Não verificado nesta rodada:</b> compra/registro de domínio pelo Route 53 (a anotação antiga o citava; consulte a documentação de registro de domínios).</span><span class="en"><b>Moved:</b> the "ACM" item that lived here now has its own section. <b>Not verified this round:</b> buying/registering a domain through Route 53 (the old note mentioned it; see the domain registration docs).</span></p>
   </div>
 </section>
+
 
     </main>
   </div>
