@@ -62,6 +62,23 @@
     }).observe(heroElement);
   }
 
+  /* Reading progress: a thin bar at the top of note pages. The AWS note drives its own bar (aws.js). */
+  if (document.querySelector(".back-link") && !document.querySelector("#scroll-progress")) {
+    const progressBar = document.createElement("div");
+    progressBar.id = "scroll-progress";
+    progressBar.setAttribute("aria-hidden", "true");
+    document.body.prepend(progressBar);
+
+    const updateProgress = () => {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const ratio = scrollableHeight > 0 ? Math.min(1, window.scrollY / scrollableHeight) : 0;
+      progressBar.style.transform = `scaleX(${ratio})`;
+    };
+    window.addEventListener("scroll", updateProgress, { passive: true });
+    window.addEventListener("resize", updateProgress);
+    updateProgress();
+  }
+
   /* Theme: automatic (dark from 18:00 to 06:00, see boot.js), light or dark. The choice is remembered. */
   function applyTheme() {
     documentRoot.dataset.theme = resolveTheme(readThemeMode(), new Date());
