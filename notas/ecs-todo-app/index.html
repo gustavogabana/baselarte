@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="ecs.metaTitle">ECS from zero: a to-do app behind ALB, Cloudflare and RDS</title>
+  <meta name="description" data-i18n-attributes="content:ecs.metaDescription" content="Step by step, for someone who has only used EC2 by hand: a Node to-do API in Docker on ECS Fargate, behind an ALB with a Cloudflare origin certificate, TLS all the way to RDS, and automatic deploy from GitHub.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/ecs-todo-app/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/ecs-todo-app/">
+  <meta property="og:title" data-i18n-attributes="content:ecs.metaTitle" content="ECS from zero: a to-do app behind ALB, Cloudflare and RDS">
+  <meta property="og:description" data-i18n-attributes="content:ecs.metaDescription" content="Step by step, for someone who has only used EC2 by hand: a Node to-do API in Docker on ECS Fargate, behind an ALB with a Cloudflare origin certificate, TLS all the way to RDS, and automatic deploy from GitHub.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:ecs.metaTitle" content="ECS from zero: a to-do app behind ALB, Cloudflare and RDS">
+  <meta name="twitter:description" data-i18n-attributes="content:ecs.metaDescription" content="Step by step, for someone who has only used EC2 by hand: a Node to-do API in Docker on ECS Fargate, behind an ALB with a Cloudflare origin certificate, TLS all the way to RDS, and automatic deploy from GitHub.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="ecs.kicker">AWS</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="ecs.heroTitle">ECS from zero: <em>a to-do app behind ALB, Cloudflare and RDS.</em></h1>
+      <p class="hero-lede" data-i18n="ecs.heroLede">A Node to-do API in Docker on ECS Fargate, with TLS from the visitor to the database, a deploy on every push, and every step explained for someone who has only used EC2 by hand.</p>
+    </section>
+<aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#overview"><span class="pt">O fluxo completo</span><span class="en">The full flow</span></a></li>
+        <li><a href="#ecs101"><span class="pt">1. ECS para quem vem da EC2</span><span class="en">1. ECS for people coming from EC2</span></a></li>
+        <li><a href="#app"><span class="pt">2. O projeto de exemplo</span><span class="en">2. The example project</span></a></li>
+        <li><a href="#network"><span class="pt">3. Rede e security groups</span><span class="en">3. Network and security groups</span></a></li>
+        <li><a href="#tls"><span class="pt">4. SSL ponta a ponta</span><span class="en">4. End-to-end SSL</span></a></li>
+        <li><a href="#data"><span class="pt">5. Banco e segredos</span><span class="en">5. Database and secrets</span></a></li>
+        <li><a href="#roles"><span class="pt">6. As duas roles do ECS</span><span class="en">6. The two ECS roles</span></a></li>
+        <li><a href="#ecs-setup"><span class="pt">7. Cluster, task, ALB e service</span><span class="en">7. Cluster, task, ALB and service</span></a></li>
+        <li><a href="#github"><span class="pt">8. Deploy automático</span><span class="en">8. Automatic deploy</span></a></li>
+        <li><a href="#verify"><span class="pt">9. Conferir e diagnosticar</span><span class="en">9. Checking and troubleshooting</span></a></li>
+        <li><a href="#variantb"><span class="pt">10. Variante B: HTTP interno</span><span class="en">10. Variant B: internal HTTP</span></a></li>
+        <li><a href="#cleanup"><span class="pt">11. Apagar tudo</span><span class="en">11. Deleting everything</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+<section class="content-section" aria-labelledby="overview">
+<h2 id="overview"><span class="pt">O fluxo completo</span><span class="en">The full flow</span></h2>
+<p><span class="pt">Este roteiro leva você de uma conta AWS vazia até um <code>git push</code> que publica uma API de to-do no ECS. O projeto é de propósito pequeno: um servidor Node nativo, um Postgres com <b>uma tabela</b> e quatro rotas. O que importa aqui é a infraestrutura em volta, e ela é a mesma de um projeto grande.</span><span class="en">This walkthrough takes you from an empty AWS account to a <code>git push</code> that publishes a to-do API on ECS. The project is small on purpose: a plain Node server, a Postgres database with <b>one table</b> and four routes. What matters is the infrastructure around it, and that is the same as in a large project.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="Quatro trechos com TLS / Four TLS legs" style="min-width:560px">
+<rect x="278" y="14" width="416" height="118" rx="6" class="ln dash"/>
+<text x="483" y="150" class="pt mut" text-anchor="middle">sua conta AWS: VPC com subnets públicas e privadas</text><text x="483" y="150" class="en mut" text-anchor="middle">your AWS account: VPC with public and private subnets</text>
+<rect x="8" y="40" width="112" height="64" rx="4" class="ln fillsoft"/>
+<text x="64.0" y="68" class="pt" text-anchor="middle">Visitante</text><text x="64.0" y="68" class="en" text-anchor="middle">Visitor</text>
+<text x="64.0" y="88" class="pt mut" text-anchor="middle">navegador</text><text x="64.0" y="88" class="en mut" text-anchor="middle">browser</text>
+<rect x="146" y="40" width="112" height="64" rx="4" class="ln brandfill"/>
+<text x="202.0" y="68" class="pt" text-anchor="middle">Cloudflare</text><text x="202.0" y="68" class="en" text-anchor="middle">Cloudflare</text>
+<text x="202.0" y="88" class="pt mut" text-anchor="middle">proxy · Full (strict)</text><text x="202.0" y="88" class="en mut" text-anchor="middle">proxy · Full (strict)</text>
+<rect x="284" y="40" width="112" height="64" rx="4" class="ln fillsoft"/>
+<text x="340.0" y="68" class="pt" text-anchor="middle">ALB :443</text><text x="340.0" y="68" class="en" text-anchor="middle">ALB :443</text>
+<text x="340.0" y="88" class="pt mut" text-anchor="middle">subnets públicas</text><text x="340.0" y="88" class="en mut" text-anchor="middle">public subnets</text>
+<rect x="422" y="40" width="112" height="64" rx="4" class="ln brandfill"/>
+<text x="478.0" y="68" class="pt" text-anchor="middle">Task :8443</text><text x="478.0" y="68" class="en" text-anchor="middle">Task :8443</text>
+<text x="478.0" y="88" class="pt mut" text-anchor="middle">Fargate · privada</text><text x="478.0" y="88" class="en mut" text-anchor="middle">Fargate · private</text>
+<rect x="560" y="40" width="126" height="64" rx="4" class="ln fillsoft"/>
+<text x="623.0" y="68" class="pt" text-anchor="middle">RDS :5432</text><text x="623.0" y="68" class="en" text-anchor="middle">RDS :5432</text>
+<text x="623.0" y="88" class="pt mut" text-anchor="middle">Postgres · privada</text><text x="623.0" y="88" class="en mut" text-anchor="middle">Postgres · private</text>
+<path d="M120 72L146 72" class="ln"/>
+<path d="M138.8 75.5L146 72L138.8 68.5" class="ln"/>
+<text x="133.0" y="30" class="mono mut" text-anchor="middle">1</text>
+<path d="M258 72L284 72" class="ln"/>
+<path d="M276.8 75.5L284 72L276.8 68.5" class="ln"/>
+<text x="271.0" y="30" class="mono mut" text-anchor="middle">2</text>
+<path d="M396 72L422 72" class="ln"/>
+<path d="M414.8 75.5L422 72L414.8 68.5" class="ln"/>
+<text x="409.0" y="30" class="mono mut" text-anchor="middle">3</text>
+<path d="M534 72L560 72" class="ln"/>
+<path d="M552.8 75.5L560 72L552.8 68.5" class="ln"/>
+<text x="547.0" y="30" class="mono mut" text-anchor="middle">4</text>
+<text x="8" y="176" class="pt mut" text-anchor="start">1  certificado da Cloudflare (Universal SSL), automático</text><text x="8" y="176" class="en mut" text-anchor="start">1  Cloudflare certificate (Universal SSL), automatic</text>
+<text x="8" y="196" class="pt mut" text-anchor="start">2  certificado de origem da Cloudflare, importado no ACM e usado pelo listener do ALB</text><text x="8" y="196" class="en mut" text-anchor="start">2  Cloudflare origin certificate, imported into ACM and used by the ALB listener</text>
+<text x="8" y="216" class="pt mut" text-anchor="start">3  o mesmo certificado, guardado no Secrets Manager e usado pelo Node dentro da task</text><text x="8" y="216" class="en mut" text-anchor="start">3  the same certificate, kept in Secrets Manager and used by Node inside the task</text>
+<text x="8" y="236" class="pt mut" text-anchor="start">4  certificado do RDS, verificado pela aplicação com a CA da AWS (verify-full)</text><text x="8" y="236" class="en mut" text-anchor="start">4  the RDS certificate, verified by the application against the AWS CA (verify-full)</text>
+</svg></div><figcaption><span class="pt">Quatro conexões, todas criptografadas. Nada trafega em texto puro, nem dentro da VPC.</span><span class="en">Four connections, all encrypted. Nothing travels in clear text, not even inside the VPC.</span></figcaption></figure>
+<p><span class="pt">Você já fez à mão o equivalente na EC2: VPC, ALB com certificado da Cloudflare, Docker, security groups, internet gateway. O ECS troca só a parte do meio. Em vez de você acessar a máquina para rodar <code>docker run</code>, você descreve o container num arquivo e o ECS roda e mantém no ar. O resto (rede, ALB, certificado) segue o que você já conhece.</span><span class="en">You have already done the EC2 equivalent by hand: VPC, ALB with a Cloudflare certificate, Docker, security groups, internet gateway. ECS only replaces the middle. Instead of logging in to a machine to run <code>docker run</code>, you describe the container in a file and ECS runs it and keeps it up. The rest (network, ALB, certificate) is what you already know.</span></p>
+<ol class="ds-steps">
+<li><span class="pt"><b>Fundamentos (seções 1 e 2).</b> O que é cada peça do ECS e o código do app.</span><span class="en"><b>Foundations (sections 1 and 2).</b> What each ECS piece is, and the app code.</span></li>
+<li><span class="pt"><b>Infraestrutura (3 a 6).</b> Rede, SSL ponta a ponta, banco, segredos e roles. Feito uma vez por conta.</span><span class="en"><b>Infrastructure (3 to 6).</b> Network, end-to-end SSL, database, secrets and roles. Done once per account.</span></li>
+<li><span class="pt"><b>ECS (7).</b> Cluster, task definition, target group, ALB e service. Aqui o app sobe pela primeira vez.</span><span class="en"><b>ECS (7).</b> Cluster, task definition, target group, ALB and service. This is where the app first comes up.</span></li>
+<li><span class="pt"><b>Deploy automático (8).</b> Liga o que você criou ao workflow da <a href="../github-aws-oidc/index.html">nota de OIDC</a>. A partir daí, cada push troca a task.</span><span class="en"><b>Automatic deploy (8).</b> Connects what you built to the workflow in the <a href="../github-aws-oidc/index.html">OIDC note</a>. From then on, every push replaces the task.</span></li>
+</ol>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Custo.</b> ALB, RDS, Fargate e endpoints de interface cobram por hora enquanto existirem, mesmo sem tráfego. Ao terminar de estudar, apague tudo na ordem da <a href="#cleanup">seção 11</a>. Consulte os preços atuais na página de preços de cada serviço.</span><span class="en"><b>Cost.</b> The ALB, RDS, Fargate and interface endpoints bill by the hour while they exist, even without traffic. When you finish studying, delete everything in the order of <a href="#cleanup">section 11</a>. Check current prices on each service’s pricing page.</span></div>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Antes de ler.</b> Esta nota não repete o que já está nas outras: contas e roles na <a href="../aws/index.html#accounts-roles">nota de AWS</a>, domínio e certificado de origem na <a href="../cloudflare/index.html">nota da Cloudflare</a>, e o OIDC com o workflow na <a href="../github-aws-oidc/index.html">nota de GitHub para AWS</a>. Ela mostra como as peças se encaixam num projeto.</span><span class="en"><b>Before you read.</b> This note does not repeat what the others already cover: accounts and roles in the <a href="../aws/index.html#accounts-roles">AWS note</a>, domain and origin certificate in the <a href="../cloudflare/index.html">Cloudflare note</a>, and OIDC with the workflow in the <a href="../github-aws-oidc/index.html">GitHub to AWS note</a>. This one shows how the pieces fit into a project.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="ecs101">
+<h2 id="ecs101"><span class="pt">1. ECS para quem vem da EC2</span><span class="en">1. ECS for people coming from EC2</span></h2>
+<p><span class="pt">O ECS (Elastic Container Service) é o orquestrador de containers da AWS. Ele tem poucos conceitos, e quase todos têm um equivalente no que você fez à mão:</span><span class="en">ECS (Elastic Container Service) is AWS’s container orchestrator. It has few concepts, and almost all of them have an equivalent in what you did by hand:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">O que você fez na EC2</span><span class="en">What you did on EC2</span></th><th><span class="pt">No ECS</span><span class="en">In ECS</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Subir a instância e instalar o Docker</span><span class="en">Launch the instance and install Docker</span></td><td><span class="pt"><b>Fargate</b>: a AWS fornece a capacidade de computação. Não há instância para você acessar, atualizar ou proteger com SSH.</span><span class="en"><b>Fargate</b>: AWS provides the compute. There is no instance for you to log in to, patch or secure with SSH.</span></td></tr>
+<tr><td><span class="pt"><code>docker run -p ... -e ...</code></span><span class="en"><code>docker run -p ... -e ...</code></span></td><td><span class="pt"><b>Task definition</b>: um JSON com imagem, portas, variáveis, segredos, CPU, memória e logs. É a “receita” e é versionada (revisão 1, 2, 3...).</span><span class="en"><b>Task definition</b>: a JSON with image, ports, variables, secrets, CPU, memory and logs. It is the “recipe” and it is versioned (revision 1, 2, 3...).</span></td></tr>
+<tr><td><span class="pt">O container em execução</span><span class="en">The running container</span></td><td><span class="pt"><b>Task</b>: uma execução da task definition. É descartável: se morrer, o service cria outra.</span><span class="en"><b>Task</b>: one run of a task definition. It is disposable: if it dies, the service creates another.</span></td></tr>
+<tr><td><span class="pt">Um script ou systemd para manter no ar e reiniciar</span><span class="en">A script or systemd to keep it up and restart it</span></td><td><span class="pt"><b>Service</b>: mantém N tasks rodando, repõe as que caem, registra no ALB e faz a troca a cada deploy.</span><span class="en"><b>Service</b>: keeps N tasks running, replaces the ones that die, registers them with the ALB and does the swap on each deploy.</span></td></tr>
+<tr><td><span class="pt">O conjunto das suas instâncias</span><span class="en">The set of your instances</span></td><td><span class="pt"><b>Cluster</b>: só um agrupamento lógico de services e tasks.</span><span class="en"><b>Cluster</b>: just a logical grouping of services and tasks.</span></td></tr>
+<tr><td><span class="pt">Target group por instância e porta</span><span class="en">Target group by instance and port</span></td><td><span class="pt">Target group do tipo <code>ip</code>. No modo de rede <code>awsvpc</code> cada task ganha a sua própria interface de rede (ENI) e IP; a documentação exige <code>ip</code>, não <code>instance</code>.</span><span class="en">Target group of type <code>ip</code>. In <code>awsvpc</code> network mode every task gets its own network interface (ENI) and IP; the docs require <code>ip</code>, not <code>instance</code>.</span></td></tr>
+<tr><td><span class="pt">Security group da instância</span><span class="en">The instance’s security group</span></td><td><span class="pt">Security group da <b>task</b> (fica na ENI dela). Dá para ter uma regra por serviço, não por máquina.</span><span class="en">The <b>task’s</b> security group (it sits on its ENI). You can have one rule set per service, not per machine.</span></td></tr>
+<tr><td><span class="pt"><code>docker pull</code> com login no ECR</span><span class="en"><code>docker pull</code> with an ECR login</span></td><td><span class="pt">A <b>task execution role</b> puxa a imagem do ECR e lê os segredos antes de o container iniciar.</span><span class="en">The <b>task execution role</b> pulls the image from ECR and reads the secrets before the container starts.</span></td></tr>
+<tr><td><span class="pt">Arquivo <code>.env</code> ou variáveis na máquina</span><span class="en"><code>.env</code> file or variables on the machine</span></td><td><span class="pt"><code>environment</code> (valores comuns) e <code>secrets</code> (vêm do Secrets Manager) na task definition.</span><span class="en"><code>environment</code> (plain values) and <code>secrets</code> (come from Secrets Manager) in the task definition.</span></td></tr>
+<tr><td><span class="pt"><code>ssh</code> + <code>docker logs</code></span><span class="en"><code>ssh</code> + <code>docker logs</code></span></td><td><span class="pt">O driver <code>awslogs</code> envia o stdout do container para o CloudWatch Logs.</span><span class="en">The <code>awslogs</code> driver sends the container’s stdout to CloudWatch Logs.</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3><span class="pt">Duas roles, dois papéis</span><span class="en">Two roles, two jobs</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Role</span><span class="en">Role</span></th><th><span class="pt">Quem usa</span><span class="en">Who uses it</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><b>Task execution role</b></span><span class="en"><b>Task execution role</b></span></td><td><span class="pt">O agente do ECS/Fargate, <i>antes</i> do container iniciar</span><span class="en">The ECS/Fargate agent, <i>before</i> the container starts</span></td><td><span class="pt">Puxar a imagem do ECR, escrever logs, ler os segredos do <code>secrets</code>. A documentação diz que essas permissões não ficam acessíveis aos containers.</span><span class="en">Pull the image from ECR, write logs, read the <code>secrets</code>. The docs say these permissions are not directly accessible to the containers.</span></td></tr>
+<tr><td><span class="pt"><b>Task role</b></span><span class="en"><b>Task role</b></span></td><td><span class="pt">O <i>seu código</i>, dentro do container</span><span class="en"><i>Your code</i>, inside the container</span></td><td><span class="pt">Chamar APIs da AWS (S3, SQS...). Este app não chama nenhuma, então a role fica sem permissões. Mantê-la separada permite dar acesso depois sem mexer na execução.</span><span class="en">Call AWS APIs (S3, SQS...). This app calls none, so the role has no permissions. Keeping it separate lets you grant access later without touching execution.</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">O ECS também roda em instâncias EC2 suas (“launch type EC2”). Aqui usamos Fargate para não ter servidor para manter. O resto da nota vale para os dois, exceto a parte da máquina.</span><span class="en">ECS can also run on your own EC2 instances (“EC2 launch type”). Here we use Fargate so there is no server to maintain. The rest of the note applies to both, except the machine part.</span></p>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Importante para a arquitetura da imagem.</b> A imagem precisa ser da mesma arquitetura da task (<code>X86_64</code> por padrão). O runner <code>ubuntu-latest</code> do GitHub é x86_64, então o workflow da nota de OIDC já gera uma imagem compatível. Se um dia você buildar num Mac com Apple Silicon, use <code>docker build --platform linux/amd64</code>.</span><span class="en"><b>Image architecture matters.</b> The image must match the task’s architecture (<code>X86_64</code> by default). GitHub’s <code>ubuntu-latest</code> runner is x86_64, so the OIDC note’s workflow already produces a compatible image. If you ever build on an Apple Silicon Mac, use <code>docker build --platform linux/amd64</code>.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="app">
+<h2 id="app"><span class="pt">2. O projeto de exemplo: uma API de to-do</span><span class="en">2. The example project: a to-do API</span></h2>
+<p><span class="pt">Quatro arquivos na raiz do repositório. O servidor usa os módulos <code>http</code> e <code>https</code> do Node; a única dependência é o driver <code>pg</code> para falar com o Postgres. Testei este código e esta imagem localmente (Docker, Postgres 16 e um certificado autoassinado): criar, listar, marcar, apagar, validação de entrada, health check, filesystem somente leitura e parada limpa com <code>SIGTERM</code>.</span><span class="en">Four files at the repository root. The server uses Node’s <code>http</code> and <code>https</code> modules; the only dependency is the <code>pg</code> driver to talk to Postgres. I ran this code and image locally (Docker, Postgres 16 and a self-signed certificate): create, list, toggle, delete, input validation, health check, read-only filesystem and a clean stop on <code>SIGTERM</code>.</span></p>
+<h3><span class="pt">server.js</span><span class="en">server.js</span></h3>
+<pre><code>&#x27;use strict&#x27;;
+
+const http = require(&#x27;node:http&#x27;);
+const https = require(&#x27;node:https&#x27;);
+const fs = require(&#x27;node:fs&#x27;);
+const { Pool } = require(&#x27;pg&#x27;);
+
+const PORT = Number(process.env.PORT || 8443);
+const MAX_BODY = 10 * 1024;
+
+// TLS_CERT and TLS_KEY come from Secrets Manager (injected by ECS).
+// Without them the server speaks plain HTTP (variant B in the note).
+const tls = process.env.TLS_CERT &amp;&amp; process.env.TLS_KEY
+  ? { cert: process.env.TLS_CERT, key: process.env.TLS_KEY }
+  : null;
+
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT || 5432),
+  database: process.env.DB_NAME || &#x27;todos&#x27;,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  // Verify the RDS certificate chain and host name (sslmode=verify-full).
+  ssl: process.env.DB_SSL === &#x27;off&#x27;
+    ? false
+    : { ca: fs.readFileSync(process.env.DB_CA_FILE || &#x27;/app/rds-global-bundle.pem&#x27;, &#x27;utf8&#x27;) },
+  max: 5,
+  connectionTimeoutMillis: 5000,
+});
+
+function send(res, status, body) {
+  const payload = body === undefined ? &#x27;&#x27; : JSON.stringify(body);
+  res.writeHead(status, { &#x27;content-type&#x27;: &#x27;application/json&#x27; });
+  res.end(payload);
+}
+
+function readJson(req) {
+  return new Promise((resolve, reject) =&gt; {
+    let size = 0;
+    const chunks = [];
+    req.on(&#x27;data&#x27;, (c) =&gt; {
+      size += c.length;
+      if (size &gt; MAX_BODY) { reject(Object.assign(new Error(&#x27;too large&#x27;), { status: 413 })); req.destroy(); return; }
+      chunks.push(c);
+    });
+    req.on(&#x27;end&#x27;, () =&gt; {
+      try { resolve(JSON.parse(Buffer.concat(chunks).toString() || &#x27;{}&#x27;)); }
+      catch { reject(Object.assign(new Error(&#x27;invalid json&#x27;), { status: 400 })); }
+    });
+    req.on(&#x27;error&#x27;, reject);
+  });
+}
+
+async function handle(req, res) {
+  const url = new URL(req.url, &#x27;http://localhost&#x27;);
+  const m = url.pathname.match(/^\/todos(?:\/(\d+))?$/);
+
+  // Shallow on purpose: it answers &quot;is the process up&quot;, not &quot;is the database up&quot;.
+  if (url.pathname === &#x27;/health&#x27; &amp;&amp; req.method === &#x27;GET&#x27;) return send(res, 200, { ok: true });
+
+  if (m &amp;&amp; !m[1] &amp;&amp; req.method === &#x27;GET&#x27;) {
+    const { rows } = await pool.query(&#x27;SELECT id, title, done, created_at FROM todos ORDER BY id&#x27;);
+    return send(res, 200, rows);
+  }
+  if (m &amp;&amp; !m[1] &amp;&amp; req.method === &#x27;POST&#x27;) {
+    const { title } = await readJson(req);
+    if (typeof title !== &#x27;string&#x27; || !title.trim() || title.length &gt; 200) return send(res, 400, { error: &#x27;title: 1 to 200 characters&#x27; });
+    const { rows } = await pool.query(&#x27;INSERT INTO todos (title) VALUES ($1) RETURNING id, title, done, created_at&#x27;, [title.trim()]);
+    return send(res, 201, rows[0]);
+  }
+  if (m &amp;&amp; m[1] &amp;&amp; req.method === &#x27;PATCH&#x27;) {
+    const { done } = await readJson(req);
+    if (typeof done !== &#x27;boolean&#x27;) return send(res, 400, { error: &#x27;done: boolean&#x27; });
+    const { rows } = await pool.query(&#x27;UPDATE todos SET done = $1 WHERE id = $2 RETURNING id, title, done, created_at&#x27;, [done, m[1]]);
+    return rows[0] ? send(res, 200, rows[0]) : send(res, 404, { error: &#x27;not found&#x27; });
+  }
+  if (m &amp;&amp; m[1] &amp;&amp; req.method === &#x27;DELETE&#x27;) {
+    const { rowCount } = await pool.query(&#x27;DELETE FROM todos WHERE id = $1&#x27;, [m[1]]);
+    return rowCount ? send(res, 204) : send(res, 404, { error: &#x27;not found&#x27; });
+  }
+  return send(res, 404, { error: &#x27;not found&#x27; });
+}
+
+const onRequest = (req, res) =&gt; {
+  handle(req, res).catch((err) =&gt; {
+    if (err.status) return send(res, err.status, { error: err.message });
+    console.error(err);
+    send(res, 500, { error: &#x27;internal error&#x27; });
+  });
+};
+
+async function main() {
+  // Demo-only migration. Idempotent, so two tasks starting together do not conflict.
+  await pool.query(`CREATE TABLE IF NOT EXISTS todos (
+    id         integer     GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    title      text        NOT NULL,
+    done       boolean     NOT NULL DEFAULT false,
+    created_at timestamptz NOT NULL DEFAULT now()
+  )`);
+
+  const server = tls ? https.createServer(tls, onRequest) : http.createServer(onRequest);
+  server.listen(PORT, () =&gt; console.log(`listening on ${PORT} (${tls ? &#x27;https&#x27; : &#x27;http&#x27;})`));
+
+  // ECS sends SIGTERM, then SIGKILL after stopTimeout (30 s by default).
+  const shutdown = () =&gt; {
+    server.close(async () =&gt; { await pool.end(); process.exit(0); });
+    server.closeIdleConnections();
+  };
+  process.on(&#x27;SIGTERM&#x27;, shutdown);
+  process.on(&#x27;SIGINT&#x27;, shutdown);
+}
+
+main().catch((err) =&gt; { console.error(err); process.exit(1); });</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><em>TLS na própria aplicação.</em> Se <code>TLS_CERT</code> e <code>TLS_KEY</code> existirem, o servidor sobe em HTTPS; se não, em HTTP. É isso que permite a <a href="#variantb">variante B</a> sem trocar a imagem.</span><span class="en"><em>TLS in the application itself.</em> If <code>TLS_CERT</code> and <code>TLS_KEY</code> exist, the server starts on HTTPS; otherwise on HTTP. That is what makes <a href="#variantb">variant B</a> possible without changing the image.</span></li>
+<li><span class="pt"><em>Banco com verificação.</em> O <code>ssl.ca</code> carrega o bundle de CAs da AWS; com isso o driver valida a cadeia e o nome do host do RDS. Sem <code>ca</code>, o <code>pg</code> não confia no certificado do RDS.</span><span class="en"><em>Verified database connection.</em> <code>ssl.ca</code> loads the AWS CA bundle; the driver then validates the RDS chain and host name. Without <code>ca</code>, <code>pg</code> does not trust the RDS certificate.</span></li>
+<li><span class="pt"><em><code>/health</code> é rasa de propósito.</em> Ela só diz que o processo responde. Se checasse o banco, uma queda do RDS faria o ECS matar e recriar todas as tasks sem resolver nada.</span><span class="en"><em><code>/health</code> is shallow on purpose.</em> It only says the process answers. If it checked the database, an RDS outage would make ECS kill and recreate every task without fixing anything.</span></li>
+<li><span class="pt"><em>Parada limpa.</em> O ECS manda <code>SIGTERM</code> e, se o processo não sair, <code>SIGKILL</code> depois do <code>stopTimeout</code> (30 s por padrão, máximo 120 s). O handler deixa terminar as requisições em andamento.</span><span class="en"><em>Clean stop.</em> ECS sends <code>SIGTERM</code> and, if the process does not exit, <code>SIGKILL</code> after <code>stopTimeout</code> (30 s by default, 120 s maximum). The handler lets in-flight requests finish.</span></li>
+<li><span class="pt"><em>Migração no start.</em> O <code>CREATE TABLE IF NOT EXISTS</code> serve para o exemplo e é seguro com duas tasks iniciando juntas. Em um projeto real, rode migrações como uma etapa separada do deploy.</span><span class="en"><em>Migration at start.</em> <code>CREATE TABLE IF NOT EXISTS</code> is fine for an example and safe with two tasks starting together. In a real project, run migrations as a separate deploy step.</span></li>
+</ul>
+<h3><span class="pt">package.json e Dockerfile</span><span class="en">package.json and Dockerfile</span></h3>
+<pre><code>{
+  &quot;name&quot;: &quot;todo-api&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;private&quot;: true,
+  &quot;main&quot;: &quot;server.js&quot;,
+  &quot;engines&quot;: { &quot;node&quot;: &quot;&gt;=22&quot; },
+  &quot;dependencies&quot;: { &quot;pg&quot;: &quot;^8.13.0&quot; }
+}</code></pre>
+<pre><code>FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev
+
+FROM node:22-alpine
+ENV NODE_ENV=production
+WORKDIR /app
+# CA bundle used to verify the RDS certificate (global bundle, AWS docs).
+ADD https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem /app/rds-global-bundle.pem
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json server.js ./
+USER node
+EXPOSE 8443
+CMD [&quot;node&quot;, &quot;server.js&quot;]</code></pre>
+<p><span class="pt">Rode <code>npm install</code> uma vez para gerar o <code>package-lock.json</code> e versione-o: o <code>npm ci</code> do Dockerfile exige esse arquivo. O Dockerfile usa dois estágios, roda como o usuário <code>node</code> (não como root) e baixa o bundle de CAs do RDS da URL oficial. Crie também um <code>.dockerignore</code> para que chaves e <code>node_modules</code> não entrem na imagem:</span><span class="en">Run <code>npm install</code> once to generate <code>package-lock.json</code> and commit it: the Dockerfile’s <code>npm ci</code> requires it. The Dockerfile uses two stages, runs as the <code>node</code> user (not root) and downloads the RDS CA bundle from the official URL. Also create a <code>.dockerignore</code> so keys and <code>node_modules</code> stay out of the image:</span></p>
+<pre><code>node_modules
+.git
+.github
+*.pem
+*.key
+.env</code></pre>
+<h3><span class="pt">Testar localmente</span><span class="en">Test locally</span></h3>
+<pre><code>docker build -t todo .
+docker network create tnet
+docker run -d --name pg --network tnet -e POSTGRES_PASSWORD=pw -e POSTGRES_DB=todos postgres:16-alpine
+# local Postgres has no TLS, so turn the DB check off (never do this in the cloud)
+docker run -d --name app --network tnet -p 8443:8443 \
+  -e DB_HOST=pg -e DB_USER=postgres -e DB_PASSWORD=pw -e DB_SSL=off todo
+curl -s -X POST localhost:8443/todos -d &#x27;{&quot;title&quot;:&quot;buy milk&quot;}&#x27;
+curl -s localhost:8443/todos</code></pre>
+</section>
+
+<section class="content-section" aria-labelledby="network">
+<h2 id="network"><span class="pt">3. Rede: VPC, subnets, endpoints e security groups</span><span class="en">3. Network: VPC, subnets, endpoints and security groups</span></h2>
+<p><span class="pt">Você já montou uma VPC com ALB e EC2. A diferença aqui é onde cada peça mora: o ALB fica em subnets <b>públicas</b>; as tasks e o banco ficam em subnets <b>privadas</b>, sem IP público e sem rota para o internet gateway. A task só aceita tráfego do ALB e só fala com o banco e com a AWS.</span><span class="en">You already built a VPC with an ALB and EC2. What differs here is where each piece lives: the ALB sits in <b>public</b> subnets; tasks and the database sit in <b>private</b> subnets, with no public IP and no route to the internet gateway. The task only accepts traffic from the ALB and only talks to the database and to AWS.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 262" role="img" aria-label="Rede e security groups / Network and security groups" style="min-width:560px">
+<rect x="136" y="10" width="554" height="240" rx="6" class="ln dash"/>
+<text x="146" y="28" class="pt mono mut" text-anchor="start">VPC 10.0.0.0/16</text><text x="146" y="28" class="en mono mut" text-anchor="start">VPC 10.0.0.0/16</text>
+<rect x="8" y="60" width="112" height="64" rx="4" class="ln fillsoft"/>
+<text x="64.0" y="88" class="pt" text-anchor="middle">Internet</text><text x="64.0" y="88" class="en" text-anchor="middle">Internet</text>
+<text x="64.0" y="108" class="pt mut" text-anchor="middle">só IPs Cloudflare</text><text x="64.0" y="108" class="en mut" text-anchor="middle">Cloudflare IPs only</text>
+<rect x="176" y="60" width="120" height="64" rx="4" class="ln fillsoft"/>
+<text x="236.0" y="88" class="pt" text-anchor="middle">ALB</text><text x="236.0" y="88" class="en" text-anchor="middle">ALB</text>
+<text x="236.0" y="108" class="pt mut" text-anchor="middle">sg-alb · pública</text><text x="236.0" y="108" class="en mut" text-anchor="middle">sg-alb · public</text>
+<rect x="346" y="60" width="120" height="64" rx="4" class="ln brandfill"/>
+<text x="406.0" y="88" class="pt" text-anchor="middle">Tasks Fargate</text><text x="406.0" y="88" class="en" text-anchor="middle">Fargate tasks</text>
+<text x="406.0" y="108" class="pt mut" text-anchor="middle">sg-app · privada</text><text x="406.0" y="108" class="en mut" text-anchor="middle">sg-app · private</text>
+<rect x="536" y="60" width="142" height="64" rx="4" class="ln fillsoft"/>
+<text x="607.0" y="88" class="pt" text-anchor="middle">RDS</text><text x="607.0" y="88" class="en" text-anchor="middle">RDS</text>
+<text x="607.0" y="108" class="pt mut" text-anchor="middle">sg-db · privada</text><text x="607.0" y="108" class="en mut" text-anchor="middle">sg-db · private</text>
+<path d="M120 92L176 92" class="ln"/>
+<path d="M168.8 95.5L176 92L168.8 88.5" class="ln"/>
+<path d="M296 92L346 92" class="ln"/>
+<path d="M338.8 95.5L346 92L338.8 88.5" class="ln"/>
+<path d="M466 92L536 92" class="ln"/>
+<path d="M528.8 95.5L536 92L528.8 88.5" class="ln"/>
+<text x="156" y="82" class="mono mut" text-anchor="middle">443</text>
+<text x="321" y="82" class="mono mut" text-anchor="middle">8443</text>
+<text x="501" y="82" class="mono mut" text-anchor="middle">5432</text>
+<rect x="346" y="166" width="332" height="68" rx="4" class="ln fillsoft"/>
+<text x="512" y="188" class="pt" text-anchor="middle">VPC endpoints (sg-vpce, porta 443)</text><text x="512" y="188" class="en" text-anchor="middle">VPC endpoints (sg-vpce, port 443)</text>
+<text x="512" y="210" class="mono mut" text-anchor="middle">ecr.api · ecr.dkr · logs · secretsmanager</text>
+<text x="512" y="226" class="mono mut" text-anchor="middle">s3 (gateway)</text>
+<path d="M406 124L406 166" class="ln dash"/>
+</svg></div><figcaption><span class="pt">Quem pode falar com quem. Cada seta é uma regra de entrada que aponta para o SG de origem, não para um CIDR. A task não tem IP público: alcança ECR, logs e segredos pelos endpoints.</span><span class="en">Who may talk to whom. Each arrow is an inbound rule pointing to the source SG, not a CIDR. The task has no public IP: it reaches ECR, logs and secrets through the endpoints.</span></figcaption></figure>
+<h3><span class="pt">3.1 VPC e subnets</span><span class="en">3.1 VPC and subnets</span></h3>
+<ol class="ds-steps">
+<li><span class="pt">Console: <b>VPC → Create VPC → VPC and more</b>. Nome <code>todo</code>, IPv4 <code>10.0.0.0/16</code>, <b>2</b> Availability Zones, <b>2</b> subnets públicas, <b>2</b> privadas.</span><span class="en">Console: <b>VPC → Create VPC → VPC and more</b>. Name <code>todo</code>, IPv4 <code>10.0.0.0/16</code>, <b>2</b> Availability Zones, <b>2</b> public subnets, <b>2</b> private.</span></li>
+<li><span class="pt"><b>NAT gateways: None</b> e <b>VPC endpoints: S3 Gateway</b>. Mantenha ativos <i>Enable DNS hostnames</i> e <i>Enable DNS resolution</i> (os endpoints de interface usam DNS privado).</span><span class="en"><b>NAT gateways: None</b> and <b>VPC endpoints: S3 Gateway</b>. Keep <i>Enable DNS hostnames</i> and <i>Enable DNS resolution</i> on (interface endpoints use private DNS).</span></li>
+<li><span class="pt">O assistente cria o internet gateway, a tabela de rotas das públicas (<code>0.0.0.0/0</code> → IGW) e as das privadas (sem rota para a internet, só o endpoint do S3). Os detalhes de VPC, rotas e IGW estão na <a href="../aws/index.html#vpc">nota de AWS</a>.</span><span class="en">The wizard creates the internet gateway, the public route table (<code>0.0.0.0/0</code> → IGW) and the private ones (no internet route, only the S3 endpoint). VPC, route and IGW details are in the <a href="../aws/index.html#vpc">AWS note</a>.</span></li>
+</ol>
+<p><span class="pt">Para simplificar, o RDS reaproveita as subnets privadas das tasks. Em produção, é comum uma camada separada só para dados.</span><span class="en">To keep it simple, RDS reuses the tasks’ private subnets. In production a separate data tier is common.</span></p>
+<pre><code>REGION=sa-east-1
+ACCOUNT_ID=&lt;ACCOUNT_ID&gt;        # the account of this environment (dev or prod)
+export AWS_PROFILE=dev         # one CLI profile per account
+DOMAIN=todo.example.com        # the hostname that Cloudflare will serve
+VPC_ID=&lt;vpc-id&gt;; PUB_A=&lt;subnet-public-a&gt;; PUB_B=&lt;subnet-public-b&gt;; PRIV_A=&lt;subnet-private-a&gt;; PRIV_B=&lt;subnet-private-b&gt;</code></pre>
+<h3><span class="pt">3.2 Security groups encadeados</span><span class="en">3.2 Chained security groups</span></h3>
+<p><span class="pt">Quatro grupos. Cada regra de entrada aponta para o <i>grupo</i> de origem, não para um CIDR: se as tasks mudarem de IP, nada precisa ser editado. É o mesmo encadeamento da <a href="../aws/index.html#sg">nota de AWS</a>.</span><span class="en">Four groups. Each inbound rule points to the source <i>group</i>, not a CIDR: if the tasks change IP, nothing needs editing. It is the same chaining as in the <a href="../aws/index.html#sg">AWS note</a>.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Grupo</span><span class="en">Group</span></th><th><span class="pt">Entrada permitida</span><span class="en">Allowed inbound</span></th><th><span class="pt">Por quê</span><span class="en">Why</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><code>sg-alb</code></span><span class="en"><code>sg-alb</code></span></td><td><span class="pt">443 dos IPs da Cloudflare</span><span class="en">443 from Cloudflare’s IPs</span></td><td><span class="pt">Ninguém além da Cloudflare chega ao ALB. Quem tentar o DNS do ALB direto não conecta.</span><span class="en">Nobody but Cloudflare reaches the ALB. Anyone trying the ALB’s DNS name directly cannot connect.</span></td></tr>
+<tr><td><span class="pt"><code>sg-app</code></span><span class="en"><code>sg-app</code></span></td><td><span class="pt">8443 de <code>sg-alb</code></span><span class="en">8443 from <code>sg-alb</code></span></td><td><span class="pt">Só o ALB fala com a task.</span><span class="en">Only the ALB talks to the task.</span></td></tr>
+<tr><td><span class="pt"><code>sg-db</code></span><span class="en"><code>sg-db</code></span></td><td><span class="pt">5432 de <code>sg-app</code></span><span class="en">5432 from <code>sg-app</code></span></td><td><span class="pt">Só a aplicação fala com o banco.</span><span class="en">Only the application talks to the database.</span></td></tr>
+<tr><td><span class="pt"><code>sg-vpce</code></span><span class="en"><code>sg-vpce</code></span></td><td><span class="pt">443 de <code>sg-app</code></span><span class="en">443 from <code>sg-app</code></span></td><td><span class="pt">Os endpoints de interface só atendem as tasks. A documentação exige 443 de entrada a partir das subnets privadas.</span><span class="en">The interface endpoints only serve the tasks. The docs require inbound 443 from the private subnets.</span></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>mksg() { aws ec2 create-security-group --group-name &quot;$1&quot; --description &quot;$1&quot; --vpc-id $VPC_ID --query GroupId --output text; }
+SG_ALB=$(mksg todo-alb); SG_APP=$(mksg todo-app); SG_DB=$(mksg todo-db); SG_VPCE=$(mksg todo-vpce)
+
+allow() { aws ec2 authorize-security-group-ingress --group-id &quot;$1&quot; --protocol tcp --port &quot;$2&quot; --source-group &quot;$3&quot;; }
+allow $SG_APP 8443 $SG_ALB
+allow $SG_DB 5432 $SG_APP
+allow $SG_VPCE 443 $SG_APP</code></pre>
+<h3><span class="pt">3.3 Só a Cloudflare chega ao ALB</span><span class="en">3.3 Only Cloudflare reaches the ALB</span></h3>
+<p><span class="pt">A Cloudflare publica os endereços de onde conecta à sua origem (<a href="https://www.cloudflare.com/ips-v4">ips-v4</a>, <a href="https://www.cloudflare.com/ips-v6">ips-v6</a>), e a documentação recomenda descartar o tráfego web que não venha deles. Em vez de copiar 15 regras para o security group, use uma <i>prefix list</i> (veja <a href="../aws/index.html#sg">Prefix Lists</a> na nota de AWS). Este exemplo cobre IPv4; o ALB padrão é IPv4 e a Cloudflare consegue alcançá-lo assim.</span><span class="en">Cloudflare publishes the addresses it connects to your origin from (<a href="https://www.cloudflare.com/ips-v4">ips-v4</a>, <a href="https://www.cloudflare.com/ips-v6">ips-v6</a>), and its docs recommend dropping web traffic that does not come from them. Instead of copying 15 rules into the security group, use a <i>prefix list</i> (see <a href="../aws/index.html#sg">Prefix Lists</a> in the AWS note). This example covers IPv4; the default ALB is IPv4 and Cloudflare can reach it that way.</span></p>
+<pre><code>PL_CF=$(aws ec2 create-managed-prefix-list --prefix-list-name cloudflare-ipv4 \
+  --address-family IPv4 --max-entries 30 \
+  --entries $(curl -s https://www.cloudflare.com/ips-v4 | sed &#x27;s/^/Cidr=/&#x27;) \
+  --query PrefixList.PrefixListId --output text)
+
+aws ec2 authorize-security-group-ingress --group-id $SG_ALB \
+  --ip-permissions &quot;IpProtocol=tcp,FromPort=443,ToPort=443,PrefixListIds=[{PrefixListId=$PL_CF}]&quot;</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">A lista da Cloudflare muda de vez em quando. Revise a prefix list periodicamente (<code>modify-managed-prefix-list</code>) ou automatize com um job agendado. Além disso, a documentação avisa: a Cloudflare usa <code>172.64.0.0/13</code> para se conectar, e uma rota mais ampla que aponte para um destino interno (por exemplo, <code>172.16.0.0/12</code> ou maior) causa erros 521/522.</span><span class="en">Cloudflare’s list changes now and then. Review the prefix list periodically (<code>modify-managed-prefix-list</code>) or automate it with a scheduled job. Also, the docs warn: Cloudflare connects from <code>172.64.0.0/13</code>, and a broader route that points to an internal target (for example <code>172.16.0.0/12</code> or larger) causes 521/522 errors.</span></div>
+<h3><span class="pt">3.4 Como a task alcança a AWS sem internet</span><span class="en">3.4 How the task reaches AWS without internet</span></h3>
+<p><span class="pt">Uma task Fargate numa subnet privada precisa falar com quatro serviços antes e durante a execução. Sem NAT, cada um ganha um endpoint dentro da sua VPC. Segundo as documentações do ECS e do ECR (Fargate com plataforma 1.4.0 ou mais nova):</span><span class="en">A Fargate task in a private subnet needs to talk to four services before and during its run. Without NAT, each gets an endpoint inside your VPC. According to the ECS and ECR docs (Fargate platform 1.4.0 or newer):</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Para quê</span><span class="en">What for</span></th><th><span class="pt">Endpoint</span><span class="en">Endpoint</span></th><th><span class="pt">Tipo</span><span class="en">Type</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Autenticar e consultar o ECR</span><span class="en">Authenticate to and query ECR</span></td><td><span class="pt"><code>ecr.api</code></span><span class="en"><code>ecr.api</code></span></td><td><span class="pt">Interface</span><span class="en">Interface</span></td></tr>
+<tr><td><span class="pt">Baixar a imagem (protocolo Docker)</span><span class="en">Download the image (Docker protocol)</span></td><td><span class="pt"><code>ecr.dkr</code> (com DNS privado ligado)</span><span class="en"><code>ecr.dkr</code> (with private DNS on)</span></td><td><span class="pt">Interface</span><span class="en">Interface</span></td></tr>
+<tr><td><span class="pt">Baixar as camadas da imagem, que o ECR guarda no S3</span><span class="en">Download image layers, which ECR stores in S3</span></td><td><span class="pt"><code>s3</code></span><span class="en"><code>s3</code></span></td><td><span class="pt">Gateway (o assistente já criou)</span><span class="en">Gateway (the wizard already created it)</span></td></tr>
+<tr><td><span class="pt">Enviar logs ao CloudWatch</span><span class="en">Send logs to CloudWatch</span></td><td><span class="pt"><code>logs</code></span><span class="en"><code>logs</code></span></td><td><span class="pt">Interface</span><span class="en">Interface</span></td></tr>
+<tr><td><span class="pt">Ler segredos antes de iniciar</span><span class="en">Read secrets before starting</span></td><td><span class="pt"><code>secretsmanager</code></span><span class="en"><code>secretsmanager</code></span></td><td><span class="pt">Interface</span><span class="en">Interface</span></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>for SVC in ecr.api ecr.dkr logs secretsmanager; do
+  aws ec2 create-vpc-endpoint --vpc-endpoint-type Interface --vpc-id $VPC_ID \
+    --service-name com.amazonaws.$REGION.$SVC \
+    --subnet-ids $PRIV_A $PRIV_B --security-group-ids $SG_VPCE --private-dns-enabled
+done</code></pre>
+<p><span class="pt">Alternativa: um NAT gateway numa subnet pública e uma rota <code>0.0.0.0/0</code> → NAT nas privadas. É mais simples de configurar, mas todo tráfego de saída passa por um dispositivo na internet pública e o NAT cobra por hora e por GB. Para uma API que só fala com serviços da AWS, os endpoints mantêm o tráfego dentro da rede da Amazon.</span><span class="en">Alternative: a NAT gateway in a public subnet and a <code>0.0.0.0/0</code> → NAT route in the private ones. It is simpler to set up, but all outbound traffic goes through a device on the public internet, and the NAT bills per hour and per GB. For an API that only talks to AWS services, endpoints keep traffic inside Amazon’s network.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Se sua aplicação chamar uma API externa (pagamento, e-mail), a task precisará de NAT além dos endpoints. Sem saída para a internet, a chamada simplesmente expira.</span><span class="en">If your application calls an external API (payments, email), the task needs a NAT in addition to the endpoints. Without an outbound path to the internet, the call just times out.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="tls">
+<h2 id="tls"><span class="pt">4. SSL ponta a ponta</span><span class="en">4. End-to-end SSL</span></h2>
+<p><span class="pt">Voltando à figura do início: são <b>quatro conexões</b> e cada uma tem o seu certificado. O trecho 1 a Cloudflare resolve sozinha. O trecho 4 já está na seção 5 (RDS). Esta seção cuida dos trechos 2 e 3, que usam o <b>mesmo</b> certificado de origem da Cloudflare em dois lugares.</span><span class="en">Back to the figure at the top: there are <b>four connections</b> and each has its own certificate. Cloudflare handles leg 1 by itself. Leg 4 is in section 5 (RDS). This section covers legs 2 and 3, which use the <b>same</b> Cloudflare origin certificate in two places.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Trecho</span><span class="en">Leg</span></th><th><span class="pt">Termina em</span><span class="en">Terminates at</span></th><th><span class="pt">Certificado</span><span class="en">Certificate</span></th><th><span class="pt">Quem valida</span><span class="en">Who validates</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">1 · visitante → Cloudflare</span><span class="en">1 · visitor → Cloudflare</span></td><td><span class="pt">Cloudflare</span><span class="en">Cloudflare</span></td><td><span class="pt">Universal SSL da Cloudflare</span><span class="en">Cloudflare’s Universal SSL</span></td><td><span class="pt">O navegador</span><span class="en">The browser</span></td></tr>
+<tr><td><span class="pt">2 · Cloudflare → ALB</span><span class="en">2 · Cloudflare → ALB</span></td><td><span class="pt">Listener 443 do ALB</span><span class="en">ALB 443 listener</span></td><td><span class="pt">Origem da Cloudflare, importado no ACM</span><span class="en">Cloudflare origin, imported into ACM</span></td><td><span class="pt">A Cloudflare (Full strict)</span><span class="en">Cloudflare (Full strict)</span></td></tr>
+<tr><td><span class="pt">3 · ALB → task</span><span class="en">3 · ALB → task</span></td><td><span class="pt">Node, dentro do container</span><span class="en">Node, inside the container</span></td><td><span class="pt">O mesmo, vindo do Secrets Manager</span><span class="en">The same one, from Secrets Manager</span></td><td><span class="pt">Ninguém (veja abaixo)</span><span class="en">Nobody (see below)</span></td></tr>
+<tr><td><span class="pt">4 · task → RDS</span><span class="en">4 · task → RDS</span></td><td><span class="pt">PostgreSQL no RDS</span><span class="en">PostgreSQL on RDS</span></td><td><span class="pt">CA do RDS</span><span class="en">RDS CA</span></td><td><span class="pt">O driver <code>pg</code> (verify-full)</span><span class="en">The <code>pg</code> driver (verify-full)</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O que o trecho 3 protege (e o que não).</b> A documentação do ALB diz que ele <i>não valida</i> o certificado dos targets: aceita autoassinado ou expirado, porque o tráfego dentro da VPC é autenticado no nível do pacote, sem risco de man-in-the-middle ou falsificação. Então o HTTPS até a task não serve para provar identidade; ele serve para <b>confidencialidade</b>: ninguém que consiga observar o tráfego da VPC vê o conteúdo. É uma defesa em profundidade e muitas vezes uma exigência de conformidade. Se você não precisa disso, a <a href="#variantb">variante B</a> é mais simples.</span><span class="en"><b>What leg 3 protects (and what it does not).</b> The ALB docs say it <i>does not validate</i> target certificates: self-signed or expired ones work, because traffic inside the VPC is authenticated at the packet level, with no man-in-the-middle or spoofing risk. So HTTPS to the task is not about proving identity; it is about <b>confidentiality</b>: nobody who can observe VPC traffic sees the content. It is defense in depth and often a compliance requirement. If you do not need that, <a href="#variantb">variant B</a> is simpler.</span></div>
+<h3><span class="pt">4.1 Cloudflare: modo Full (strict) e certificado de origem</span><span class="en">4.1 Cloudflare: Full (strict) mode and origin certificate</span></h3>
+<ol class="ds-steps">
+<li><span class="pt">Dashboard da Cloudflare → seu domínio → <b>SSL/TLS → Overview</b> → modo <b>Full (strict)</b>. Nesse modo a Cloudflare só conecta à origem se o certificado for válido para o hostname e emitido por uma CA pública ou pela Origin CA da Cloudflare.</span><span class="en">Cloudflare dashboard → your domain → <b>SSL/TLS → Overview</b> → <b>Full (strict)</b> mode. In this mode Cloudflare only connects to the origin if the certificate is valid for the hostname and issued by a public CA or Cloudflare’s Origin CA.</span></li>
+<li><span class="pt"><b>SSL/TLS → Origin Server → Create Certificate</b>. Deixe a Cloudflare gerar a chave privada (RSA 2048 é suficiente), liste o hostname (<code>todo.example.com</code>) e escolha a validade.</span><span class="en"><b>SSL/TLS → Origin Server → Create Certificate</b>. Let Cloudflare generate the private key (RSA 2048 is enough), list the hostname (<code>todo.example.com</code>) and pick the validity.</span></li>
+<li><span class="pt">Copie o certificado para <code>origin.pem</code> e a chave para <code>origin.key</code> <b>antes de sair da tela</b>: a documentação avisa que a chave não pode ser vista depois.</span><span class="en">Copy the certificate into <code>origin.pem</code> and the key into <code>origin.key</code> <b>before leaving the screen</b>: the docs warn the key cannot be viewed afterwards.</span></li>
+</ol>
+<p><span class="pt">O passo a passo completo, com capturas do modo e das opções, está na <a href="../cloudflare/index.html#ssl">nota da Cloudflare</a>. Esse certificado só é confiável para a Cloudflare: um navegador que falasse direto com o ALB o rejeitaria, o que é mais um motivo para o <code>sg-alb</code> aceitar só os IPs dela.</span><span class="en">The full walkthrough, with the mode and option screens, is in the <a href="../cloudflare/index.html#ssl">Cloudflare note</a>. This certificate is only trusted by Cloudflare: a browser talking to the ALB directly would reject it, one more reason for <code>sg-alb</code> to accept only its IPs.</span></p>
+<h3><span class="pt">4.2 Trecho 2: importar no ACM (para o ALB)</span><span class="en">4.2 Leg 2: import into ACM (for the ALB)</span></h3>
+<p><span class="pt">O ACM aceita certificados importados em PEM, com chave privada sem senha e de até 5 KB; RSA 2048 e ECDSA entre os suportados, e o ALB aceita todos os algoritmos do ACM.</span><span class="en">ACM accepts imported certificates in PEM, with an unencrypted private key of at most 5 KB; RSA 2048 and ECDSA are among the supported ones, and the ALB supports every ACM algorithm.</span></p>
+<pre><code>CERT_ARN=$(aws acm import-certificate \
+  --certificate fileb://origin.pem --private-key fileb://origin.key \
+  --query CertificateArn --output text)
+echo $CERT_ARN</code></pre>
+<h3><span class="pt">4.3 Trecho 3: guardar no Secrets Manager (para o Node)</span><span class="en">4.3 Leg 3: store in Secrets Manager (for Node)</span></h3>
+<p><span class="pt">O ACM não entrega a chave privada de volta, e a chave nunca deve entrar na imagem. Por isso a mesma chave vai para um segredo, e o ECS a injeta como variável de ambiente <code>TLS_KEY</code> quando a task inicia (é o que o <code>server.js</code> lê). O <code>jq</code> monta o JSON e cuida das quebras de linha do PEM:</span><span class="en">ACM does not hand the private key back, and the key must never go into the image. So the same key goes into a secret, and ECS injects it as the <code>TLS_KEY</code> environment variable when the task starts (that is what <code>server.js</code> reads). <code>jq</code> builds the JSON and handles the PEM line breaks:</span></p>
+<pre><code>aws secretsmanager create-secret --name todo/tls --description &quot;Cloudflare origin cert for the todo app&quot; \
+  --secret-string &quot;$(jq -n --rawfile c origin.pem --rawfile k origin.key &#x27;{tls_cert:$c, tls_key:$k}&#x27;)&quot;
+
+rm origin.key   # keep the only other copy in your password manager, if you want one</code></pre>
+<h3><span class="pt">4.4 Renovar sem derrubar nada</span><span class="en">4.4 Renewing without downtime</span></h3>
+<ul class="ds-list">
+<li><span class="pt">A Cloudflare não avisa quando o certificado de origem vai vencer (a documentação diz isso), e certificados importados no ACM não renovam sozinhos. Crie um lembrete no calendário com bastante antecedência.</span><span class="en">Cloudflare does not warn you before an origin certificate expires (its docs say so), and certificates imported into ACM do not renew by themselves. Put a reminder in your calendar well in advance.</span></li>
+<li><span class="pt">Os segredos só são lidos <b>quando a task inicia</b>: a documentação do ECS avisa que, se o segredo mudar, o container não recebe o valor novo sozinho. É preciso forçar um deploy novo.</span><span class="en">Secrets are only read <b>when the task starts</b>: the ECS docs warn that if the secret changes, the container does not get the new value on its own. You have to force a new deployment.</span></li>
+</ul>
+<pre><code># 1) create a new origin certificate in Cloudflare and save origin.pem / origin.key
+# 2) re-import over the same ARN, so the listener keeps working
+aws acm import-certificate --certificate-arn $CERT_ARN \
+  --certificate fileb://origin.pem --private-key fileb://origin.key
+# 3) update the secret
+aws secretsmanager put-secret-value --secret-id todo/tls \
+  --secret-string &quot;$(jq -n --rawfile c origin.pem --rawfile k origin.key &#x27;{tls_cert:$c, tls_key:$k}&#x27;)&quot;
+# 4) restart the tasks, one by one, with the rolling update
+aws ecs update-service --cluster todo --service todo --force-new-deployment</code></pre>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Dica de segurança: o certificado de origem valer por muito tempo é conveniente, mas o risco é a chave vazar e ficar válida por anos. Escolha uma validade que você consiga renovar com disciplina.</span><span class="en">Security tip: a long-lived origin certificate is convenient, but the risk is a leaked key staying valid for years. Pick a validity you can renew with discipline.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="data">
+<h2 id="data"><span class="pt">5. Banco de dados: RDS e segredos</span><span class="en">5. Database: RDS and secrets</span></h2>
+<p><span class="pt">O RDS Postgres vai nas subnets privadas, sem acesso público, criptografado em repouso, e só aceita a porta 5432 vinda do <code>sg-app</code>. A senha é gerada na hora, vai direto para o Secrets Manager e nunca aparece no terminal.</span><span class="en">RDS Postgres goes in the private subnets, with no public access, encrypted at rest, and only accepts port 5432 from <code>sg-app</code>. The password is generated on the spot, goes straight into Secrets Manager and never shows on the terminal.</span></p>
+<pre><code>aws rds create-db-subnet-group --db-subnet-group-name todo \
+  --db-subnet-group-description &quot;todo private subnets&quot; --subnet-ids $PRIV_A $PRIV_B
+
+DB_PASS=$(aws secretsmanager get-random-password --password-length 32 --exclude-punctuation \
+  --query RandomPassword --output text)
+
+aws secretsmanager create-secret --name todo/db --description &quot;todo app database login&quot; \
+  --secret-string &quot;$(jq -n --arg u todo_admin --arg p &quot;$DB_PASS&quot; &#x27;{username:$u, password:$p}&#x27;)&quot;
+
+aws rds create-db-instance --db-instance-identifier todo-db \
+  --engine postgres --db-instance-class db.t4g.micro --allocated-storage 20 \
+  --db-name todos --master-username todo_admin --master-user-password &quot;$DB_PASS&quot; \
+  --db-subnet-group-name todo --vpc-security-group-ids $SG_DB \
+  --no-publicly-accessible --storage-encrypted --backup-retention-period 7
+unset DB_PASS
+
+aws rds wait db-instance-available --db-instance-identifier todo-db
+DB_HOST=$(aws rds describe-db-instances --db-instance-identifier todo-db \
+  --query &#x27;DBInstances[0].Endpoint.Address&#x27; --output text)
+echo $DB_HOST</code></pre>
+<h3><span class="pt">SSL até o banco (trecho 4)</span><span class="en">SSL to the database (leg 4)</span></h3>
+<ul class="ds-list">
+<li><span class="pt"><em>Exigir SSL no servidor.</em> Segundo a documentação do RDS, o parâmetro <code>rds.force_ssl</code> vem ligado (1) por padrão no PostgreSQL 15 ou mais novo; nas versões 14 e anteriores o padrão é 0 e você precisa de um parameter group próprio. Confira a versão com <code>aws rds describe-db-instances --query "DBInstances[0].EngineVersion"</code>.</span><span class="en"><em>Require SSL on the server.</em> Per the RDS docs, the <code>rds.force_ssl</code> parameter is on (1) by default on PostgreSQL 15 or newer; on 14 and older the default is 0 and you need your own parameter group. Check the version with <code>aws rds describe-db-instances --query "DBInstances[0].EngineVersion"</code>.</span></li>
+<li><span class="pt"><em>Verificar o servidor no cliente.</em> Cliente que só “usa SSL” não sabe com quem fala. Com <code>sslmode=verify-full</code> (o que o <code>ssl.ca</code> do <code>server.js</code> faz), o driver confere a cadeia e o nome do host. Para isso ele precisa da CA da AWS, que o Dockerfile baixa do <code>truststore.pki.rds.amazonaws.com</code>.</span><span class="en"><em>Verify the server on the client.</em> A client that merely “uses SSL” does not know who it talks to. With <code>sslmode=verify-full</code> (what <code>ssl.ca</code> in <code>server.js</code> does), the driver checks the chain and host name. It needs AWS’s CA for that, which the Dockerfile downloads from <code>truststore.pki.rds.amazonaws.com</code>.</span></li>
+<li><span class="pt"><em>CA do bundle.</em> O bundle global inclui as CAs <code>rds-ca-rsa2048-g1</code> (padrão), <code>rds-ca-rsa4096-g1</code> e <code>rds-ca-ecc384-g1</code>. A documentação manda registrar só as CAs raiz, não as intermediárias, para não quebrar quando o RDS rotaciona o certificado do servidor.</span><span class="en"><em>Bundle CAs.</em> The global bundle includes <code>rds-ca-rsa2048-g1</code> (default), <code>rds-ca-rsa4096-g1</code> and <code>rds-ca-ecc384-g1</code>. The docs say to register only the root CAs, not intermediates, so nothing breaks when RDS rotates the server certificate.</span></li>
+</ul>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Usuário mestre no app é atalho de estudo.</b> Em produção crie um usuário só com <code>SELECT/INSERT/UPDATE/DELETE</code> na tabela e use as credenciais mestras apenas para migrações.</span><span class="en"><b>The master user in the app is a study shortcut.</b> In production create a user with only <code>SELECT/INSERT/UPDATE/DELETE</code> on the table and use the master credentials only for migrations.</span></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Cuidado com a senha gerenciada pelo RDS.</b> O RDS pode guardar e rotacionar a senha mestra no Secrets Manager (<code>--manage-master-user-password</code>), por padrão a cada sete dias. Mas o ECS lê o segredo só quando a task <i>inicia</i>: depois de uma rotação, as tasks em execução continuam com a senha antiga e novas conexões falham até um deploy novo. Para usar esse recurso, o app precisa ler o segredo em tempo de execução (com a task role e o endpoint do Secrets Manager) ou você precisa de um processo que force o deploy após a rotação. Por isso este exemplo usa um segredo próprio e estático.</span><span class="en"><b>Beware of the RDS-managed password.</b> RDS can store and rotate the master password in Secrets Manager (<code>--manage-master-user-password</code>), by default every seven days. But ECS reads the secret only when the task <i>starts</i>: after a rotation, running tasks keep the old password and new connections fail until a new deployment. To use that feature, the app must read the secret at run time (with the task role and the Secrets Manager endpoint) or you need a process that forces a deployment after rotation. That is why this example uses its own static secret.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="roles">
+<h2 id="roles"><span class="pt">6. As duas roles do ECS</span><span class="en">6. The two ECS roles</span></h2>
+<p><span class="pt">Crie as duas roles <b>em cada conta</b> (dev e prod). A de execução usa a política gerenciada <code>AmazonECSTaskExecutionRolePolicy</code> (ECR e logs) e ganha uma política embutida para ler só os dois segredos do app. Como os segredos usam a chave KMS padrão do Secrets Manager, a documentação não pede <code>kms:Decrypt</code>.</span><span class="en">Create both roles <b>in each account</b> (dev and prod). The execution role uses the managed policy <code>AmazonECSTaskExecutionRolePolicy</code> (ECR and logs) and gets an inline policy to read only the app’s two secrets. Because the secrets use Secrets Manager’s default KMS key, the docs do not ask for <code>kms:Decrypt</code>.</span></p>
+<pre><code>cat &gt; ecs-trust.json &lt;&lt;&#x27;EOF&#x27;
+{
+  &quot;Version&quot;: &quot;2012-10-17&quot;,
+  &quot;Statement&quot;: [{
+    &quot;Effect&quot;: &quot;Allow&quot;,
+    &quot;Principal&quot;: { &quot;Service&quot;: &quot;ecs-tasks.amazonaws.com&quot; },
+    &quot;Action&quot;: &quot;sts:AssumeRole&quot;
+  }]
+}
+EOF
+
+aws iam create-role --role-name todoExecutionRole --assume-role-policy-document file://ecs-trust.json
+aws iam attach-role-policy --role-name todoExecutionRole \
+  --policy-arn arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+
+aws iam put-role-policy --role-name todoExecutionRole --policy-name read-todo-secrets \
+  --policy-document &#x27;{
+    &quot;Version&quot;: &quot;2012-10-17&quot;,
+    &quot;Statement&quot;: [{
+      &quot;Effect&quot;: &quot;Allow&quot;,
+      &quot;Action&quot;: &quot;secretsmanager:GetSecretValue&quot;,
+      &quot;Resource&quot;: [
+        &quot;arn:aws:secretsmanager:&#x27;$REGION&#x27;:&#x27;$ACCOUNT_ID&#x27;:secret:todo/db-*&quot;,
+        &quot;arn:aws:secretsmanager:&#x27;$REGION&#x27;:&#x27;$ACCOUNT_ID&#x27;:secret:todo/tls-*&quot;
+      ]
+    }]
+  }&#x27;
+
+# task role: no permissions, the app calls no AWS API
+aws iam create-role --role-name todoTaskRole --assume-role-policy-document file://ecs-trust.json</code></pre>
+<p><span class="pt">O <code>-*</code> no fim cobre o sufixo aleatório que o Secrets Manager acrescenta ao ARN. A role de deploy do GitHub (nota de OIDC) já tem <code>iam:PassRole</code> para <i>essas duas</i> roles; ajuste o ARN dela se você usou outros nomes.</span><span class="en">The trailing <code>-*</code> covers the random suffix that Secrets Manager appends to the ARN. The GitHub deploy role (OIDC note) already has <code>iam:PassRole</code> for <i>these two</i> roles; adjust its ARN if you used different names.</span></p>
+</section>
+
+<section class="content-section" aria-labelledby="ecs-setup">
+<h2 id="ecs-setup"><span class="pt">7. ECS: cluster, task definition, ALB e service</span><span class="en">7. ECS: cluster, task definition, ALB and service</span></h2>
+<p><span class="pt">Agora as peças do ECS, na ordem em que uma depende da outra. Os comandos usam as variáveis das seções anteriores.</span><span class="en">Now the ECS pieces, in the order each depends on the next. The commands use the variables from the earlier sections.</span></p>
+<h3><span class="pt">7.1 Repositório de imagens e a primeira imagem</span><span class="en">7.1 Image repository and the first image</span></h3>
+<p><span class="pt">O repositório é o da <a href="../github-aws-oidc/index.html#ecr">etapa 6 da nota de OIDC</a> (tags imutáveis). Um service precisa de uma imagem que exista para subir; como o pipeline só funciona depois que o service existe, envie a primeira imagem à mão, uma única vez, com a tag <code>bootstrap</code>.</span><span class="en">The repository is the one from <a href="../github-aws-oidc/index.html#ecr">step 6 of the OIDC note</a> (immutable tags). A service needs an image that exists to start; since the pipeline only works once the service exists, push the first image by hand, just once, with the <code>bootstrap</code> tag.</span></p>
+<pre><code>aws ecr create-repository --repository-name todo --image-tag-mutability IMMUTABLE \
+  --image-scanning-configuration scanOnPush=true
+
+REGISTRY=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
+aws ecr get-login-password | docker login --username AWS --password-stdin $REGISTRY
+docker build --platform linux/amd64 -t $REGISTRY/todo:bootstrap .
+docker push $REGISTRY/todo:bootstrap</code></pre>
+<h3><span class="pt">7.2 Logs e cluster</span><span class="en">7.2 Logs and cluster</span></h3>
+<pre><code>aws logs create-log-group --log-group-name /ecs/todo
+aws logs put-retention-policy --log-group-name /ecs/todo --retention-in-days 14
+
+aws ecs create-cluster --cluster-name todo</code></pre>
+<h3><span class="pt">7.3 Task definition</span><span class="en">7.3 Task definition</span></h3>
+<p><span class="pt">Salve como <code>.aws/task-definition.develop.json</code> (e outro, <code>.aws/task-definition.production.json</code>, para a conta de produção). Troque os marcadores <code>&lt;...&gt;</code>. Os ARNs completos dos segredos, com o sufixo aleatório, saem de <code>aws secretsmanager describe-secret --secret-id todo/db --query ARN --output text</code> (e o mesmo para <code>todo/tls</code>).</span><span class="en">Save it as <code>.aws/task-definition.develop.json</code> (and another, <code>.aws/task-definition.production.json</code>, for the production account). Replace the <code>&lt;...&gt;</code> markers. The full secret ARNs, with the random suffix, come from <code>aws secretsmanager describe-secret --secret-id todo/db --query ARN --output text</code> (and the same for <code>todo/tls</code>).</span></p>
+<pre><code>{
+  &quot;family&quot;: &quot;todo&quot;,
+  &quot;networkMode&quot;: &quot;awsvpc&quot;,
+  &quot;requiresCompatibilities&quot;: [&quot;FARGATE&quot;],
+  &quot;cpu&quot;: &quot;256&quot;,
+  &quot;memory&quot;: &quot;512&quot;,
+  &quot;runtimePlatform&quot;: { &quot;cpuArchitecture&quot;: &quot;X86_64&quot;, &quot;operatingSystemFamily&quot;: &quot;LINUX&quot; },
+  &quot;executionRoleArn&quot;: &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/todoExecutionRole&quot;,
+  &quot;taskRoleArn&quot;: &quot;arn:aws:iam::&lt;ACCOUNT_ID&gt;:role/todoTaskRole&quot;,
+  &quot;containerDefinitions&quot;: [
+    {
+      &quot;name&quot;: &quot;app&quot;,
+      &quot;image&quot;: &quot;&lt;ACCOUNT_ID&gt;.dkr.ecr.&lt;REGION&gt;.amazonaws.com/todo:bootstrap&quot;,
+      &quot;essential&quot;: true,
+      &quot;readonlyRootFilesystem&quot;: true,
+      &quot;stopTimeout&quot;: 30,
+      &quot;portMappings&quot;: [{ &quot;containerPort&quot;: 8443, &quot;protocol&quot;: &quot;tcp&quot; }],
+      &quot;environment&quot;: [
+        { &quot;name&quot;: &quot;PORT&quot;, &quot;value&quot;: &quot;8443&quot; },
+        { &quot;name&quot;: &quot;DB_HOST&quot;, &quot;value&quot;: &quot;&lt;DB_HOST&gt;&quot; },
+        { &quot;name&quot;: &quot;DB_NAME&quot;, &quot;value&quot;: &quot;todos&quot; }
+      ],
+      &quot;secrets&quot;: [
+        { &quot;name&quot;: &quot;DB_USER&quot;,     &quot;valueFrom&quot;: &quot;&lt;TODO_DB_SECRET_ARN&gt;:username::&quot; },
+        { &quot;name&quot;: &quot;DB_PASSWORD&quot;, &quot;valueFrom&quot;: &quot;&lt;TODO_DB_SECRET_ARN&gt;:password::&quot; },
+        { &quot;name&quot;: &quot;TLS_CERT&quot;,    &quot;valueFrom&quot;: &quot;&lt;TODO_TLS_SECRET_ARN&gt;:tls_cert::&quot; },
+        { &quot;name&quot;: &quot;TLS_KEY&quot;,     &quot;valueFrom&quot;: &quot;&lt;TODO_TLS_SECRET_ARN&gt;:tls_key::&quot; }
+      ],
+      &quot;healthCheck&quot;: {
+        &quot;command&quot;: [&quot;CMD-SHELL&quot;, &quot;node -e \&quot;require(&#x27;https&#x27;).get({host:&#x27;localhost&#x27;,port:8443,path:&#x27;/health&#x27;,rejectUnauthorized:false},r=&gt;process.exit(r.statusCode===200?0:1)).on(&#x27;error&#x27;,()=&gt;process.exit(1))\&quot;&quot;],
+        &quot;interval&quot;: 15,
+        &quot;timeout&quot;: 5,
+        &quot;retries&quot;: 3,
+        &quot;startPeriod&quot;: 20
+      },
+      &quot;logConfiguration&quot;: {
+        &quot;logDriver&quot;: &quot;awslogs&quot;,
+        &quot;options&quot;: {
+          &quot;awslogs-group&quot;: &quot;/ecs/todo&quot;,
+          &quot;awslogs-region&quot;: &quot;&lt;REGION&gt;&quot;,
+          &quot;awslogs-stream-prefix&quot;: &quot;app&quot;
+        }
+      }
+    }
+  ]
+}</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><em><code>secrets</code> × <code>environment</code>.</em> O que está em <code>secrets</code> vem do Secrets Manager e não aparece no JSON. A sintaxe <code>ARN:chave::</code> pega uma chave do JSON do segredo (exige Fargate com plataforma 1.4.0 ou mais nova). Os dois pontos finais são as partes opcionais (estágio e versão) deixadas em branco.</span><span class="en"><em><code>secrets</code> vs <code>environment</code>.</em> What is in <code>secrets</code> comes from Secrets Manager and does not appear in the JSON. The <code>ARN:key::</code> syntax picks one key from the secret’s JSON (needs Fargate platform 1.4.0 or newer). The trailing colons are the optional parts (stage and version) left blank.</span></li>
+<li><span class="pt"><em><code>awsvpc</code> e portas.</em> Em <code>awsvpc</code> a task tem seu próprio IP, então a porta do container é a porta que o ALB acessa. Não existe mapeamento de porta do host.</span><span class="en"><em><code>awsvpc</code> and ports.</em> In <code>awsvpc</code> the task has its own IP, so the container port is the port the ALB reaches. There is no host port mapping.</span></li>
+<li><span class="pt"><em><code>readonlyRootFilesystem</code>.</em> O container não pode escrever no próprio disco. Se um invasor entrar, não consegue gravar binários nem alterar o app. O Node não precisa de disco para este exemplo.</span><span class="en"><em><code>readonlyRootFilesystem</code>.</em> The container cannot write to its own disk. If an attacker gets in, they cannot drop binaries or alter the app. Node does not need disk for this example.</span></li>
+<li><span class="pt"><em>Health check do container.</em> Usa o próprio Node (a imagem Alpine não traz <code>curl</code>) e aceita o certificado local com <code>rejectUnauthorized:false</code>, já que a checagem é interna. Na variante B troque <code>https</code> por <code>http</code>.</span><span class="en"><em>Container health check.</em> It uses Node itself (the Alpine image has no <code>curl</code>) and accepts the local certificate with <code>rejectUnauthorized:false</code>, since the check is internal. In variant B swap <code>https</code> for <code>http</code>.</span></li>
+<li><span class="pt"><em>CPU e memória.</em> 256 (0,25 vCPU) e 512 MB é uma combinação válida para Fargate e basta para o exemplo.</span><span class="en"><em>CPU and memory.</em> 256 (0.25 vCPU) and 512 MB is a valid Fargate combination and is enough for the example.</span></li>
+</ul>
+<pre><code>aws ecs register-task-definition --cli-input-json file://.aws/task-definition.develop.json</code></pre>
+<h3><span class="pt">7.4 Target group, ALB e listener HTTPS</span><span class="en">7.4 Target group, ALB and HTTPS listener</span></h3>
+<p><span class="pt">O target group é <code>ip</code> e fala <b>HTTPS</b> com a task na 8443; o health check do ALB também é HTTPS no <code>/health</code>. Mesmo que o ALB seja compartilhado com outros apps, cada service usa o seu próprio target group (a documentação do ECS recomenda um por service).</span><span class="en">The target group is <code>ip</code> and speaks <b>HTTPS</b> to the task on 8443; the ALB health check is also HTTPS on <code>/health</code>. Even if the ALB is shared with other apps, each service uses its own target group (the ECS docs recommend one per service).</span></p>
+<pre><code>TG_ARN=$(aws elbv2 create-target-group --name todo --target-type ip \
+  --protocol HTTPS --port 8443 --vpc-id $VPC_ID \
+  --health-check-protocol HTTPS --health-check-path /health \
+  --health-check-interval-seconds 15 --healthy-threshold-count 2 --matcher HttpCode=200 \
+  --query &#x27;TargetGroups[0].TargetGroupArn&#x27; --output text)
+aws elbv2 modify-target-group-attributes --target-group-arn $TG_ARN \
+  --attributes Key=deregistration_delay.timeout_seconds,Value=30
+
+ALB_ARN=$(aws elbv2 create-load-balancer --name todo --type application --scheme internet-facing \
+  --subnets $PUB_A $PUB_B --security-groups $SG_ALB \
+  --query &#x27;LoadBalancers[0].LoadBalancerArn&#x27; --output text)
+
+aws elbv2 create-listener --load-balancer-arn $ALB_ARN --protocol HTTPS --port 443 \
+  --certificates CertificateArn=$CERT_ARN --ssl-policy ELBSecurityPolicy-TLS13-1-2-2021-06 \
+  --default-actions Type=forward,TargetGroupArn=$TG_ARN
+
+aws elbv2 describe-load-balancers --load-balancer-arns $ALB_ARN --query &#x27;LoadBalancers[0].DNSName&#x27; --output text</code></pre>
+<p><span class="pt">Não há listener na porta 80: o <code>sg-alb</code> nem a deixa entrar. O redirecionamento de HTTP para HTTPS fica na Cloudflare (<b>SSL/TLS → Edge Certificates → Always Use HTTPS</b>), antes de o tráfego chegar à sua conta.</span><span class="en">There is no listener on port 80: <code>sg-alb</code> does not even let it in. The HTTP-to-HTTPS redirect lives at Cloudflare (<b>SSL/TLS → Edge Certificates → Always Use HTTPS</b>), before traffic reaches your account.</span></p>
+<h3><span class="pt">7.5 Service</span><span class="en">7.5 Service</span></h3>
+<pre><code># once per account; the console does it for you, the CLI does not
+aws iam create-service-linked-role --aws-service-name ecs.amazonaws.com   # ignore &quot;already exists&quot;
+
+aws ecs create-service --cluster todo --service-name todo \
+  --task-definition todo --desired-count 2 --launch-type FARGATE \
+  --network-configuration &quot;awsvpcConfiguration={subnets=[$PRIV_A,$PRIV_B],securityGroups=[$SG_APP],assignPublicIp=DISABLED}&quot; \
+  --load-balancers targetGroupArn=$TG_ARN,containerName=app,containerPort=8443 \
+  --health-check-grace-period-seconds 60 \
+  --deployment-configuration &quot;minimumHealthyPercent=100,maximumPercent=200,deploymentCircuitBreaker={enable=true,rollback=true}&quot;</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><em><code>desired-count 2</code>.</em> Duas tasks, uma em cada subnet privada (AZs diferentes). Uma AZ pode cair sem tirar o app do ar. Com 1 task só, a troca de versão passa por um instante com a nova e a antiga juntas (100/200).</span><span class="en"><em><code>desired-count 2</code>.</em> Two tasks, one in each private subnet (different AZs). An AZ can fail without taking the app down. With a single task, the swap briefly runs the new and old together (100/200).</span></li>
+<li><span class="pt"><em><code>assignPublicIp=DISABLED</code>.</em> A task não ganha IP público. Ela é alcançável só de dentro da VPC, via ALB.</span><span class="en"><em><code>assignPublicIp=DISABLED</code>.</em> The task gets no public IP. It is reachable only from inside the VPC, via the ALB.</span></li>
+<li><span class="pt"><em><code>health-check-grace-period-seconds 60</code>.</em> Pela referência da API, o scheduler ignora health checks do ALB reprovados por esse tempo depois de a task iniciar. Sem ele (padrão 0) uma task que ainda está carregando seria morta antes de ficar pronta.</span><span class="en"><em><code>health-check-grace-period-seconds 60</code>.</em> Per the API reference, the scheduler ignores failing ALB health checks for that long after the task starts. Without it (default 0), a task still booting could be killed before it is ready.</span></li>
+<li><span class="pt"><em>Circuit breaker com rollback.</em> Se as tasks novas não ficarem saudáveis, o ECS volta para a revisão anterior sozinho. Detalhes na <a href="../github-aws-oidc/index.html#ecs">etapa 7 da nota de OIDC</a>.</span><span class="en"><em>Circuit breaker with rollback.</em> If the new tasks do not become healthy, ECS rolls back to the previous revision on its own. Details in <a href="../github-aws-oidc/index.html#ecs">step 7 of the OIDC note</a>.</span></li>
+<li><span class="pt"><em>Service-linked role.</em> O ECS precisa dela para registrar e remover as tasks no ALB, segundo a documentação.</span><span class="en"><em>Service-linked role.</em> ECS needs it to register and deregister tasks with the ALB, per the docs.</span></li>
+</ul>
+<h3><span class="pt">7.6 DNS na Cloudflare</span><span class="en">7.6 DNS at Cloudflare</span></h3>
+<ol class="ds-steps">
+<li><span class="pt">Cloudflare → <b>DNS → Records → Add record</b>: tipo <code>CNAME</code>, nome <code>todo</code>, destino = o DNS do ALB que o último comando acima imprimiu, <b>Proxy status: Proxied</b> (nuvem laranja).</span><span class="en">Cloudflare → <b>DNS → Records → Add record</b>: type <code>CNAME</code>, name <code>todo</code>, target = the ALB DNS name that the last command above printed, <b>Proxy status: Proxied</b> (orange cloud).</span></li>
+<li><span class="pt">Com o proxy ligado, a Cloudflare termina o trecho 1 e abre o trecho 2 até o ALB, validando o certificado de origem (Full strict).</span><span class="en">With the proxy on, Cloudflare terminates leg 1 and opens leg 2 to the ALB, validating the origin certificate (Full strict).</span></li>
+</ol>
+</section>
+
+<section class="content-section" aria-labelledby="github">
+<h2 id="github"><span class="pt">8. Ligar ao deploy automático</span><span class="en">8. Connecting to automatic deploy</span></h2>
+<p><span class="pt">Tudo o que a <a href="../github-aws-oidc/index.html">nota de OIDC</a> chamava de “já existe” (ECR, cluster, service, roles) agora existe. Falta entregar ao workflow os nomes certos, em cada environment do GitHub:</span><span class="en">Everything the <a href="../github-aws-oidc/index.html">OIDC note</a> called “already exists” (ECR, cluster, service, roles) now exists. What remains is handing the workflow the right names, in each GitHub environment:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Variável do environment</span><span class="en">Environment variable</span></th><th><span class="pt">Valor deste exemplo</span><span class="en">Value in this example</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><code>AWS_ROLE_ARN</code></span><span class="en"><code>AWS_ROLE_ARN</code></span></td><td><span class="pt">A role de deploy via OIDC daquela conta (etapa 2 da nota de OIDC)</span><span class="en">That account’s OIDC deploy role (step 2 of the OIDC note)</span></td></tr>
+<tr><td><span class="pt"><code>AWS_REGION</code></span><span class="en"><code>AWS_REGION</code></span></td><td><span class="pt"><code>sa-east-1</code> (a mesma de <code>$REGION</code>)</span><span class="en"><code>sa-east-1</code> (the same as <code>$REGION</code>)</span></td></tr>
+<tr><td><span class="pt"><code>ECR_REPOSITORY</code></span><span class="en"><code>ECR_REPOSITORY</code></span></td><td><span class="pt"><code>todo</code></span><span class="en"><code>todo</code></span></td></tr>
+<tr><td><span class="pt"><code>ECS_CLUSTER</code></span><span class="en"><code>ECS_CLUSTER</code></span></td><td><span class="pt"><code>todo</code></span><span class="en"><code>todo</code></span></td></tr>
+<tr><td><span class="pt"><code>ECS_SERVICE</code></span><span class="en"><code>ECS_SERVICE</code></span></td><td><span class="pt"><code>todo</code></span><span class="en"><code>todo</code></span></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code>gh variable set ECR_REPOSITORY --env develop --body &quot;todo&quot;
+gh variable set ECS_CLUSTER    --env develop --body &quot;todo&quot;
+gh variable set ECS_SERVICE    --env develop --body &quot;todo&quot;
+# AWS_ROLE_ARN and AWS_REGION: see step 3 of the OIDC note; repeat all of them for --env production</code></pre>
+<h3><span class="pt">Um arquivo de task definition por ambiente</span><span class="en">One task definition file per environment</span></h3>
+<p><span class="pt">O workflow da nota de OIDC usa um único <code>.aws/task-definition.json</code>. Aqui o arquivo carrega o ID da conta (nos ARNs das roles e dos segredos) e o endpoint do banco, que são diferentes em dev e prod. Por isso há um arquivo por environment, e uma única linha do workflow muda para escolher o certo:</span><span class="en">The OIDC note’s workflow uses a single <code>.aws/task-definition.json</code>. Here the file carries the account ID (in the role and secret ARNs) and the database endpoint, which differ between dev and prod. So there is one file per environment, and a single workflow line changes to pick the right one:</span></p>
+<pre><code>    env:
+      # ...
+      ECS_TASK_DEFINITION: .aws/task-definition.${{ github.ref_name == &#x27;main&#x27; &amp;&amp; &#x27;production&#x27; || &#x27;develop&#x27; }}.json
+      CONTAINER_NAME: app</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><em>A imagem do arquivo é só um marcador.</em> A action de render troca o campo <code>image</code> do container <code>app</code> pela imagem do commit; o <code>:bootstrap</code> nunca mais é usado.</span><span class="en"><em>The image in the file is just a placeholder.</em> The render action swaps the <code>image</code> field of the <code>app</code> container for the commit’s image; <code>:bootstrap</code> is never used again.</span></li>
+<li><span class="pt"><em>O app não usa <code>--build-arg</code>.</em> Se o seu Dockerfile não declara <code>ARG APP_ENV</code>, o <code>docker build</code> ignora o argumento extra com um aviso. Você pode apagar essas linhas do workflow, já que a configuração do app vem em tempo de execução (<code>environment</code> e <code>secrets</code>).</span><span class="en"><em>The app does not use <code>--build-arg</code>.</em> If your Dockerfile does not declare <code>ARG APP_ENV</code>, <code>docker build</code> ignores the extra argument with a warning. You can delete those lines from the workflow, since the app’s configuration arrives at run time (<code>environment</code> and <code>secrets</code>).</span></li>
+<li><span class="pt"><em>O que o pipeline não faz.</em> Não cria rede, banco, segredos nem roles; só troca a imagem. Mudou um segredo (por exemplo, o certificado)? Rode <code>update-service --force-new-deployment</code>, como na seção 4.4.</span><span class="en"><em>What the pipeline does not do.</em> It does not create network, database, secrets or roles; it only swaps the image. Changed a secret (the certificate, say)? Run <code>update-service --force-new-deployment</code>, as in section 4.4.</span></li>
+</ul>
+<ol class="ds-steps">
+<li><span class="pt">Faça merge de uma mudança em <code>develop</code>. O workflow constrói a imagem (a do GitHub é x86_64, como a task), envia ao ECR com o SHA como tag, registra uma revisão da task definition e atualiza o service.</span><span class="en">Merge a change into <code>develop</code>. The workflow builds the image (GitHub’s runner is x86_64, like the task), pushes it to ECR tagged with the SHA, registers a task definition revision and updates the service.</span></li>
+<li><span class="pt">O ECS sobe duas tasks novas, espera passarem nos health checks do container e do ALB, e só então para as antigas (100/200). Enquanto isso, o ALB só manda tráfego às saudáveis.</span><span class="en">ECS starts two new tasks, waits for them to pass the container and ALB health checks, and only then stops the old ones (100/200). Meanwhile the ALB only sends traffic to healthy ones.</span></li>
+<li><span class="pt">O job do GitHub espera o service estabilizar. Se o circuit breaker fizer rollback, o job falha e o app antigo continua no ar.</span><span class="en">The GitHub job waits for the service to stabilise. If the circuit breaker rolls back, the job fails and the old app keeps serving.</span></li>
+</ol>
+</section>
+
+<section class="content-section" aria-labelledby="verify">
+<h2 id="verify"><span class="pt">9. Conferir que funciona e que está seguro</span><span class="en">9. Checking it works and is secure</span></h2>
+<pre><code># 1) the service reached steady state, and the targets are healthy
+aws ecs describe-services --cluster todo --services todo \
+  --query &#x27;services[0].{running:runningCount,desired:desiredCount,events:events[0].message}&#x27;
+aws elbv2 describe-target-health --target-group-arn $TG_ARN \
+  --query &#x27;TargetHealthDescriptions[].TargetHealth.State&#x27;
+
+# 2) the app log says it started over HTTPS
+aws logs tail /ecs/todo --since 10m
+
+# 3) through Cloudflare, end to end
+curl -i https://$DOMAIN/health
+curl -s -X POST https://$DOMAIN/todos -d &#x27;{&quot;title&quot;:&quot;first task&quot;}&#x27;
+curl -s https://$DOMAIN/todos
+
+# 4) negative tests: both must FAIL
+curl -m 8 -k https://&lt;ALB_DNS_NAME&gt;/health     # times out: sg-alb only accepts Cloudflare IPs
+curl -m 8 http://$DOMAIN/health                # redirected to HTTPS by Cloudflare</code></pre>
+<h3><span class="pt">Quando algo dá errado</span><span class="en">When something goes wrong</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Causa provável</span><span class="en">Likely cause</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Cloudflare <b>521</b> (web server is down) ou <b>522</b> (connection timed out)</span><span class="en">Cloudflare <b>521</b> (web server is down) or <b>522</b> (connection timed out)</span></td><td><span class="pt">O <code>sg-alb</code> não tem os IPs da Cloudflare na 443, ou o listener 443 não existe. Verifique também a rota de 172.64.0.0/13 citada na seção 3.</span><span class="en"><code>sg-alb</code> lacks Cloudflare’s IPs on 443, or the 443 listener does not exist. Also check the 172.64.0.0/13 route mentioned in section 3.</span></td></tr>
+<tr><td><span class="pt">Cloudflare <b>525</b> (SSL handshake failed) ou <b>526</b> (invalid SSL certificate)</span><span class="en">Cloudflare <b>525</b> (SSL handshake failed) or <b>526</b> (invalid SSL certificate)</span></td><td><span class="pt">O listener do ALB não usa o certificado de origem importado, o certificado não cobre o hostname, ou o modo Full (strict) está com um certificado vencido.</span><span class="en">The ALB listener is not using the imported origin certificate, the certificate does not cover the hostname, or Full (strict) is on with an expired certificate.</span></td></tr>
+<tr><td><span class="pt">Cloudflare <b>502</b>, ALB 502/503</span><span class="en">Cloudflare <b>502</b>, ALB 502/503</span></td><td><span class="pt">Nenhum target saudável. Veja <code>describe-target-health</code>: se estiver <i>unhealthy</i>, o target group fala HTTPS e a task HTTP (ou o contrário), ou <code>sg-app</code> não aceita 8443 do <code>sg-alb</code>.</span><span class="en">No healthy target. Check <code>describe-target-health</code>: if <i>unhealthy</i>, the target group speaks HTTPS while the task speaks HTTP (or the reverse), or <code>sg-app</code> does not accept 8443 from <code>sg-alb</code>.</span></td></tr>
+<tr><td><span class="pt">A task para logo depois de iniciar: <code>ResourceInitializationError ... unable to pull secrets</code></span><span class="en">The task stops right after starting: <code>ResourceInitializationError ... unable to pull secrets</code></span></td><td><span class="pt">A execution role não pode ler o segredo (ARN errado na política ou no <code>valueFrom</code>), ou falta o endpoint <code>secretsmanager</code>, ou o <code>sg-vpce</code> não aceita 443 do <code>sg-app</code>.</span><span class="en">The execution role cannot read the secret (wrong ARN in the policy or in <code>valueFrom</code>), or the <code>secretsmanager</code> endpoint is missing, or <code>sg-vpce</code> does not accept 443 from <code>sg-app</code>.</span></td></tr>
+<tr><td><span class="pt"><code>CannotPullContainerError</code></span><span class="en"><code>CannotPullContainerError</code></span></td><td><span class="pt">Faltam <code>ecr.api</code>, <code>ecr.dkr</code> ou o gateway do <code>s3</code>; o DNS privado do endpoint está desligado; ou a imagem/tag não existe no ECR.</span><span class="en"><code>ecr.api</code>, <code>ecr.dkr</code> or the <code>s3</code> gateway is missing; the endpoint’s private DNS is off; or the image/tag does not exist in ECR.</span></td></tr>
+<tr><td><span class="pt">Sem logs no CloudWatch</span><span class="en">No logs in CloudWatch</span></td><td><span class="pt">Falta o endpoint <code>logs</code>, ou o grupo <code>/ecs/todo</code> não existe (o <code>awslogs</code> não o cria sozinho nesta configuração).</span><span class="en">The <code>logs</code> endpoint is missing, or the <code>/ecs/todo</code> group does not exist (<code>awslogs</code> does not create it on its own in this setup).</span></td></tr>
+<tr><td><span class="pt">O log mostra <code>self-signed certificate in certificate chain</code> ao falar com o banco</span><span class="en">The log shows <code>self-signed certificate in certificate chain</code> when talking to the database</span></td><td><span class="pt">O bundle de CAs não foi baixado na imagem, ou o <code>DB_CA_FILE</code> aponta para outro arquivo. O RDS exige confiar na CA da AWS para o <code>verify-full</code>.</span><span class="en">The CA bundle was not downloaded into the image, or <code>DB_CA_FILE</code> points elsewhere. RDS needs the AWS CA trusted for <code>verify-full</code>.</span></td></tr>
+<tr><td><span class="pt"><code>no pg_hba.conf entry ... SSL off</code></span><span class="en"><code>no pg_hba.conf entry ... SSL off</code></span></td><td><span class="pt">O servidor exige SSL (<code>rds.force_ssl</code>) e o cliente tentou sem. Confira que <code>DB_SSL</code> não está <code>off</code> na task.</span><span class="en">The server requires SSL (<code>rds.force_ssl</code>) and the client tried without it. Make sure <code>DB_SSL</code> is not <code>off</code> in the task.</span></td></tr>
+<tr><td><span class="pt">Deploy fica em loop e volta para a versão antiga</span><span class="en">Deploy loops and goes back to the old version</span></td><td><span class="pt">É o circuit breaker fazendo o trabalho dele. Leia os eventos do service e os logs da task nova para achar o motivo.</span><span class="en">That is the circuit breaker doing its job. Read the service events and the new task’s logs to find the reason.</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> as causas da tabela acima são o diagnóstico que faço a partir da leitura das documentações, não uma lista oficial. Das mensagens da Cloudflare, só os títulos dos erros foram conferidos na documentação.</span><span class="en"><b>Personal note, not verified in the sources:</b> the causes in the table above are my own diagnosis from reading the docs, not an official list. Of Cloudflare’s messages, only the error titles were checked in its documentation.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="variantb">
+<h2 id="variantb"><span class="pt">10. Variante B: HTTP dentro da VPC</span><span class="en">10. Variant B: HTTP inside the VPC</span></h2>
+<p><span class="pt">Se você não precisa da criptografia entre o ALB e a task, o ALB pode terminar o TLS e falar HTTP com o container. Fica bem mais simples: a task não precisa do certificado, o segredo <code>todo/tls</code> deixa de existir e não há renovação em dois lugares. O mesmo código serve, porque o <code>server.js</code> cai para HTTP quando não recebe <code>TLS_CERT</code>.</span><span class="en">If you do not need encryption between the ALB and the task, the ALB can terminate TLS and speak HTTP to the container. It is much simpler: the task needs no certificate, the <code>todo/tls</code> secret disappears and there is no renewal in two places. The same code works, because <code>server.js</code> falls back to HTTP when it gets no <code>TLS_CERT</code>.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">O que muda</span><span class="en">What changes</span></th><th><span class="pt">Variante A (principal)</span><span class="en">Variant A (main)</span></th><th><span class="pt">Variante B</span><span class="en">Variant B</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Target group</span><span class="en">Target group</span></td><td><span class="pt">HTTPS · 8443 · health check HTTPS</span><span class="en">HTTPS · 8443 · HTTPS health check</span></td><td><span class="pt">HTTP · 8080 · health check HTTP</span><span class="en">HTTP · 8080 · HTTP health check</span></td></tr>
+<tr><td><span class="pt">Task definition</span><span class="en">Task definition</span></td><td><span class="pt"><code>TLS_CERT</code> e <code>TLS_KEY</code> em <code>secrets</code>; <code>PORT=8443</code></span><span class="en"><code>TLS_CERT</code> and <code>TLS_KEY</code> in <code>secrets</code>; <code>PORT=8443</code></span></td><td><span class="pt">Sem os dois; <code>PORT=8080</code>; health check com <code>http</code></span><span class="en">Without both; <code>PORT=8080</code>; health check with <code>http</code></span></td></tr>
+<tr><td><span class="pt">Security group</span><span class="en">Security group</span></td><td><span class="pt"><code>sg-app</code> aceita 8443 do ALB</span><span class="en"><code>sg-app</code> accepts 8443 from the ALB</span></td><td><span class="pt"><code>sg-app</code> aceita 8080 do ALB</span><span class="en"><code>sg-app</code> accepts 8080 from the ALB</span></td></tr>
+<tr><td><span class="pt">Trecho ALB → task</span><span class="en">ALB → task leg</span></td><td><span class="pt">Criptografado</span><span class="en">Encrypted</span></td><td><span class="pt">Texto puro dentro da VPC, autenticado por pacote</span><span class="en">Clear text inside the VPC, packet-authenticated</span></td></tr>
+<tr><td><span class="pt">Trechos 1, 2 e 4</span><span class="en">Legs 1, 2 and 4</span></td><td><span class="pt">Iguais</span><span class="en">Same</span></td><td><span class="pt">Iguais (Cloudflare → ALB e task → RDS continuam em TLS)</span><span class="en">Same (Cloudflare → ALB and task → RDS remain TLS)</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">O target group não pode mudar de protocolo depois de criado, então migrar da A para a B (ou ao contrário) significa criar outro target group e trocar o service para ele.</span><span class="en">A target group’s protocol cannot be changed after creation, so moving from A to B (or back) means creating another target group and pointing the service at it.</span></p>
+</section>
+
+<section class="content-section" aria-labelledby="cleanup">
+<h2 id="cleanup"><span class="pt">11. Apagar tudo</span><span class="en">11. Deleting everything</span></h2>
+<p><span class="pt">Apague na ordem inversa da dependência, para que nada fique preso. Desfazer o que você criou evita cobranças por hora de ALB, RDS, endpoints e tasks.</span><span class="en">Delete in reverse dependency order so nothing gets stuck. Undoing what you created avoids hourly charges for the ALB, RDS, endpoints and tasks.</span></p>
+<ol class="ds-steps">
+<li><span class="pt">Cloudflare: apague o registro CNAME. GitHub: apague as variáveis (ou desligue o workflow).</span><span class="en">Cloudflare: delete the CNAME record. GitHub: delete the variables (or disable the workflow).</span></li>
+<li><span class="pt"><code>aws ecs update-service --cluster todo --service todo --desired-count 0</code> e depois <code>aws ecs delete-service --cluster todo --service todo --force</code>; então <code>aws ecs delete-cluster --cluster todo</code>.</span><span class="en"><code>aws ecs update-service --cluster todo --service todo --desired-count 0</code> then <code>aws ecs delete-service --cluster todo --service todo --force</code>; then <code>aws ecs delete-cluster --cluster todo</code>.</span></li>
+<li><span class="pt">Apague o listener e o ALB (<code>aws elbv2 delete-load-balancer</code>), depois o target group. Remova o certificado do ACM (<code>aws acm delete-certificate</code>), que só pode ser apagado depois de sair do listener.</span><span class="en">Delete the listener and the ALB (<code>aws elbv2 delete-load-balancer</code>), then the target group. Remove the ACM certificate (<code>aws acm delete-certificate</code>), which can only be deleted once it is no longer on the listener.</span></li>
+<li><span class="pt">RDS: <code>aws rds delete-db-instance --db-instance-identifier todo-db --skip-final-snapshot</code> (ou tire um snapshot final se os dados importarem).</span><span class="en">RDS: <code>aws rds delete-db-instance --db-instance-identifier todo-db --skip-final-snapshot</code> (or take a final snapshot if the data matters).</span></li>
+<li><span class="pt">Segredos (<code>aws secretsmanager delete-secret</code>), repositório ECR, log group, roles IAM, as task definitions (desregistre as revisões).</span><span class="en">Secrets (<code>aws secretsmanager delete-secret</code>), ECR repository, log group, IAM roles, the task definitions (deregister the revisions).</span></li>
+<li><span class="pt">Por último a rede: endpoints, security groups, prefix list e a VPC (o assistente remove as subnets, rotas e o IGW junto).</span><span class="en">Network last: endpoints, security groups, prefix list and the VPC (the wizard-created subnets, routes and IGW go with it).</span></li>
+</ol>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> esta combinação (Cloudflare Full strict, certificado de origem no ACM e no container, Fargate em subnets privadas com endpoints, RDS com verify-full) não aparece num único exemplo oficial; ela junta as páginas listadas abaixo. O <code>server.js</code>, a imagem e o <code>jq</code> que monta o segredo foram executados localmente (Docker, Postgres 16, certificado autoassinado), com o TLS ligado e desligado. Os comandos <code>aws</code> e a task definition <b>não foram executados contra uma conta AWS</b>: foram escritos pelas referências da CLI e da API, então confira os parâmetros com <code>--help</code> na sua versão antes de depender deles.</span><span class="en"><b>Personal note, not verified in the sources:</b> this combination (Cloudflare Full strict, origin certificate in ACM and in the container, Fargate in private subnets with endpoints, RDS with verify-full) does not appear in a single official example; it joins the pages listed below. The <code>server.js</code>, the image and the <code>jq</code> that builds the secret were run locally (Docker, Postgres 16, a self-signed certificate), with TLS on and off. The <code>aws</code> commands and the task definition were <b>not run against an AWS account</b>: they were written from the CLI and API references, so check the parameters with <code>--help</code> on your version before relying on them.</span></div>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> a Cloudflare oferece o Authenticated Origin Pulls (mTLS) para que a origem só aceite conexões da sua conta. Não verifiquei se o ALB consegue exigi-lo, então esta nota usa a lista de IPs no security group. O ponto de partida é a página oficial de Authenticated Origin Pulls, listada abaixo.</span><span class="en"><b>Personal note, not verified in the sources:</b> Cloudflare offers Authenticated Origin Pulls (mTLS) so the origin only accepts connections from your account. I did not verify whether the ALB can enforce it, so this note uses the IP list in the security group. The starting point is the official Authenticated Origin Pulls page, listed below.</span></div>
+<div class="sources"><b><span class="pt">Fontes oficiais · verificadas em 2026-10-25</span><span class="en">Official sources · verified on 2026-10-25</span></b><ul><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/alb.html">AWS Docs · ECS: Use an Application Load Balancer (target type ip for awsvpc, one target group per service)</a></li><li><a href="https://docs.aws.amazon.com/elasticloadbalancing/latest/application/load-balancer-target-groups.html">AWS Docs · ELB: Target groups for ALB (HTTPS targets, certificates are not validated, ip targets)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/secrets-envvar-secrets-manager.html">AWS Docs · ECS: Pass Secrets Manager secrets through environment variables (valueFrom syntax, platform 1.4.0, no rotation pickup)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html">AWS Docs · ECS: Task execution IAM role (managed policy, Secrets Manager permissions)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/vpc-endpoints.html">AWS Docs · ECS: Interface VPC endpoints (Fargate: ECR, Secrets Manager and CloudWatch Logs)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/vpc-endpoints.html">AWS Docs · ECR: Interface VPC endpoints (ecr.api, ecr.dkr, S3 gateway, logs)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_definition_parameters.html">AWS Docs · ECS: Task definition parameters for Fargate (stopTimeout, readonlyRootFilesystem, healthCheck)</a></li><li><a href="https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_CreateService.html">AWS Docs · ECS API: CreateService (healthCheckGracePeriodSeconds)</a></li><li><a href="https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-prerequisites.html">AWS Docs · ACM: Prerequisites for importing certificates</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html">AWS Docs · RDS: Using SSL with a PostgreSQL DB instance (rds.force_ssl, verify-full)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html">AWS Docs · RDS: Using SSL/TLS to encrypt a connection (CA bundle, root CAs only)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-secrets-manager.html">AWS Docs · RDS: Password management with Secrets Manager (default 7-day rotation)</a></li><li><a href="https://developers.cloudflare.com/ssl/origin-configuration/origin-ca/">Cloudflare Docs · Origin CA certificates</a></li><li><a href="https://developers.cloudflare.com/ssl/origin-configuration/authenticated-origin-pull/">Cloudflare Docs · Authenticated Origin Pulls</a></li><li><a href="https://developers.cloudflare.com/fundamentals/concepts/cloudflare-ip-addresses/">Cloudflare Docs · Cloudflare IP addresses</a></li><li><a href="https://developers.cloudflare.com/support/troubleshooting/http-status-codes/cloudflare-5xx-errors/">Cloudflare Docs · 5xx errors</a></li><li><a href="https://nodejs.org/docs/latest-v22.x/api/https.html">Node.js Docs · HTTPS (createServer, server.close)</a></li></ul></div>
+</section>
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
