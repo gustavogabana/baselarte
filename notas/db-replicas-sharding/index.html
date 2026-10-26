@@ -1,0 +1,962 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="dbs.metaTitle">Databases: reads, writes, replicas and sharding (Postgres and AWS)</title>
+  <meta name="description" data-i18n-attributes="content:dbs.metaDescription" content="How to scale a database beyond one server: the WAL, read replicas, replication lag and read-your-writes, Multi-AZ, Aurora, RDS Proxy and sharding (Citus, Aurora Limitless), with a Postgres replication lab in Docker and a request traced end to end.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/db-replicas-sharding/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/db-replicas-sharding/">
+  <meta property="og:title" data-i18n-attributes="content:dbs.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta property="og:description" data-i18n-attributes="content:dbs.metaDescription" content="How to scale a database beyond one server: the WAL, read replicas, replication lag and read-your-writes, Multi-AZ, Aurora, RDS Proxy and sharding (Citus, Aurora Limitless), with a Postgres replication lab in Docker and a request traced end to end.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:dbs.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta name="twitter:description" data-i18n-attributes="content:dbs.metaDescription" content="How to scale a database beyond one server: the WAL, read replicas, replication lag and read-your-writes, Multi-AZ, Aurora, RDS Proxy and sharding (Citus, Aurora Limitless), with a Postgres replication lab in Docker and a request traced end to end.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="dbs.kicker">Databases</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="dbs.heroTitle">Reads, writes, replicas and sharding: <em>scaling a database past one server.</em></h1>
+      <p class="hero-lede" data-i18n="dbs.heroLede">How the WAL feeds replicas, what replication lag breaks and how to live with it, what AWS offers (RDS, Multi-AZ, Aurora, Proxy), when to shard, and one request traced through a real primary and replica in Docker.</p>
+    </section>
+<aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#map"><span class="pt">O problema e a escada</span><span class="en">The problem and the ladder</span></a></li>
+        <li><a href="#replication"><span class="pt">1. Primário, WAL e réplicas</span><span class="en">1. Primary, WAL and replicas</span></a></li>
+        <li><a href="#replicas"><span class="pt">2. Lidar com réplicas</span><span class="en">2. Living with replicas</span></a></li>
+        <li><a href="#aws"><span class="pt">3. Na AWS</span><span class="en">3. On AWS</span></a></li>
+        <li><a href="#sharding"><span class="pt">4. Sharding</span><span class="en">4. Sharding</span></a></li>
+        <li><a href="#e2e"><span class="pt">5. Uma requisição ponta a ponta</span><span class="en">5. One request, end to end</span></a></li>
+        <li><a href="#lab"><span class="pt">6. Laboratório em Docker</span><span class="en">6. Docker lab</span></a></li>
+        <li><a href="#cheat"><span class="pt">7. Decisão e checklist</span><span class="en">7. Decision and checklist</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+<section class="content-section" aria-labelledby="map">
+<h2 id="map"><span class="pt">O problema e a escada</span><span class="en">The problem and the ladder</span></h2>
+<p><span class="pt">Um banco em um servidor só cresce até o limite da máquina: CPU, memória, disco, conexões. Depois disso há duas perguntas diferentes, e elas têm respostas diferentes. <b>Leitura demais?</b> Réplicas copiam os dados para outras máquinas que só respondem consultas. <b>Escrita demais, ou dados demais para um disco?</b> Só dividir os dados entre servidores (sharding) resolve, porque toda escrita de uma linha ainda passa por um único primário.</span><span class="en">A database on one server grows until the machine's limit: CPU, memory, disk, connections. Past that there are two different questions with different answers. <b>Too many reads?</b> Replicas copy the data to other machines that only answer queries. <b>Too many writes, or too much data for one disk?</b> Only splitting the data across servers (sharding) solves it, because every write to a row still goes through a single primary.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 140" role="img" aria-label="A escada de escala de um banco / The database scaling ladder" style="min-width:640px">
+<rect x="4" y="30" width="104" height="58" rx="4" class="ln fillsoft"/>
+<text x="56.0" y="56.0" class="pt" text-anchor="middle">Índices</text><text x="56.0" y="56.0" class="en" text-anchor="middle">Indexes</text>
+<text x="56.0" y="73.0" class="mut pt" text-anchor="middle">query lenta</text><text x="56.0" y="73.0" class="mut en" text-anchor="middle">slow query</text>
+<path d="M108 59L120 59" class="ln"/>
+<path d="M112.8 62.5L120 59L112.8 55.5" class="ln"/>
+<rect x="120" y="30" width="104" height="58" rx="4" class="ln fillsoft"/>
+<text x="172.0" y="56.0" class="pt" text-anchor="middle">Pool</text><text x="172.0" y="56.0" class="en" text-anchor="middle">Pooling</text>
+<text x="172.0" y="73.0" class="mut pt" text-anchor="middle">conexões</text><text x="172.0" y="73.0" class="mut en" text-anchor="middle">connections</text>
+<path d="M224 59L236 59" class="ln"/>
+<path d="M228.8 62.5L236 59L228.8 55.5" class="ln"/>
+<rect x="236" y="30" width="104" height="58" rx="4" class="ln fillsoft"/>
+<text x="288.0" y="56.0" class="pt" text-anchor="middle">Cache</text><text x="288.0" y="56.0" class="en" text-anchor="middle">Cache</text>
+<text x="288.0" y="73.0" class="mut pt" text-anchor="middle">repetições</text><text x="288.0" y="73.0" class="mut en" text-anchor="middle">repeats</text>
+<path d="M340 59L352 59" class="ln"/>
+<path d="M344.8 62.5L352 59L344.8 55.5" class="ln"/>
+<rect x="352" y="30" width="104" height="58" rx="4" class="ln fillsoft"/>
+<text x="404.0" y="56.0" class="pt" text-anchor="middle">Scale up</text><text x="404.0" y="56.0" class="en" text-anchor="middle">Scale up</text>
+<text x="404.0" y="73.0" class="mut pt" text-anchor="middle">mais máquina</text><text x="404.0" y="73.0" class="mut en" text-anchor="middle">bigger box</text>
+<path d="M456 59L468 59" class="ln"/>
+<path d="M460.8 62.5L468 59L460.8 55.5" class="ln"/>
+<rect x="468" y="30" width="104" height="58" rx="4" class="ln brandfill"/>
+<text x="520.0" y="56.0" class="pt" text-anchor="middle">Réplicas</text><text x="520.0" y="56.0" class="en" text-anchor="middle">Replicas</text>
+<text x="520.0" y="73.0" class="mut pt" text-anchor="middle">mais leitura</text><text x="520.0" y="73.0" class="mut en" text-anchor="middle">more reads</text>
+<path d="M572 59L584 59" class="ln"/>
+<path d="M576.8 62.5L584 59L576.8 55.5" class="ln"/>
+<rect x="584" y="30" width="104" height="58" rx="4" class="ln brandfill"/>
+<text x="636.0" y="56.0" class="pt" text-anchor="middle">Sharding</text><text x="636.0" y="56.0" class="en" text-anchor="middle">Sharding</text>
+<text x="636.0" y="73.0" class="mut pt" text-anchor="middle">mais escrita</text><text x="636.0" y="73.0" class="mut en" text-anchor="middle">more writes</text>
+<text x="4" y="14" class="mut mono pt" text-anchor="start">barato e reversível</text><text x="4" y="14" class="mut mono en" text-anchor="start">cheap and reversible</text>
+<text x="696" y="14" class="mut mono pt" text-anchor="end">caro e quase irreversível</text><text x="696" y="14" class="mut mono en" text-anchor="end">costly and nearly irreversible</text>
+<path d="M4 108L696 108" class="ln dash"/>
+<text x="350" y="128" class="mut pt" text-anchor="middle">suba um degrau só quando o anterior estiver esgotado e medido</text><text x="350" y="128" class="mut en" text-anchor="middle">climb a step only when the previous one is exhausted and measured</text>
+</svg></div><figcaption><span class="pt">Cada degrau à direita custa mais complexidade. Réplicas e sharding resolvem problemas diferentes.</span><span class="en">Each step to the right costs more complexity. Replicas and sharding solve different problems.</span></figcaption></figure>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Causa provável</span><span class="en">Likely cause</span></th><th><span class="pt">Primeira ferramenta</span><span class="en">First tool</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">CPU alta, poucas queries muito lentas</span><span class="en">High CPU, a few very slow queries</span></td><td><span class="pt">Falta de índice, plano ruim</span><span class="en">Missing index, bad plan</span></td><td><span class="pt"><code>EXPLAIN ANALYZE</code>, índices (veja a <a href="../postgres-for-devs/index.html">nota de Postgres</a>)</span><span class="en"><code>EXPLAIN ANALYZE</code>, indexes (see the <a href="../postgres-for-devs/index.html">Postgres note</a>)</span></td></tr>
+<tr><td><span class="pt">Erro <code>too many connections</code></span><span class="en"><code>too many connections</code> error</span></td><td><span class="pt">Cada conexão do Postgres é um processo; muitas instâncias do app</span><span class="en">Each Postgres connection is a process; many app instances</span></td><td><span class="pt">Pool de conexões (PgBouncer, RDS Proxy)</span><span class="en">Connection pooling (PgBouncer, RDS Proxy)</span></td></tr>
+<tr><td><span class="pt">As mesmas leituras repetidas milhares de vezes</span><span class="en">The same reads repeated thousands of times</span></td><td><span class="pt">Dados quentes e estáveis</span><span class="en">Hot, stable data</span></td><td><span class="pt">Cache (Redis, CDN)</span><span class="en">Cache (Redis, CDN)</span></td></tr>
+<tr><td><span class="pt">Leitura satura o primário; relatórios travam o app</span><span class="en">Reads saturate the primary; reports stall the app</span></td><td><span class="pt">Muita consulta, pouca escrita</span><span class="en">Lots of queries, few writes</span></td><td><span class="pt"><b>Réplicas de leitura</b></span><span class="en"><b>Read replicas</b></span></td></tr>
+<tr><td><span class="pt">Primário não aguenta as escritas, ou a tabela não cabe</span><span class="en">Primary cannot take the writes, or the table does not fit</span></td><td><span class="pt">Escrita e volume passam de um servidor</span><span class="en">Writes and volume exceed one server</span></td><td><span class="pt">Particionar; se não bastar, <b>sharding</b></span><span class="en">Partition; if that is not enough, <b>sharding</b></span></td></tr>
+<tr><td><span class="pt">Indisponibilidade quando o primário cai</span><span class="en">Downtime when the primary dies</span></td><td><span class="pt">Ponto único de falha</span><span class="en">Single point of failure</span></td><td><span class="pt">Standby com failover (Multi-AZ); réplica também serve</span><span class="en">Standby with failover (Multi-AZ); a replica also works</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> a escada e a tabela de sintomas são a minha síntese, uma ordem prática comum e não uma recomendação oficial. O ponto de fundo é que réplica não escala escrita, e é o erro de diagnóstico mais comum.</span><span class="en"><b>Personal note, not verified in the sources:</b> the ladder and the symptom table are my own synthesis, a common practical order and not an official recommendation. The underlying point is that a replica does not scale writes, and that is the most common diagnosis mistake.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="replication">
+<h2 id="replication"><span class="pt">1. Primário, WAL e réplicas</span><span class="en">1. Primary, WAL and replicas</span></h2>
+<p><span class="pt">Todo banco relacional grava as mudanças primeiro em um log (no Postgres, o <b>WAL</b>, <i>write-ahead log</i>) e só depois nos arquivos de dados. A <i>streaming replication</i> do Postgres aproveita isso: o primário envia o WAL a um standby assim que ele é gerado, sem esperar o segmento de 16 MB encher, e o standby reaplica as mudanças. Em modo assíncrono ele costuma ficar menos de um segundo atrás.</span><span class="en">Every relational database writes changes first to a log (in Postgres, the <b>WAL</b>, <i>write-ahead log</i>) and only then to the data files. Postgres <i>streaming replication</i> builds on that: the primary sends the WAL to a standby as soon as it is generated, without waiting for the 16 MB segment to fill, and the standby replays the changes. In asynchronous mode it is usually under a second behind.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 204" role="img" aria-label="Streaming replication do Postgres / Postgres streaming replication" style="min-width:640px">
+<rect x="150" y="8" width="230" height="170" rx="6" class="ln dash"/>
+<text x="160" y="24" class="mut mono pt" text-anchor="start">primário</text><text x="160" y="24" class="mut mono en" text-anchor="start">primary</text>
+<rect x="440" y="8" width="252" height="170" rx="6" class="ln dash"/>
+<text x="450" y="24" class="mut mono pt" text-anchor="start">réplica (hot standby)</text><text x="450" y="24" class="mut mono en" text-anchor="start">replica (hot standby)</text>
+<rect x="8" y="60" width="100" height="56" rx="4" class="ln fillsoft"/>
+<text x="58.0" y="85.0" class="pt" text-anchor="middle">App</text><text x="58.0" y="85.0" class="en" text-anchor="middle">App</text>
+<text x="58.0" y="102.0" class="mut pt" text-anchor="middle">escreve</text><text x="58.0" y="102.0" class="mut en" text-anchor="middle">writes</text>
+<rect x="162" y="38" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="212.0" y="60.0" class="pt" text-anchor="middle">COMMIT</text><text x="212.0" y="60.0" class="en" text-anchor="middle">COMMIT</text>
+<text x="212.0" y="77.0" class="mut pt" text-anchor="middle">linha nova</text><text x="212.0" y="77.0" class="mut en" text-anchor="middle">new row</text>
+<rect x="162" y="108" width="100" height="50" rx="4" class="ln brandfill"/>
+<text x="212.0" y="130.0" class="pt" text-anchor="middle">WAL</text><text x="212.0" y="130.0" class="en" text-anchor="middle">WAL</text>
+<text x="212.0" y="147.0" class="mut pt" text-anchor="middle">log</text><text x="212.0" y="147.0" class="mut en" text-anchor="middle">log</text>
+<rect x="278" y="108" width="90" height="50" rx="4" class="ln fillsoft"/>
+<text x="323.0" y="137.0" class="pt" text-anchor="middle">walsender</text><text x="323.0" y="137.0" class="en" text-anchor="middle">walsender</text>
+<rect x="452" y="108" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="502.0" y="137.0" class="pt" text-anchor="middle">walreceiver</text><text x="502.0" y="137.0" class="en" text-anchor="middle">walreceiver</text>
+<rect x="582" y="38" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="632.0" y="60.0" class="pt" text-anchor="middle">Replay</text><text x="632.0" y="60.0" class="en" text-anchor="middle">Replay</text>
+<text x="632.0" y="77.0" class="mut pt" text-anchor="middle">aplica o WAL</text><text x="632.0" y="77.0" class="mut en" text-anchor="middle">applies WAL</text>
+<rect x="582" y="108" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="632.0" y="130.0" class="pt" text-anchor="middle">Dados</text><text x="632.0" y="130.0" class="en" text-anchor="middle">Data</text>
+<text x="632.0" y="147.0" class="mut pt" text-anchor="middle">arquivos</text><text x="632.0" y="147.0" class="mut en" text-anchor="middle">files</text>
+<rect x="452" y="38" width="100" height="50" rx="4" class="ln fillsoft"/>
+<text x="502.0" y="60.0" class="pt" text-anchor="middle">SELECT</text><text x="502.0" y="60.0" class="en" text-anchor="middle">SELECT</text>
+<text x="502.0" y="77.0" class="mut pt" text-anchor="middle">só leitura</text><text x="502.0" y="77.0" class="mut en" text-anchor="middle">read only</text>
+<path d="M108 63L162 63" class="ln"/>
+<path d="M154.8 66.5L162 63L154.8 59.5" class="ln"/>
+<path d="M212 88L212 108" class="ln"/>
+<path d="M215.5 100.8L212 108L208.5 100.8" class="ln"/>
+<path d="M262 133L278 133" class="ln"/>
+<path d="M270.8 136.5L278 133L270.8 129.5" class="ln"/>
+<path d="M368 133L452 133" class="ln"/>
+<path d="M444.8 136.5L452 133L444.8 129.5" class="ln"/>
+<text x="410" y="124" class="mut mono pt" text-anchor="middle">TCP</text><text x="410" y="124" class="mut mono en" text-anchor="middle">TCP</text>
+<path d="M552 133L582 133" class="ln"/>
+<path d="M574.8 136.5L582 133L574.8 129.5" class="ln"/>
+<path d="M632 108L632 88" class="ln"/>
+<path d="M635.5 95.2L632 88L628.5 95.2" class="ln"/>
+<path d="M582 63L552 63" class="ln"/>
+<path d="M559.2 66.5L552 63L559.2 59.5" class="ln"/>
+<text x="350" y="194" class="mut pt" text-anchor="middle">cada COMMIT vira WAL; a réplica reaplica o WAL; o atraso entre os dois é o lag</text><text x="350" y="194" class="mut en" text-anchor="middle">each COMMIT becomes WAL; the replica replays the WAL; the delay between the two is the lag</text>
+</svg></div><figcaption><span class="pt">A réplica é uma cópia física: reaplica exatamente o mesmo WAL, byte a byte.</span><span class="en">The replica is a physical copy: it replays exactly the same WAL, byte for byte.</span></figcaption></figure>
+<h3><span class="pt">Montar na mão (Postgres)</span><span class="en">Setting it up by hand (Postgres)</span></h3>
+<p><span class="pt">É o que o laboratório da seção 6 faz, e é o que o RDS faz por você. No primário, um usuário de replicação, uma linha no <code>pg_hba.conf</code> e <code>max_wal_senders</code> suficiente. No standby, um backup base, um arquivo <code>standby.signal</code> vazio e o <code>primary_conninfo</code>. A opção <code>-R</code> do <code>pg_basebackup</code> grava os dois últimos.</span><span class="en">This is what the section 6 lab does, and what RDS does for you. On the primary, a replication user, a line in <code>pg_hba.conf</code> and enough <code>max_wal_senders</code>. On the standby, a base backup, an empty <code>standby.signal</code> file and <code>primary_conninfo</code>. The <code>-R</code> option of <code>pg_basebackup</code> writes the last two.</span></p>
+<pre><code># primário: pg_hba.conf
+host  replication  replicator  192.168.1.100/32  scram-sha-256
+
+# standby: backup base + standby.signal + primary_conninfo (e um slot de replicação)
+pg_basebackup -h 192.168.1.50 -U replicator -D /var/lib/postgresql/data \
+  -R -X stream -C -S replica1
+
+# monitorar, no primário
+SELECT application_name, state, sync_state,
+       pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn) AS replay_lag_bytes
+FROM pg_stat_replication;
+
+# promover o standby a primário (failover)
+SELECT pg_promote();</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Slot de replicação enche o disco.</b> Um slot impede o primário de reciclar o WAL que o standby ainda precisa. Se o standby some, o WAL acumula em <code>pg_wal</code> até lotar o disco. Limite com <code>max_slot_wal_keep_size</code>, como no laboratório, e alarme o tamanho do WAL retido.</span><span class="en"><b>A replication slot can fill the disk.</b> A slot stops the primary from recycling WAL the standby still needs. If the standby disappears, WAL piles up in <code>pg_wal</code> until the disk is full. Cap it with <code>max_slot_wal_keep_size</code>, as in the lab, and alarm on the retained WAL size.</span></div>
+<h3><span class="pt">Assíncrona ou síncrona</span><span class="en">Asynchronous or synchronous</span></h3>
+<p><span class="pt">O padrão é <b>assíncrono</b>: o <code>COMMIT</code> não espera o standby, então uma queda do primário pode perder as últimas transações confirmadas. No modo <b>síncrono</b> (<code>synchronous_standby_names</code> não vazio) o commit espera, e <code>synchronous_commit</code> escolhe até onde:</span><span class="en">The default is <b>asynchronous</b>: <code>COMMIT</code> does not wait for the standby, so a primary crash can lose the last committed transactions. In <b>synchronous</b> mode (<code>synchronous_standby_names</code> non-empty) the commit waits, and <code>synchronous_commit</code> chooses how far:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt"><code>synchronous_commit</code></span><span class="en"><code>synchronous_commit</code></span></th><th><span class="pt">O commit espera o standby ter...</span><span class="en">The commit waits until the standby has...</span></th><th><span class="pt">Troca</span><span class="en">Trade-off</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><code>on</code> (padrão)</span><span class="en"><code>on</code> (default)</span></td><td><span class="pt">gravado o WAL em disco</span><span class="en">written the WAL to disk</span></td><td><span class="pt">Não perde dado confirmado; não garante que a leitura na réplica já veja</span><span class="en">No acknowledged data loss; does not guarantee the replica read already sees it</span></td></tr>
+<tr><td><span class="pt"><code>remote_write</code></span><span class="en"><code>remote_write</code></span></td><td><span class="pt">recebido e entregue ao SO (sem flush)</span><span class="en">received and handed to the OS (no flush)</span></td><td><span class="pt">Mais rápido, um pouco menos durável</span><span class="en">Faster, slightly less durable</span></td></tr>
+<tr><td><span class="pt"><code>remote_apply</code></span><span class="en"><code>remote_apply</code></span></td><td><span class="pt"><b>reaplicado</b>: visível a consultas</span><span class="en"><b>replayed</b>: visible to queries</span></td><td><span class="pt">Leitura na réplica enxerga o commit, mas a escrita fica mais lenta</span><span class="en">A replica read sees the commit, but writes get slower</span></td></tr>
+<tr><td><span class="pt"><code>local</code> / <code>off</code></span><span class="en"><code>local</code> / <code>off</code></span></td><td><span class="pt">não espera o standby</span><span class="en">does not wait for the standby</span></td><td><span class="pt">Menor latência, maior risco</span><span class="en">Lowest latency, highest risk</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">O <code>synchronous_commit</code> pode ser definido por usuário, banco ou transação, então dá para pagar a latência só nas escritas que importam. Também há quórum: <code>ANY 2 (s1, s2, s3)</code> espera dois quaisquer.</span><span class="en"><code>synchronous_commit</code> can be set per user, database or transaction, so you can pay the latency only on the writes that matter. There is also quorum: <code>ANY 2 (s1, s2, s3)</code> waits for any two.</span></p>
+<h3><span class="pt">O que a réplica aceita</span><span class="en">What a replica accepts</span></h3>
+<p><span class="pt">Uma réplica que aceita consultas se chama <i>hot standby</i>. Ela é somente leitura de verdade: <code>transaction_read_only</code> é sempre verdadeiro e não dá para mudar. Confirmei no laboratório:</span><span class="en">A replica that accepts queries is called a <i>hot standby</i>. It is truly read-only: <code>transaction_read_only</code> is always true and cannot be changed. I confirmed it in the lab:</span></p>
+<pre><code>$ psql -h replica -c &quot;INSERT INTO orders(tenant_id,customer,total) VALUES (&#x27;x&#x27;,&#x27;y&#x27;,1)&quot;
+ERROR:  cannot execute INSERT in a read-only transaction</code></pre>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Permitido</span><span class="en">Allowed</span></th><th><span class="pt">Proibido (erro)</span><span class="en">Not allowed (error)</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><code>SELECT</code>, <code>COPY TO</code>, cursores, <code>SHOW</code>/<code>SET</code>, <code>PREPARE</code>/<code>EXECUTE</code></span><span class="en"><code>SELECT</code>, <code>COPY TO</code>, cursors, <code>SHOW</code>/<code>SET</code>, <code>PREPARE</code>/<code>EXECUTE</code></span></td><td><span class="pt"><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>MERGE</code>, <code>TRUNCATE</code>, tabelas temporárias</span><span class="en"><code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code>, <code>MERGE</code>, <code>TRUNCATE</code>, temp tables</span></td></tr>
+<tr><td><span class="pt"><code>BEGIN</code>/<code>COMMIT</code> de transação somente leitura</span><span class="en"><code>BEGIN</code>/<code>COMMIT</code> of a read-only transaction</span></td><td><span class="pt">DDL (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>), <code>VACUUM</code>, <code>ANALYZE</code>, <code>REINDEX</code></span><span class="en">DDL (<code>CREATE</code>, <code>ALTER</code>, <code>DROP</code>), <code>VACUUM</code>, <code>ANALYZE</code>, <code>REINDEX</code></span></td></tr>
+<tr><td><span class="pt"><code>LOCK TABLE</code> só em <code>ACCESS SHARE</code>, <code>ROW SHARE</code>, <code>ROW EXCLUSIVE</code></span><span class="en"><code>LOCK TABLE</code> only in <code>ACCESS SHARE</code>, <code>ROW SHARE</code>, <code>ROW EXCLUSIVE</code></span></td><td><span class="pt"><code>SELECT ... FOR UPDATE/SHARE</code>, <code>nextval()</code>, <code>LISTEN</code>/<code>NOTIFY</code>, isolamento <code>SERIALIZABLE</code></span><span class="en"><code>SELECT ... FOR UPDATE/SHARE</code>, <code>nextval()</code>, <code>LISTEN</code>/<code>NOTIFY</code>, <code>SERIALIZABLE</code> isolation</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">Consequência de design: <b>uma transação que lê para depois escrever, ou que usa <code>FOR UPDATE</code>, tem que ir inteira ao primário</b>. Só roteie para a réplica o que é leitura de ponta a ponta.</span><span class="en">Design consequence: <b>a transaction that reads and then writes, or that uses <code>FOR UPDATE</code>, must go entirely to the primary</b>. Only route to the replica what is read-only end to end.</span></p>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-26</span><span class="en">Sources · checked on 2026-10-26</span></b><ul><li><a href="https://www.postgresql.org/docs/current/warm-standby.html">PostgreSQL Docs · Log-Shipping Standby Servers (streaming replication, slots, synchronous commit)</a></li><li><a href="https://www.postgresql.org/docs/current/hot-standby.html">PostgreSQL Docs · Hot Standby (allowed queries, conflicts)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="replicas">
+<h2 id="replicas"><span class="pt">2. Lidar com réplicas: lag, consistência, conflitos</span><span class="en">2. Living with replicas: lag, consistency, conflicts</span></h2>
+<p><span class="pt">Adicionar a réplica é a parte fácil. O difícil é que ela <b>sempre</b> está um pouco no passado, e o app precisa ser desenhado para isso.</span><span class="en">Adding the replica is the easy part. The hard part is that it is <b>always</b> a little in the past, and the app must be designed for that.</span></p>
+<h3><span class="pt">Medir o lag</span><span class="en">Measuring lag</span></h3>
+<ul class="ds-list">
+<li><span class="pt"><b>Em bytes, no primário:</b> <code>pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)</code> em <code>pg_stat_replication</code>. Se a distância até <code>sent_lsn</code> é grande, o primário está carregado; entre <code>sent</code> e <code>replay</code>, é rede ou réplica lenta.</span><span class="en"><b>In bytes, on the primary:</b> <code>pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)</code> from <code>pg_stat_replication</code>. A large gap up to <code>sent_lsn</code> means a loaded primary; between <code>sent</code> and <code>replay</code>, network or a slow replica.</span></li>
+<li><span class="pt"><b>Em tempo, na réplica:</b> <code>now() - pg_last_xact_replay_timestamp()</code>. Cuidado: num primário parado esse valor cresce mesmo com a réplica em dia. É o mesmo cálculo da métrica <code>ReplicaLag</code> do RDS, que por isso pode mostrar até 5 minutos de lag sem transações.</span><span class="en"><b>In time, on the replica:</b> <code>now() - pg_last_xact_replay_timestamp()</code>. Careful: on an idle primary this value grows even with the replica caught up. It is the same calculation as RDS's <code>ReplicaLag</code> metric, which is why it can show up to 5 minutes of lag with no transactions.</span></li>
+</ul>
+<p><span class="pt">As causas típicas de lag, segundo a AWS: escrita muito concorrente ou lotes grandes no primário; consultas pesadas ou lentas na própria réplica, que disputam recurso com a reaplicação; e transações enormes ou DDL, porque a ordem dos commits é preservada.</span><span class="en">Typical lag causes, per AWS: highly concurrent writes or big batches on the primary; heavy or slow queries on the replica itself, competing with replay; and huge transactions or DDL, because commit order is preserved.</span></p>
+<h3><span class="pt">Consistência: o que o usuário percebe</span><span class="en">Consistency: what the user notices</span></h3>
+<p><span class="pt">Com réplica assíncrona, três anomalias aparecem para o usuário, e todas têm a mesma raiz:</span><span class="en">With an asynchronous replica, three anomalies reach the user, all with the same root:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Anomalia</span><span class="en">Anomaly</span></th><th><span class="pt">Exemplo</span><span class="en">Example</span></th><th><span class="pt">Por quê</span><span class="en">Why</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Ler o que acabei de escrever (<i>read-your-writes</i>)</span><span class="en">Reading what I just wrote (<i>read-your-writes</i>)</span></td><td><span class="pt">Cria o pedido e a página seguinte diz &ldquo;não encontrado&rdquo;</span><span class="en">Creates the order and the next page says &ldquo;not found&rdquo;</span></td><td><span class="pt">O <code>GET</code> caiu numa réplica que ainda não reaplicou o <code>INSERT</code></span><span class="en">The <code>GET</code> hit a replica that has not replayed the <code>INSERT</code> yet</span></td></tr>
+<tr><td><span class="pt">Leituras voltando no tempo (<i>monotonic reads</i>)</span><span class="en">Reads going back in time (<i>monotonic reads</i>)</span></td><td><span class="pt">Atualiza a página: o comentário some e volta</span><span class="en">Refreshes the page: the comment vanishes and returns</span></td><td><span class="pt">Duas réplicas com lags diferentes</span><span class="en">Two replicas with different lags</span></td></tr>
+<tr><td><span class="pt">Decidir com dado velho</span><span class="en">Deciding on stale data</span></td><td><span class="pt">Checa estoque na réplica e vende o que acabou</span><span class="en">Checks stock on the replica and sells what ran out</span></td><td><span class="pt">A decisão exige o dado atual</span><span class="en">The decision needs current data</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">As estratégias, da mais simples à mais precisa:</span><span class="en">The strategies, from simplest to most precise:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Estratégia</span><span class="en">Strategy</span></th><th><span class="pt">Como</span><span class="en">How</span></th><th><span class="pt">Custo</span><span class="en">Cost</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Decisões e leituras críticas vão ao primário</span><span class="en">Decisions and critical reads go to the primary</span></td><td><span class="pt">Classifique cada leitura: &ldquo;pode ser velha?&rdquo; Se não, primário.</span><span class="en">Classify each read: &ldquo;may it be stale?&rdquo; If not, primary.</span></td><td><span class="pt">Simples; o primário continua recebendo essas leituras</span><span class="en">Simple; the primary keeps receiving those reads</span></td></tr>
+<tr><td><span class="pt">Janela pós-escrita</span><span class="en">Post-write window</span></td><td><span class="pt">Depois de uma escrita, o usuário lê do primário por N segundos (cookie ou sessão).</span><span class="en">After a write, the user reads from the primary for N seconds (cookie or session).</span></td><td><span class="pt">Simples; N é um chute (lag pode passar de N)</span><span class="en">Simple; N is a guess (lag can exceed N)</span></td></tr>
+<tr><td><span class="pt"><b>Token de posição do WAL (LSN)</b></span><span class="en"><b>WAL position token (LSN)</b></span></td><td><span class="pt">A escrita devolve <code>pg_current_wal_lsn()</code>; a leitura só usa a réplica se <code>pg_last_wal_replay_lsn()</code> já passou dele, senão vai ao primário. <b>É o que o laboratório faz.</b></span><span class="en">The write returns <code>pg_current_wal_lsn()</code>; the read only uses the replica if <code>pg_last_wal_replay_lsn()</code> has passed it, otherwise it goes to the primary. <b>This is what the lab does.</b></span></td><td><span class="pt">Uma consulta extra por leitura; o app carrega o token</span><span class="en">One extra query per read; the app carries the token</span></td></tr>
+<tr><td><span class="pt"><code>WAIT FOR LSN</code> (PostgreSQL 19)</span><span class="en"><code>WAIT FOR LSN</code> (PostgreSQL 19)</span></td><td><span class="pt">A réplica bloqueia a sessão até reaplicar o LSN (com <code>TIMEOUT</code>), em vez de o app decidir.</span><span class="en">The replica blocks the session until it replays the LSN (with <code>TIMEOUT</code>), instead of the app deciding.</span></td><td><span class="pt">Requer a versão 19; com pool em modo transação o <code>WAIT</code> e a leitura podem cair em conexões diferentes</span><span class="en">Requires version 19; with transaction-mode pooling the <code>WAIT</code> and the read may land on different connections</span></td></tr>
+<tr><td><span class="pt">Commit síncrono com <code>remote_apply</code></span><span class="en">Synchronous commit with <code>remote_apply</code></span></td><td><span class="pt">O commit só volta depois que a réplica reaplicou.</span><span class="en">The commit only returns after the replica has replayed.</span></td><td><span class="pt">Escritas mais lentas; uma réplica parada trava as escritas</span><span class="en">Slower writes; a stalled replica blocks writes</span></td></tr>
+<tr><td><span class="pt">Aurora: <i>write forwarding</i> local</span><span class="en">Aurora: local <i>write forwarding</i></span></td><td><span class="pt">O app abre transação de leitura/escrita direto na réplica; a escrita é encaminhada ao writer.</span><span class="en">The app opens a read/write transaction directly on the replica; the write is forwarded to the writer.</span></td><td><span class="pt">Só Aurora PostgreSQL 14.13+, 15.8+ ou 16.4+; é para escritas ocasionais</span><span class="en">Aurora PostgreSQL 14.13+, 15.8+ or 16.4+ only; meant for occasional writes</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> a data de lançamento e a sintaxe final do <code>WAIT FOR LSN</code> eu não consegui confirmar na página oficial (devolveu 404 para mim). O que sei vem de resumos de busca da documentação da versão 19, que descrevem <code>WAIT FOR LSN '...' WITH (MODE, TIMEOUT, NO_THROW)</code> executado numa réplica; confira na documentação da sua versão antes de usar. A técnica do token, que o laboratório usa, funciona em qualquer versão.</span><span class="en"><b>Personal note, not verified in the sources:</b> I could not confirm the release date and final syntax of <code>WAIT FOR LSN</code> on the official page (it returned 404 for me). What I know comes from search summaries of the version 19 docs, which describe <code>WAIT FOR LSN '...' WITH (MODE, TIMEOUT, NO_THROW)</code> run on a replica; check your version's docs before using it. The token technique, which the lab uses, works on any version.</span></div>
+<h3><span class="pt">Conflitos: a réplica cancela consultas</span><span class="en">Conflicts: the replica cancels queries</span></h3>
+<p><span class="pt">O primário não enxerga as consultas da réplica. Quando a reaplicação do WAL entra em conflito com uma consulta que está rodando na réplica (por exemplo, o <code>VACUUM</code> do primário removeu linhas que a consulta ainda via, ou um <code>DROP TABLE</code> pegou um lock exclusivo), a réplica espera ou cancela a consulta. Os controles:</span><span class="en">The primary cannot see the replica's queries. When WAL replay conflicts with a query running on the replica (for example, the primary's <code>VACUUM</code> removed rows the query still saw, or a <code>DROP TABLE</code> took an exclusive lock), the replica waits or cancels the query. The controls:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Parâmetro</span><span class="en">Parameter</span></th><th><span class="pt">Efeito</span><span class="en">Effect</span></th><th><span class="pt">Use quando</span><span class="en">Use when</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><code>max_standby_streaming_delay</code></span><span class="en"><code>max_standby_streaming_delay</code></span></td><td><span class="pt">Quanto a reaplicação pode esperar a consulta. Passado o tempo, a consulta é cancelada. <code>-1</code> espera para sempre.</span><span class="en">How long replay may wait for the query. Past it, the query is cancelled. <code>-1</code> waits forever.</span></td><td><span class="pt">Réplica de relatório: valor alto (horas) ou <code>-1</code>, aceitando mais lag</span><span class="en">Reporting replica: a high value (hours) or <code>-1</code>, accepting more lag</span></td></tr>
+<tr><td><span class="pt"><code>hot_standby_feedback = on</code></span><span class="en"><code>hot_standby_feedback = on</code></span></td><td><span class="pt">A réplica avisa o primário para não remover linhas que ela ainda usa.</span><span class="en">The replica tells the primary not to remove rows it still uses.</span></td><td><span class="pt">Muitos cancelamentos; custo: <i>bloat</i> no primário</span><span class="en">Many cancellations; cost: bloat on the primary</span></td></tr>
+<tr><td><span class="pt">Delay curto ou <code>0</code></span><span class="en">Short delay or <code>0</code></span></td><td><span class="pt">A réplica nunca se atrasa; cancela consultas.</span><span class="en">The replica never falls behind; it cancels queries.</span></td><td><span class="pt">Réplica de alta disponibilidade, que precisa estar em dia para o failover</span><span class="en">High-availability replica, which must be current for failover</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">Duas regras práticas: <b>separe a réplica de relatório da réplica de failover</b>, porque elas querem configurações opostas; e trate o cancelamento como erro normal, com nova tentativa em outra transação. A visão <code>pg_stat_database_conflicts</code>, na réplica, mostra os cancelamentos por motivo.</span><span class="en">Two practical rules: <b>keep the reporting replica separate from the failover replica</b>, because they want opposite settings; and treat cancellation as a normal error, with a retry in a new transaction. The <code>pg_stat_database_conflicts</code> view, on the replica, shows cancellations by reason.</span></p>
+<h3><span class="pt">Rotear no app, no pool ou no DNS</span><span class="en">Routing in the app, the pool or DNS</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Onde</span><span class="en">Where</span></th><th><span class="pt">Como</span><span class="en">How</span></th><th><span class="pt">Cuidado</span><span class="en">Watch out for</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">No app (router explícito)</span><span class="en">In the app (explicit router)</span></td><td><span class="pt">Duas conexões: <code>primary</code> e <code>replica</code>; o código escolhe por leitura.</span><span class="en">Two connections: <code>primary</code> and <code>replica</code>; the code chooses per read.</span></td><td><span class="pt">É o que dá controle de consistência; é mais código</span><span class="en">It gives consistency control; it is more code</span></td></tr>
+<tr><td><span class="pt">Endpoint de leitura do provedor</span><span class="en">Provider read endpoint</span></td><td><span class="pt">O app usa um nome para escrita e outro para leitura (Aurora reader endpoint).</span><span class="en">The app uses one name for writes and another for reads (Aurora reader endpoint).</span></td><td><span class="pt">Balanceia <b>conexões</b>, não consultas; um pool que reaproveita conexões fica desbalanceado</span><span class="en">It balances <b>connections</b>, not queries; a pool that reuses connections ends up unbalanced</span></td></tr>
+<tr><td><span class="pt">Proxy / pool</span><span class="en">Proxy / pool</span></td><td><span class="pt">RDS Proxy, PgBouncer: um endpoint de leitura que escolhe réplica viva.</span><span class="en">RDS Proxy, PgBouncer: a read endpoint that picks a live replica.</span></td><td><span class="pt">O proxy não sabe do seu token de consistência; ele escolhe a réplica, não a leitura segura</span><span class="en">The proxy does not know your consistency token; it picks the replica, not the safe read</span></td></tr>
+<tr><td><span class="pt">Driver</span><span class="en">Driver</span></td><td><span class="pt">Alguns drivers aceitam várias URLs e papéis (<code>targetServerType</code> no driver JDBC do Postgres, por exemplo).</span><span class="en">Some drivers accept several URLs and roles (<code>targetServerType</code> in the Postgres JDBC driver, for example).</span></td><td><span class="pt">Confira na doc do seu driver (de memória)</span><span class="en">Check your driver's docs (from memory)</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Regra de ouro.</b> Um endpoint de leitura resolve <i>onde</i> ler. Nenhum endpoint resolve <i>quando é seguro</i> ler da réplica. Isso é regra de negócio e fica no seu código, como o token da seção 5.</span><span class="en"><b>Golden rule.</b> A read endpoint solves <i>where</i> to read. No endpoint solves <i>when it is safe</i> to read from the replica. That is business logic and lives in your code, like the token in section 5.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-26</span><span class="en">Sources · checked on 2026-10-26</span></b><ul><li><a href="https://www.postgresql.org/docs/current/hot-standby.html">PostgreSQL Docs · Hot Standby (query conflicts, max_standby_streaming_delay, hot_standby_feedback)</a></li><li><a href="https://www.postgresql.org/docs/19/sql-wait-for.html">PostgreSQL 19 Docs · WAIT FOR (page returned 404 here; see personal note)</a></li><li><a href="https://rednafi.com/system/wait-for-lsn/">Reading your writes with WAIT FOR LSN in Postgres 19 (blog)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.Monitoring.html">AWS Docs · RDS: Monitoring read replication (ReplicaLag)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_PostgreSQL.Replication.ReadReplicas.html">AWS Docs · RDS for PostgreSQL read replicas (limitations, idle lag)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-postgresql-write-forwarding.html">AWS Docs · Aurora PostgreSQL local write forwarding</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="aws">
+<h2 id="aws"><span class="pt">3. Na AWS: o que existe e quando usar</span><span class="en">3. On AWS: what exists and when to use it</span></h2>
+<p><span class="pt">A AWS tem várias formas de ter &ldquo;mais de uma cópia&rdquo;, e elas resolvem problemas diferentes. A confusão mais comum é tratar <b>Multi-AZ</b> (disponibilidade) como <b>réplica de leitura</b> (escala de leitura). A documentação separa as duas.</span><span class="en">AWS has several ways to have &ldquo;more than one copy&rdquo;, and they solve different problems. The most common confusion is treating <b>Multi-AZ</b> (availability) as a <b>read replica</b> (read scaling). The documentation keeps them separate.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Opção</span><span class="en">Option</span></th><th><span class="pt">Como replica</span><span class="en">How it replicates</span></th><th><span class="pt">Lê da cópia?</span><span class="en">Read from the copy?</span></th><th><span class="pt">Serve para</span><span class="en">Good for</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">RDS Multi-AZ (instância)</span><span class="en">RDS Multi-AZ (instance)</span></td><td><span class="pt">Um standby, replicação <b>síncrona</b></span><span class="en">One standby, <b>synchronous</b> replication</span></td><td><span class="pt">Não</span><span class="en">No</span></td><td><span class="pt">Alta disponibilidade e failover</span><span class="en">High availability and failover</span></td></tr>
+<tr><td><span class="pt">RDS read replica</span><span class="en">RDS read replica</span></td><td><span class="pt">Mecanismo nativo do motor, <b>assíncrono</b>. Parte de um snapshot do primário.</span><span class="en">The engine's native mechanism, <b>asynchronous</b>. Starts from a snapshot of the primary.</span></td><td><span class="pt">Sim</span><span class="en">Yes</span></td><td><span class="pt">Escalar leitura, relatórios, DR (promover)</span><span class="en">Scaling reads, reports, DR (promote)</span></td></tr>
+<tr><td><span class="pt">RDS Multi-AZ DB cluster (MySQL, PostgreSQL)</span><span class="en">RDS Multi-AZ DB cluster (MySQL, PostgreSQL)</span></td><td><span class="pt">Writer + 2 readers em 3 AZs, <b>semissíncrona</b>: o commit espera ao menos um reader</span><span class="en">Writer + 2 readers in 3 AZs, <b>semi-synchronous</b>: the commit waits for at least one reader</span></td><td><span class="pt">Sim (reader endpoint)</span><span class="en">Yes (reader endpoint)</span></td><td><span class="pt">HA e leitura juntas, com menor latência de escrita que Multi-AZ instância</span><span class="en">HA and reads together, with lower write latency than Multi-AZ instance</span></td></tr>
+<tr><td><span class="pt">Aurora</span><span class="en">Aurora</span></td><td><span class="pt">Os nós <b>compartilham um volume</b> do cluster, com cópias em 3 AZs; até 15 réplicas</span><span class="en">Nodes <b>share one cluster volume</b>, with copies in 3 AZs; up to 15 replicas</span></td><td><span class="pt">Sim (reader endpoint)</span><span class="en">Yes (reader endpoint)</span></td><td><span class="pt">Muita leitura, failover rápido, lag normalmente bem abaixo de 100 ms</span><span class="en">Heavy reads, fast failover, lag usually well under 100 ms</span></td></tr>
+<tr><td><span class="pt">Aurora Global Database</span><span class="en">Aurora Global Database</span></td><td><span class="pt">Replica o volume para até 10 Regiões secundárias; latência tipicamente abaixo de 1 s</span><span class="en">Replicates the volume to up to 10 secondary Regions; latency typically under 1 s</span></td><td><span class="pt">Sim, nas Regiões secundárias</span><span class="en">Yes, in secondary Regions</span></td><td><span class="pt">Leitura perto do usuário e recuperação de falha de Região</span><span class="en">Reads near the user and Region-failure recovery</span></td></tr>
+<tr><td><span class="pt">Aurora PostgreSQL Limitless</span><span class="en">Aurora PostgreSQL Limitless</span></td><td><span class="pt"><b>Sharding</b> gerenciado: routers e shards</span><span class="en">Managed <b>sharding</b>: routers and shards</span></td><td><span class="pt">Via routers</span><span class="en">Through routers</span></td><td><span class="pt">Escrita e volume além de um writer</span><span class="en">Writes and volume beyond one writer</span></td></tr>
+</tbody>
+</table>
+</div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 206" role="img" aria-label="RDS contra Aurora / RDS versus Aurora" style="min-width:640px">
+<rect x="4" y="8" width="330" height="190" rx="6" class="ln dash"/>
+<text x="14" y="24" class="mut mono pt" text-anchor="start">RDS: cada instância tem o seu disco</text><text x="14" y="24" class="mut mono en" text-anchor="start">RDS: each instance has its own disk</text>
+<rect x="24" y="44" width="120" height="52" rx="4" class="ln brandfill"/>
+<text x="84.0" y="67.0" class="pt" text-anchor="middle">Primário</text><text x="84.0" y="67.0" class="en" text-anchor="middle">Primary</text>
+<text x="84.0" y="84.0" class="mut pt" text-anchor="middle">AZ a</text><text x="84.0" y="84.0" class="mut en" text-anchor="middle">AZ a</text>
+<rect x="194" y="44" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="254.0" y="67.0" class="pt" text-anchor="middle">Réplica</text><text x="254.0" y="67.0" class="en" text-anchor="middle">Replica</text>
+<text x="254.0" y="84.0" class="mut pt" text-anchor="middle">AZ b</text><text x="254.0" y="84.0" class="mut en" text-anchor="middle">AZ b</text>
+<rect x="24" y="128" width="120" height="44" rx="4" class="ln fillsoft"/>
+<text x="84.0" y="154.0" class="pt" text-anchor="middle">Volume (EBS)</text><text x="84.0" y="154.0" class="en" text-anchor="middle">Volume (EBS)</text>
+<rect x="194" y="128" width="120" height="44" rx="4" class="ln fillsoft"/>
+<text x="254.0" y="154.0" class="pt" text-anchor="middle">Volume (EBS)</text><text x="254.0" y="154.0" class="en" text-anchor="middle">Volume (EBS)</text>
+<path d="M84 96L84 128" class="ln"/>
+<path d="M87.5 120.8L84 128L80.5 120.8" class="ln"/>
+<path d="M254 96L254 128" class="ln"/>
+<path d="M257.5 120.8L254 128L250.5 120.8" class="ln"/>
+<path d="M144 70L194 70" class="ln"/>
+<path d="M186.8 73.5L194 70L186.8 66.5" class="ln"/>
+<text x="169" y="38" class="mut mono pt" text-anchor="middle">WAL async</text><text x="169" y="38" class="mut mono en" text-anchor="middle">WAL async</text>
+<rect x="366" y="8" width="330" height="190" rx="6" class="ln dash"/>
+<text x="376" y="24" class="mut mono pt" text-anchor="start">Aurora: um volume do cluster para todos</text><text x="376" y="24" class="mut mono en" text-anchor="start">Aurora: one cluster volume for all</text>
+<rect x="382" y="44" width="90" height="52" rx="4" class="ln brandfill"/>
+<text x="427.0" y="67.0" class="pt" text-anchor="middle">Writer</text><text x="427.0" y="67.0" class="en" text-anchor="middle">Writer</text>
+<text x="427.0" y="84.0" class="mut pt" text-anchor="middle">AZ a</text><text x="427.0" y="84.0" class="mut en" text-anchor="middle">AZ a</text>
+<rect x="484" y="44" width="90" height="52" rx="4" class="ln fillsoft"/>
+<text x="529.0" y="67.0" class="pt" text-anchor="middle">Reader</text><text x="529.0" y="67.0" class="en" text-anchor="middle">Reader</text>
+<text x="529.0" y="84.0" class="mut pt" text-anchor="middle">AZ b</text><text x="529.0" y="84.0" class="mut en" text-anchor="middle">AZ b</text>
+<rect x="586" y="44" width="90" height="52" rx="4" class="ln fillsoft"/>
+<text x="631.0" y="67.0" class="pt" text-anchor="middle">Reader</text><text x="631.0" y="67.0" class="en" text-anchor="middle">Reader</text>
+<text x="631.0" y="84.0" class="mut pt" text-anchor="middle">AZ c</text><text x="631.0" y="84.0" class="mut en" text-anchor="middle">AZ c</text>
+<rect x="382" y="128" width="294" height="44" rx="4" class="ln fillsoft"/>
+<text x="529.0" y="154.0" class="pt" text-anchor="middle">Volume do cluster · cópias em 3 AZs</text><text x="529.0" y="154.0" class="en" text-anchor="middle">Cluster volume · copies in 3 AZs</text>
+<path d="M427 96L427 128" class="ln"/>
+<path d="M430.5 120.8L427 128L423.5 120.8" class="ln"/>
+<path d="M529 96L529 128" class="ln"/>
+<path d="M532.5 120.8L529 128L525.5 120.8" class="ln"/>
+<path d="M631 96L631 128" class="ln"/>
+<path d="M634.5 120.8L631 128L627.5 120.8" class="ln"/>
+</svg></div><figcaption><span class="pt">No RDS cada cópia é um disco e o WAL viaja pela rede. No Aurora o volume é do cluster, por isso a réplica não reaplica um WAL próprio e o lag é baixo.</span><span class="en">On RDS each copy is a disk and the WAL travels over the network. On Aurora the volume belongs to the cluster, so the replica does not replay its own WAL and lag is low.</span></figcaption></figure>
+<h3><span class="pt">Uma topologia típica</span><span class="en">A typical topology</span></h3>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 298" role="img" aria-label="Topologia de leitura e escrita na AWS / Read and write topology on AWS" style="min-width:640px">
+<rect x="196" y="8" width="318" height="258" rx="6" class="ln dash"/>
+<text x="206" y="24" class="mut mono pt" text-anchor="start">VPC · subnets privadas em 3 AZs</text><text x="206" y="24" class="mut mono en" text-anchor="start">VPC · private subnets in 3 AZs</text>
+<rect x="8" y="106" width="100" height="56" rx="4" class="ln fillsoft"/>
+<text x="58.0" y="131.0" class="pt" text-anchor="middle">App</text><text x="58.0" y="131.0" class="en" text-anchor="middle">App</text>
+<text x="58.0" y="148.0" class="mut pt" text-anchor="middle">ECS / Lambda</text><text x="58.0" y="148.0" class="mut en" text-anchor="middle">ECS / Lambda</text>
+<rect x="214" y="106" width="110" height="56" rx="4" class="ln brandfill"/>
+<text x="269.0" y="131.0" class="pt" text-anchor="middle">RDS Proxy</text><text x="269.0" y="131.0" class="en" text-anchor="middle">RDS Proxy</text>
+<text x="269.0" y="148.0" class="mut pt" text-anchor="middle">pool + failover</text><text x="269.0" y="148.0" class="mut en" text-anchor="middle">pool + failover</text>
+<rect x="380" y="36" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="440.0" y="59.0" class="pt" text-anchor="middle">Writer</text><text x="440.0" y="59.0" class="en" text-anchor="middle">Writer</text>
+<text x="440.0" y="76.0" class="mut pt" text-anchor="middle">cluster endpoint</text><text x="440.0" y="76.0" class="mut en" text-anchor="middle">cluster endpoint</text>
+<rect x="380" y="106" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="440.0" y="129.0" class="pt" text-anchor="middle">Reader</text><text x="440.0" y="129.0" class="en" text-anchor="middle">Reader</text>
+<text x="440.0" y="146.0" class="mut pt" text-anchor="middle">reader endpoint</text><text x="440.0" y="146.0" class="mut en" text-anchor="middle">reader endpoint</text>
+<rect x="380" y="176" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="440.0" y="199.0" class="pt" text-anchor="middle">Reader</text><text x="440.0" y="199.0" class="en" text-anchor="middle">Reader</text>
+<text x="440.0" y="216.0" class="mut pt" text-anchor="middle">custom: relatórios</text><text x="440.0" y="216.0" class="mut en" text-anchor="middle">custom: reports</text>
+<path d="M108 134L214 134" class="ln"/>
+<path d="M206.8 137.5L214 134L206.8 130.5" class="ln"/>
+<path d="M324 126L352 126L352 62L380 62" class="ln"/>
+<path d="M372.8 65.5L380 62L372.8 58.5" class="ln"/>
+<path d="M324 134L380 134" class="ln"/>
+<path d="M372.8 137.5L380 134L372.8 130.5" class="ln"/>
+<path d="M324 142L352 142L352 202L380 202" class="ln"/>
+<path d="M372.8 205.5L380 202L372.8 198.5" class="ln"/>
+<text x="110" y="124" class="mut mono pt" text-anchor="start">SQL</text><text x="110" y="124" class="mut mono en" text-anchor="start">SQL</text>
+<text x="560" y="62" class="mut pt" text-anchor="start">escritas</text><text x="560" y="62" class="mut en" text-anchor="start">writes</text>
+<text x="560" y="134" class="mut pt" text-anchor="start">leituras</text><text x="560" y="134" class="mut en" text-anchor="start">reads</text>
+<text x="560" y="202" class="mut pt" text-anchor="start">análise</text><text x="560" y="202" class="mut en" text-anchor="start">analytics</text>
+<text x="355" y="288" class="mut mono pt" text-anchor="middle">RDS Proxy: endpoints de leitura só em Aurora e Multi-AZ DB cluster</text><text x="355" y="288" class="mut mono en" text-anchor="middle">RDS Proxy: read endpoints only on Aurora and Multi-AZ DB clusters</text>
+</svg></div><figcaption><span class="pt">O app fala com um proxy. Escritas vão ao writer; leituras, a um endpoint de leitura que escolhe um reader vivo.</span><span class="en">The app talks to a proxy. Writes go to the writer; reads go to a read endpoint that picks a live reader.</span></figcaption></figure>
+<ul class="ds-list">
+<li><span class="pt"><b>Endpoints do Aurora:</b> o <i>cluster endpoint</i> sempre aponta para o writer (muda sozinho no failover); o <i>reader endpoint</i> balanceia <b>conexões</b> entre os readers (não balanceia consultas: para espalhar cada consulta, abra uma conexão por consulta); o <i>custom endpoint</i> agrupa um subconjunto de instâncias (por exemplo, readers maiores para relatórios); o <i>instance endpoint</i> serve para diagnóstico. Se o cluster só tem o writer, o reader endpoint aponta para ele.</span><span class="en"><b>Aurora endpoints:</b> the <i>cluster endpoint</i> always points to the writer (it changes by itself on failover); the <i>reader endpoint</i> balances <b>connections</b> among the readers (it does not balance queries: to spread each query, open a connection per query); the <i>custom endpoint</i> groups a subset of instances (for example, larger readers for reports); the <i>instance endpoint</i> is for diagnosis. If the cluster has only the writer, the reader endpoint points to it.</span></li>
+<li><span class="pt"><b>RDS Proxy:</b> mantém um pool de conexões e as multiplexa (todas as operações de uma transação usam uma conexão do banco), o que protege o banco de rajadas, e reconecta a um standby no failover preservando as conexões do app. Para Aurora e Multi-AZ DB cluster você pode criar <b>endpoints somente leitura</b> (<code>TargetRole = READ_ONLY</code>), que reagem a um reader que cai sem esperar o cache de DNS. Já para uma instância RDS com réplicas, o proxy só se associa ao <b>writer</b>, não a uma réplica de leitura.</span><span class="en"><b>RDS Proxy:</b> keeps a connection pool and multiplexes it (all operations of a transaction use one database connection), which protects the database from bursts, and reconnects to a standby on failover while preserving app connections. For Aurora and Multi-AZ DB clusters you can create <b>read-only endpoints</b> (<code>TargetRole = READ_ONLY</code>), which react to a reader dying without waiting for the DNS cache. For an RDS instance with replicas, however, the proxy only associates with the <b>writer</b>, not a read replica.</span></li>
+<li><span class="pt"><b>Sem autoscaling de réplica no RDS:</b> o RDS não adiciona nem remove réplicas conforme a demanda; você cria e apaga à mão. Se apagar o primário sem apagar as réplicas na mesma Região, cada réplica é promovida a instância independente.</span><span class="en"><b>No replica autoscaling on RDS:</b> RDS does not add or remove replicas as demand changes; you create and delete them by hand. If you delete the primary without deleting its replicas in the same Region, each replica is promoted to a standalone instance.</span></li>
+<li><span class="pt"><b>Lag e failover:</b> no Multi-AZ DB cluster com PostgreSQL, o tempo de failover depende do menor lag entre os dois readers, porque o escolhido precisa aplicar o que falta antes de virar writer. Por isso a AWS recomenda alarmar o lag.</span><span class="en"><b>Lag and failover:</b> in a Multi-AZ DB cluster with PostgreSQL, failover time depends on the lowest lag of the two readers, because the chosen one must apply what is missing before becoming writer. That is why AWS recommends alarming on lag.</span></li>
+</ul>
+<h3><span class="pt">Como fazer (AWS CLI)</span><span class="en">How to do it (AWS CLI)</span></h3>
+<pre><code># 1. réplica de leitura de uma instância RDS (mesma Região)
+aws rds create-db-instance-read-replica \
+  --db-instance-identifier shop-replica-1 \
+  --source-db-instance-identifier shop \
+  --availability-zone us-east-1b
+
+# promover a réplica a instância independente (irreversível)
+aws rds promote-read-replica --db-instance-identifier shop-replica-1
+
+# 2. Multi-AZ DB cluster (writer + 2 readers em 3 AZs)
+aws rds create-db-cluster \
+  --db-cluster-identifier shop-cluster --engine postgres \
+  --master-username postgres --manage-master-user-password \
+  --db-subnet-group-name private-3az --backup-retention-period 1 \
+  --allocated-storage 400 --storage-type io1 --iops 3000 \
+  --db-cluster-instance-class db.m5d.xlarge
+
+# 3. Aurora PostgreSQL: o cluster e depois uma instância por papel
+aws rds create-db-cluster --db-cluster-identifier shop-aurora \
+  --engine aurora-postgresql --master-username postgres --manage-master-user-password \
+  --db-subnet-group-name private-3az
+aws rds create-db-instance --db-instance-identifier shop-aurora-writer \
+  --db-cluster-identifier shop-aurora --engine aurora-postgresql --db-instance-class db.r6g.large
+aws rds create-db-instance --db-instance-identifier shop-aurora-reader-1 \
+  --db-cluster-identifier shop-aurora --engine aurora-postgresql --db-instance-class db.r6g.large
+
+# onde estão os endpoints do cluster
+aws rds describe-db-clusters --query &#x27;*[].{Writer:Endpoint,Reader:ReaderEndpoint}&#x27;
+
+# 4. alarme de lag em instância RDS (métrica ReplicaLag, em segundos)
+aws cloudwatch put-metric-alarm --alarm-name shop-replica-lag \
+  --namespace AWS/RDS --metric-name ReplicaLag \
+  --dimensions Name=DBInstanceIdentifier,Value=shop-replica-1 \
+  --statistic Maximum --period 60 --evaluation-periods 5 \
+  --threshold 30 --comparison-operator GreaterThanThreshold \
+  --alarm-actions arn:aws:sns:us-east-1:123456789012:db-alerts</code></pre>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> <b>não executei nada disto na AWS</b> (custa dinheiro e não tenho conta de teste aqui). Conferi na documentação os comandos de réplica de leitura e de Multi-AZ DB cluster. Os comandos do Aurora, o alarme de CloudWatch e a ideia de ajustar <code>hot_standby_feedback</code> e <code>max_standby_streaming_delay</code> pelo parameter group são de memória; no Aurora a métrica de lag tem outro nome (<code>AuroraReplicaLag</code>, em milissegundos, se me lembro bem). Valores como classes de instância, nomes e IDs são exemplos.</span><span class="en"><b>Personal note, not verified in the sources:</b> <b>I did not run any of this on AWS</b> (it costs money and I have no test account here). I checked the read-replica and Multi-AZ DB cluster commands against the docs. The Aurora commands, the CloudWatch alarm and the idea of tuning <code>hot_standby_feedback</code> and <code>max_standby_streaming_delay</code> through the parameter group are from memory; on Aurora the lag metric has a different name (<code>AuroraReplicaLag</code>, in milliseconds, if I remember right). Values such as instance classes, names and IDs are examples.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-26</span><span class="en">Sources · checked on 2026-10-26</span></b><ul><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html">AWS Docs · RDS: Working with DB instance read replicas</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html">AWS Docs · RDS: Multi-AZ deployments (instance vs cluster)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html">AWS Docs · RDS: Multi-AZ DB cluster deployments (semisynchronous, replica lag, flow control)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/create-multi-az-db-cluster.html">AWS Docs · RDS: Creating a Multi-AZ DB cluster (CLI)</a></li><li><a href="https://docs.aws.amazon.com/cli/latest/reference/rds/create-db-instance-read-replica.html">AWS CLI · create-db-instance-read-replica</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.html">AWS Docs · Aurora DB clusters (cluster volume, up to 15 replicas)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Replication.html">AWS Docs · Aurora replication (lag usually under 100 ms)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.Endpoints.html">AWS Docs · Aurora endpoints (cluster, reader, custom, instance)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Endpoints.Reader.html">AWS Docs · Aurora reader endpoints (connection balancing)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-global-database.html">AWS Docs · Aurora Global Database</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy.html">AWS Docs · RDS Proxy (pooling, multiplexing, limitations)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/rds-proxy-endpoints.html">AWS Docs · RDS Proxy endpoints (read-only endpoints)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="sharding">
+<h2 id="sharding"><span class="pt">4. Sharding: dividir os dados entre servidores</span><span class="en">4. Sharding: splitting data across servers</span></h2>
+<p><span class="pt">No sharding cada servidor (<i>shard</i>) guarda um pedaço das linhas, e cada shard é o primário dos seus dados, com as suas próprias réplicas. A escrita escala porque deixa de passar por um único nó. O preço é que o banco deixa de ser &ldquo;um banco&rdquo;: o que era trivial (um join, uma transação, um <code>COUNT</code>) vira problema distribuído.</span><span class="en">In sharding each server (<i>shard</i>) holds a slice of the rows, and each shard is the primary of its own data, with its own replicas. Writes scale because they no longer go through a single node. The price is that the database stops being &ldquo;one database&rdquo;: what was trivial (a join, a transaction, a <code>COUNT</code>) becomes a distributed problem.</span></p>
+<h3><span class="pt">Particionar não é fazer shard</span><span class="en">Partitioning is not sharding</span></h3>
+<p><span class="pt">O Postgres tem <b>particionamento declarativo</b> (range, list e hash), que divide uma tabela em pedaços <i>dentro do mesmo servidor</i>. Ele ajuda com poda de partições (<i>partition pruning</i>), com manutenção (apagar uma partição antiga é quase instantâneo) e com localidade de cache, mas CPU, memória e disco continuam sendo de uma máquina só. A documentação sugere considerar particionar quando a tabela passa da memória do servidor. Sharding é o passo seguinte: os pedaços ficam em máquinas diferentes.</span><span class="en">Postgres has <b>declarative partitioning</b> (range, list and hash), which splits a table into pieces <i>inside the same server</i>. It helps with partition pruning, with maintenance (dropping an old partition is nearly instant) and with cache locality, but CPU, memory and disk still belong to one machine. The docs suggest considering partitioning when the table exceeds the server's memory. Sharding is the next step: the pieces live on different machines.</span></p>
+<pre><code>CREATE TABLE measurement (
+    city_id int NOT NULL, logdate date NOT NULL, peaktemp int
+) PARTITION BY RANGE (logdate);
+
+CREATE TABLE measurement_y2026m10 PARTITION OF measurement
+    FOR VALUES FROM (&#x27;2026-10-01&#x27;) TO (&#x27;2026-11-01&#x27;);
+
+-- Hash: espalha por uma chave (útil quando não há um eixo natural de tempo)
+CREATE TABLE m_p0 PARTITION OF measurement FOR VALUES WITH (MODULUS 4, REMAINDER 0);</code></pre>
+<p><span class="pt">Duas restrições que importam: uma chave primária ou <code>UNIQUE</code> numa tabela particionada precisa incluir todas as colunas da chave de partição, e partições demais aumentam o tempo de planejamento.</span><span class="en">Two restrictions that matter: a primary key or <code>UNIQUE</code> on a partitioned table must include all the partition key columns, and too many partitions increase planning time.</span></p>
+<h3><span class="pt">Escolher a chave de shard</span><span class="en">Choosing the shard key</span></h3>
+<p><span class="pt">É a decisão mais difícil de desfazer. Uma boa chave: (1) aparece em quase toda consulta, para que ela caia em um shard só; (2) distribui bem, sem shards quentes; (3) mantém junto o que é consultado junto. Em SaaS multi-tenant, <code>tenant_id</code> costuma ser a escolha natural.</span><span class="en">It is the hardest decision to undo. A good key: (1) appears in almost every query, so it lands on a single shard; (2) distributes evenly, with no hot shards; (3) keeps together what is queried together. In multi-tenant SaaS, <code>tenant_id</code> is usually the natural choice.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Estratégia</span><span class="en">Strategy</span></th><th><span class="pt">Como decide o shard</span><span class="en">How it picks the shard</span></th><th><span class="pt">Bom para</span><span class="en">Good for</span></th><th><span class="pt">Problema</span><span class="en">Problem</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Hash</span><span class="en">Hash</span></td><td><span class="pt"><code>hash(chave) % N</code></span><span class="en"><code>hash(key) % N</code></span></td><td><span class="pt">Distribuição uniforme</span><span class="en">Even distribution</span></td><td><span class="pt">Consulta por faixa vira todos os shards; mudar N remapeia quase tudo (sem buckets)</span><span class="en">Range queries hit every shard; changing N remaps almost everything (without buckets)</span></td></tr>
+<tr><td><span class="pt">Faixa (range)</span><span class="en">Range</span></td><td><span class="pt">Intervalos da chave (datas, IDs)</span><span class="en">Key intervals (dates, IDs)</span></td><td><span class="pt">Consultas por faixa; dados que envelhecem</span><span class="en">Range queries; aging data</span></td><td><span class="pt">Shard &ldquo;do mês atual&rdquo; recebe todas as escritas (quente)</span><span class="en">The &ldquo;current month&rdquo; shard takes all writes (hot)</span></td></tr>
+<tr><td><span class="pt">Diretório (lookup)</span><span class="en">Directory (lookup)</span></td><td><span class="pt">Uma tabela diz onde cada tenant está</span><span class="en">A table says where each tenant lives</span></td><td><span class="pt">Mover um tenant grande para um shard só dele</span><span class="en">Moving a big tenant to a shard of its own</span></td><td><span class="pt">O diretório vira dependência crítica e precisa de cache</span><span class="en">The directory becomes a critical dependency and needs caching</span></td></tr>
+<tr><td><span class="pt">Geográfico</span><span class="en">Geographic</span></td><td><span class="pt">Região do usuário</span><span class="en">User's region</span></td><td><span class="pt">Latência e residência de dados</span><span class="en">Latency and data residency</span></td><td><span class="pt">Usuário que viaja; distribuição desigual</span><span class="en">Users who travel; uneven distribution</span></td></tr>
+</tbody>
+</table>
+</div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 256" role="img" aria-label="Roteamento por buckets com um shard novo / Bucket routing with a new shard" style="min-width:640px">
+<rect x="8" y="100" width="90" height="56" rx="4" class="ln fillsoft"/>
+<text x="53.0" y="132.0" class="pt" text-anchor="middle">App</text><text x="53.0" y="132.0" class="en" text-anchor="middle">App</text>
+<rect x="130" y="82" width="190" height="92" rx="4" class="ln brandfill"/>
+<text x="225.0" y="125.0" class="pt" text-anchor="middle">Router</text><text x="225.0" y="125.0" class="en" text-anchor="middle">Router</text>
+<text x="225.0" y="142.0" class="mut pt" text-anchor="middle">hash(tenant) % 64 = bucket</text><text x="225.0" y="142.0" class="mut en" text-anchor="middle">hash(tenant) % 64 = bucket</text>
+<text x="225" y="160" class="mut mono pt" text-anchor="middle">mapa: bucket → shard</text><text x="225" y="160" class="mut mono en" text-anchor="middle">map: bucket → shard</text>
+<rect x="380" y="20" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="43.0" class="pt" text-anchor="middle">Shard 0</text><text x="455.0" y="43.0" class="en" text-anchor="middle">Shard 0</text>
+<text x="455.0" y="60.0" class="mut pt" text-anchor="middle">buckets 0 a 31</text><text x="455.0" y="60.0" class="mut en" text-anchor="middle">buckets 0 to 31</text>
+<rect x="380" y="106" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="129.0" class="pt" text-anchor="middle">Shard 1</text><text x="455.0" y="129.0" class="en" text-anchor="middle">Shard 1</text>
+<text x="455.0" y="146.0" class="mut pt" text-anchor="middle">buckets 32 a 63</text><text x="455.0" y="146.0" class="mut en" text-anchor="middle">buckets 32 to 63</text>
+<rect x="380" y="192" width="150" height="52" rx="4" class="ln fillsoft"/>
+<text x="455.0" y="215.0" class="pt" text-anchor="middle">Shard 2 (novo)</text><text x="455.0" y="215.0" class="en" text-anchor="middle">Shard 2 (new)</text>
+<text x="455.0" y="232.0" class="mut pt" text-anchor="middle">recebe buckets movidos</text><text x="455.0" y="232.0" class="mut en" text-anchor="middle">receives moved buckets</text>
+<rect x="570" y="20" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="630.0" y="50.0" class="pt" text-anchor="middle">Réplica 0</text><text x="630.0" y="50.0" class="en" text-anchor="middle">Replica 0</text>
+<rect x="570" y="106" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="630.0" y="136.0" class="pt" text-anchor="middle">Réplica 1</text><text x="630.0" y="136.0" class="en" text-anchor="middle">Replica 1</text>
+<rect x="570" y="192" width="120" height="52" rx="4" class="ln fillsoft"/>
+<text x="630.0" y="222.0" class="pt" text-anchor="middle">Réplica 2</text><text x="630.0" y="222.0" class="en" text-anchor="middle">Replica 2</text>
+<path d="M98 128L130 128" class="ln"/>
+<path d="M122.8 131.5L130 128L122.8 124.5" class="ln"/>
+<path d="M320 110L350 110L350 46L380 46" class="ln"/>
+<path d="M372.8 49.5L380 46L372.8 42.5" class="ln"/>
+<path d="M320 132L380 132" class="ln"/>
+<path d="M372.8 135.5L380 132L372.8 128.5" class="ln"/>
+<path d="M320 150L350 150L350 218L380 218" class="ln"/>
+<path d="M372.8 221.5L380 218L372.8 214.5" class="ln"/>
+<path d="M530 46L570 46" class="ln"/>
+<path d="M562.8 49.5L570 46L562.8 42.5" class="ln"/>
+<path d="M530 132L570 132" class="ln"/>
+<path d="M562.8 135.5L570 132L562.8 128.5" class="ln"/>
+<path d="M530 218L570 218" class="ln"/>
+<path d="M562.8 221.5L570 218L562.8 214.5" class="ln"/>
+<text x="550" y="36" class="mut mono pt" text-anchor="middle">WAL</text><text x="550" y="36" class="mut mono en" text-anchor="middle">WAL</text>
+</svg></div><figcaption><span class="pt">O hash mapeia a chave para um de 64 buckets fixos; só o mapa bucket → shard muda quando você adiciona um servidor.</span><span class="en">The hash maps the key to one of 64 fixed buckets; only the bucket → shard map changes when you add a server.</span></figcaption></figure>
+<p><span class="pt">O truque do desenho acima é o que torna o resharding viável: <b>shards lógicos (buckets) fixos, shards físicos variáveis</b>. A chave nunca muda de bucket; para crescer, você move alguns buckets de um servidor para outro e atualiza o mapa. Sem isso, <code>hash % N</code> com <code>N</code> novo obriga a mover quase todas as linhas.</span><span class="en">The trick in the drawing above is what makes resharding viable: <b>fixed logical shards (buckets), variable physical shards</b>. A key never changes bucket; to grow, you move some buckets from one server to another and update the map. Without it, <code>hash % N</code> with a new <code>N</code> forces moving almost every row.</span></p>
+<h3><span class="pt">O que quebra</span><span class="en">What breaks</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Problema</span><span class="en">Problem</span></th><th><span class="pt">Por que</span><span class="en">Why</span></th><th><span class="pt">Como lidar</span><span class="en">How to cope</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Consulta sem a chave de shard</span><span class="en">Query without the shard key</span></td><td><span class="pt">Precisa perguntar a todos os shards (<i>scatter-gather</i>) e juntar</span><span class="en">Must ask every shard (<i>scatter-gather</i>) and merge</span></td><td><span class="pt">Evite no caminho quente; relatórios vão para um data warehouse</span><span class="en">Avoid on the hot path; reports go to a data warehouse</span></td></tr>
+<tr><td><span class="pt">Join entre shards</span><span class="en">Cross-shard join</span></td><td><span class="pt">Os dados estão em máquinas diferentes</span><span class="en">The data is on different machines</span></td><td><span class="pt">Co-localizar tabelas pela mesma chave; replicar tabelas pequenas em todos os shards (<i>reference tables</i>)</span><span class="en">Co-locate tables by the same key; replicate small tables on every shard (<i>reference tables</i>)</span></td></tr>
+<tr><td><span class="pt">Transação entre shards</span><span class="en">Cross-shard transaction</span></td><td><span class="pt">Exige commit em duas fases ou compensação (saga)</span><span class="en">Needs two-phase commit or compensation (saga)</span></td><td><span class="pt">Desenhe para a transação caber em um shard</span><span class="en">Design so the transaction fits one shard</span></td></tr>
+<tr><td><span class="pt">IDs únicos</span><span class="en">Unique IDs</span></td><td><span class="pt"><code>serial</code> repete entre shards</span><span class="en"><code>serial</code> repeats across shards</span></td><td><span class="pt">UUID (o laboratório usa <code>gen_random_uuid()</code>) ou IDs com prefixo de tempo</span><span class="en">UUIDs (the lab uses <code>gen_random_uuid()</code>) or time-prefixed IDs</span></td></tr>
+<tr><td><span class="pt">Tenant gigante, shard quente</span><span class="en">Giant tenant, hot shard</span></td><td><span class="pt">Um tenant concentra a carga</span><span class="en">One tenant concentrates the load</span></td><td><span class="pt">Diretório para isolar o tenant num shard próprio</span><span class="en">A directory to isolate the tenant on its own shard</span></td></tr>
+<tr><td><span class="pt">Migrações de schema</span><span class="en">Schema migrations</span></td><td><span class="pt">N bancos para migrar, alguns podem falhar no meio</span><span class="en">N databases to migrate, some may fail midway</span></td><td><span class="pt">Migração versionada e idempotente, aplicada shard a shard</span><span class="en">Versioned, idempotent migration applied shard by shard</span></td></tr>
+<tr><td><span class="pt">Resharding</span><span class="en">Resharding</span></td><td><span class="pt">Mover dados com o sistema no ar</span><span class="en">Moving data while the system is live</span></td><td><span class="pt">Buckets fixos; copiar, sincronizar, trocar o mapa, apagar a origem</span><span class="en">Fixed buckets; copy, sync, switch the map, delete the source</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3><span class="pt">Três jeitos de fazer</span><span class="en">Three ways to do it</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Opção</span><span class="en">Option</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Quando</span><span class="en">When</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt"><b>No app</b> (o laboratório)</span><span class="en"><b>In the app</b> (the lab)</span></td><td><span class="pt">O código calcula o bucket e escolhe a conexão.</span><span class="en">The code computes the bucket and picks the connection.</span></td><td><span class="pt">Poucos shards, equipe que aceita ser dona do roteamento e do resharding</span><span class="en">Few shards, a team willing to own routing and resharding</span></td></tr>
+<tr><td><span class="pt"><b>Citus</b> (extensão do Postgres)</span><span class="en"><b>Citus</b> (Postgres extension)</span></td><td><span class="pt">Um <i>coordinator</i> recebe o SQL e o envia aos <i>workers</i>. Tabelas distribuídas por uma coluna de distribuição, <i>reference tables</i> replicadas em todos os workers e <i>co-location</i> por chave. Sharding por linha (<code>tenant_id</code>) ou por schema (Citus 12+).</span><span class="en">A <i>coordinator</i> receives the SQL and sends it to the <i>workers</i>. Tables distributed by a distribution column, <i>reference tables</i> replicated on every worker and key <i>co-location</i>. Row-based sharding (<code>tenant_id</code>) or schema-based (Citus 12+).</span></td><td><span class="pt">Você quer SQL distribuído sem trocar de motor</span><span class="en">You want distributed SQL without changing engines</span></td></tr>
+<tr><td><span class="pt"><b>Aurora PostgreSQL Limitless</b></span><span class="en"><b>Aurora PostgreSQL Limitless</b></span></td><td><span class="pt"><i>Routers</i> escondem os <i>shards</i> atrás de um endpoint de cluster. Três tipos de tabela: <i>sharded</i> (hash por uma chave, com co-location), <i>reference</i> (cópia em todos os shards) e <i>standard</i> (padrão, num shard só). Cada shard é uma instância Aurora (limite de 128 TiB).</span><span class="en"><i>Routers</i> hide the <i>shards</i> behind a cluster endpoint. Three table types: <i>sharded</i> (hash on a key, with co-location), <i>reference</i> (copy on every shard) and <i>standard</i> (default, on a single shard). Each shard is an Aurora instance (128 TiB limit).</span></td><td><span class="pt">Já está na AWS e quer sharding gerenciado</span><span class="en">Already on AWS and want managed sharding</span></td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">Em todos, a lição é a mesma da escolha da chave: o que for consultado e transacionado junto precisa ter a mesma chave de shard.</span><span class="en">In all of them the lesson is the same as for key choice: what is queried and transacted together must share the same shard key.</span></p>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> o texto sobre a ordem de grandeza em que vale partir para sharding (&ldquo;só depois de esgotar a escada&rdquo;) é opinião minha. Não tenho um número de corte; ele depende da carga. Também não testei Citus nem Limitless; descrevi só o que as documentações dizem.</span><span class="en"><b>Personal note, not verified in the sources:</b> the claim about when sharding is worth it (&ldquo;only after exhausting the ladder&rdquo;) is my opinion. I have no cutoff number; it depends on load. I also did not test Citus or Limitless; I described only what the docs say.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-26</span><span class="en">Sources · checked on 2026-10-26</span></b><ul><li><a href="https://www.postgresql.org/docs/current/ddl-partitioning.html">PostgreSQL Docs · Table partitioning</a></li><li><a href="https://docs.citusdata.com/en/stable/get_started/concepts.html">Citus Docs · Concepts (coordinator, workers, distributed and reference tables, co-location)</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/limitless.html">AWS Docs · Aurora PostgreSQL Limitless Database</a></li><li><a href="https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/limitless-architecture.html">AWS Docs · Limitless architecture (routers, shards, table types)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="e2e">
+<h2 id="e2e"><span class="pt">5. Uma requisição ponta a ponta</span><span class="en">5. One request, end to end</span></h2>
+<p><span class="pt">O exemplo: um endpoint <code>POST /orders</code> cria um pedido e o cliente imediatamente faz <code>GET /orders/{id}</code>. É o caso em que a leitura na réplica mais dói. O desenho abaixo é o que o laboratório da seção 6 implementa.</span><span class="en">The example: a <code>POST /orders</code> endpoint creates an order and the client immediately does <code>GET /orders/{id}</code>. It is the case where reading from the replica hurts most. The drawing below is what the section 6 lab implements.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 326" role="img" aria-label="Uma escrita e a leitura seguinte / One write and the read that follows" style="min-width:640px">
+<rect x="15" y="6" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="70.0" y="30.0" class="pt" text-anchor="middle">Cliente</text><text x="70.0" y="30.0" class="en" text-anchor="middle">Client</text>
+<path d="M70 46L70 318" class="ln dash"/>
+<rect x="185" y="6" width="110" height="40" rx="4" class="ln brandfill"/>
+<text x="240.0" y="30.0" class="pt" text-anchor="middle">API</text><text x="240.0" y="30.0" class="en" text-anchor="middle">API</text>
+<path d="M240 46L240 318" class="ln dash"/>
+<rect x="375" y="6" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="430.0" y="30.0" class="pt" text-anchor="middle">Primário</text><text x="430.0" y="30.0" class="en" text-anchor="middle">Primary</text>
+<path d="M430 46L430 318" class="ln dash"/>
+<rect x="565" y="6" width="110" height="40" rx="4" class="ln fillsoft"/>
+<text x="620.0" y="30.0" class="pt" text-anchor="middle">Réplica</text><text x="620.0" y="30.0" class="en" text-anchor="middle">Replica</text>
+<path d="M620 46L620 318" class="ln dash"/>
+<path d="M70 76L240 76" class="ln"/>
+<path d="M232.8 79.5L240 76L232.8 72.5" class="ln"/>
+<text x="78" y="70" class="mono pt" text-anchor="start">1 POST /orders</text><text x="78" y="70" class="mono en" text-anchor="start">1 POST /orders</text>
+<path d="M240 102L430 102" class="ln"/>
+<path d="M422.8 105.5L430 102L422.8 98.5" class="ln"/>
+<text x="248" y="96" class="mono pt" text-anchor="start">2 INSERT RETURNING id</text><text x="248" y="96" class="mono en" text-anchor="start">2 INSERT RETURNING id</text>
+<path d="M240 128L430 128" class="ln"/>
+<path d="M422.8 131.5L430 128L422.8 124.5" class="ln"/>
+<text x="248" y="122" class="mono pt" text-anchor="start">3 pg_current_wal_lsn()</text><text x="248" y="122" class="mono en" text-anchor="start">3 pg_current_wal_lsn()</text>
+<path d="M240 154L70 154" class="ln dash"/>
+<path d="M77.2 157.5L70 154L77.2 150.5" class="ln"/>
+<text x="78" y="148" class="mono pt" text-anchor="start">3 201 + X-Min-LSN</text><text x="78" y="148" class="mono en" text-anchor="start">3 201 + X-Min-LSN</text>
+<path d="M430 180L620 180" class="ln"/>
+<path d="M612.8 183.5L620 180L612.8 176.5" class="ln"/>
+<text x="438" y="174" class="mono pt" text-anchor="start">4 WAL (assíncrono)</text><text x="438" y="174" class="mono en" text-anchor="start">4 WAL (async)</text>
+<path d="M70 210L240 210" class="ln"/>
+<path d="M232.8 213.5L240 210L232.8 206.5" class="ln"/>
+<text x="78" y="204" class="mono pt" text-anchor="start">5 GET + X-Min-LSN</text><text x="78" y="204" class="mono en" text-anchor="start">5 GET + X-Min-LSN</text>
+<path d="M240 236L620 236" class="ln"/>
+<path d="M612.8 239.5L620 236L612.8 232.5" class="ln"/>
+<text x="248" y="230" class="mono pt" text-anchor="start">6 replay_lsn >= token ?</text><text x="248" y="230" class="mono en" text-anchor="start">6 replay_lsn >= token ?</text>
+<path d="M620 262L240 262" class="ln dash"/>
+<path d="M247.2 265.5L240 262L247.2 258.5" class="ln"/>
+<text x="248" y="256" class="mono pt" text-anchor="start">sim: lê aqui</text><text x="248" y="256" class="mono en" text-anchor="start">yes: read here</text>
+<path d="M240 288L430 288" class="ln"/>
+<path d="M422.8 291.5L430 288L422.8 284.5" class="ln"/>
+<text x="248" y="282" class="mono pt" text-anchor="start">não: lê do primário</text><text x="248" y="282" class="mono en" text-anchor="start">no: read from primary</text>
+<path d="M240 312L70 312" class="ln dash"/>
+<path d="M77.2 315.5L70 312L77.2 308.5" class="ln"/>
+<text x="78" y="306" class="mono pt" text-anchor="start">200 + served_by</text><text x="78" y="306" class="mono en" text-anchor="start">200 + served_by</text>
+</svg></div><figcaption><span class="pt">O tempo corre para baixo. Os números são os passos da lista abaixo; tracejado é resposta.</span><span class="en">Time runs downward. The numbers are the steps in the list below; dashed is a response.</span></figcaption></figure>
+<ol class="ds-steps">
+<li><span class="pt"><b>POST /orders.</b> O router sabe que isto é escrita e abre conexão com o <b>primário</b>.</span><span class="en"><b>POST /orders.</b> The router knows this is a write and opens a connection to the <b>primary</b>.</span></li>
+<li><span class="pt"><b>INSERT ... RETURNING id.</b> O primário grava no WAL e confirma o commit. Assíncrono: não espera a réplica.</span><span class="en"><b>INSERT ... RETURNING id.</b> The primary writes to the WAL and acknowledges the commit. Asynchronous: it does not wait for the replica.</span></li>
+<li><span class="pt"><b>Token.</b> Logo <i>depois</i> do commit, a API lê <code>pg_current_wal_lsn()</code>. Como foi lido depois, é maior ou igual à posição do commit. A resposta carrega o id e o cabeçalho <code>X-Min-LSN</code>.</span><span class="en"><b>Token.</b> Right <i>after</i> the commit, the API reads <code>pg_current_wal_lsn()</code>. Since it was read after, it is greater than or equal to the commit's position. The response carries the id and the <code>X-Min-LSN</code> header.</span></li>
+<li><span class="pt"><b>Replicação.</b> Em paralelo, o walsender envia o WAL; a réplica o grava e reaplica. Milissegundos, mas não zero.</span><span class="en"><b>Replication.</b> In parallel, the walsender ships the WAL; the replica writes and replays it. Milliseconds, but not zero.</span></li>
+<li><span class="pt"><b>GET /orders/{id}</b> com <code>X-Min-LSN</code>. O router quer usar a réplica, para poupar o primário.</span><span class="en"><b>GET /orders/{id}</b> with <code>X-Min-LSN</code>. The router wants to use the replica, to spare the primary.</span></li>
+<li><span class="pt"><b>Checagem.</b> Na réplica, <code>SELECT pg_last_wal_replay_lsn() &gt;= token</code>. Se verdadeiro, a réplica já enxerga o pedido e responde (<code>served_by: replica</code>). Se falso, ou se a réplica estiver fora do ar, a API lê do primário (<code>served_by: primary (...)</code>). A posição de reaplicação só avança, então a checagem não tem condição de corrida.</span><span class="en"><b>Check.</b> On the replica, <code>SELECT pg_last_wal_replay_lsn() &gt;= token</code>. If true, the replica already sees the order and answers (<code>served_by: replica</code>). If false, or if the replica is down, the API reads from the primary (<code>served_by: primary (...)</code>). The replay position only advances, so the check has no race condition.</span></li>
+</ol>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Situação</span><span class="en">Situation</span></th><th><span class="pt">Sem o token (split ingênuo)</span><span class="en">Without the token (naive split)</span></th><th><span class="pt">Com o token</span><span class="en">With the token</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Réplica em dia</span><span class="en">Replica caught up</span></td><td><span class="pt">Lê da réplica</span><span class="en">Reads from the replica</span></td><td><span class="pt">Lê da réplica (uma checagem a mais)</span><span class="en">Reads from the replica (one extra check)</span></td></tr>
+<tr><td><span class="pt">Réplica atrasada</span><span class="en">Replica lagging</span></td><td><span class="pt"><b>404</b>: o pedido &ldquo;não existe&rdquo;</span><span class="en"><b>404</b>: the order &ldquo;does not exist&rdquo;</span></td><td><span class="pt">Lê do primário: correto, mais lento</span><span class="en">Reads from the primary: correct, slower</span></td></tr>
+<tr><td><span class="pt">Réplica fora do ar</span><span class="en">Replica down</span></td><td><span class="pt">Erro, a menos que haja fallback</span><span class="en">Error, unless there is a fallback</span></td><td><span class="pt">Lê do primário</span><span class="en">Reads from the primary</span></td></tr>
+<tr><td><span class="pt">Primário fora do ar</span><span class="en">Primary down</span></td><td><span class="pt">Escritas falham; leituras seguem na réplica</span><span class="en">Writes fail; reads continue on the replica</span></td><td><span class="pt">Escritas falham; leituras com token falham até o failover (a réplica não prova estar em dia)</span><span class="en">Writes fail; token reads fail until failover (the replica cannot prove it is current)</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O que esse desenho não resolve.</b> (1) O token precisa viajar: cabeçalho, cookie ou sessão; se o cliente o perde, volta ao split ingênuo. (2) Se a réplica fica muito atrás, quase todas as leituras vão ao primário: o lag vira carga no primário. Alarme o lag. (3) Entre dois pedidos diferentes de usuários diferentes, a leitura ainda pode ser velha; para isso o token não é necessário e a estratégia é aceitar.</span><span class="en"><b>What this design does not solve.</b> (1) The token has to travel: header, cookie or session; if the client loses it, you are back to the naive split. (2) If the replica falls far behind, nearly every read goes to the primary: lag becomes load on the primary. Alarm on lag. (3) Between requests from different users, a read may still be stale; the token is not needed for that and the strategy is to accept it.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">6. Laboratório em Docker: primário, réplica, API e shards</span><span class="en">6. Docker lab: primary, replica, API and shards</span></h2>
+<p><span class="pt">O laboratório sobe um Postgres 18 primário, uma réplica de verdade (feita com <code>pg_basebackup -R</code>, em streaming replication), uma API em Python que separa leitura e escrita com o token da seção 5 e, num perfil à parte, dois shards do roteamento por buckets da seção 4. Só a API tem dependência externa (<code>psycopg</code>).</span><span class="en">The lab starts a primary Postgres 18, a real replica (made with <code>pg_basebackup -R</code>, in streaming replication), a Python API that splits reads and writes using the section 5 token and, under a separate profile, two shards with the section 4 bucket routing. Only the API has an external dependency (<code>psycopg</code>).</span></p>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>O que eu testei.</b> Subi tudo no Docker (versão 29, Postgres 18.6) e rodei os dois cenários abaixo, e as saídas mostradas são as reais, só reformatadas. Verifiquei que a réplica está em <code>streaming</code>, que ela recusa escrita e que a leitura obsoleta acontece e é corrigida pelo token. <b>Não testei na AWS.</b></span><span class="en"><b>What I tested.</b> I brought everything up in Docker (version 29, Postgres 18.6) and ran the two scenarios below, and the outputs shown are real, just reformatted. I verified the replica is in <code>streaming</code>, that it refuses writes, and that the stale read happens and is fixed by the token. <b>I did not test on AWS.</b></span></div>
+<h3><span class="pt">Estrutura</span><span class="en">Layout</span></h3>
+<pre><code>db-lab/
+├── compose.yaml
+├── replica.sh              # pg_basebackup -R e sobe o standby
+├── initdb/
+│   ├── 00-replication.sh   # usuário de replicação + pg_hba
+│   └── 10-schema.sql       # tabela orders
+├── app/
+│   ├── Dockerfile
+│   └── app.py              # API: split leitura/escrita + sharding
+└── demo.sh                 # o cenário ponta a ponta</code></pre>
+<h3><span class="pt">compose.yaml</span><span class="en">compose.yaml</span></h3>
+<pre><code>x-pg: &amp;pg
+  image: postgres:18.6-alpine
+  environment:
+    POSTGRES_USER: app
+    POSTGRES_PASSWORD: secret
+    POSTGRES_DB: shop
+
+services:
+  primary:
+    &lt;&lt;: *pg
+    command: [&quot;postgres&quot;, &quot;-c&quot;, &quot;wal_level=replica&quot;, &quot;-c&quot;, &quot;max_wal_senders=5&quot;, &quot;-c&quot;, &quot;max_slot_wal_keep_size=256MB&quot;]
+    volumes:
+      - ./initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: [&quot;CMD-SHELL&quot;, &quot;pg_isready -U app -d shop&quot;]
+      interval: 2s
+      retries: 30
+
+  replica:
+    &lt;&lt;: *pg
+    user: postgres
+    entrypoint: [&quot;/replica.sh&quot;]
+    volumes:
+      - ./replica.sh:/replica.sh:ro
+      - replica-data:/var/lib/postgresql
+    depends_on:
+      primary: { condition: service_healthy }
+
+  api:
+    build: ./app
+    environment:
+      PRIMARY_DSN: postgresql://app:secret@primary/shop
+      REPLICA_DSN: postgresql://app:secret@replica/shop
+      SHARD_DSNS: postgresql://app:secret@shard0/shop,postgresql://app:secret@shard1/shop
+    ports: [&quot;8080:8080&quot;]
+    depends_on: [replica]
+
+  shard0:
+    &lt;&lt;: *pg
+    profiles: [shard]
+    volumes: [&quot;./initdb/10-schema.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro&quot;]
+  shard1:
+    &lt;&lt;: *pg
+    profiles: [shard]
+    volumes: [&quot;./initdb/10-schema.sql:/docker-entrypoint-initdb.d/10-schema.sql:ro&quot;]
+
+volumes:
+  replica-data:</code></pre>
+<h3><span class="pt">initdb/00-replication.sh</span><span class="en">initdb/00-replication.sh</span></h3>
+<pre><code>#!/bin/sh
+set -e
+psql -v ON_ERROR_STOP=1 -U &quot;$POSTGRES_USER&quot; -d &quot;$POSTGRES_DB&quot; \
+  -c &quot;CREATE ROLE replicator WITH REPLICATION LOGIN PASSWORD &#x27;replpass&#x27;&quot;
+echo &quot;host replication replicator all scram-sha-256&quot; &gt;&gt; &quot;$PGDATA/pg_hba.conf&quot;</code></pre>
+<h3><span class="pt">initdb/10-schema.sql</span><span class="en">initdb/10-schema.sql</span></h3>
+<pre><code>CREATE TABLE orders (
+    id         uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    tenant_id  text        NOT NULL,
+    customer   text        NOT NULL,
+    total      numeric(10,2) NOT NULL,
+    created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX orders_tenant_idx ON orders (tenant_id, created_at DESC);</code></pre>
+<h3><span class="pt">replica.sh</span><span class="en">replica.sh</span></h3>
+<pre><code>#!/bin/sh
+set -e
+if [ ! -s &quot;$PGDATA/PG_VERSION&quot; ]; then
+  PGPASSWORD=replpass pg_basebackup -h primary -U replicator -D &quot;$PGDATA&quot; \
+    -R -X stream -C -S replica1
+  chmod 700 &quot;$PGDATA&quot;
+fi
+exec postgres -c hot_standby=on -c hot_standby_feedback=on</code></pre>
+<h3><span class="pt">app/Dockerfile</span><span class="en">app/Dockerfile</span></h3>
+<pre><code>FROM python:3.12-slim
+RUN pip install --no-cache-dir &quot;psycopg[binary]==3.2.*&quot;
+WORKDIR /app
+COPY app.py .
+USER 10001
+CMD [&quot;python&quot;, &quot;-u&quot;, &quot;app.py&quot;]</code></pre>
+<p><span class="pt">A API inteira cabe em um arquivo. Leia <code>create_order</code> e <code>read_order</code> (token e fallback) e depois <code>bucket_of</code> e <code>shard_of</code> (sharding):</span><span class="en">The whole API fits in one file. Read <code>create_order</code> and <code>read_order</code> (token and fallback) and then <code>bucket_of</code> and <code>shard_of</code> (sharding):</span></p>
+<h3><span class="pt">app/app.py</span><span class="en">app/app.py</span></h3>
+<pre><code>import hashlib
+import json
+import os
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+import psycopg
+
+PRIMARY = os.environ[&quot;PRIMARY_DSN&quot;]
+REPLICA = os.environ[&quot;REPLICA_DSN&quot;]
+SHARDS = os.environ[&quot;SHARD_DSNS&quot;].split(&quot;,&quot;)
+BUCKETS = 64  # logical shards: fixed forever; only the bucket -&gt; server map changes
+
+
+def connect(dsn):
+    return psycopg.connect(dsn, autocommit=True, connect_timeout=2)
+
+
+# ---- read/write split with read-your-writes --------------------------------
+def create_order(tenant, customer, total):
+    with connect(PRIMARY) as db:
+        order_id = db.execute(
+            &quot;INSERT INTO orders (tenant_id, customer, total) VALUES (%s, %s, %s) RETURNING id&quot;,
+            (tenant, customer, total),
+        ).fetchone()[0]
+        # taken AFTER the commit, so it is &gt;= the commit&#x27;s position in the WAL
+        lsn = db.execute(&quot;SELECT pg_current_wal_lsn()::text&quot;).fetchone()[0]
+    return {&quot;id&quot;: str(order_id), &quot;min_lsn&quot;: lsn, &quot;served_by&quot;: &quot;primary&quot;}
+
+
+def read_order(order_id, min_lsn):
+    reason = &quot;no token&quot;
+    try:
+        with connect(REPLICA) as db:
+            fresh = min_lsn is None or db.execute(
+                &quot;SELECT pg_last_wal_replay_lsn() &gt;= %s::pg_lsn&quot;, (min_lsn,)
+            ).fetchone()[0]
+            if fresh:
+                row = db.execute(
+                    &quot;SELECT id, customer, total FROM orders WHERE id = %s&quot;, (order_id,)
+                ).fetchone()
+                return row, &quot;replica&quot;
+            reason = &quot;replica behind the token&quot;
+    except psycopg.OperationalError:
+        reason = &quot;replica unreachable&quot;
+    with connect(PRIMARY) as db:
+        row = db.execute(&quot;SELECT id, customer, total FROM orders WHERE id = %s&quot;, (order_id,)).fetchone()
+    return row, f&quot;primary ({reason})&quot;
+
+
+def lag():
+    with connect(PRIMARY) as db:
+        return db.execute(
+            &quot;SELECT application_name, state, sync_state, &quot;
+            &quot;pg_wal_lsn_diff(pg_current_wal_lsn(), replay_lsn)::bigint AS replay_lag_bytes &quot;
+            &quot;FROM pg_stat_replication&quot;
+        ).fetchall()
+
+
+# ---- sharding by tenant -----------------------------------------------------
+def bucket_of(tenant):
+    return int.from_bytes(hashlib.sha256(tenant.encode()).digest()[:8], &quot;big&quot;) % BUCKETS
+
+
+def shard_of(tenant):
+    return bucket_of(tenant) * len(SHARDS) // BUCKETS  # buckets 0..31 -&gt; shard 0, 32..63 -&gt; shard 1
+
+
+def shard_create(tenant, customer, total):
+    with connect(SHARDS[shard_of(tenant)]) as db:
+        order_id = db.execute(
+            &quot;INSERT INTO orders (tenant_id, customer, total) VALUES (%s, %s, %s) RETURNING id&quot;,
+            (tenant, customer, total),
+        ).fetchone()[0]
+    return {&quot;id&quot;: str(order_id), &quot;tenant&quot;: tenant, &quot;bucket&quot;: bucket_of(tenant), &quot;shard&quot;: shard_of(tenant)}
+
+
+def shard_list(tenant):
+    with connect(SHARDS[shard_of(tenant)]) as db:  # single-shard query: tenant_id is in the WHERE
+        rows = db.execute(
+            &quot;SELECT customer, total FROM orders WHERE tenant_id = %s ORDER BY created_at DESC&quot;, (tenant,)
+        ).fetchall()
+    return {&quot;tenant&quot;: tenant, &quot;shard&quot;: shard_of(tenant), &quot;orders&quot;: [[c, str(t)] for c, t in rows]}
+
+
+def shard_stats():
+    out = []  # scatter-gather: touches every shard
+    for i, dsn in enumerate(SHARDS):
+        with connect(dsn) as db:
+            n, s = db.execute(&quot;SELECT count(*), coalesce(sum(total), 0) FROM orders&quot;).fetchone()
+        out.append({&quot;shard&quot;: i, &quot;orders&quot;: n, &quot;revenue&quot;: str(s)})
+    return {&quot;shards&quot;: out, &quot;total_orders&quot;: sum(x[&quot;orders&quot;] for x in out)}
+
+
+class Handler(BaseHTTPRequestHandler):
+    def reply(self, status, body, headers=()):
+        data = json.dumps(body).encode()
+        self.send_response(status)
+        self.send_header(&quot;Content-Type&quot;, &quot;application/json&quot;)
+        for k, v in headers:
+            self.send_header(k, v)
+        self.end_headers()
+        self.wfile.write(data)
+
+    def body(self):
+        return json.loads(self.rfile.read(int(self.headers.get(&quot;Content-Length&quot;, 0))) or &quot;{}&quot;)
+
+    def do_POST(self):
+        parts = self.path.strip(&quot;/&quot;).split(&quot;/&quot;)
+        data = self.body()
+        if parts == [&quot;orders&quot;]:
+            out = create_order(data.get(&quot;tenant&quot;, &quot;acme&quot;), data[&quot;customer&quot;], data[&quot;total&quot;])
+            return self.reply(201, out, [(&quot;X-Min-LSN&quot;, out[&quot;min_lsn&quot;])])
+        if len(parts) == 3 and parts[0] == &quot;t&quot; and parts[2] == &quot;orders&quot;:
+            return self.reply(201, shard_create(parts[1], data[&quot;customer&quot;], data[&quot;total&quot;]))
+        self.reply(404, {&quot;error&quot;: &quot;not found&quot;})
+
+    def do_GET(self):
+        parts = self.path.strip(&quot;/&quot;).split(&quot;/&quot;)
+        if len(parts) == 2 and parts[0] == &quot;orders&quot;:
+            row, served_by = read_order(parts[1], self.headers.get(&quot;X-Min-LSN&quot;))
+            if row is None:
+                return self.reply(404, {&quot;error&quot;: &quot;order not found&quot;, &quot;served_by&quot;: served_by})
+            return self.reply(200, {&quot;id&quot;: str(row[0]), &quot;customer&quot;: row[1], &quot;total&quot;: str(row[2]), &quot;served_by&quot;: served_by})
+        if parts == [&quot;lag&quot;]:
+            return self.reply(200, [dict(zip((&quot;replica&quot;, &quot;state&quot;, &quot;sync&quot;, &quot;replay_lag_bytes&quot;), r)) for r in lag()])
+        if len(parts) == 3 and parts[0] == &quot;t&quot; and parts[2] == &quot;orders&quot;:
+            return self.reply(200, shard_list(parts[1]))
+        if parts == [&quot;stats&quot;]:
+            return self.reply(200, shard_stats())
+        self.reply(404, {&quot;error&quot;: &quot;not found&quot;})
+
+
+ThreadingHTTPServer((&quot;0.0.0.0&quot;, 8080), Handler).serve_forever()</code></pre>
+<h3><span class="pt">Cenário 1: réplica saudável, atrasada e fora do ar</span><span class="en">Scenario 1: replica healthy, lagging and down</span></h3>
+<pre><code>docker compose up -d --build primary replica api
+docker compose exec primary psql -U app -d shop -c &quot;select application_name,state,sync_state from pg_stat_replication&quot;
+#  application_name |   state   | sync_state
+#  walreceiver      | streaming | async
+./demo.sh</code></pre>
+<h3><span class="pt">demo.sh</span><span class="en">demo.sh</span></h3>
+<pre><code>#!/bin/sh
+# end-to-end: one write and its reads, with the replica healthy, lagging and down
+api=http://localhost:8080
+sql() { docker compose exec -T replica psql -U app -d shop -tAc &quot;$1&quot;; }
+post() { curl -s -D /tmp/h -X POST $api/orders -d &quot;{\&quot;customer\&quot;:\&quot;$1\&quot;,\&quot;total\&quot;:$2}&quot;; }
+
+echo &quot;== 1. write goes to the primary and returns a token (WAL position)&quot;
+out=$(post ana 49.90); echo &quot;$out&quot;
+id=$(echo &quot;$out&quot; | sed &#x27;s/.*&quot;id&quot;: &quot;\([^&quot;]*\)&quot;.*/\1/&#x27;); lsn=$(grep -i x-min-lsn /tmp/h | tr -d &#x27;\r&#x27; | cut -d&#x27; &#x27; -f2)
+sleep 1
+echo &quot;== 2. read with the token: replica has already replayed it&quot;
+curl -s -H &quot;X-Min-LSN: $lsn&quot; $api/orders/$id; echo
+
+echo &quot;== 3. freeze replay on the replica (simulates lag)&quot;
+sql &quot;SELECT pg_wal_replay_pause()&quot; &gt;/dev/null
+out=$(post bruno 120.00); echo &quot;$out&quot;
+id=$(echo &quot;$out&quot; | sed &#x27;s/.*&quot;id&quot;: &quot;\([^&quot;]*\)&quot;.*/\1/&#x27;); lsn=$(grep -i x-min-lsn /tmp/h | tr -d &#x27;\r&#x27; | cut -d&#x27; &#x27; -f2)
+echo &quot;-- read WITHOUT token (naive split): stale read&quot;
+curl -s $api/orders/$id; echo
+echo &quot;-- read WITH token: falls back to the primary&quot;
+curl -s -H &quot;X-Min-LSN: $lsn&quot; $api/orders/$id; echo
+echo &quot;-- lag as seen by the primary&quot;
+curl -s $api/lag; echo
+
+echo &quot;== 4. resume replay: the same read goes back to the replica&quot;
+sql &quot;SELECT pg_wal_replay_resume()&quot; &gt;/dev/null; sleep 1
+curl -s -H &quot;X-Min-LSN: $lsn&quot; $api/orders/$id; echo
+
+echo &quot;== 5. replica down: reads survive on the primary&quot;
+docker compose stop -t 1 replica &gt;/dev/null 2&gt;&amp;1
+curl -s -H &quot;X-Min-LSN: $lsn&quot; $api/orders/$id; echo
+docker compose start replica &gt;/dev/null 2&gt;&amp;1</code></pre>
+<p><span class="pt">Saída real (o <code>pg_wal_replay_pause()</code> congela a reaplicação na réplica, simulando lag):</span><span class="en">Real output (<code>pg_wal_replay_pause()</code> freezes replay on the replica, simulating lag):</span></p>
+<pre><code>== 1. write goes to the primary and returns a token (WAL position)
+{&quot;id&quot;: &quot;92c500b3-...&quot;, &quot;min_lsn&quot;: &quot;0/3047348&quot;, &quot;served_by&quot;: &quot;primary&quot;}
+== 2. read with the token: replica has already replayed it
+{&quot;id&quot;: &quot;92c500b3-...&quot;, &quot;customer&quot;: &quot;ana&quot;, &quot;total&quot;: &quot;49.90&quot;, &quot;served_by&quot;: &quot;replica&quot;}
+== 3. freeze replay on the replica (simulates lag)
+{&quot;id&quot;: &quot;6dc4dfd0-...&quot;, &quot;min_lsn&quot;: &quot;0/3047460&quot;, &quot;served_by&quot;: &quot;primary&quot;}
+-- read WITHOUT token (naive split): stale read
+{&quot;error&quot;: &quot;order not found&quot;, &quot;served_by&quot;: &quot;replica&quot;}
+-- read WITH token: falls back to the primary
+{&quot;id&quot;: &quot;6dc4dfd0-...&quot;, &quot;customer&quot;: &quot;bruno&quot;, &quot;total&quot;: &quot;120.00&quot;, &quot;served_by&quot;: &quot;primary (replica behind the token)&quot;}
+-- lag as seen by the primary
+[{&quot;replica&quot;: &quot;walreceiver&quot;, &quot;state&quot;: &quot;streaming&quot;, &quot;sync&quot;: &quot;async&quot;, &quot;replay_lag_bytes&quot;: 280}]
+== 4. resume replay: the same read goes back to the replica
+{&quot;id&quot;: &quot;6dc4dfd0-...&quot;, &quot;customer&quot;: &quot;bruno&quot;, &quot;total&quot;: &quot;120.00&quot;, &quot;served_by&quot;: &quot;replica&quot;}
+== 5. replica down: reads survive on the primary
+{&quot;id&quot;: &quot;6dc4dfd0-...&quot;, &quot;customer&quot;: &quot;bruno&quot;, &quot;total&quot;: &quot;120.00&quot;, &quot;served_by&quot;: &quot;primary (replica unreachable)&quot;}</code></pre>
+<p><span class="pt">Repare no passo 3: a leitura <b>sem</b> o token devolveu um 404 de um pedido que acabou de ser criado. É a anomalia de <i>read-your-writes</i> reproduzida, com a réplica respondendo com toda a confiança.</span><span class="en">Note step 3: the read <b>without</b> the token returned a 404 for an order that had just been created. It is the read-your-writes anomaly reproduced, with the replica answering with full confidence.</span></p>
+<h3><span class="pt">Cenário 2: sharding por tenant</span><span class="en">Scenario 2: sharding by tenant</span></h3>
+<pre><code>docker compose --profile shard up -d shard0 shard1
+docker compose up -d api          # recria a API já com os shards no ar
+
+# 8 tenants x 3 pedidos cada
+curl -X POST localhost:8080/t/acme/orders -d &#x27;{&quot;customer&quot;:&quot;zed&quot;,&quot;total&quot;:5}&#x27;
+# {&quot;id&quot;: &quot;ebdca5ae-...&quot;, &quot;tenant&quot;: &quot;acme&quot;, &quot;bucket&quot;: 32, &quot;shard&quot;: 1}
+
+curl localhost:8080/t/acme/orders      # consulta de UM shard (tem a chave)
+# {&quot;tenant&quot;: &quot;acme&quot;, &quot;shard&quot;: 1, &quot;orders&quot;: [[&quot;zed&quot;,&quot;5.00&quot;],[&quot;c3&quot;,&quot;30.00&quot;],[&quot;c2&quot;,&quot;20.00&quot;],[&quot;c1&quot;,&quot;10.00&quot;]]}
+
+curl localhost:8080/stats              # scatter-gather: consulta TODOS os shards
+# {&quot;shards&quot;: [{&quot;shard&quot;: 0, &quot;orders&quot;: 12, &quot;revenue&quot;: &quot;240.00&quot;},
+#             {&quot;shard&quot;: 1, &quot;orders&quot;: 13, &quot;revenue&quot;: &quot;245.00&quot;}], &quot;total_orders&quot;: 25}
+
+# onde cada tenant caiu
+# acme 32-&gt;1  globex 39-&gt;1  initech 3-&gt;0  umbrella 32-&gt;1
+# hooli 11-&gt;0 stark 14-&gt;0   wayne 31-&gt;0   wonka 62-&gt;1</code></pre>
+<p><span class="pt">A distribuição ficou equilibrada (12 e 13 pedidos) com só 8 tenants. Note também que <code>acme</code> e <code>umbrella</code> caíram no mesmo bucket (32), o que é normal com 64 buckets: o bucket é uma unidade de movimentação, não de isolamento.</span><span class="en">The distribution came out balanced (12 and 13 orders) with only 8 tenants. Also note that <code>acme</code> and <code>umbrella</code> landed in the same bucket (32), which is normal with 64 buckets: the bucket is a unit of movement, not of isolation.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Este laboratório não faz resharding.</b> Ele mostra o roteamento (bucket para shard) e a consulta em todos os shards, mas não move dados. Mover um bucket de verdade exige copiar as linhas, sincronizar as escritas feitas durante a cópia (por exemplo, com replicação lógica), trocar o mapa de forma atômica e só então apagar a origem. Também não há réplicas por shard nem tolerância a falha de shard.</span><span class="en"><b>This lab does not reshard.</b> It shows the routing (bucket to shard) and the query across all shards, but it does not move data. Really moving a bucket requires copying the rows, syncing the writes made during the copy (for example, with logical replication), switching the map atomically and only then deleting the source. There are also no per-shard replicas or shard-failure tolerance.</span></div>
+<h3><span class="pt">Limpar e exercícios</span><span class="en">Cleanup and exercises</span></h3>
+<pre><code>docker compose --profile shard down -v</code></pre>
+<ol class="ds-steps">
+<li><span class="pt">Coloque <code>synchronous_standby_names = 'replica1'</code> e <code>synchronous_commit = remote_apply</code> no primário. Repita o cenário 1: o passo 3 trava o <code>POST</code>? Por quê? (Dica: a réplica está com a reaplicação pausada.)</span><span class="en">Set <code>synchronous_standby_names = 'replica1'</code> and <code>synchronous_commit = remote_apply</code> on the primary. Repeat scenario 1: does step 3 block the <code>POST</code>? Why? (Hint: the replica has replay paused.)</span></li>
+<li><span class="pt">Desligue o <code>hot_standby_feedback</code>, rode um <code>pg_sleep(60)</code> numa transação na réplica e um <code>UPDATE</code> mais <code>VACUUM</code> no primário. Veja a consulta ser cancelada e consulte <code>pg_stat_database_conflicts</code>.</span><span class="en">Turn off <code>hot_standby_feedback</code>, run a <code>pg_sleep(60)</code> in a transaction on the replica and an <code>UPDATE</code> plus <code>VACUUM</code> on the primary. Watch the query get cancelled and check <code>pg_stat_database_conflicts</code>.</span></li>
+<li><span class="pt">Pare o primário e promova a réplica com <code>SELECT pg_promote()</code>. O que a API faz? O que precisa mudar para o failover ser automático?</span><span class="en">Stop the primary and promote the replica with <code>SELECT pg_promote()</code>. What does the API do? What has to change for failover to be automatic?</span></li>
+<li><span class="pt">Adicione um terceiro shard: mude <code>shard_of</code> para usar um mapa explícito bucket → shard, mova um bucket à mão (<code>INSERT ... SELECT</code> entre os dois bancos) e troque o mapa.</span><span class="en">Add a third shard: change <code>shard_of</code> to use an explicit bucket → shard map, move one bucket by hand (<code>INSERT ... SELECT</code> between the two databases) and switch the map.</span></li>
+</ol>
+</section>
+
+<section class="content-section" aria-labelledby="cheat">
+<h2 id="cheat"><span class="pt">7. Decisão e checklist</span><span class="en">7. Decision and checklist</span></h2>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Se você precisa de...</span><span class="en">If you need...</span></th><th><span class="pt">Use</span><span class="en">Use</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Sobreviver à queda do primário</span><span class="en">Surviving the primary's failure</span></td><td><span class="pt">Multi-AZ (instância ou cluster) ou Aurora; teste o failover</span><span class="en">Multi-AZ (instance or cluster) or Aurora; test the failover</span></td></tr>
+<tr><td><span class="pt">Aliviar leitura e relatórios</span><span class="en">Offloading reads and reports</span></td><td><span class="pt">Réplicas de leitura; réplica de relatório separada da de failover</span><span class="en">Read replicas; reporting replica separate from the failover one</span></td></tr>
+<tr><td><span class="pt">Ler o que acabou de escrever</span><span class="en">Reading what you just wrote</span></td><td><span class="pt">Token de LSN, janela pós-escrita ou ler do primário</span><span class="en">LSN token, post-write window or reading from the primary</span></td></tr>
+<tr><td><span class="pt">Muitas conexões, Lambda, picos</span><span class="en">Many connections, Lambda, spikes</span></td><td><span class="pt">RDS Proxy ou PgBouncer</span><span class="en">RDS Proxy or PgBouncer</span></td></tr>
+<tr><td><span class="pt">Leitura perto do usuário em outra Região</span><span class="en">Reads near users in another Region</span></td><td><span class="pt">Aurora Global Database (ou réplica entre Regiões no RDS)</span><span class="en">Aurora Global Database (or a cross-Region replica on RDS)</span></td></tr>
+<tr><td><span class="pt">Tabela enorme, sem escala de escrita necessária</span><span class="en">Huge table, no write scaling needed</span></td><td><span class="pt">Particionamento declarativo</span><span class="en">Declarative partitioning</span></td></tr>
+<tr><td><span class="pt">Escrita e volume além de um servidor</span><span class="en">Writes and volume beyond one server</span></td><td><span class="pt">Sharding: Citus, Aurora Limitless ou no app</span><span class="en">Sharding: Citus, Aurora Limitless or in the app</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3><span class="pt">Checklist</span><span class="en">Checklist</span></h3>
+<ul class="ds-list">
+<li><span class="pt">Meça antes: qual é o gargalo? CPU, IO, conexões, leitura, escrita?</span><span class="en">Measure first: what is the bottleneck? CPU, IO, connections, reads, writes?</span></li>
+<li><span class="pt">Cada leitura classificada: pode ser velha? Se não, vai ao primário ou usa token.</span><span class="en">Every read classified: may it be stale? If not, it goes to the primary or uses a token.</span></li>
+<li><span class="pt">Transação que escreve (ou usa <code>FOR UPDATE</code>) inteira no primário.</span><span class="en">A transaction that writes (or uses <code>FOR UPDATE</code>) entirely on the primary.</span></li>
+<li><span class="pt">Alarme de lag, de WAL retido e de conexões; fallback para o primário se a réplica falhar.</span><span class="en">Alarms on lag, retained WAL and connections; fallback to the primary if the replica fails.</span></li>
+<li><span class="pt">Réplica de relatório com <code>max_standby_streaming_delay</code> alto, separada da de failover.</span><span class="en">Reporting replica with a high <code>max_standby_streaming_delay</code>, separate from the failover one.</span></li>
+<li><span class="pt">Failover testado de verdade, com a aplicação reconectando (DNS e pool).</span><span class="en">Failover tested for real, with the application reconnecting (DNS and pool).</span></li>
+<li><span class="pt">Se for fazer shard: chave que aparece em quase toda consulta, buckets fixos, UUIDs, migrações versionadas.</span><span class="en">If you shard: a key that appears in almost every query, fixed buckets, UUIDs, versioned migrations.</span></li>
+<li><span class="pt">Cada shard com as suas réplicas e o seu backup.</span><span class="en">Each shard with its own replicas and backup.</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Limites desta nota.</b> Os dados e comportamentos vêm das documentações citadas em cada seção, consultadas em 26/10/2026; limites, preços e versões da AWS mudam. O laboratório foi testado no Docker, com um primário e uma réplica de verdade; nada foi executado na AWS, e Citus e Limitless não foram testados.</span><span class="en"><b>Limits of this note.</b> Facts and behaviors come from the docs cited in each section, consulted on 2026-10-26; AWS limits, prices and versions change. The lab was tested in Docker, with a real primary and replica; nothing was run on AWS, and Citus and Limitless were not tested.</span></div>
+</section>
+
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
