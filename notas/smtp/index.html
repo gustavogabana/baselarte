@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="smtp.metaTitle">SMTP: how email travels and how to run it securely</title>
+  <meta name="description" data-i18n-attributes="content:smtp.metaDescription" content="What SMTP is, how a message travels from sender to inbox, the ports (25, 587, 465), how to secure it (TLS, authentication, SPF, DKIM, DMARC, MTA-STS), and open-source projects to practise with in Docker.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/smtp/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/smtp/">
+  <meta property="og:title" data-i18n-attributes="content:smtp.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta property="og:description" data-i18n-attributes="content:smtp.metaDescription" content="What SMTP is, how a message travels from sender to inbox, the ports (25, 587, 465), how to secure it (TLS, authentication, SPF, DKIM, DMARC, MTA-STS), and open-source projects to practise with in Docker.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:smtp.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta name="twitter:description" data-i18n-attributes="content:smtp.metaDescription" content="What SMTP is, how a message travels from sender to inbox, the ports (25, 587, 465), how to secure it (TLS, authentication, SPF, DKIM, DMARC, MTA-STS), and open-source projects to practise with in Docker.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="smtp.kicker">Networking and security</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="smtp.heroTitle">SMTP: <em>how email travels, and how to run it securely.</em></h1>
+      <p class="hero-lede" data-i18n="smtp.heroLede">What the protocol is, the conversation between servers, the ports (25, 587, 465), TLS and authentication, SPF, DKIM and DMARC, open-source servers to practise with, and a Docker lab with real output.</p>
+    </section>
+<aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#what"><span class="pt">O que é o SMTP</span><span class="en">What SMTP is</span></a></li>
+        <li><a href="#talk"><span class="pt">1. A conversa, comando a comando</span><span class="en">1. The conversation, command by command</span></a></li>
+        <li><a href="#ports"><span class="pt">2. Portas: 25, 587, 465</span><span class="en">2. Ports: 25, 587, 465</span></a></li>
+        <li><a href="#secure"><span class="pt">3. Como fazer com segurança</span><span class="en">3. Doing it securely</span></a></li>
+        <li><a href="#projects"><span class="pt">4. Projetos open-source</span><span class="en">4. Open-source projects</span></a></li>
+        <li><a href="#lab"><span class="pt">5. Laboratório em Docker</span><span class="en">5. Docker lab</span></a></li>
+        <li><a href="#cheat"><span class="pt">6. Checklist</span><span class="en">6. Checklist</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é o SMTP</span><span class="en">What SMTP is</span></h2>
+<p><span class="pt"><b>SMTP</b> (<i>Simple Mail Transfer Protocol</i>) é o protocolo que <b>empurra</b> uma mensagem de um servidor para outro até ela chegar ao servidor de quem recebe. Ele só <b>entrega</b>; quem lê a caixa de entrada depois usa outro protocolo (IMAP ou POP3). Pense no correio: o SMTP é o caminhão que leva a carta de agência em agência; o IMAP é você abrindo a caixa postal.</span><span class="en"><b>SMTP</b> (<i>Simple Mail Transfer Protocol</i>) is the protocol that <b>pushes</b> a message from one server to another until it reaches the recipient's server. It only <b>delivers</b>; reading the inbox later uses another protocol (IMAP or POP3). Think of the postal service: SMTP is the truck carrying the letter from office to office; IMAP is you opening your mailbox.</span></p>
+<p><span class="pt">É um protocolo de texto, nascido em 1982 e hoje definido na RFC 5321. Foi desenhado quando todo mundo se conhecia, então <b>não tinha autenticação nem criptografia</b>. Quase tudo o que é "segurança de e-mail" é uma camada colocada por cima depois (seção 3).</span><span class="en">It is a text protocol, born in 1982 and now defined in RFC 5321. It was designed when everyone knew each other, so it <b>had no authentication and no encryption</b>. Almost everything called "email security" is a layer added on top later (section 3).</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 250" role="img" aria-label="O caminho de um e-mail / The path of an email" style="min-width:640px">
+<rect x="4" y="30" width="96" height="56" rx="4" class="ln fillsoft"/>
+<text x="52" y="54" class="pt" text-anchor="middle">MUA</text><text x="52" y="54" class="en" text-anchor="middle">MUA</text>
+<text x="52" y="72" class="mut pt" text-anchor="middle">app da Ana</text><text x="52" y="72" class="mut en" text-anchor="middle">Ana's app</text>
+<rect x="132" y="30" width="96" height="56" rx="4" class="ln brandfill"/>
+<text x="180" y="54" class="pt" text-anchor="middle">MSA</text><text x="180" y="54" class="en" text-anchor="middle">MSA</text>
+<text x="180" y="72" class="mut pt" text-anchor="middle">porta 587/465</text><text x="180" y="72" class="mut en" text-anchor="middle">port 587/465</text>
+<rect x="260" y="30" width="96" height="56" rx="4" class="ln brandfill"/>
+<text x="308" y="54" class="pt" text-anchor="middle">MTA origem</text><text x="308" y="54" class="en" text-anchor="middle">Sending MTA</text>
+<text x="308" y="72" class="mut pt" text-anchor="middle">fila e reenvio</text><text x="308" y="72" class="mut en" text-anchor="middle">queue, retry</text>
+<rect x="388" y="30" width="96" height="56" rx="4" class="ln brandfill"/>
+<text x="436" y="54" class="pt" text-anchor="middle">MTA destino</text><text x="436" y="54" class="en" text-anchor="middle">Receiving MTA</text>
+<text x="436" y="72" class="mut pt" text-anchor="middle">porta 25</text><text x="436" y="72" class="mut en" text-anchor="middle">port 25</text>
+<rect x="516" y="30" width="80" height="56" rx="4" class="ln fillsoft"/>
+<text x="556" y="54" class="pt" text-anchor="middle">MDA</text><text x="556" y="54" class="en" text-anchor="middle">MDA</text>
+<text x="556" y="72" class="mut pt" text-anchor="middle">guarda</text><text x="556" y="72" class="mut en" text-anchor="middle">stores</text>
+<rect x="620" y="30" width="76" height="56" rx="4" class="ln fillsoft"/>
+<text x="658" y="54" class="pt" text-anchor="middle">Caixa</text><text x="658" y="54" class="en" text-anchor="middle">Mailbox</text>
+<text x="658" y="72" class="mut pt" text-anchor="middle">do Bruno</text><text x="658" y="72" class="mut en" text-anchor="middle">Bruno's</text>
+<path d="M100 58L132 58" class="ln"/><path d="M124.8 61.5L132 58L124.8 54.5" class="ln"/>
+<path d="M228 58L260 58" class="ln"/><path d="M252.8 61.5L260 58L252.8 54.5" class="ln"/>
+<path d="M356 58L388 58" class="ln"/><path d="M380.8 61.5L388 58L380.8 54.5" class="ln"/>
+<path d="M484 58L516 58" class="ln"/><path d="M508.8 61.5L516 58L508.8 54.5" class="ln"/>
+<path d="M596 58L620 58" class="ln"/><path d="M612.8 61.5L620 58L612.8 54.5" class="ln"/>
+<text x="116" y="22" class="mut mono" text-anchor="middle">SMTP</text>
+<text x="244" y="22" class="mut mono" text-anchor="middle">SMTP</text>
+<text x="372" y="22" class="mut mono" text-anchor="middle">SMTP</text>
+<text x="500" y="22" class="mut mono pt" text-anchor="middle">local</text><text x="500" y="22" class="mut mono en" text-anchor="middle">local</text>
+<rect x="260" y="120" width="96" height="40" rx="4" class="ln fillsoft"/>
+<text x="308" y="145" class="pt" text-anchor="middle">DNS: registro MX</text><text x="308" y="145" class="en" text-anchor="middle">DNS: MX record</text>
+<path d="M308 86L308 120" class="ln dash"/>
+<text x="318" y="106" class="mut mono pt" text-anchor="start">quem recebe example.org?</text><text x="318" y="106" class="mut mono en" text-anchor="start">who receives example.org?</text>
+<rect x="516" y="120" width="180" height="40" rx="4" class="ln fillsoft"/>
+<text x="606" y="145" class="pt" text-anchor="middle">IMAP / POP3 (leitura)</text><text x="606" y="145" class="en" text-anchor="middle">IMAP / POP3 (reading)</text>
+<path d="M658 120L658 86" class="ln dash"/>
+<text x="350" y="200" class="mut pt" text-anchor="middle">MUA = app de e-mail · MSA = recebe do usuário · MTA = transfere entre servidores · MDA = entrega na caixa</text><text x="350" y="200" class="mut en" text-anchor="middle">MUA = mail app · MSA = takes mail from the user · MTA = relays between servers · MDA = delivers to the mailbox</text>
+<text x="350" y="224" class="mut pt" text-anchor="middle">Postfix, Exim e OpenSMTPD fazem MSA + MTA; Dovecot faz MDA + IMAP</text><text x="350" y="224" class="mut en" text-anchor="middle">Postfix, Exim and OpenSMTPD do MSA + MTA; Dovecot does MDA + IMAP</text>
+</svg></div><figcaption><span class="pt">O SMTP aparece três vezes no caminho; o último trecho (caixa até o leitor) já é outro protocolo.</span><span class="en">SMTP shows up three times on the path; the last stretch (mailbox to reader) is already another protocol.</span></figcaption></figure>
+<p><span class="pt">O passo "quem recebe <code>example.org</code>?" é uma consulta DNS ao registro <b>MX</b>:</span><span class="en">The "who receives <code>example.org</code>?" step is a DNS query for the <b>MX</b> record:</span></p>
+<pre><code>$ dig +short MX gmail.com
+10 alt1.gmail-smtp-in.l.google.com.
+5  gmail-smtp-in.l.google.com.
+# o número menor tem prioridade; se falhar, o MTA tenta o próximo e depois tenta de novo mais tarde</code></pre>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> os hosts MX do exemplo acima são de memória e mudam; rode o <code>dig</code> você mesmo. O resto do texto vem das RFCs e docs citadas ao fim de cada seção.</span><span class="en"><b>Personal note, not verified in the sources:</b> the MX hosts in the example above are from memory and change; run <code>dig</code> yourself. The rest of the text comes from the RFCs and docs cited at the end of each section.</span></div>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul><li><a href="https://datatracker.ietf.org/doc/rfc5321/">RFC 5321 · Simple Mail Transfer Protocol</a></li><li><a href="https://datatracker.ietf.org/doc/rfc5322/">RFC 5322 · Internet Message Format</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="talk">
+<h2 id="talk"><span class="pt">1. A conversa, comando a comando</span><span class="en">1. The conversation, command by command</span></h2>
+<p><span class="pt">Cliente e servidor trocam linhas de texto. O servidor responde com um <b>código de três dígitos</b>: <code>2xx</code> deu certo, <code>3xx</code> continue, <code>4xx</code> erro temporário (tente de novo depois), <code>5xx</code> erro permanente (desista). Esta é uma sessão real contra o Mailpit (seção 5); as linhas numeradas <code>2xx</code>, <code>354</code> e <code>221</code> são do servidor, o resto eu digitei:</span><span class="en">Client and server exchange lines of text. The server answers with a <b>three-digit code</b>: <code>2xx</code> worked, <code>3xx</code> keep going, <code>4xx</code> temporary error (try again later), <code>5xx</code> permanent error (give up). This is a real session against Mailpit (section 5); the numbered lines (<code>2xx</code>, <code>354</code>, <code>221</code>) are from the server, the rest I typed:</span></p>
+<pre><code>S: 220 633819653d9a Mailpit ESMTP Service ready
+C: EHLO laptop.local
+S: 250-633819653d9a greets laptop.local
+S: 250-SIZE 52428800
+S: 250-8BITMIME
+S: 250 SMTPUTF8
+C: MAIL FROM:&lt;ana@example.com&gt;
+S: 250 2.1.0 Ok
+C: RCPT TO:&lt;bruno@example.org&gt;
+S: 250 2.1.5 Ok
+C: DATA
+S: 354 Start mail input; end with &lt;CR&gt;&lt;LF&gt;.&lt;CR&gt;&lt;LF&gt;
+C: From: Ana &lt;ana@example.com&gt;
+C: To: Bruno &lt;bruno@example.org&gt;
+C: Subject: Oi
+C:
+C: Primeira mensagem.
+C: .
+S: 250 2.0.0 Ok: queued as 4UAGUIw2T5z4DNJwPRVPgh
+C: QUIT
+S: 221 2.0.0 633819653d9a Mailpit ESMTP Service closing transmission channel</code></pre>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead>
+<tbody>
+<tr><td><code>EHLO nome</code></td><td><span class="pt">Apresenta o cliente e pede a lista de extensões (<code>STARTTLS</code>, <code>AUTH</code>, <code>SIZE</code>...). O antigo <code>HELO</code> não lista nada.</span><span class="en">Introduces the client and asks for the list of extensions (<code>STARTTLS</code>, <code>AUTH</code>, <code>SIZE</code>...). The old <code>HELO</code> lists nothing.</span></td></tr>
+<tr><td><code>STARTTLS</code></td><td><span class="pt">Pede para trocar a conexão aberta por uma criptografada (seção 3).</span><span class="en">Asks to upgrade the open connection to an encrypted one (section 3).</span></td></tr>
+<tr><td><code>AUTH</code></td><td><span class="pt">O cliente prova quem é (usuário e senha, ou token).</span><span class="en">The client proves who it is (user and password, or token).</span></td></tr>
+<tr><td><code>MAIL FROM</code></td><td><span class="pt">Remetente do <b>envelope</b>; para onde voltam os erros (<i>bounces</i>).</span><span class="en">The <b>envelope</b> sender; where errors (<i>bounces</i>) go back.</span></td></tr>
+<tr><td><code>RCPT TO</code></td><td><span class="pt">Destinatário do envelope; um por comando, quantos precisar.</span><span class="en">Envelope recipient; one per command, as many as needed.</span></td></tr>
+<tr><td><code>DATA</code></td><td><span class="pt">Começa o conteúdo (cabeçalhos, linha em branco, corpo) e termina com uma linha só com <code>.</code></span><span class="en">Starts the content (headers, blank line, body) and ends with a line holding only <code>.</code></span></td></tr>
+<tr><td><code>RSET</code> / <code>QUIT</code></td><td><span class="pt">Cancela a transação atual / encerra a sessão.</span><span class="en">Cancels the current transaction / ends the session.</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Envelope não é cabeçalho.</b> O <code>MAIL FROM</code> do envelope e o <code>From:</code> que o leitor vê são coisas separadas, e o servidor não exige que combinem. É por isso que dá para forjar o remetente de um e-mail, e é exatamente o furo que SPF, DKIM e DMARC tentam fechar (seção 3).</span><span class="en"><b>Envelope is not header.</b> The envelope <code>MAIL FROM</code> and the <code>From:</code> the reader sees are separate things, and the server does not require them to match. That is why a sender can be forged, and it is exactly the hole SPF, DKIM and DMARC try to close (section 3).</span></div>
+<p><span class="pt">Os códigos que você mais vai ver ao depurar:</span><span class="en">The codes you will see most when debugging:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Código</span><span class="en">Code</span></th><th><span class="pt">Significado</span><span class="en">Meaning</span></th></tr></thead>
+<tbody>
+<tr><td><code>250</code></td><td><span class="pt">Ok</span><span class="en">Ok</span></td></tr>
+<tr><td><code>421</code> / <code>451</code></td><td><span class="pt">Temporário: servidor ocupado, ou <i>greylisting</i>. O MTA reenvia sozinho.</span><span class="en">Temporary: server busy, or greylisting. The MTA retries by itself.</span></td></tr>
+<tr><td><code>530</code></td><td><span class="pt">Autenticação ou TLS exigidos (veja o laboratório)</span><span class="en">Authentication or TLS required (see the lab)</span></td></tr>
+<tr><td><code>535</code></td><td><span class="pt">Credenciais inválidas</span><span class="en">Invalid credentials</span></td></tr>
+<tr><td><code>550</code></td><td><span class="pt">Caixa inexistente ou mensagem recusada por política (SPF/DMARC, spam)</span><span class="en">Mailbox does not exist, or message rejected by policy (SPF/DMARC, spam)</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://datatracker.ietf.org/doc/rfc5321/">RFC 5321 · commands, reply codes, envelope</a></li><li><span class="pt">Sessão e códigos 530/535 reproduzidos por mim no laboratório da seção 5</span><span class="en">Session and 530/535 codes reproduced by me in the section 5 lab</span></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="ports">
+<h2 id="ports"><span class="pt">2. Portas: 25, 587, 465</span><span class="en">2. Ports: 25, 587, 465</span></h2>
+<p><span class="pt">O SMTP usa portas diferentes para <b>papéis</b> diferentes. Separar os papéis é a primeira decisão de segurança: quem envia mensagem como usuário deve se autenticar; quem só recebe de outros servidores, não.</span><span class="en">SMTP uses different ports for different <b>roles</b>. Separating the roles is the first security decision: someone sending as a user must authenticate; a server only receiving from other servers does not.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Porta</span><span class="en">Port</span></th><th><span class="pt">Uso</span><span class="en">Use</span></th><th><span class="pt">Criptografia</span><span class="en">Encryption</span></th><th><span class="pt">Autenticação</span><span class="en">Authentication</span></th></tr></thead>
+<tbody>
+<tr><td><code>25</code></td><td><span class="pt"><b>Entre servidores</b> (MTA para MTA)</span><span class="en"><b>Server to server</b> (MTA to MTA)</span></td><td><span class="pt">STARTTLS oportunista</span><span class="en">Opportunistic STARTTLS</span></td><td><span class="pt">Normalmente nenhuma</span><span class="en">Usually none</span></td></tr>
+<tr><td><code>587</code></td><td><span class="pt"><b>Submissão</b>: app/usuário envia (RFC 6409)</span><span class="en"><b>Submission</b>: app/user sends (RFC 6409)</span></td><td><span class="pt">STARTTLS (exigido)</span><span class="en">STARTTLS (required)</span></td><td><span class="pt">Obrigatória</span><span class="en">Required</span></td></tr>
+<tr><td><code>465</code></td><td><span class="pt">Submissão com <b>TLS implícito</b> (RFC 8314)</span><span class="en">Submission with <b>implicit TLS</b> (RFC 8314)</span></td><td><span class="pt">TLS desde o primeiro byte</span><span class="en">TLS from the first byte</span></td><td><span class="pt">Obrigatória</span><span class="en">Required</span></td></tr>
+<tr><td><code>2525</code></td><td><span class="pt">Não oficial; provedores o oferecem quando a 587 é bloqueada</span><span class="en">Unofficial; providers offer it when 587 is blocked</span></td><td><span class="pt">Como a 587</span><span class="en">Like 587</span></td><td><span class="pt">Obrigatória</span><span class="en">Required</span></td></tr>
+<tr><td><code>1025</code></td><td><span class="pt">Convenção de ferramentas de teste (Mailpit, MailHog)</span><span class="en">Convention of test tools (Mailpit, MailHog)</span></td><td><span class="pt">Opcional</span><span class="en">Optional</span></td><td><span class="pt">Opcional</span><span class="en">Optional</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Para a sua aplicação enviar e-mail:</b> use a <b>465</b> (TLS implícito) ou a <b>587</b> (STARTTLS), sempre com usuário e senha, nunca a 25. A RFC 8314 recomenda o TLS implícito, e a 587 com STARTTLS continua amplamente usada e aceita.</span><span class="en"><b>For your application to send email:</b> use <b>465</b> (implicit TLS) or <b>587</b> (STARTTLS), always with a username and password, never 25. RFC 8314 recommends implicit TLS, and 587 with STARTTLS remains widely used and accepted.</span></div>
+<p><span class="pt">A porta 25 de saída costuma ser <b>bloqueada</b> por provedores de nuvem e residenciais para conter spam; se o seu servidor na nuvem não consegue enviar, isso é o primeiro suspeito. Por isso quem hospeda um app costuma enviar por um serviço de relay (SES, Postmark, Mailgun, Resend) na 587/465 em vez de operar o próprio MTA.</span><span class="en">Outbound port 25 is often <b>blocked</b> by cloud and residential providers to curb spam; if your cloud server cannot send, that is the first suspect. That is why people hosting an app usually send through a relay service (SES, Postmark, Mailgun, Resend) on 587/465 instead of running their own MTA.</span></p>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://datatracker.ietf.org/doc/rfc6409/">RFC 6409 · Message Submission for Mail</a></li><li><a href="https://datatracker.ietf.org/doc/rfc8314/">RFC 8314 · Cleartext Considered Obsolete (implicit TLS, port 465)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="secure">
+<h2 id="secure"><span class="pt">3. Como fazer com segurança</span><span class="en">3. Doing it securely</span></h2>
+<p><span class="pt">A sua pergunta tinha duas partes: "entra SSL?" e "tem um equivalente?". Entra, e o nome certo hoje é <b>TLS</b> (o SSL é o antecessor, já descontinuado). Mas TLS resolve só <b>uma</b> de quatro perguntas. O SMTP precisa de quatro camadas, cada uma com um problema diferente:</span><span class="en">Your question had two parts: "does SSL apply?" and "is there an equivalent?". It does, and the right name today is <b>TLS</b> (SSL is the deprecated predecessor). But TLS answers only <b>one</b> of four questions. SMTP needs four layers, each solving a different problem:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">Ferramentas</span><span class="en">Tools</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Alguém no caminho lê a mensagem?</span><span class="en">Can someone on the path read the message?</span></td><td><span class="pt"><b>Transporte</b></span><span class="en"><b>Transport</b></span></td><td><span class="pt">TLS: STARTTLS ou TLS implícito, MTA-STS, DANE</span><span class="en">TLS: STARTTLS or implicit TLS, MTA-STS, DANE</span></td></tr>
+<tr><td><span class="pt">Quem pode enviar pelo meu servidor?</span><span class="en">Who may send through my server?</span></td><td><span class="pt"><b>Acesso</b></span><span class="en"><b>Access</b></span></td><td><span class="pt"><code>AUTH</code> só dentro do TLS, senhas de app, OAuth2, limites e fail2ban</span><span class="en"><code>AUTH</code> only inside TLS, app passwords, OAuth2, limits and fail2ban</span></td></tr>
+<tr><td><span class="pt">Este e-mail é mesmo do domínio que diz ser?</span><span class="en">Is this email really from the domain it claims?</span></td><td><span class="pt"><b>Identidade</b></span><span class="en"><b>Identity</b></span></td><td><span class="pt">SPF, DKIM, DMARC</span><span class="en">SPF, DKIM, DMARC</span></td></tr>
+<tr><td><span class="pt">Meu servidor virou um relay de spam?</span><span class="en">Did my server become a spam relay?</span></td><td><span class="pt"><b>Operação</b></span><span class="en"><b>Operation</b></span></td><td><span class="pt">Sem <i>open relay</i>, PTR, monitoramento, TLS-RPT/DMARC reports</span><span class="en">No open relay, PTR, monitoring, TLS-RPT/DMARC reports</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h3><span class="pt">3.1 Transporte: STARTTLS ou TLS implícito</span><span class="en">3.1 Transport: STARTTLS or implicit TLS</span></h3>
+<p><span class="pt">Há dois jeitos de criptografar. No <b>TLS implícito</b> (porta 465) o TLS começa antes de qualquer palavra do SMTP. No <b>STARTTLS</b> (587, 25) a conexão começa em texto puro, o servidor anuncia <code>250-STARTTLS</code> no <code>EHLO</code>, o cliente pede <code>STARTTLS</code> e só então a conexão é trocada por uma criptografada.</span><span class="en">There are two ways to encrypt. With <b>implicit TLS</b> (port 465) TLS starts before any SMTP word. With <b>STARTTLS</b> (587, 25) the connection starts in plain text, the server announces <code>250-STARTTLS</code> in <code>EHLO</code>, the client sends <code>STARTTLS</code> and only then is the connection upgraded to an encrypted one.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 232" role="img" aria-label="STARTTLS contra TLS implícito / STARTTLS versus implicit TLS" style="min-width:640px">
+<rect x="4" y="8" width="338" height="216" rx="6" class="ln dash"/>
+<text x="14" y="24" class="mut mono pt" text-anchor="start">STARTTLS (587 / 25)</text><text x="14" y="24" class="mut mono en" text-anchor="start">STARTTLS (587 / 25)</text>
+<text x="60" y="48" class="mut mono pt" text-anchor="middle">cliente</text><text x="60" y="48" class="mut mono en" text-anchor="middle">client</text><text x="286" y="48" class="mut mono pt" text-anchor="middle">servidor</text><text x="286" y="48" class="mut mono en" text-anchor="middle">server</text>
+<path d="M60 56L60 212" class="ln dash"/><path d="M286 56L286 212" class="ln dash"/>
+<path d="M60 76L286 76" class="ln"/><text x="173" y="70" class="mut mono" text-anchor="middle">EHLO</text>
+<path d="M286 100L60 100" class="ln"/><text x="173" y="94" class="mut mono" text-anchor="middle">250-STARTTLS</text>
+<path d="M60 124L286 124" class="ln"/><text x="173" y="118" class="mut mono" text-anchor="middle">STARTTLS</text>
+<path d="M286 148L60 148" class="ln"/><text x="173" y="142" class="mut mono" text-anchor="middle">220 Ready</text>
+<rect x="40" y="160" width="266" height="46" rx="4" class="ln brandfill"/>
+<text x="173" y="180" class="pt" text-anchor="middle">handshake TLS; depois tudo cifrado</text><text x="173" y="180" class="en" text-anchor="middle">TLS handshake; then all encrypted</text>
+<text x="173" y="196" class="mut pt" text-anchor="middle">o início da conversa é texto puro</text><text x="173" y="196" class="mut en" text-anchor="middle">the start of the talk is plain text</text>
+<rect x="358" y="8" width="338" height="216" rx="6" class="ln dash"/>
+<text x="368" y="24" class="mut mono pt" text-anchor="start">TLS implícito (465)</text><text x="368" y="24" class="mut mono en" text-anchor="start">Implicit TLS (465)</text>
+<text x="414" y="48" class="mut mono pt" text-anchor="middle">cliente</text><text x="414" y="48" class="mut mono en" text-anchor="middle">client</text><text x="640" y="48" class="mut mono pt" text-anchor="middle">servidor</text><text x="640" y="48" class="mut mono en" text-anchor="middle">server</text>
+<path d="M414 56L414 212" class="ln dash"/><path d="M640 56L640 212" class="ln dash"/>
+<rect x="394" y="70" width="266" height="46" rx="4" class="ln brandfill"/>
+<text x="527" y="90" class="pt" text-anchor="middle">handshake TLS primeiro</text><text x="527" y="90" class="en" text-anchor="middle">TLS handshake first</text>
+<text x="527" y="106" class="mut pt" text-anchor="middle">nada em texto puro</text><text x="527" y="106" class="mut en" text-anchor="middle">nothing in plain text</text>
+<path d="M414 138L640 138" class="ln"/><text x="527" y="132" class="mut mono" text-anchor="middle">EHLO (cifrado)</text>
+<path d="M640 162L414 162" class="ln"/><text x="527" y="156" class="mut mono" text-anchor="middle">250-AUTH ...</text>
+<text x="527" y="200" class="mut pt" text-anchor="middle">menos um passo, menos um ponto de ataque</text><text x="527" y="200" class="mut en" text-anchor="middle">one step fewer, one attack point fewer</text>
+</svg></div><figcaption><span class="pt">O STARTTLS é um upgrade combinado em texto puro; o TLS implícito não tem esse momento exposto.</span><span class="en">STARTTLS is an upgrade negotiated in plain text; implicit TLS has no such exposed moment.</span></figcaption></figure>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O ataque de <i>downgrade</i>.</b> Como o STARTTLS é negociado em texto puro, quem está no meio da rede pode apagar a linha <code>250-STARTTLS</code> da resposta. Um cliente que trata o TLS como "se possível" segue em texto puro sem avisar. A defesa: o cliente <b>exige</b> TLS e aborta se ele faltar. É o que o Mailpit faz com <code>MP_SMTP_REQUIRE_STARTTLS</code>, e o que o laboratório mostra com o erro <code>530 Must issue a STARTTLS command first</code>.</span><span class="en"><b>The downgrade attack.</b> Because STARTTLS is negotiated in plain text, someone in the middle of the network can strip the <code>250-STARTTLS</code> line from the reply. A client that treats TLS as "if possible" carries on in plain text without warning. The defence: the client <b>requires</b> TLS and aborts if it is missing. That is what Mailpit does with <code>MP_SMTP_REQUIRE_STARTTLS</code>, and what the lab shows with the <code>530 Must issue a STARTTLS command first</code> error.</span></div>
+<p><span class="pt">Entre <b>servidores</b> (porta 25) o problema é maior: não há como exigir TLS de qualquer destino, porque muitos servidores antigos ainda não o oferecem. Por isso o TLS ali é <i>oportunista</i> (criptografa se der, e aceita qualquer certificado). Duas tecnologias fecham essa brecha para o <b>seu</b> domínio:</span><span class="en">Between <b>servers</b> (port 25) the problem is bigger: you cannot require TLS from every destination, because many old servers still do not offer it. So TLS there is <i>opportunistic</i> (encrypt if possible, accept any certificate). Two technologies close that gap for <b>your</b> domain:</span></p>
+<ul class="ds-list">
+<li><span class="pt"><b>MTA-STS</b> (RFC 8461): você publica uma política em HTTPS (<code>https://mta-sts.seudominio.com/.well-known/mta-sts.txt</code>) e um registro DNS <code>_mta-sts</code>. Quem envia para você passa a exigir TLS válido para os seus MX. Não depende de DNSSEC.</span><span class="en"><b>MTA-STS</b> (RFC 8461): you publish a policy over HTTPS (<code>https://mta-sts.yourdomain.com/.well-known/mta-sts.txt</code>) and a <code>_mta-sts</code> DNS record. Senders to you then require valid TLS for your MX hosts. It does not depend on DNSSEC.</span></li>
+<li><span class="pt"><b>DANE</b> (RFC 7672): você publica o certificado (registros <code>TLSA</code>) no DNS, assinado com DNSSEC. Mais forte, mas exige DNSSEC.</span><span class="en"><b>DANE</b> (RFC 7672): you publish the certificate (<code>TLSA</code> records) in DNS, signed with DNSSEC. Stronger, but requires DNSSEC.</span></li>
+<li><span class="pt"><b>TLS-RPT</b> (RFC 8460): relatórios diários dos remetentes dizendo onde o TLS falhou com você.</span><span class="en"><b>TLS-RPT</b> (RFC 8460): daily reports from senders saying where TLS failed with you.</span></li>
+</ul>
+<pre><code># política MTA-STS (arquivo servido em HTTPS)
+version: STSv1
+mode: enforce          # comece com "testing"
+mx: mail.seudominio.com
+max_age: 604800
+
+# DNS
+_mta-sts.seudominio.com. TXT "v=STSv1; id=20261027T000000"
+_smtp._tls.seudominio.com. TXT "v=TLSRPTv1; rua=mailto:tls@seudominio.com"</code></pre>
+
+<h3><span class="pt">3.2 Acesso: autenticação</span><span class="en">3.2 Access: authentication</span></h3>
+<p><span class="pt">Na 587/465 o cliente prova quem é com o comando <code>AUTH</code> (RFC 4954). Os mecanismos comuns, <code>PLAIN</code> e <code>LOGIN</code>, mandam a senha só codificada em base64, ou seja, <b>legível</b>. Por isso a regra é: <b>o servidor só oferece <code>AUTH</code> depois do TLS.</b> O laboratório confere: o <code>EHLO</code> do Mailpit, logo após o TLS, anuncia <code>AUTH LOGIN PLAIN</code>.</span><span class="en">On 587/465 the client proves who it is with the <code>AUTH</code> command (RFC 4954). The common mechanisms, <code>PLAIN</code> and <code>LOGIN</code>, send the password only base64-encoded, which means <b>readable</b>. So the rule is: <b>the server only offers <code>AUTH</code> after TLS.</b> The lab checks it: Mailpit's <code>EHLO</code>, right after TLS, announces <code>AUTH LOGIN PLAIN</code>.</span></p>
+<ul class="ds-list">
+<li><span class="pt"><b>Uma credencial por aplicação</b> (senha de app, usuário SMTP dedicado), para revogar uma sem derrubar as outras.</span><span class="en"><b>One credential per application</b> (app password, dedicated SMTP user), so you can revoke one without breaking the others.</span></li>
+<li><span class="pt"><b>OAuth2</b> (<code>XOAUTH2</code>, <code>OAUTHBEARER</code>) onde o provedor suporta: o app usa um token de curta duração em vez da senha da conta.</span><span class="en"><b>OAuth2</b> (<code>XOAUTH2</code>, <code>OAUTHBEARER</code>) where the provider supports it: the app uses a short-lived token instead of the account password.</span></li>
+<li><span class="pt"><b>Limite de taxa e bloqueio</b> de tentativas falhas (fail2ban, <code>postscreen</code>), porque a porta 587 é alvo constante de força bruta.</span><span class="en"><b>Rate limits and blocking</b> of failed attempts (fail2ban, <code>postscreen</code>), because port 587 is a constant brute-force target.</span></li>
+<li><span class="pt">Credenciais fora do código: variável de ambiente ou gerenciador de segredos, como nas outras notas.</span><span class="en">Credentials out of the code: environment variable or secrets manager, as in the other notes.</span></li>
+</ul>
+
+<h3><span class="pt">3.3 Identidade: SPF, DKIM e DMARC</span><span class="en">3.3 Identity: SPF, DKIM and DMARC</span></h3>
+<p><span class="pt">Lembra do envelope forjável? Três registros no DNS do seu domínio permitem que o destinatário verifique de quem a mensagem realmente veio:</span><span class="en">Remember the forgeable envelope? Three records in your domain's DNS let the recipient verify who a message really came from:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th/><th><span class="pt">Responde</span><span class="en">Answers</span></th><th><span class="pt">Como</span><span class="en">How</span></th></tr></thead>
+<tbody>
+<tr><td><b>SPF</b><br>RFC 7208</td><td><span class="pt">"Este IP pode enviar por este domínio?"</span><span class="en">"May this IP send for this domain?"</span></td><td><span class="pt">Registro TXT com a lista de IPs/serviços autorizados. Confere o domínio do <code>MAIL FROM</code> (envelope).</span><span class="en">A TXT record listing authorized IPs/services. Checks the <code>MAIL FROM</code> (envelope) domain.</span></td></tr>
+<tr><td><b>DKIM</b><br>RFC 6376</td><td><span class="pt">"A mensagem foi alterada no caminho? Quem a assinou?"</span><span class="en">"Was the message altered in transit? Who signed it?"</span></td><td><span class="pt">O servidor assina cabeçalhos e corpo com uma chave privada; a chave pública fica no DNS (<code>seletor._domainkey</code>). Vai no cabeçalho <code>DKIM-Signature</code>. É a mesma ideia de assinatura digital da <a href="../crypto-keys-ssh/index.html">nota de criptografia</a>.</span><span class="en">The server signs headers and body with a private key; the public key lives in DNS (<code>selector._domainkey</code>). It goes in the <code>DKIM-Signature</code> header. It is the same digital-signature idea from the <a href="../crypto-keys-ssh/index.html">cryptography note</a>.</span></td></tr>
+<tr><td><b>DMARC</b></td><td><span class="pt">"O que fazer se SPF e DKIM falharem para o <code>From:</code> que o leitor vê?"</span><span class="en">"What to do if SPF and DKIM fail for the <code>From:</code> the reader sees?"</span></td><td><span class="pt">Registro <code>_dmarc</code> com a política (<code>none</code>, <code>quarantine</code>, <code>reject</code>). Exige que o domínio autenticado <b>alinhe</b> com o do <code>From:</code> e envia relatórios.</span><span class="en">A <code>_dmarc</code> record with the policy (<code>none</code>, <code>quarantine</code>, <code>reject</code>). Requires the authenticated domain to <b>align</b> with the <code>From:</code> domain and sends reports.</span></td></tr>
+</tbody>
+</table>
+</div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 190" role="img" aria-label="Verificação no recebimento / Checks on receipt" style="min-width:640px">
+<rect x="4" y="50" width="110" height="60" rx="4" class="ln fillsoft"/>
+<text x="59" y="76" class="pt" text-anchor="middle">Mensagem</text><text x="59" y="76" class="en" text-anchor="middle">Message</text>
+<text x="59" y="94" class="mut pt" text-anchor="middle">chega ao MTA</text><text x="59" y="94" class="mut en" text-anchor="middle">reaches the MTA</text>
+<rect x="164" y="8" width="150" height="46" rx="4" class="ln brandfill"/>
+<text x="239" y="28" class="pt" text-anchor="middle">SPF</text><text x="239" y="28" class="en" text-anchor="middle">SPF</text>
+<text x="239" y="44" class="mut pt" text-anchor="middle">IP autorizado?</text><text x="239" y="44" class="mut en" text-anchor="middle">authorized IP?</text>
+<rect x="164" y="68" width="150" height="46" rx="4" class="ln brandfill"/>
+<text x="239" y="88" class="pt" text-anchor="middle">DKIM</text><text x="239" y="88" class="en" text-anchor="middle">DKIM</text>
+<text x="239" y="104" class="mut pt" text-anchor="middle">assinatura válida?</text><text x="239" y="104" class="mut en" text-anchor="middle">valid signature?</text>
+<rect x="364" y="38" width="150" height="70" rx="4" class="ln brandfill"/>
+<text x="439" y="64" class="pt" text-anchor="middle">DMARC</text><text x="439" y="64" class="en" text-anchor="middle">DMARC</text>
+<text x="439" y="82" class="mut pt" text-anchor="middle">um passou E</text><text x="439" y="82" class="mut en" text-anchor="middle">one passed AND</text>
+<text x="439" y="98" class="mut pt" text-anchor="middle">alinha com From:?</text><text x="439" y="98" class="mut en" text-anchor="middle">aligns with From:?</text>
+<rect x="564" y="8" width="132" height="46" rx="4" class="ln fillsoft"/>
+<text x="630" y="36" class="pt" text-anchor="middle">Caixa de entrada</text><text x="630" y="36" class="en" text-anchor="middle">Inbox</text>
+<rect x="564" y="68" width="132" height="46" rx="4" class="ln fillsoft"/>
+<text x="630" y="96" class="pt" text-anchor="middle">Spam / rejeitada</text><text x="630" y="96" class="en" text-anchor="middle">Spam / rejected</text>
+<path d="M114 72L164 34" class="ln"/><path d="M114 88L164 90" class="ln"/>
+<path d="M314 31L364 58" class="ln"/><path d="M314 91L364 88" class="ln"/>
+<path d="M514 58L564 31" class="ln"/><path d="M514 88L564 91" class="ln"/>
+<text x="540" y="40" class="mut mono pt" text-anchor="middle">passa</text><text x="540" y="40" class="mut mono en" text-anchor="middle">pass</text>
+<text x="540" y="104" class="mut mono pt" text-anchor="middle">falha</text><text x="540" y="104" class="mut mono en" text-anchor="middle">fail</text>
+<text x="350" y="150" class="mut pt" text-anchor="middle">o DMARC é quem usa os dois resultados e aplica a política do dono do domínio</text><text x="350" y="150" class="mut en" text-anchor="middle">DMARC is what uses both results and applies the domain owner's policy</text>
+<text x="350" y="172" class="mut pt" text-anchor="middle">SPF e DKIM sozinhos não dizem o que fazer; o DMARC diz</text><text x="350" y="172" class="mut en" text-anchor="middle">SPF and DKIM alone do not say what to do; DMARC does</text>
+</svg></div><figcaption><span class="pt">Quem recebe consulta o DNS do domínio remetente: três perguntas, uma decisão.</span><span class="en">The receiver queries the sender domain's DNS: three questions, one decision.</span></figcaption></figure>
+<pre><code># SPF: só o MX do domínio e o relay do provedor podem enviar; o resto falha ("-all")
+seudominio.com.               TXT "v=spf1 mx include:_spf.provedor.com -all"
+
+# DKIM: chave pública do seletor "2026a"
+2026a._domainkey.seudominio.com. TXT "v=DKIM1; k=rsa; p=MIIBIjANBgkqh..."
+
+# DMARC: comece monitorando, depois suba para quarantine e reject
+_dmarc.seudominio.com.        TXT "v=DMARC1; p=none; rua=mailto:dmarc@seudominio.com"</code></pre>
+<p><span class="pt">O caminho seguro é gradual: publique SPF e DKIM, ponha o DMARC em <code>p=none</code> e leia os relatórios agregados por algumas semanas para descobrir todos os serviços que enviam em nome do domínio (marketing, suporte, sistema de cobrança), depois suba para <code>quarantine</code> e por fim <code>reject</code>. Subir direto para <code>reject</code> derruba o e-mail legítimo que você esqueceu. Desde 2024 Google e Yahoo exigem SPF, DKIM e DMARC de quem envia em volume para contas deles, então isto deixou de ser opcional para app com usuários reais.</span><span class="en">The safe path is gradual: publish SPF and DKIM, set DMARC to <code>p=none</code> and read the aggregate reports for a few weeks to discover every service sending on the domain's behalf (marketing, support, billing), then move to <code>quarantine</code> and finally <code>reject</code>. Jumping straight to <code>reject</code> kills legitimate email you forgot about. Since 2024 Google and Yahoo require SPF, DKIM and DMARC from bulk senders to their accounts, so this stopped being optional for an app with real users.</span></p>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes primárias:</b> a DMARC original é a RFC 7489 (informativa). Pesquisando, encontrei só blogs de fornecedores dizendo que em maio de 2026 a IETF publicou a revisão (DMARCbis) como RFC 9989, 9990 e 9991, substituindo a 7489 e removendo tags como <code>pct</code>. Os registros <code>v=DMARC1</code> continuam iguais; confira a RFC 9989 no rfc-editor.org antes de depender de detalhes. A exigência do Google/Yahoo é de memória (fevereiro de 2024, para remetentes de mais de 5 mil mensagens por dia).</span><span class="en"><b>Personal note, not verified in primary sources:</b> the original DMARC is RFC 7489 (informational). Searching, I found only vendor blogs saying that in May 2026 the IETF published the revision (DMARCbis) as RFC 9989, 9990 and 9991, replacing 7489 and removing tags such as <code>pct</code>. <code>v=DMARC1</code> records stay the same; check RFC 9989 on rfc-editor.org before relying on details. The Google/Yahoo requirement is from memory (February 2024, for senders of more than 5,000 messages a day).</span></div>
+
+<h3><span class="pt">3.4 Operação: não vire um relay aberto</span><span class="en">3.4 Operation: do not become an open relay</span></h3>
+<p><span class="pt">Um <b>open relay</b> é um servidor que aceita e reenvia e-mail de qualquer pessoa para qualquer lugar. Spammers o encontram em horas, e o seu IP vai para listas de bloqueio. A regra é simples: o servidor só aceita mensagens (a) <b>para domínios que ele hospeda</b>, ou (b) <b>de clientes autenticados</b> (ou de redes de confiança explícitas, como um IP interno). Em Postfix, é o papel de <code>smtpd_relay_restrictions</code>:</span><span class="en">An <b>open relay</b> is a server that accepts and forwards email from anyone to anywhere. Spammers find it within hours, and your IP lands on blocklists. The rule is simple: the server only accepts messages (a) <b>for domains it hosts</b>, or (b) <b>from authenticated clients</b> (or explicit trusted networks, such as an internal IP). In Postfix, that is the job of <code>smtpd_relay_restrictions</code>:</span></p>
+<pre><code># /etc/postfix/main.cf (trecho)
+smtpd_relay_restrictions = permit_mynetworks, permit_sasl_authenticated, reject_unauth_destination
+smtpd_tls_security_level = may          # porta 25: oportunista
+smtpd_tls_auth_only = yes               # AUTH só dentro do TLS
+disable_vrfy_command = yes              # não revela quais caixas existem</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><b>DNS reverso (PTR)</b> do IP de saída apontando para o nome do seu servidor, e o nome resolvendo de volta ao IP. Sem isso, muitos destinos recusam.</span><span class="en"><b>Reverse DNS (PTR)</b> for the outbound IP pointing to your server's name, and the name resolving back to the IP. Without it, many destinations refuse.</span></li>
+<li><span class="pt"><b>Certificado válido</b> (Let's Encrypt) com renovação automática, para o nome que o MX anuncia.</span><span class="en"><b>A valid certificate</b> (Let's Encrypt) with automatic renewal, for the name the MX announces.</span></li>
+<li><span class="pt"><b>Monitore a fila</b> (<code>mailq</code>) e os logs: uma fila crescendo de repente é sinal de conta comprometida enviando spam.</span><span class="en"><b>Monitor the queue</b> (<code>mailq</code>) and logs: a suddenly growing queue is a sign of a compromised account sending spam.</span></li>
+<li><span class="pt"><b>Mantenha atualizado</b>: servidores de e-mail ficam expostos à internet e já tiveram falhas graves (por exemplo, a <i>smuggling</i> de SMTP de 2023, em que terminadores de DATA ambíguos permitiam forjar mensagens).</span><span class="en"><b>Keep it patched</b>: mail servers are exposed to the internet and have had serious flaws (for example, the 2023 SMTP smuggling, where ambiguous DATA terminators let attackers forge messages).</span></li>
+</ul>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Recomendação prática, e opinião minha:</b> para um app, <b>não opere o seu próprio MTA de saída</b>. Use um serviço de relay (SES, Postmark, Mailgun, Resend), que já cuida de reputação de IP, PTR e filas, e configure só SPF, DKIM e DMARC no seu domínio. Operar o servidor completo é ótimo para aprender (seção 4) e razoável para caixa de e-mail própria, mas entregabilidade é um trabalho contínuo.</span><span class="en"><b>Practical recommendation, and my opinion:</b> for an app, <b>do not run your own outbound MTA</b>. Use a relay service (SES, Postmark, Mailgun, Resend), which already handles IP reputation, PTR and queues, and configure only SPF, DKIM and DMARC on your domain. Running the full server is great for learning (section 4) and reasonable for your own mailbox, but deliverability is ongoing work.</span></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>TLS não é ponta a ponta.</b> Mesmo com tudo acima, cada servidor do caminho lê a mensagem em claro. Para o conteúdo ficar secreto até o leitor é preciso criptografar a própria mensagem (S/MIME ou OpenPGP), o que está fora do escopo desta nota.</span><span class="en"><b>TLS is not end to end.</b> Even with everything above, every server on the path reads the message in the clear. To keep the content secret until the reader you must encrypt the message itself (S/MIME or OpenPGP), which is outside this note's scope.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://datatracker.ietf.org/doc/rfc8314/">RFC 8314 · Cleartext Considered Obsolete</a></li><li><a href="https://datatracker.ietf.org/doc/rfc3207/">RFC 3207 · SMTP Service Extension for Secure SMTP over TLS (STARTTLS)</a></li><li><a href="https://datatracker.ietf.org/doc/rfc4954/">RFC 4954 · SMTP Service Extension for Authentication</a></li><li><a href="https://datatracker.ietf.org/doc/rfc8461/">RFC 8461 · MTA-STS</a></li><li><a href="https://datatracker.ietf.org/doc/rfc7672/">RFC 7672 · DANE for SMTP</a></li><li><a href="https://datatracker.ietf.org/doc/rfc8460/">RFC 8460 · SMTP TLS Reporting</a></li><li><a href="https://datatracker.ietf.org/doc/rfc7208/">RFC 7208 · SPF</a></li><li><a href="https://datatracker.ietf.org/doc/rfc6376/">RFC 6376 · DKIM</a></li><li><a href="https://datatracker.ietf.org/doc/rfc7489/">RFC 7489 · DMARC</a> (<a href="https://dmarcreport.com/blog/dmarcbis-dkim2-rfc-9989.html">DMARCbis: blog, not primary</a>)</li><li><a href="https://www.postfix.org/SMTPD_ACCESS_README.html">Postfix · access restrictions (relay)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="projects">
+<h2 id="projects"><span class="pt">4. Projetos open-source para praticar</span><span class="en">4. Open-source projects to practise with</span></h2>
+<p><span class="pt">Há dois grupos com objetivos diferentes. As <b>caixas de areia</b> capturam e mostram o que o seu código enviou, sem entregar nada a ninguém; são para desenvolver e testar. Os <b>servidores de verdade</b> entregam e-mail de verdade; são para aprender a operar.</span><span class="en">There are two groups with different goals. <b>Sandboxes</b> capture and show what your code sent, delivering nothing to anyone; they are for developing and testing. <b>Real servers</b> deliver real email; they are for learning to operate.</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Projeto</span><span class="en">Project</span></th><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th></tr></thead>
+<tbody>
+<tr><td><a href="https://github.com/axllent/mailpit"><b>Mailpit</b></a></td><td><span class="pt">Sandbox</span><span class="en">Sandbox</span></td><td><span class="pt">Servidor SMTP de teste (porta 1025) com interface web (8025) e API REST; aceita STARTTLS, TLS e autenticação opcionais. <b>Comece por aqui</b> (seção 5).</span><span class="en">Test SMTP server (port 1025) with a web UI (8025) and REST API; optional STARTTLS, TLS and authentication. <b>Start here</b> (section 5).</span></td></tr>
+<tr><td><a href="https://github.com/mailhog/MailHog">MailHog</a></td><td><span class="pt">Sandbox</span><span class="en">Sandbox</span></td><td><span class="pt">O clássico, com as mesmas portas. A página do repositório mostra 2014-2017 e não indica manutenção ativa; hoje o Mailpit é o substituto mais usado.</span><span class="en">The classic, with the same ports. The repository page shows 2014-2017 and no sign of active maintenance; Mailpit is now the most-used replacement.</span></td></tr>
+<tr><td><a href="https://github.com/docker-mailserver/docker-mailserver"><b>docker-mailserver</b></a></td><td><span class="pt">Servidor completo</span><span class="en">Full server</span></td><td><span class="pt">Postfix (SMTP) + Dovecot (IMAP) + Rspamd, ClamAV, OpenDKIM, OpenDMARC, Fail2ban em um contêiner; configuração em arquivos; Let's Encrypt, certificado manual ou autoassinado. O melhor para ver as seções 2 e 3 funcionando juntas.</span><span class="en">Postfix (SMTP) + Dovecot (IMAP) + Rspamd, ClamAV, OpenDKIM, OpenDMARC, Fail2ban in one container; file-based config; Let's Encrypt, manual or self-signed certificate. The best to see sections 2 and 3 working together.</span></td></tr>
+<tr><td><a href="https://github.com/stalwartlabs/stalwart"><b>Stalwart</b></a></td><td><span class="pt">Servidor completo</span><span class="en">Full server</span></td><td><span class="pt">Escrito em Rust: SMTP, IMAP, JMAP, POP3 e também CalDAV/CardDAV, em um binário só. Licença AGPL-3.0 (com uma edição Enterprise). Bom para ver uma implementação moderna.</span><span class="en">Written in Rust: SMTP, IMAP, JMAP, POP3 and also CalDAV/CardDAV, in a single binary. AGPL-3.0 license (with an Enterprise edition). Good for seeing a modern implementation.</span></td></tr>
+<tr><td><a href="https://www.postfix.org/">Postfix</a></td><td><span class="pt">MTA</span><span class="en">MTA</span></td><td><span class="pt">O MTA mais comum; o <code>main.cf</code> da seção 3.4 é dele. Estudar o Postfix puro ensina o que o docker-mailserver esconde.</span><span class="en">The most common MTA; the <code>main.cf</code> in section 3.4 is its. Studying plain Postfix teaches what docker-mailserver hides.</span></td></tr>
+<tr><td><span class="pt">Outros</span><span class="en">Others</span></td><td>MTA</td><td><span class="pt">Exim, OpenSMTPD, Haraka (em Node.js, extensível por plugins), Maddy (um binário em Go), Mailu e Mail-in-a-Box (pacotes prontos). Citados de memória; confira o estado de cada um antes de escolher.</span><span class="en">Exim, OpenSMTPD, Haraka (Node.js, extensible by plugins), Maddy (a single Go binary), Mailu and Mail-in-a-Box (ready-made bundles). Mentioned from memory; check each one's status before choosing.</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Servidor de verdade em casa raramente entrega.</b> Para o Gmail aceitar seu e-mail você precisa de IP fixo, PTR, porta 25 liberada, SPF, DKIM e DMARC, e ainda assim um IP novo parte com má reputação. Pratique tudo em <code>localhost</code> e com domínios de teste; só ponha um servidor na internet depois de ter fechado o relay (seção 3.4).</span><span class="en"><b>A real server at home rarely delivers.</b> For Gmail to accept your email you need a fixed IP, PTR, port 25 open, SPF, DKIM and DMARC, and even then a new IP starts with a bad reputation. Practise everything on <code>localhost</code> and with test domains; only put a server on the internet after closing the relay (section 3.4).</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://github.com/axllent/mailpit">Mailpit · README</a> (<a href="https://mailpit.axllent.org/docs/configuration/smtp/">SMTP configuration</a>)</li><li><a href="https://github.com/docker-mailserver/docker-mailserver">docker-mailserver · README</a></li><li><a href="https://github.com/stalwartlabs/stalwart">Stalwart · README</a></li><li><a href="https://github.com/mailhog/MailHog">MailHog · README</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">5. Laboratório em Docker: Mailpit com TLS e autenticação</span><span class="en">5. Docker lab: Mailpit with TLS and authentication</span></h2>
+<p><span class="pt">Vamos subir um servidor SMTP que <b>exige STARTTLS e senha</b>, enviar um e-mail por um script Python e ver cada tentativa insegura ser recusada. Tudo em <code>127.0.0.1</code>; nada sai do seu computador. Testado com Docker e a imagem <code>axllent/mailpit</code> em 27/10/2026.</span><span class="en">We will start an SMTP server that <b>requires STARTTLS and a password</b>, send an email from a Python script and watch every insecure attempt get refused. Everything on <code>127.0.0.1</code>; nothing leaves your computer. Tested with Docker and the <code>axllent/mailpit</code> image on 2026-10-27.</span></p>
+<h3><span class="pt">Parte A: a conversa em texto puro</span><span class="en">Part A: the conversation in plain text</span></h3>
+<pre><code>docker run -d --rm --name mp -p 127.0.0.1:1025:1025 -p 127.0.0.1:8025:8025 axllent/mailpit
+
+# fale SMTP "na mão" (a sessão da seção 1)
+printf 'EHLO laptop.local\r\nMAIL FROM:&lt;ana@example.com&gt;\r\nRCPT TO:&lt;bruno@example.org&gt;\r\nDATA\r\nSubject: Oi\r\n\r\nOla.\r\n.\r\nQUIT\r\n' | nc localhost 1025
+
+# abra http://localhost:8025 e veja a mensagem na interface
+docker rm -f mp</code></pre>
+<h3><span class="pt">Parte B: exigir TLS e senha</span><span class="en">Part B: requiring TLS and a password</span></h3>
+<pre><code>mkdir smtp-lab &amp;&amp; cd smtp-lab &amp;&amp; mkdir certs
+
+# certificado autoassinado, só para o laboratório
+openssl req -x509 -newkey rsa:2048 -nodes -days 30 -subj "/CN=localhost" \
+  -addext "subjectAltName=DNS:localhost" -keyout certs/key.pem -out certs/cert.pem
+
+# arquivo de senhas (bcrypt): usuário "ana", senha "segredo"
+docker run --rm httpd:2.4-alpine htpasswd -nbB ana segredo &gt; auth.txt</code></pre>
+<p><span class="pt"><code>compose.yaml</code>:</span><span class="en"><code>compose.yaml</code>:</span></p>
+<pre><code>services:
+  mailpit:
+    image: axllent/mailpit
+    ports:
+      - "127.0.0.1:8025:8025"   # interface web
+      - "127.0.0.1:1025:1025"   # SMTP
+    volumes:
+      - ./certs:/certs:ro
+      - ./auth.txt:/auth.txt:ro
+    environment:
+      MP_SMTP_TLS_CERT: /certs/cert.pem
+      MP_SMTP_TLS_KEY: /certs/key.pem
+      MP_SMTP_REQUIRE_STARTTLS: "true"
+      MP_SMTP_AUTH_FILE: /auth.txt</code></pre>
+<p><span class="pt"><code>send.py</code> (cliente seguro: confia só no nosso certificado, faz STARTTLS e depois login):</span><span class="en"><code>send.py</code> (secure client: trusts only our certificate, does STARTTLS and then login):</span></p>
+<pre><code>import smtplib, ssl, sys
+from email.message import EmailMessage
+
+msg = EmailMessage()
+msg["From"] = "ana@example.com"
+msg["To"] = "bruno@example.org"
+msg["Subject"] = "Olá pelo SMTP"
+msg.set_content("Corpo da mensagem.\n")
+
+ctx = ssl.create_default_context(cafile="certs/cert.pem")   # confia só no nosso certificado
+with smtplib.SMTP("localhost", 1025) as s:
+    s.starttls(context=ctx)
+    s.login("ana", sys.argv[1])
+    s.send_message(msg)
+print("enviado")</code></pre>
+<p><span class="pt">Suba e rode os quatro testes. Esta é a saída real:</span><span class="en">Start it and run the four tests. This is the real output:</span></p>
+<pre><code>docker compose up -d
+# [smtpd] starting on [::]:1025 (STARTTLS required)
+
+# 1. sem TLS: recusado
+python3 -c "import smtplib; smtplib.SMTP('localhost',1025).sendmail('a@x.com',['b@y.org'],'Subject: x\r\n\r\nhi')"
+# SMTPSenderRefused: (530, b'5.7.0 Must issue a STARTTLS command first')
+
+# 2. TLS, senha errada: recusado
+python3 send.py errada
+# SMTPAuthenticationError: (535, b'5.7.8 Authentication credentials invalid')
+
+# 3. TLS e senha certa: aceito
+python3 send.py segredo
+# enviado
+
+# 4. inspecionar o TLS e o que o servidor anuncia depois dele
+echo QUIT | openssl s_client -starttls smtp -connect localhost:1025 -CAfile certs/cert.pem
+# Verification: OK
+# New, TLSv1.3, Cipher is TLS_AES_128_GCM_SHA256
+# Verify return code: 0 (ok)
+
+# a mensagem chegou
+curl -s localhost:8025/api/v1/messages | python3 -c "import json,sys; d=json.load(sys.stdin); print(d['total'], d['messages'][0]['Subject'])"
+# 1 Olá pelo SMTP</code></pre>
+<p><span class="pt">O teste 1 é a defesa contra o downgrade da seção 3.1 em ação, o 2 mostra o <code>535</code> e o 3 mostra o caminho feliz. Sem o <code>cafile</code>, o Python recusaria o certificado autoassinado: é a verificação de certificado funcionando, e o motivo de nunca desligá-la (<code>CERT_NONE</code>) para "fazer funcionar".</span><span class="en">Test 1 is the section 3.1 downgrade defence in action, 2 shows the <code>535</code> and 3 shows the happy path. Without the <code>cafile</code>, Python would refuse the self-signed certificate: that is certificate verification working, and the reason never to turn it off (<code>CERT_NONE</code>) just to "make it work".</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Só no laboratório.</b> O certificado autoassinado e a senha "segredo" são para teste. Em produção use um certificado de uma CA (Let's Encrypt) e segredos de verdade. Note também que o Mailpit avisa, no log, que a interface web (8025) fica sem autenticação; por isso o <code>compose.yaml</code> publica as portas só em <code>127.0.0.1</code>.</span><span class="en"><b>Lab only.</b> The self-signed certificate and the "segredo" password are for testing. In production use a CA certificate (Let's Encrypt) and real secrets. Also note Mailpit warns in its log that the web UI (8025) has no authentication; that is why <code>compose.yaml</code> publishes ports only on <code>127.0.0.1</code>.</span></div>
+<h3><span class="pt">Limpar e exercícios</span><span class="en">Cleanup and exercises</span></h3>
+<pre><code>docker compose down -v</code></pre>
+<ol class="ds-steps">
+<li><span class="pt">Faça um <code>EHLO</code> na mão antes e depois do TLS (<code>openssl s_client -starttls smtp -connect localhost:1025 -crlf</code>). Em qual dos dois aparece <code>AUTH LOGIN PLAIN</code>? Por quê?</span><span class="en">Do an <code>EHLO</code> by hand before and after TLS (<code>openssl s_client -starttls smtp -connect localhost:1025 -crlf</code>). In which of the two does <code>AUTH LOGIN PLAIN</code> appear? Why?</span></li>
+<li><span class="pt">No <code>send.py</code>, troque o <code>cafile</code> por <code>ssl.create_default_context()</code> e rode. Que erro aparece? Leia a mensagem.</span><span class="en">In <code>send.py</code>, replace the <code>cafile</code> with <code>ssl.create_default_context()</code> and run it. What error appears? Read the message.</span></li>
+<li><span class="pt">Mande um e-mail com <code>From: presidente@example.com</code> no cabeçalho e outro <code>MAIL FROM</code> no envelope. O Mailpit aceita? O que isso prova sobre a seção 1?</span><span class="en">Send an email with <code>From: presidente@example.com</code> in the header and a different envelope <code>MAIL FROM</code>. Does Mailpit accept it? What does that prove about section 1?</span></li>
+<li><span class="pt">Suba o <a href="https://github.com/docker-mailserver/docker-mailserver">docker-mailserver</a> seguindo a documentação dele, crie uma conta e repita o <code>openssl s_client</code> na 587 e na 465. Compare o que muda entre STARTTLS e TLS implícito (<code>-connect localhost:465</code> sem <code>-starttls</code>).</span><span class="en">Start <a href="https://github.com/docker-mailserver/docker-mailserver">docker-mailserver</a> following its documentation, create an account and repeat <code>openssl s_client</code> on 587 and on 465. Compare what changes between STARTTLS and implicit TLS (<code>-connect localhost:465</code> without <code>-starttls</code>).</span></li>
+<li><span class="pt">Use <code>dig TXT</code> no SPF, no DMARC e no seletor DKIM de um domínio que você usa e leia os registros com o que aprendeu na seção 3.3.</span><span class="en">Use <code>dig TXT</code> on the SPF, DMARC and a DKIM selector of a domain you use and read the records with what you learned in section 3.3.</span></li>
+</ol>
+</section>
+
+<section class="content-section" aria-labelledby="cheat">
+<h2 id="cheat"><span class="pt">6. Checklist</span><span class="en">6. Checklist</span></h2>
+<ul class="ds-list">
+<li><span class="pt">Aplicação envia pela <b>587 (STARTTLS) ou 465 (TLS implícito)</b>, autenticada, com TLS obrigatório e certificado verificado.</span><span class="en">The application sends via <b>587 (STARTTLS) or 465 (implicit TLS)</b>, authenticated, with TLS required and the certificate verified.</span></li>
+<li><span class="pt">Uma credencial por aplicação, fora do código, revogável.</span><span class="en">One credential per application, out of the code, revocable.</span></li>
+<li><span class="pt">Servidor oferece <code>AUTH</code> só depois do TLS; relay fechado (<code>reject_unauth_destination</code>); <code>VRFY</code> desligado.</span><span class="en">Server offers <code>AUTH</code> only after TLS; relay closed (<code>reject_unauth_destination</code>); <code>VRFY</code> off.</span></li>
+<li><span class="pt">SPF, DKIM e DMARC publicados; DMARC começa em <code>p=none</code> e sobe com base nos relatórios.</span><span class="en">SPF, DKIM and DMARC published; DMARC starts at <code>p=none</code> and rises based on the reports.</span></li>
+<li><span class="pt">MTA-STS (e TLS-RPT) no domínio que recebe e-mail; DANE se você já tem DNSSEC.</span><span class="en">MTA-STS (and TLS-RPT) on the domain that receives email; DANE if you already have DNSSEC.</span></li>
+<li><span class="pt">PTR do IP de saída, certificado válido com renovação, fila e logs monitorados, software atualizado.</span><span class="en">PTR for the outbound IP, valid certificate with renewal, queue and logs monitored, software patched.</span></li>
+<li><span class="pt">Em desenvolvimento, use uma caixa de areia (Mailpit); nunca aponte testes para um relay real com endereços de clientes.</span><span class="en">In development, use a sandbox (Mailpit); never point tests at a real relay with customers' addresses.</span></li>
+<li><span class="pt">Para um app, prefira um serviço de relay a operar o próprio MTA.</span><span class="en">For an app, prefer a relay service to running your own MTA.</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Limites desta nota.</b> As RFCs e as documentações dos projetos foram consultadas em 27/10/2026. O laboratório da seção 5 foi executado de verdade (Mailpit, Docker, Python, OpenSSL); o docker-mailserver, o Stalwart, o MTA-STS, o DKIM e o Postfix foram descritos pela documentação e <b>não foram executados por mim</b>. A lista de "outros" projetos e os exemplos de DNS são de memória.</span><span class="en"><b>Limits of this note.</b> The RFCs and project documentation were consulted on 2026-10-27. The section 5 lab was actually run (Mailpit, Docker, Python, OpenSSL); docker-mailserver, Stalwart, MTA-STS, DKIM and Postfix were described from the documentation and <b>not run by me</b>. The "others" project list and the DNS examples are from memory.</span></div>
+</section>
+
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
