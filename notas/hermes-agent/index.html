@@ -1,0 +1,531 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="hm.metaTitle">Hermes Agent: memory, skills, messaging apps, guardrails and running it 24/7</title>
+  <meta name="description" data-i18n-attributes="content:hm.metaDescription" content="What Nous Research's Hermes Agent is and how it works: memory, self-created skills, Telegram, WhatsApp and Signal integration, guardrails, installation, supported LLMs and how to keep it running 24/7 on a Hostinger or AWS server.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/hermes-agent/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/hermes-agent/">
+  <meta property="og:title" data-i18n-attributes="content:hm.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta property="og:description" data-i18n-attributes="content:hm.metaDescription" content="What Nous Research's Hermes Agent is and how it works: memory, self-created skills, Telegram, WhatsApp and Signal integration, guardrails, installation, supported LLMs and how to keep it running 24/7 on a Hostinger or AWS server.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:hm.metaTitle" content="Databases: reads, writes, replicas and sharding (Postgres and AWS)">
+  <meta name="twitter:description" data-i18n-attributes="content:hm.metaDescription" content="What Nous Research's Hermes Agent is and how it works: memory, self-created skills, Telegram, WhatsApp and Signal integration, guardrails, installation, supported LLMs and how to keep it running 24/7 on a Hostinger or AWS server.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+  <symbol id="i-house" viewBox="0 0 32 32"><path d="M4 15 16 4l12 11M7 13v15h18V13M13 28v-8h6v8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+      <p class="monospace-label hero-kicker" data-i18n="hm.kicker">AI engineering</p>
+      <h1 id="hero-title" class="hero-title" data-i18n="hm.heroTitle">Hermes Agent: <em>an agent that remembers, learns skills and answers you on WhatsApp, 24/7.</em></h1>
+      <p class="hero-lede" data-i18n="hm.heroLede">What it is and how it works, its memory, how it creates skills, how it plugs into Telegram, WhatsApp and Signal, its guardrails, how to install it, which models it supports and how to leave it running on a Hostinger or AWS server.</p>
+    </section>
+<aside class="side-nav" id="side-nav">
+        <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+          <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+          <ul>
+        <li><a href="#what"><span class="pt">O que é</span><span class="en">What it is</span></a></li>
+        <li><a href="#how"><span class="pt">1. Como funciona por dentro</span><span class="en">1. How it works inside</span></a></li>
+        <li><a href="#memory"><span class="pt">2. Memória</span><span class="en">2. Memory</span></a></li>
+        <li><a href="#skills"><span class="pt">3. Skills que ele mesmo cria</span><span class="en">3. Skills it creates itself</span></a></li>
+        <li><a href="#gateway"><span class="pt">4. Telegram, WhatsApp, Signal e o resto</span><span class="en">4. Telegram, WhatsApp, Signal and the rest</span></a></li>
+        <li><a href="#guardrails"><span class="pt">5. Guardrails</span><span class="en">5. Guardrails</span></a></li>
+        <li><a href="#install"><span class="pt">6. Instalar e escolher o modelo</span><span class="en">6. Installing and choosing the model</span></a></li>
+        <li><a href="#server"><span class="pt">7. Deixar rodando 24/7 (Hostinger ou AWS)</span><span class="en">7. Running 24/7 (Hostinger or AWS)</span></a></li>
+        <li><a href="#cheat"><span class="pt">8. Checklist</span><span class="en">8. Checklist</span></a></li>
+          </ul>
+        </nav>
+      </aside>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é</span><span class="en">What it is</span></h2>
+<p><span class="pt"><b>Hermes Agent</b> é um agente de IA open-source (licença MIT) da <b>Nous Research</b>, que o descreve como "o agente que se melhora sozinho". Na prática é um programa que você instala, aponta para um modelo de linguagem (LLM) e conversa com ele pelo terminal <b>ou pelo celular</b>, via Telegram, WhatsApp, Signal e outros. Ele executa comandos, edita arquivos, pesquisa na web, agenda tarefas e, o que o distingue, <b>guarda memória entre conversas e transforma o que aprendeu em skills reutilizáveis</b>.</span><span class="en"><b>Hermes Agent</b> is an open-source AI agent (MIT license) from <b>Nous Research</b>, which describes it as "the self-improving agent". In practice it is a program you install, point at a large language model (LLM) and talk to from the terminal <b>or from your phone</b>, via Telegram, WhatsApp, Signal and others. It runs commands, edits files, searches the web, schedules tasks and, what sets it apart, <b>keeps memory across conversations and turns what it learned into reusable skills</b>.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Não confunda o agente com os modelos.</b> "Hermes" também é uma família de modelos da Nous (Hermes 3, Hermes 4). O <i>Hermes Agent</i> é o programa em volta do modelo e funciona com <b>qualquer</b> LLM que você configurar (seção 6). A nota sobre <a href="../agent-harness/index.html">harness de agentes</a> explica o que é essa camada; aqui vemos um exemplo completo dela.</span><span class="en"><b>Do not confuse the agent with the models.</b> "Hermes" is also a family of Nous models (Hermes 3, Hermes 4). <i>Hermes Agent</i> is the program around the model and works with <b>any</b> LLM you configure (section 6). The <a href="../agent-harness/index.html">agent harness note</a> explains what that layer is; here we see a complete example of it.</span></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 270" role="img" aria-label="Visão geral do Hermes Agent / Hermes Agent overview" style="min-width:640px">
+<rect x="4" y="12" width="130" height="150" rx="6" class="ln dash"/>
+<text x="14" y="28" class="mut mono pt" text-anchor="start">você</text><text x="14" y="28" class="mut mono en" text-anchor="start">you</text>
+<rect x="16" y="38" width="106" height="30" rx="4" class="ln fillsoft"/><text x="69" y="58" class="pt" text-anchor="middle">Terminal / app</text><text x="69" y="58" class="en" text-anchor="middle">Terminal / app</text>
+<rect x="16" y="76" width="106" height="30" rx="4" class="ln fillsoft"/><text x="69" y="96" class="pt" text-anchor="middle">Telegram</text><text x="69" y="96" class="en" text-anchor="middle">Telegram</text>
+<rect x="16" y="114" width="106" height="30" rx="4" class="ln fillsoft"/><text x="69" y="134" class="pt" text-anchor="middle">WhatsApp, Signal...</text><text x="69" y="134" class="en" text-anchor="middle">WhatsApp, Signal...</text>
+<rect x="170" y="38" width="110" height="106" rx="4" class="ln brandfill"/>
+<text x="225" y="76" class="pt" text-anchor="middle">Gateway</text><text x="225" y="76" class="en" text-anchor="middle">Gateway</text>
+<text x="225" y="94" class="mut pt" text-anchor="middle">um processo,</text><text x="225" y="94" class="mut en" text-anchor="middle">one process,</text>
+<text x="225" y="110" class="mut pt" text-anchor="middle">vários apps</text><text x="225" y="110" class="mut en" text-anchor="middle">many apps</text>
+<rect x="326" y="12" width="200" height="150" rx="6" class="ln dash"/>
+<text x="336" y="28" class="mut mono" text-anchor="start">AIAgent</text>
+<rect x="340" y="38" width="172" height="34" rx="4" class="ln brandfill"/><text x="426" y="60" class="pt" text-anchor="middle">Loop do agente</text><text x="426" y="60" class="en" text-anchor="middle">Agent loop</text>
+<rect x="340" y="80" width="80" height="34" rx="4" class="ln fillsoft"/><text x="380" y="102" class="pt" text-anchor="middle">Memória</text><text x="380" y="102" class="en" text-anchor="middle">Memory</text>
+<rect x="432" y="80" width="80" height="34" rx="4" class="ln fillsoft"/><text x="472" y="102" class="pt" text-anchor="middle">Skills</text><text x="472" y="102" class="en" text-anchor="middle">Skills</text>
+<rect x="340" y="122" width="80" height="30" rx="4" class="ln fillsoft"/><text x="380" y="142" class="pt" text-anchor="middle">Cron</text><text x="380" y="142" class="en" text-anchor="middle">Cron</text>
+<rect x="432" y="122" width="80" height="30" rx="4" class="ln fillsoft"/><text x="472" y="142" class="pt" text-anchor="middle">Subagentes</text><text x="472" y="142" class="en" text-anchor="middle">Subagents</text>
+<rect x="566" y="38" width="130" height="50" rx="4" class="ln fillsoft"/><text x="631" y="60" class="pt" text-anchor="middle">LLM</text><text x="631" y="60" class="en" text-anchor="middle">LLM</text><text x="631" y="77" class="mut pt" text-anchor="middle">nuvem ou local</text><text x="631" y="77" class="mut en" text-anchor="middle">cloud or local</text>
+<rect x="566" y="100" width="130" height="62" rx="4" class="ln fillsoft"/><text x="631" y="122" class="pt" text-anchor="middle">Ferramentas</text><text x="631" y="122" class="en" text-anchor="middle">Tools</text><text x="631" y="140" class="mut pt" text-anchor="middle">terminal, web, MCP</text><text x="631" y="140" class="mut en" text-anchor="middle">terminal, web, MCP</text>
+<path d="M122 91L170 91" class="ln"/><path d="M280 91L326 91" class="ln"/><path d="M526 63L566 63" class="ln"/><path d="M526 131L566 131" class="ln"/>
+<path d="M319 91L326 88M319 91L326 94" class="ln"/><path d="M559 63L566 60M559 63L566 66" class="ln"/><path d="M559 131L566 128M559 131L566 134" class="ln"/>
+<rect x="326" y="186" width="370" height="64" rx="6" class="ln dash"/>
+<text x="336" y="202" class="mut mono pt" text-anchor="start">tudo em ~/.hermes (no Docker: /opt/data)</text><text x="336" y="202" class="mut mono en" text-anchor="start">all in ~/.hermes (in Docker: /opt/data)</text>
+<text x="511" y="226" class="mut mono" text-anchor="middle">config.yaml · .env · SOUL.md · memories/ · skills/ · state.db · cron/</text>
+<path d="M426 162L426 186" class="ln dash"/>
+<text x="100" y="228" class="mut pt" text-anchor="middle">a mesma memória em todos os canais</text><text x="100" y="228" class="mut en" text-anchor="middle">the same memory on every channel</text>
+</svg></div><figcaption><span class="pt">Os apps de mensagem falam com o gateway; o gateway chama o mesmo agente, com a mesma memória e as mesmas skills, que usa o LLM e as ferramentas.</span><span class="en">The messaging apps talk to the gateway; the gateway calls the same agent, with the same memory and skills, which uses the LLM and the tools.</span></figcaption></figure>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, sobre as fontes:</b> esta nota vem da documentação oficial (hermes-agent.nousresearch.com) e do README no GitHub, lidos em 27/10/2026, e de um tutorial da Hostinger. Eu baixei a imagem Docker oficial (4,31 GB) e vi que a primeira partida cria a estrutura de <code>~/.hermes</code> (<code>memories/</code>, <code>skills/</code>, <code>sessions/</code>, <code>cron/</code>, <code>pairing/</code>, <code>platforms/</code>, <code>SOUL.md</code>, <code>config.yaml</code>), mas <b>não rodei o agente com um modelo de verdade</b>; os comandos são os da documentação, não saídas que eu tenha visto. O projeto muda rápido; confira a página da versão que instalar.</span><span class="en"><b>Personal note, on sources:</b> this note comes from the official documentation (hermes-agent.nousresearch.com) and the GitHub README, read on 2026-10-27, and from a Hostinger tutorial. I pulled the official Docker image (4.31 GB) and saw that the first start creates the <code>~/.hermes</code> structure (<code>memories/</code>, <code>skills/</code>, <code>sessions/</code>, <code>cron/</code>, <code>pairing/</code>, <code>platforms/</code>, <code>SOUL.md</code>, <code>config.yaml</code>), but I <b>did not run the agent against a real model</b>; the commands are the documentation's, not outputs I have seen. The project moves fast; check the page for the version you install.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://github.com/NousResearch/hermes-agent">GitHub · NousResearch/hermes-agent (README)</a></li><li><a href="https://hermes-agent.nousresearch.com/">Hermes Agent · site oficial / official site</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="how">
+<h2 id="how"><span class="pt">1. Como funciona por dentro</span><span class="en">1. How it works inside</span></h2>
+<p><span class="pt">Todas as portas de entrada (o terminal <code>cli.py</code>, o gateway <code>gateway/run.py</code>, a integração com editores, a API) acabam na mesma classe, a <code>AIAgent</code>. O coração dela é um <b>loop de agente</b>, o mesmo padrão de qualquer agente com ferramentas:</span><span class="en">All entry points (the <code>cli.py</code> terminal, the <code>gateway/run.py</code> gateway, the editor integration, the API) end up in the same class, <code>AIAgent</code>. Its heart is an <b>agent loop</b>, the same pattern as any agent with tools:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 150" role="img" aria-label="O loop do agente / The agent loop" style="min-width:640px">
+<rect x="4" y="40" width="120" height="56" rx="4" class="ln fillsoft"/><text x="64" y="64" class="pt" text-anchor="middle">Sua mensagem</text><text x="64" y="64" class="en" text-anchor="middle">Your message</text><text x="64" y="82" class="mut pt" text-anchor="middle">chat ou terminal</text><text x="64" y="82" class="mut en" text-anchor="middle">chat or terminal</text>
+<rect x="160" y="40" width="130" height="56" rx="4" class="ln brandfill"/><text x="225" y="64" class="pt" text-anchor="middle">Monta o prompt</text><text x="225" y="64" class="en" text-anchor="middle">Builds the prompt</text><text x="225" y="82" class="mut pt" text-anchor="middle">SOUL + memória + skills</text><text x="225" y="82" class="mut en" text-anchor="middle">SOUL + memory + skills</text>
+<rect x="326" y="40" width="110" height="56" rx="4" class="ln brandfill"/><text x="381" y="64" class="pt" text-anchor="middle">Chama o LLM</text><text x="381" y="64" class="en" text-anchor="middle">Calls the LLM</text><text x="381" y="82" class="mut pt" text-anchor="middle">decide o próximo passo</text><text x="381" y="82" class="mut en" text-anchor="middle">decides the next step</text>
+<rect x="472" y="40" width="110" height="56" rx="4" class="ln fillsoft"/><text x="527" y="64" class="pt" text-anchor="middle">Executa a</text><text x="527" y="64" class="en" text-anchor="middle">Runs the</text><text x="527" y="82" class="pt" text-anchor="middle">ferramenta</text><text x="527" y="82" class="en" text-anchor="middle">tool</text>
+<rect x="618" y="40" width="78" height="56" rx="4" class="ln fillsoft"/><text x="657" y="64" class="pt" text-anchor="middle">Resposta</text><text x="657" y="64" class="en" text-anchor="middle">Answer</text><text x="657" y="82" class="mut pt" text-anchor="middle">e sessão salva</text><text x="657" y="82" class="mut en" text-anchor="middle">and session saved</text>
+<path d="M124 68L160 68" class="ln"/><path d="M290 68L326 68" class="ln"/><path d="M436 68L472 68" class="ln"/><path d="M582 68L618 68" class="ln dash"/>
+<path d="M527 96L527 122L381 122L381 96" class="ln"/><path d="M377.5 103L381 96L384.5 103" class="ln"/>
+<text x="454" y="116" class="mut mono pt" text-anchor="middle">resultado volta ao LLM; repete até terminar</text><text x="454" y="116" class="mut mono en" text-anchor="middle">result goes back to the LLM; repeats until done</text>
+<text x="527" y="30" class="mut mono pt" text-anchor="middle">pede aprovação se perigoso</text><text x="527" y="30" class="mut mono en" text-anchor="middle">asks approval if dangerous</text>
+</svg></div><figcaption><span class="pt">Se a resposta do LLM tem uma chamada de ferramenta, o agente a executa e devolve o resultado; quando não tem, a resposta é entregue e a sessão é gravada no SQLite.</span><span class="en">If the LLM's reply contains a tool call, the agent runs it and returns the result; when it does not, the answer is delivered and the session is written to SQLite.</span></figcaption></figure>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Peça</span><span class="en">Piece</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Prompt do sistema</span><span class="en">System prompt</span></td><td><span class="pt">Montado em camadas: identidade (<code>SOUL.md</code>), guia das ferramentas, memória, lista de skills, arquivos de contexto (<code>AGENTS.md</code>), data e hora, dicas da plataforma e, por último, a personalidade escolhida. As partes estáveis vêm primeiro para aproveitar o cache de prompt do provedor.</span><span class="en">Built in layers: identity (<code>SOUL.md</code>), tool guidance, memory, skill list, context files (<code>AGENTS.md</code>), date and time, platform hints and, last, the chosen personality. Stable parts come first to take advantage of the provider's prompt cache.</span></td></tr>
+<tr><td><span class="pt">Ferramentas</span><span class="en">Tools</span></td><td><span class="pt">Mais de 70, em cerca de 28 grupos (<i>toolsets</i>): terminal, arquivos, web, navegador, visão, geração de imagem, voz, MCP, agendamento. Cada uma se registra sozinha.</span><span class="en">Over 70, in about 28 groups (<i>toolsets</i>): terminal, files, web, browser, vision, image generation, voice, MCP, scheduling. Each registers itself.</span></td></tr>
+<tr><td><span class="pt">Compressão de contexto</span><span class="en">Context compression</span></td><td><span class="pt">Quando a conversa passa de um limite, um modelo auxiliar resume os turnos do meio. O modelo de resumo precisa ter janela de contexto <b>pelo menos igual</b> à do principal, senão os turnos são descartados sem resumo.</span><span class="en">When the conversation passes a threshold, an auxiliary model summarizes the middle turns. The summary model needs a context window <b>at least as large</b> as the main one, or the turns are dropped without a summary.</span></td></tr>
+<tr><td><span class="pt">Subagentes</span><span class="en">Subagents</span></td><td><span class="pt">Instâncias isoladas, com conversa e terminal próprios, para trabalho em paralelo.</span><span class="en">Isolated instances, with their own conversation and terminal, for parallel work.</span></td></tr>
+<tr><td><span class="pt">Agendador (cron)</span><span class="en">Scheduler (cron)</span></td><td><span class="pt">Tarefas em linguagem natural ("todo dia às 8h me mande um resumo"). Roda dentro do gateway, que confere a cada 60 s, e entrega o resultado no app que você escolher.</span><span class="en">Tasks in natural language ("every day at 8am send me a summary"). Runs inside the gateway, which checks every 60 s, and delivers the result to the app you choose.</span></td></tr>
+<tr><td><span class="pt">Backends de terminal</span><span class="en">Terminal backends</span></td><td><span class="pt">Onde os comandos rodam: <code>local</code>, <code>docker</code>, <code>ssh</code>, Modal, Daytona, Vercel Sandbox (e Singularity por plugin). Importa muito para a segurança (seção 5).</span><span class="en">Where commands run: <code>local</code>, <code>docker</code>, <code>ssh</code>, Modal, Daytona, Vercel Sandbox (and Singularity by plugin). It matters a lot for security (section 5).</span></td></tr>
+</tbody>
+</table>
+</div>
+<h3><span class="pt">SOUL.md e AGENTS.md</span><span class="en">SOUL.md and AGENTS.md</span></h3>
+<p><span class="pt">São dois arquivos de texto que você escreve. O <code>~/.hermes/SOUL.md</code> é a <b>identidade</b> do agente (tom, jeito de responder) e vale para tudo. O <code>AGENTS.md</code> traz as instruções de <b>um projeto</b> (comandos, convenções). Regra da documentação: o que deve seguir você a todo lugar vai no SOUL.md; o que pertence a um projeto, no AGENTS.md. Os dois são varridos em busca de injeção de prompt antes de entrar no prompt (seção 5).</span><span class="en">They are two text files you write. <code>~/.hermes/SOUL.md</code> is the agent's <b>identity</b> (tone, way of answering) and applies everywhere. <code>AGENTS.md</code> carries the instructions of <b>one project</b> (commands, conventions). The documentation's rule: what should follow you everywhere goes in SOUL.md; what belongs to a project, in AGENTS.md. Both are scanned for prompt injection before entering the prompt (section 5).</span></p>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/developer-guide/architecture">Hermes docs · Architecture</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/personality">Hermes docs · Personality &amp; SOUL.md</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/configuration">Hermes docs · Configuration (compression, directory)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="memory">
+<h2 id="memory"><span class="pt">2. Memória</span><span class="en">2. Memory</span></h2>
+<p><span class="pt">Um LLM não lembra de nada entre chamadas; tudo o que ele "sabe" numa conversa está no prompt. A memória do Hermes é um conjunto de arquivos e um banco que ele <b>escreve e relê</b>, em três camadas:</span><span class="en">An LLM remembers nothing between calls; everything it "knows" in a conversation is in the prompt. Hermes's memory is a set of files and a database that it <b>writes and rereads</b>, in three layers:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 214" role="img" aria-label="As camadas de memória / The memory layers" style="min-width:640px">
+<rect x="4" y="10" width="210" height="150" rx="6" class="ln brandfill"/>
+<text x="109" y="34" class="pt" text-anchor="middle">1. Memória curada</text><text x="109" y="34" class="en" text-anchor="middle">1. Curated memory</text>
+<text x="109" y="62" class="mono" text-anchor="middle">MEMORY.md</text><text x="109" y="80" class="mut pt" text-anchor="middle">notas do agente · 2.200 car.</text><text x="109" y="80" class="mut en" text-anchor="middle">agent notes · 2,200 chars</text>
+<text x="109" y="106" class="mono" text-anchor="middle">USER.md</text><text x="109" y="124" class="mut pt" text-anchor="middle">perfil de você · 1.375 car.</text><text x="109" y="124" class="mut en" text-anchor="middle">profile of you · 1,375 chars</text>
+<text x="109" y="150" class="mut pt" text-anchor="middle">sempre dentro do prompt</text><text x="109" y="150" class="mut en" text-anchor="middle">always inside the prompt</text>
+<rect x="245" y="10" width="210" height="150" rx="6" class="ln fillsoft"/>
+<text x="350" y="34" class="pt" text-anchor="middle">2. Histórico pesquisável</text><text x="350" y="34" class="en" text-anchor="middle">2. Searchable history</text>
+<text x="350" y="68" class="mono" text-anchor="middle">~/.hermes/state.db</text><text x="350" y="88" class="mut" text-anchor="middle">SQLite + FTS5</text>
+<text x="350" y="114" class="mut pt" text-anchor="middle">todas as sessões (terminal</text><text x="350" y="114" class="mut en" text-anchor="middle">every session (terminal</text>
+<text x="350" y="130" class="mut pt" text-anchor="middle">e apps); o agente busca</text><text x="350" y="130" class="mut en" text-anchor="middle">and apps); the agent searches</text>
+<text x="350" y="150" class="mut pt" text-anchor="middle">só quando precisa</text><text x="350" y="150" class="mut en" text-anchor="middle">only when it needs to</text>
+<rect x="486" y="10" width="210" height="150" rx="6" class="ln fillsoft"/>
+<text x="591" y="34" class="pt" text-anchor="middle">3. Provedores externos</text><text x="591" y="34" class="en" text-anchor="middle">3. External providers</text>
+<text x="591" y="68" class="mut" text-anchor="middle">Honcho · Mem0 · Hindsight</text><text x="591" y="88" class="mut" text-anchor="middle">Supermemory · RetainDB ...</text>
+<text x="591" y="114" class="mut pt" text-anchor="middle">plugins opcionais, ao lado</text><text x="591" y="114" class="mut en" text-anchor="middle">optional plugins, alongside</text>
+<text x="591" y="130" class="mut pt" text-anchor="middle">das camadas 1 e 2</text><text x="591" y="130" class="mut en" text-anchor="middle">layers 1 and 2</text>
+<text x="350" y="194" class="mut pt" text-anchor="middle">a camada 1 é minúscula de propósito: só cabe o que vale a pena ver em toda conversa</text><text x="350" y="194" class="mut en" text-anchor="middle">layer 1 is tiny on purpose: it only holds what is worth seeing in every conversation</text>
+</svg></div><figcaption><span class="pt">Duas ideias diferentes: o que o agente <i>sempre</i> sabe (camada 1) e o que ele <i>consegue consultar</i> (camadas 2 e 3).</span><span class="en">Two different ideas: what the agent <i>always</i> knows (layer 1) and what it <i>can look up</i> (layers 2 and 3).</span></figcaption></figure>
+<h3><span class="pt">Camada 1: MEMORY.md e USER.md</span><span class="en">Layer 1: MEMORY.md and USER.md</span></h3>
+<ul class="ds-list">
+<li><span class="pt">Ficam em <code>~/.hermes/memories/</code>. O <code>MEMORY.md</code> guarda fatos do ambiente, convenções e lições (limite de 2.200 caracteres, uns 800 tokens); o <code>USER.md</code> guarda suas preferências e estilo (1.375 caracteres).</span><span class="en">They live in <code>~/.hermes/memories/</code>. <code>MEMORY.md</code> holds environment facts, conventions and lessons (limit 2,200 characters, about 800 tokens); <code>USER.md</code> holds your preferences and style (1,375 characters).</span></li>
+<li><span class="pt">O agente escreve com a ferramenta <code>memory</code> (ações <code>add</code>, <code>patch</code> e <code>remove</code>; não há "ler", porque o conteúdo já está no prompt). Quando estoura o limite, a ferramenta devolve erro e o agente precisa reorganizar: <b>nada é apagado sozinho</b>.</span><span class="en">The agent writes with the <code>memory</code> tool (actions <code>add</code>, <code>patch</code> and <code>remove</code>; there is no "read", because the content is already in the prompt). When the limit is exceeded the tool returns an error and the agent must reorganize: <b>nothing is deleted by itself</b>.</span></li>
+<li><span class="pt"><b>Instantâneo congelado:</b> o conteúdo é carregado no prompt no começo da sessão. O que o agente escreve durante a sessão vai para o disco na hora, mas só aparece no prompt na <i>próxima</i> sessão. Isso mantém o prefixo do prompt estável e o cache do provedor funcionando.</span><span class="en"><b>Frozen snapshot:</b> the content is loaded into the prompt at session start. What the agent writes mid-session goes to disk immediately but only appears in the prompt in the <i>next</i> session. This keeps the prompt prefix stable and the provider's cache working.</span></li>
+<li><span class="pt">Cada escrita é varrida em busca de padrões de injeção de prompt e exfiltração, e de caracteres Unicode invisíveis, que são bloqueados. Faz sentido: uma página web maliciosa não deve conseguir plantar uma "lembrança" que valha para sempre.</span><span class="en">Each write is scanned for prompt-injection and exfiltration patterns, and invisible Unicode characters, which are blocked. This makes sense: a malicious web page should not be able to plant a "memory" that lasts forever.</span></li>
+<li><span class="pt">Para revisar antes de gravar, ligue <code>memory.write_approval: true</code>: as escritas ficam pendentes e você usa <code>/memory pending</code>, <code>/memory approve</code> e <code>/memory reject</code>.</span><span class="en">To review before saving, turn on <code>memory.write_approval: true</code>: writes stay pending and you use <code>/memory pending</code>, <code>/memory approve</code> and <code>/memory reject</code>.</span></li>
+</ul>
+<pre><code># ~/.hermes/config.yaml (trecho da documentação)
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  write_approval: false      # true = você aprova cada escrita
+skills:
+  write_approval: false      # idem para skills (seção 3)</code></pre>
+<h3><span class="pt">Camada 2: o histórico de sessões</span><span class="en">Layer 2: session history</span></h3>
+<p><span class="pt">Toda conversa, do terminal ou de qualquer app, é gravada em <code>~/.hermes/state.db</code> (SQLite) com busca de texto <b>FTS5</b>. Quando você pergunta "o que decidimos sobre o deploy semana passada?", o agente busca ali e recebe as mensagens originais, sem resumo no meio. Você também lista as sessões com <code>hermes sessions list</code>. Como é um banco e não o prompt, ele cresce sem custo de contexto.</span><span class="en">Every conversation, from the terminal or any app, is written to <code>~/.hermes/state.db</code> (SQLite) with <b>FTS5</b> full-text search. When you ask "what did we decide about the deploy last week?", the agent searches there and receives the original messages, with no summary in between. You can also list sessions with <code>hermes sessions list</code>. Because it is a database and not the prompt, it grows at no context cost.</span></p>
+<h3><span class="pt">Camada 3: provedores externos</span><span class="en">Layer 3: external providers</span></h3>
+<p><span class="pt">Plugins como Honcho (que monta um modelo de você ao longo do tempo), Mem0, Hindsight e Supermemory rodam <b>ao lado</b> das camadas 1 e 2, sem substituí-las. Configure com <code>hermes memory setup</code> e veja o estado com <code>hermes memory status</code>.</span><span class="en">Plugins such as Honcho (which builds a model of you over time), Mem0, Hindsight and Supermemory run <b>alongside</b> layers 1 and 2, without replacing them. Set up with <code>hermes memory setup</code> and check with <code>hermes memory status</code>.</span></p>
+<div class="callout use"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><b>Uma memória por casa.</b> A memória é por <i>perfil</i> (<code>hermes -p work</code> usa <code>~/.hermes/profiles/work/</code>). A documentação avisa para nunca apontar dois processos do agente para o mesmo diretório do Hermes: dois gateways gravando no mesmo <code>state.db</code> é pedir problema.</span><span class="en"><b>One memory per home.</b> Memory is per <i>profile</i> (<code>hermes -p work</code> uses <code>~/.hermes/profiles/work/</code>). The documentation warns never to point two agent processes at the same Hermes directory: two gateways writing to the same <code>state.db</code> is asking for trouble.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/memory">Hermes docs · Persistent Memory</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="skills">
+<h2 id="skills"><span class="pt">3. Skills que ele mesmo cria</span><span class="en">3. Skills it creates itself</span></h2>
+<p><span class="pt">Uma <b>skill</b> é uma pasta com um arquivo <code>SKILL.md</code> (frontmatter YAML + instruções em Markdown) que ensina o agente a fazer uma tarefa. O formato segue o padrão aberto <i>agentskills.io</i>, o mesmo das <a href="../agent-harness/index.html">Agent Skills</a> da nota de harness. A diferença do Hermes é que ele <b>escreve as próprias skills</b>: o prompt do sistema pede que ele salve fluxos que valem repetir.</span><span class="en">A <b>skill</b> is a folder with a <code>SKILL.md</code> file (YAML frontmatter + Markdown instructions) that teaches the agent a task. The format follows the open <i>agentskills.io</i> standard, the same as the <a href="../agent-harness/index.html">Agent Skills</a> in the harness note. What is different in Hermes is that it <b>writes its own skills</b>: the system prompt asks it to save workflows worth repeating.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 150" role="img" aria-label="O ciclo de uma skill / The skill cycle" style="min-width:640px">
+<rect x="4" y="34" width="120" height="60" rx="4" class="ln fillsoft"/><text x="64" y="58" class="pt" text-anchor="middle">Tarefa difícil</text><text x="64" y="58" class="en" text-anchor="middle">Hard task</text><text x="64" y="76" class="mut pt" text-anchor="middle">muitos passos</text><text x="64" y="76" class="mut en" text-anchor="middle">many steps</text>
+<rect x="160" y="34" width="120" height="60" rx="4" class="ln fillsoft"/><text x="220" y="58" class="pt" text-anchor="middle">Dá certo</text><text x="220" y="58" class="en" text-anchor="middle">Works</text><text x="220" y="76" class="mut pt" text-anchor="middle">ou você corrige</text><text x="220" y="76" class="mut en" text-anchor="middle">or you correct it</text>
+<rect x="316" y="34" width="130" height="60" rx="4" class="ln brandfill"/><text x="381" y="58" class="mono" text-anchor="middle">skill_manage</text><text x="381" y="76" class="mut pt" text-anchor="middle">create → SKILL.md</text><text x="381" y="76" class="mut en" text-anchor="middle">create → SKILL.md</text>
+<rect x="482" y="34" width="100" height="60" rx="4" class="ln fillsoft"/><text x="532" y="58" class="pt" text-anchor="middle">Próxima vez</text><text x="532" y="58" class="en" text-anchor="middle">Next time</text><text x="532" y="76" class="mut pt" text-anchor="middle">carrega a skill</text><text x="532" y="76" class="mut en" text-anchor="middle">loads the skill</text>
+<rect x="616" y="34" width="80" height="60" rx="4" class="ln brandfill"/><text x="656" y="58" class="mono" text-anchor="middle">patch</text><text x="656" y="76" class="mut pt" text-anchor="middle">corrige em uso</text><text x="656" y="76" class="mut en" text-anchor="middle">fixes in use</text>
+<path d="M124 64L160 64" class="ln"/><path d="M280 64L316 64" class="ln"/><path d="M446 64L482 64" class="ln"/><path d="M582 64L616 64" class="ln"/>
+<path d="M656 94L656 122L381 122L381 94" class="ln dash"/>
+<text x="518" y="116" class="mut mono pt" text-anchor="middle">a skill melhora a cada uso</text><text x="518" y="116" class="mut mono en" text-anchor="middle">the skill improves with each use</text>
+</svg></div><figcaption><span class="pt">Os gatilhos listados na documentação: um fluxo de vários passos que vale repetir, um beco sem saída em que ele achou o caminho, ou uma correção sua.</span><span class="en">The triggers listed in the documentation: a multi-step workflow worth repeating, a dead end where it found the way, or a correction from you.</span></figcaption></figure>
+<pre><code># ~/.hermes/skills/devops/deploy-site/SKILL.md  (exemplo, no formato da documentação)
+---
+name: deploy-site
+description: Publica o site estático no servidor e confere se subiu
+version: 1.0.0
+platforms: [linux]
+metadata:
+  hermes:
+    tags: [deploy]
+    category: devops
+    requires_toolsets: [terminal]
+---
+# Deploy do site
+## Quando usar
+Quando o usuário pedir para publicar ou atualizar o site.
+## Procedimento
+1. Rode os testes: `npm test`.
+2. Faça o build e envie com `rsync`.
+3. Confira com `curl -I` que a página responde 200.
+## Armadilhas
+- O build falha se a pasta `dist/` estiver suja: apague antes.
+## Verificação
+`curl -I https://meusite.com` deve devolver `HTTP/2 200`.</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><b>Ferramenta <code>skill_manage</code>:</b> ações <code>create</code>, <code>patch</code> (correção pontual, a preferida), <code>delete</code>, <code>write_file</code> e <code>remove_file</code> para arquivos de apoio (<code>references/</code>, <code>scripts/</code>...).</span><span class="en"><b>The <code>skill_manage</code> tool:</b> actions <code>create</code>, <code>patch</code> (a targeted fix, the preferred one), <code>delete</code>, <code>write_file</code> and <code>remove_file</code> for support files (<code>references/</code>, <code>scripts/</code>...).</span></li>
+<li><span class="pt"><b>Divulgação progressiva</b> para não gastar contexto: o prompt só leva a lista (nome e descrição, uns 3 mil tokens no total); o <code>SKILL.md</code> inteiro só é carregado quando a skill é usada, e os arquivos de referência só quando necessários. Você também as chama na mão com <code>/nome-da-skill</code>.</span><span class="en"><b>Progressive disclosure</b> so as not to spend context: the prompt only carries the list (name and description, about 3k tokens in total); the whole <code>SKILL.md</code> is loaded only when the skill is used, and reference files only when needed. You can also call them by hand with <code>/skill-name</code>.</span></li>
+<li><span class="pt"><b>Revisão humana:</b> com <code>skills.write_approval: true</code>, as skills novas ficam em <code>~/.hermes/pending/skills/</code> até você aprovar (<code>/skills pending</code>, <code>/skills diff &lt;id&gt;</code>, <code>/skills approve &lt;id&gt;</code>). Eu recomendo ligar isto no começo: uma skill é código que roda com as suas permissões.</span><span class="en"><b>Human review:</b> with <code>skills.write_approval: true</code>, new skills sit in <code>~/.hermes/pending/skills/</code> until you approve (<code>/skills pending</code>, <code>/skills diff &lt;id&gt;</code>, <code>/skills approve &lt;id&gt;</code>). I recommend turning this on at first: a skill is instructions that run with your permissions.</span></li>
+<li><span class="pt"><b>Skills de terceiros</b> vêm de um hub (<code>hermes skills browse</code>, <code>search</code>, <code>install</code>). Todo <code>install</code> passa por um scanner (exfiltração, injeção de prompt, comandos destrutivos, cadeia de suprimentos). Há níveis de confiança (<code>builtin</code>, <code>official</code>, <code>trusted</code>, <code>community</code>), e o <code>--force</code> nunca passa por cima de um veredito <code>dangerous</code>.</span><span class="en"><b>Third-party skills</b> come from a hub (<code>hermes skills browse</code>, <code>search</code>, <code>install</code>). Every <code>install</code> goes through a scanner (exfiltration, prompt injection, destructive commands, supply chain). There are trust levels (<code>builtin</code>, <code>official</code>, <code>trusted</code>, <code>community</code>), and <code>--force</code> never overrides a <code>dangerous</code> verdict.</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> o <code>SKILL.md</code> acima é um exemplo que eu escrevi seguindo o formato da documentação; não é uma skill que o Hermes gerou. A qualidade do que ele cria sozinho depende do modelo, e skills ruins se acumulam: revise de vez em quando a pasta <code>~/.hermes/skills/</code>.</span><span class="en"><b>Personal note, not verified in the sources:</b> the <code>SKILL.md</code> above is an example I wrote following the documentation's format; it is not a skill Hermes generated. The quality of what it creates on its own depends on the model, and bad skills pile up: review the <code>~/.hermes/skills/</code> folder from time to time.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/features/skills">Hermes docs · Skills System</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="gateway">
+<h2 id="gateway"><span class="pt">4. Telegram, WhatsApp, Signal e o resto</span><span class="en">4. Telegram, WhatsApp, Signal and the rest</span></h2>
+<p><span class="pt">O <b>gateway</b> é um processo em segundo plano que se conecta a todos os apps configurados. Cada app tem um <i>adaptador</i> que recebe as mensagens, e todas passam por uma sessão por conversa e chegam ao mesmo agente. Por isso a mesma memória e as mesmas skills valem no celular e no terminal. As plataformas da documentação:</span><span class="en">The <b>gateway</b> is a background process that connects to all configured apps. Each app has an <i>adapter</i> that receives messages, and all of them go through one session per conversation and reach the same agent. That is why the same memory and skills apply on the phone and in the terminal. The platforms in the documentation:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Grupo</span><span class="en">Group</span></th><th><span class="pt">Plataformas</span><span class="en">Platforms</span></th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Chat e times</span><span class="en">Chat and teams</span></td><td>Telegram, Discord, Slack, Google Chat, Mattermost, Matrix, Microsoft Teams, Feishu/Lark, DingTalk, WeCom, LINE, QQ...</td></tr>
+<tr><td><span class="pt">Mensageiros</span><span class="en">Messengers</span></td><td>WhatsApp (ponte Baileys ou Cloud API / Baileys bridge or Cloud API), Signal, SMS (Twilio), Email, SimpleX</td></tr>
+<tr><td>Apple</td><td>BlueBubbles, Photon (iMessage)</td></tr>
+<tr><td><span class="pt">Outros</span><span class="en">Other</span></td><td>Home Assistant (plugin), ntfy, IRC, Webhooks, API Server</td></tr>
+</tbody>
+</table>
+</div>
+<p><span class="pt">A configuração é guiada: <code>hermes gateway setup</code> pergunta qual plataforma você quer e pede os dados. Os três apps que você citou:</span><span class="en">Setup is guided: <code>hermes gateway setup</code> asks which platform you want and requests the details. The three apps you mentioned:</span></p>
+<h3>Telegram</h3>
+<ol class="ds-steps">
+<li><span class="pt">No Telegram, abra o <b>@BotFather</b>, envie <code>/newbot</code>, escolha um nome e um usuário que termine em <code>bot</code>. Ele devolve o <b>token</b> (segredo: se vazar, <code>/revoke</code>).</span><span class="en">In Telegram, open <b>@BotFather</b>, send <code>/newbot</code>, choose a name and a username ending in <code>bot</code>. It returns the <b>token</b> (secret: if it leaks, <code>/revoke</code>).</span></li>
+<li><span class="pt">Descubra o seu ID numérico (não o @usuário) com o <b>@userinfobot</b>.</span><span class="en">Find your numeric ID (not the @username) with <b>@userinfobot</b>.</span></li>
+<li><span class="pt">Em <code>~/.hermes/.env</code> coloque <code>TELEGRAM_BOT_TOKEN</code> e <code>TELEGRAM_ALLOWED_USERS</code> (seu ID). Sem a lista, o gateway <b>nega todo mundo</b>.</span><span class="en">In <code>~/.hermes/.env</code> set <code>TELEGRAM_BOT_TOKEN</code> and <code>TELEGRAM_ALLOWED_USERS</code> (your ID). Without the list, the gateway <b>denies everyone</b>.</span></li>
+<li><span class="pt">Rode <code>hermes gateway</code> e mande uma mensagem ao bot. Use <code>/sethome</code> no chat para ele receber os resultados das tarefas agendadas.</span><span class="en">Run <code>hermes gateway</code> and message the bot. Use <code>/sethome</code> in the chat so it receives the scheduled tasks' results.</span></li>
+</ol>
+<p><span class="pt">O Telegram é o <b>melhor para um servidor</b>: por padrão o gateway usa <i>polling</i> (ele pergunta ao Telegram se há mensagens), ou seja, <b>só conexões de saída</b>. Não precisa abrir porta nem ter domínio. O modo webhook (<code>TELEGRAM_WEBHOOK_URL</code>) existe para plataformas que acordam a máquina com tráfego de entrada.</span><span class="en">Telegram is the <b>best fit for a server</b>: by default the gateway uses <i>polling</i> (it asks Telegram whether there are messages), meaning <b>outbound connections only</b>. No need to open a port or own a domain. Webhook mode (<code>TELEGRAM_WEBHOOK_URL</code>) exists for platforms that wake the machine on inbound traffic.</span></p>
+<h3>WhatsApp</h3>
+<p><span class="pt">Há dois caminhos. A <b>ponte Baileys</b> (<code>hermes whatsapp</code>) emula uma sessão do WhatsApp Web: você escaneia um QR code em <i>Configurações → Dispositivos conectados</i>, não precisa de conta Meta nem de URL pública, mas <b>tem risco de banimento</b>, porque o WhatsApp não suporta bots de terceiros fora da API oficial. A <b>Cloud API</b> (oficial, da Meta) evita esse risco, mas exige conta Business e um webhook público.</span><span class="en">There are two paths. The <b>Baileys bridge</b> (<code>hermes whatsapp</code>) emulates a WhatsApp Web session: you scan a QR code in <i>Settings → Linked Devices</i>, need no Meta account or public URL, but it <b>carries a ban risk</b>, because WhatsApp does not support third-party bots outside the official API. The <b>Cloud API</b> (official, from Meta) avoids that risk, but requires a Business account and a public webhook.</span></p>
+<pre><code># ~/.hermes/.env  (ponte Baileys)
+WHATSAPP_ENABLED=true
+WHATSAPP_MODE=bot                    # "bot" (número próprio do bot) ou "self-chat"
+WHATSAPP_ALLOWED_USERS=5511999999999 # código do país, sem "+"
+WHATSAPP_GROUP_POLICY=pairing        # grupos: pairing | allowlist | open
+WHATSAPP_REQUIRE_MENTION=true        # em grupos, só responde a @menções</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Cuidados da própria documentação:</b> use um <b>número dedicado</b>, não o seu pessoal; não mande mensagens em massa nem para quem não falou com você primeiro; e proteja <code>~/.hermes/platforms/whatsapp/session</code> como uma senha (<code>chmod 700</code>), porque ela guarda as credenciais da conta. Se vazar, desconecte o aparelho em Dispositivos conectados. Atualizações do protocolo do WhatsApp podem quebrar a ponte; atualize o Hermes e refaça o pareamento.</span><span class="en"><b>Cautions from the documentation itself:</b> use a <b>dedicated number</b>, not your personal one; do not send bulk messages or message people who did not write first; and protect <code>~/.hermes/platforms/whatsapp/session</code> like a password (<code>chmod 700</code>), because it holds the account credentials. If it leaks, unlink the device under Linked Devices. WhatsApp protocol updates can break the bridge; update Hermes and re-pair.</span></div>
+<h3>Signal</h3>
+<p><span class="pt">O Signal depende de um programa separado, o <b><code>signal-cli</code></b> (precisa de Java 17+), que roda como serviço local e que o Hermes acessa por HTTP. Você vincula o <code>signal-cli</code> ao seu número como aparelho secundário e deixa o daemon rodando:</span><span class="en">Signal depends on a separate program, <b><code>signal-cli</code></b> (needs Java 17+), which runs as a local service that Hermes reaches over HTTP. You link <code>signal-cli</code> to your number as a secondary device and leave the daemon running:</span></p>
+<pre><code>signal-cli link -n "HermesAgent"                      # escaneie o QR em Signal > Aparelhos vinculados
+signal-cli --account +5511999999999 daemon --http 127.0.0.1:8080
+
+# ~/.hermes/.env
+SIGNAL_HTTP_URL=http://127.0.0.1:8080
+SIGNAL_ACCOUNT=+5511999999999
+SIGNAL_ALLOWED_USERS=+5511999999999</code></pre>
+<p><span class="pt">Detalhes da documentação: mensagens passam de 8.000 caracteres são divididas em partes numeradas; só uma instância do <code>signal-cli</code> deve escutar cada número; e <code>~/.local/share/signal-cli/</code> guarda as credenciais da conta.</span><span class="en">Documentation details: messages over 8,000 characters are split into numbered parts; only one <code>signal-cli</code> instance should listen on each number; and <code>~/.local/share/signal-cli/</code> holds the account credentials.</span></p>
+<h3><span class="pt">Quem pode falar com o bot: pareamento de DM</span><span class="en">Who can talk to the bot: DM pairing</span></h3>
+<p><span class="pt">Um bot de chat é público por natureza: qualquer um que achar o nome pode mandar mensagem, e esse bot executa comandos. Por isso o gateway <b>nega por padrão</b>. Há duas formas de liberar alguém: uma lista (<code>TELEGRAM_ALLOWED_USERS</code>, <code>WHATSAPP_ALLOWED_USERS</code>, <code>GATEWAY_ALLOWED_USERS</code>...) ou o <b>pareamento</b>: um desconhecido manda mensagem, o bot responde com um código de 8 caracteres, e você, no servidor, aprova:</span><span class="en">A chat bot is public by nature: anyone who finds the name can message it, and this bot runs commands. So the gateway <b>denies by default</b>. There are two ways to let someone in: a list (<code>TELEGRAM_ALLOWED_USERS</code>, <code>WHATSAPP_ALLOWED_USERS</code>, <code>GATEWAY_ALLOWED_USERS</code>...) or <b>pairing</b>: a stranger messages, the bot replies with an 8-character code, and you, on the server, approve:</span></p>
+<pre><code>hermes pairing list
+hermes pairing approve telegram XKGH5N7P
+hermes pairing revoke telegram 123456789</code></pre>
+<p><span class="pt">Dá para separar <b>administradores</b> de usuários comuns por plataforma (<code>allow_admin_from</code>, <code>user_allowed_commands</code>), e o <code>/whoami</code> mostra o seu nível. Outras coisas úteis do gateway: se um adaptador falha várias vezes, um <i>circuit breaker</i> o pausa (retome com <code>/platform resume &lt;nome&gt;</code>); um <i>watchdog</i> encerra o processo se o loop travar, para o supervisor reiniciá-lo; e as respostas finais ficam num registro no <code>state.db</code> e são reenviadas após uma queda.</span><span class="en">You can split <b>admins</b> from regular users per platform (<code>allow_admin_from</code>, <code>user_allowed_commands</code>), and <code>/whoami</code> shows your tier. Other useful gateway behaviours: if an adapter fails repeatedly, a <i>circuit breaker</i> pauses it (resume with <code>/platform resume &lt;name&gt;</code>); a <i>watchdog</i> exits the process if the loop stalls, so the supervisor restarts it; and final replies are kept in a ledger in <code>state.db</code> and resent after a crash.</span></p>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/">Hermes docs · Messaging Gateway</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/telegram">Hermes docs · Telegram</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/whatsapp">Hermes docs · WhatsApp</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/messaging/signal">Hermes docs · Signal</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="guardrails">
+<h2 id="guardrails"><span class="pt">5. Guardrails</span><span class="en">5. Guardrails</span></h2>
+<p><span class="pt">Um agente que executa comandos a partir de mensagens de chat é, por definição, perigoso: um erro do modelo, um texto malicioso numa página que ele leu ou um desconhecido no bot podem virar um <code>rm -rf</code>. A documentação descreve <b>oito camadas</b>. As que mais importam:</span><span class="en">An agent that runs commands from chat messages is dangerous by definition: a model mistake, malicious text on a page it read or a stranger on the bot can become an <code>rm -rf</code>. The documentation describes <b>eight layers</b>. The ones that matter most:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 200" role="img" aria-label="Camadas de segurança / Security layers" style="min-width:640px">
+<rect x="4" y="10" width="130" height="110" rx="4" class="ln brandfill"/><text x="69" y="34" class="pt" text-anchor="middle">1. Quem fala</text><text x="69" y="34" class="en" text-anchor="middle">1. Who talks</text><text x="69" y="58" class="mut pt" text-anchor="middle">allowlist e</text><text x="69" y="58" class="mut en" text-anchor="middle">allowlist and</text><text x="69" y="74" class="mut pt" text-anchor="middle">pareamento;</text><text x="69" y="74" class="mut en" text-anchor="middle">pairing;</text><text x="69" y="90" class="mut pt" text-anchor="middle">padrão: negar</text><text x="69" y="90" class="mut en" text-anchor="middle">default: deny</text>
+<rect x="144" y="10" width="130" height="110" rx="4" class="ln brandfill"/><text x="209" y="34" class="pt" text-anchor="middle">2. O que lê</text><text x="209" y="34" class="en" text-anchor="middle">2. What it reads</text><text x="209" y="58" class="mut pt" text-anchor="middle">varre AGENTS.md,</text><text x="209" y="58" class="mut en" text-anchor="middle">scans AGENTS.md,</text><text x="209" y="74" class="mut pt" text-anchor="middle">memória, skills;</text><text x="209" y="74" class="mut en" text-anchor="middle">memory, skills;</text><text x="209" y="90" class="mut pt" text-anchor="middle">bloqueio SSRF</text><text x="209" y="90" class="mut en" text-anchor="middle">SSRF blocking</text>
+<rect x="284" y="10" width="130" height="110" rx="4" class="ln brandfill"/><text x="349" y="34" class="pt" text-anchor="middle">3. O que executa</text><text x="349" y="34" class="en" text-anchor="middle">3. What it runs</text><text x="349" y="58" class="mut pt" text-anchor="middle">aprovação de</text><text x="349" y="58" class="mut en" text-anchor="middle">approval of</text><text x="349" y="74" class="mut pt" text-anchor="middle">comandos;</text><text x="349" y="74" class="mut en" text-anchor="middle">commands;</text><text x="349" y="90" class="mut pt" text-anchor="middle">lista negra fixa</text><text x="349" y="90" class="mut en" text-anchor="middle">fixed blocklist</text>
+<rect x="424" y="10" width="130" height="110" rx="4" class="ln brandfill"/><text x="489" y="34" class="pt" text-anchor="middle">4. O que escreve</text><text x="489" y="34" class="en" text-anchor="middle">4. What it writes</text><text x="489" y="58" class="mut pt" text-anchor="middle">~/.ssh, ~/.aws,</text><text x="489" y="58" class="mut en" text-anchor="middle">~/.ssh, ~/.aws,</text><text x="489" y="74" class="mut pt" text-anchor="middle">.env sempre</text><text x="489" y="74" class="mut en" text-anchor="middle">.env always</text><text x="489" y="90" class="mut pt" text-anchor="middle">bloqueados</text><text x="489" y="90" class="mut en" text-anchor="middle">blocked</text>
+<rect x="564" y="10" width="132" height="110" rx="4" class="ln brandfill"/><text x="630" y="34" class="pt" text-anchor="middle">5. Onde roda</text><text x="630" y="34" class="en" text-anchor="middle">5. Where it runs</text><text x="630" y="58" class="mut pt" text-anchor="middle">contêiner sem</text><text x="630" y="58" class="mut en" text-anchor="middle">container with no</text><text x="630" y="74" class="mut pt" text-anchor="middle">privilégios;</text><text x="630" y="74" class="mut en" text-anchor="middle">privileges;</text><text x="630" y="90" class="mut pt" text-anchor="middle">segredos filtrados</text><text x="630" y="90" class="mut en" text-anchor="middle">secrets filtered</text>
+<text x="350" y="158" class="mut pt" text-anchor="middle">as quatro primeiras são políticas (guarda-corpos); só a quinta é uma fronteira de verdade (sandbox)</text><text x="350" y="158" class="mut en" text-anchor="middle">the first four are policies (guardrails); only the fifth is a real boundary (sandbox)</text>
+<text x="350" y="182" class="mut pt" text-anchor="middle">a própria documentação diz: "é uma camada de política, não um sandbox"</text><text x="350" y="182" class="mut en" text-anchor="middle">the documentation itself says: "this is a policy layer, not a sandbox"</text>
+</svg></div><figcaption><span class="pt">A ordem de uma mensagem do celular até o efeito no servidor.</span><span class="en">The order of a message from the phone to the effect on the server.</span></figcaption></figure>
+<h3><span class="pt">Aprovação de comandos</span><span class="en">Command approval</span></h3>
+<p><span class="pt">Em <code>~/.hermes/config.yaml</code>, a chave <code>approvals.mode</code> tem três valores: <code>smart</code> (padrão: um modelo auxiliar avalia o risco; baixo risco passa, perigoso é negado, incerto vira pergunta para você), <code>manual</code> (sempre pergunta) e <code>off</code> (equivale ao modo <code>--yolo</code>). Comandos que disparam a aprovação incluem <code>rm</code> recursivo, <code>chmod 777</code>, <code>DROP</code>/<code>TRUNCATE</code>, <code>curl | sh</code>, <code>kill -9</code>, escritas em <code>/etc/</code> e em <code>~/.ssh/</code>. No chat você responde <code>yes</code> ou <code>no</code>; no terminal, <code>once</code>, <code>session</code>, <code>always</code> ou <code>deny</code>. Se você não responder em <code>approvals.timeout</code> (300 s por padrão), o pedido é <b>negado</b>.</span><span class="en">In <code>~/.hermes/config.yaml</code>, the <code>approvals.mode</code> key has three values: <code>smart</code> (default: an auxiliary model rates the risk; low risk passes, dangerous is denied, uncertain becomes a question to you), <code>manual</code> (always asks) and <code>off</code> (same as <code>--yolo</code>). Commands that trigger approval include recursive <code>rm</code>, <code>chmod 777</code>, <code>DROP</code>/<code>TRUNCATE</code>, <code>curl | sh</code>, <code>kill -9</code>, writes to <code>/etc/</code> and <code>~/.ssh/</code>. In chat you answer <code>yes</code> or <code>no</code>; in the terminal, <code>once</code>, <code>session</code>, <code>always</code> or <code>deny</code>. If you do not answer within <code>approvals.timeout</code> (300 s by default), the request is <b>denied</b>.</span></p>
+<pre><code># ~/.hermes/config.yaml
+approvals:
+  mode: manual            # para um servidor exposto, comece com "manual"
+  timeout: 300
+  cron_mode: deny         # tarefas agendadas sem ninguém para aprovar: negar
+  deny:                   # regras suas, avaliadas antes de qualquer modo
+    - "rm -rf *"
+    - "*curl*|*sh*"</code></pre>
+<p><span class="pt">Dois detalhes importantes. Primeiro, há uma <b>lista negra fixa</b> (<code>rm -rf /</code>, fork bomb, <code>mkfs</code> no disco raiz, <code>dd</code> sobre disco) que vale <b>até no modo <code>--yolo</code></b>. Segundo, tarefas sem ninguém por perto (agendadas, webhooks) usam <code>cron_mode</code>, <code>unattended_mode</code> etc., todos <code>deny</code> por padrão: um comando perigoso numa tarefa das 3h da manhã é negado, não executado.</span><span class="en">Two important details. First, there is a <b>fixed blocklist</b> (<code>rm -rf /</code>, fork bomb, <code>mkfs</code> on the root disk, <code>dd</code> over a disk) that applies <b>even in <code>--yolo</code> mode</b>. Second, tasks with nobody around (scheduled, webhooks) use <code>cron_mode</code>, <code>unattended_mode</code> etc., all <code>deny</code> by default: a dangerous command in a 3am task is denied, not run.</span></p>
+<h3><span class="pt">Escrita de arquivos, segredos e injeção de prompt</span><span class="en">File writes, secrets and prompt injection</span></h3>
+<ul class="ds-list">
+<li><span class="pt"><b>Escrita:</b> as ferramentas <code>write_file</code> e <code>patch</code> não gravam em <code>~/.ssh/</code>, <code>~/.aws/</code>, <code>~/.kube/</code>, <code>/etc/sudoers</code> nem nos segredos do próprio Hermes (<code>.env</code>, <code>vault/</code>, <code>pairing/</code>), sem pedir aprovação.</span><span class="en"><b>Writes:</b> the <code>write_file</code> and <code>patch</code> tools do not write to <code>~/.ssh/</code>, <code>~/.aws/</code>, <code>~/.kube/</code>, <code>/etc/sudoers</code> nor Hermes's own secrets (<code>.env</code>, <code>vault/</code>, <code>pairing/</code>), without asking for approval.</span></li>
+<li><span class="pt"><b>Segredos:</b> o <code>execute_code</code> remove variáveis com <code>KEY</code>, <code>TOKEN</code>, <code>SECRET</code>, <code>PASSWORD</code> no nome; o backend Docker e o SSH não herdam variáveis do host; processos MCP só recebem variáveis seguras mais as que você declara; e erros de MCP têm tokens (<code>ghp_</code>, <code>sk-</code>, <code>Bearer</code>) trocados por <code>[REDACTED]</code> antes de chegar ao LLM.</span><span class="en"><b>Secrets:</b> <code>execute_code</code> strips variables with <code>KEY</code>, <code>TOKEN</code>, <code>SECRET</code>, <code>PASSWORD</code> in the name; the Docker and SSH backends do not inherit host variables; MCP processes only get safe variables plus the ones you declare; and MCP errors have tokens (<code>ghp_</code>, <code>sk-</code>, <code>Bearer</code>) replaced with <code>[REDACTED]</code> before reaching the LLM.</span></li>
+<li><span class="pt"><b>Injeção de prompt:</b> <code>AGENTS.md</code>, <code>.cursorrules</code> e <code>SOUL.md</code> são varridos (instruções do tipo "ignore as anteriores", comentários HTML escondidos, tentativas de ler <code>.env</code>, exfiltração por <code>curl</code>, Unicode invisível) e bloqueados se suspeitos. Comandos que enviam segredos por <code>curl</code> são sinalizados.</span><span class="en"><b>Prompt injection:</b> <code>AGENTS.md</code>, <code>.cursorrules</code> and <code>SOUL.md</code> are scanned ("ignore previous instructions", hidden HTML comments, attempts to read <code>.env</code>, <code>curl</code> exfiltration, invisible Unicode) and blocked if suspicious. Commands that send secrets via <code>curl</code> are flagged.</span></li>
+<li><span class="pt"><b>Rede:</b> a proteção <b>SSRF</b> bloqueia endereços privados, <i>loopback</i> e o endpoint de metadados da nuvem (<code>169.254.169.254</code>) nas ferramentas de URL, e há uma lista de domínios proibidos (<code>security.website_blocklist</code>). Isso importa na AWS: sem ela, uma página maliciosa poderia induzir o agente a ler as credenciais da instância.</span><span class="en"><b>Network:</b> <b>SSRF</b> protection blocks private addresses, loopback and the cloud metadata endpoint (<code>169.254.169.254</code>) in URL tools, and there is a domain blocklist (<code>security.website_blocklist</code>). This matters on AWS: without it, a malicious page could trick the agent into reading the instance credentials.</span></li>
+</ul>
+<h3><span class="pt">Onde roda: a única fronteira de verdade</span><span class="en">Where it runs: the only real boundary</span></h3>
+<p><span class="pt">O backend de terminal <code>local</code> executa os comandos <b>como o seu usuário, sem isolamento</b>. Os backends de contêiner (<code>docker</code>, Modal, Daytona...) isolam de verdade: no Docker, o Hermes usa <code>--cap-drop ALL</code>, <code>no-new-privileges</code>, limite de processos (256) e <code>/tmp</code> em memória, com limites de CPU, memória e disco configuráveis. Nesses backends a verificação de comandos perigosos é <b>dispensada</b>, porque o contêiner é a fronteira. A documentação lista o que fazer em produção:</span><span class="en">The <code>local</code> terminal backend runs commands <b>as your user, with no isolation</b>. The container backends (<code>docker</code>, Modal, Daytona...) isolate for real: with Docker, Hermes uses <code>--cap-drop ALL</code>, <code>no-new-privileges</code>, a process limit (256) and an in-memory <code>/tmp</code>, with configurable CPU, memory and disk limits. On those backends the dangerous-command check is <b>skipped</b>, because the container is the boundary. The documentation lists what to do in production:</span></p>
+<ul class="ds-list">
+<li><span class="pt">Allowlists explícitas; evite <code>GATEWAY_ALLOW_ALL_USERS=true</code>; use pareamento onde der.</span><span class="en">Explicit allowlists; avoid <code>GATEWAY_ALLOW_ALL_USERS=true</code>; use pairing where possible.</span></li>
+<li><span class="pt">Backend de contêiner, com limites de CPU, memória e disco.</span><span class="en">A container backend, with CPU, memory and disk limits.</span></li>
+<li><span class="pt">Segredos em <code>~/.hermes/.env</code> com <code>chmod 600</code>; <code>terminal.cwd</code> numa pasta sem nada sensível.</span><span class="en">Secrets in <code>~/.hermes/.env</code> with <code>chmod 600</code>; <code>terminal.cwd</code> in a folder with nothing sensitive.</span></li>
+<li><span class="pt">Não rodar o gateway como root; auditar o <code>command_allowlist</code>; olhar <code>~/.hermes/logs/</code>; rodar <code>hermes update</code> com frequência.</span><span class="en">Do not run the gateway as root; audit the <code>command_allowlist</code>; watch <code>~/.hermes/logs/</code>; run <code>hermes update</code> often.</span></li>
+</ul>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Aviso sobre o <code>--yolo</code>.</b> Ele desliga as aprovações para a sessão. Num bot que atende o celular, nunca o deixe ligado de forma permanente. Como o modo <code>smart</code> usa <i>outro LLM</i> para julgar risco, ele reduz o ruído, mas não é garantia: para um agente exposto à internet, comece em <code>manual</code>.</span><span class="en"><b>Warning about <code>--yolo</code>.</b> It turns off approvals for the session. On a bot serving your phone, never leave it permanently on. Because <code>smart</code> mode uses <i>another LLM</i> to judge risk, it reduces noise but is no guarantee: for an agent exposed to the internet, start with <code>manual</code>.</span></div>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, não verificada nas fontes:</b> a conclusão de que "só o contêiner é fronteira de verdade" é minha leitura da própria documentação (que chama a lista de negação de "guarda-corpo, não sandbox"). Ligue isto à nota de <a href="../agent-harness/index.html">harness e guardrails</a> (a "trifeta letal": dados privados + conteúdo não confiável + comunicação externa): um agente com memória, web e shell tem as três.</span><span class="en"><b>Personal note, not verified in the sources:</b> the conclusion that "only the container is a real boundary" is my reading of the documentation itself (which calls the denylist a "guardrail, not a sandbox"). Tie this to the <a href="../agent-harness/index.html">harness and guardrails</a> note (the "lethal trifecta": private data + untrusted content + external communication): an agent with memory, web and shell has all three.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/security">Hermes docs · Security</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="install">
+<h2 id="install"><span class="pt">6. Instalar e escolher o modelo</span><span class="en">6. Installing and choosing the model</span></h2>
+<h3><span class="pt">Instalação</span><span class="en">Installation</span></h3>
+<pre><code># Linux, macOS ou WSL2
+curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash
+
+# Windows (PowerShell)
+iex (irm https://hermes-agent.nousresearch.com/install.ps1)
+
+# depois
+source ~/.bashrc      # ou ~/.zshrc
+hermes                # abre o assistente na primeira vez
+
+# conferir e reconfigurar
+hermes doctor
+hermes model          # escolher provedor e modelo
+hermes gateway setup  # conectar Telegram, WhatsApp, Signal...
+hermes update</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Leia antes de rodar um <code>curl | bash</code>.</b> É o método oficial, mas executa um script da internet. Baixe o <code>install.sh</code> primeiro, leia, e só então rode. Na documentação, o instalador baixa Python 3.14, Node.js, ripgrep e FFmpeg gerenciados por ele, instala o Chromium (para a automação do navegador) e cria <code>~/.hermes</code>; <code>--skip-browser</code> e <code>--non-interactive</code> existem. Há também apps para macOS (Apple Silicon) e Windows, e um pacote para Android/Termux.</span><span class="en"><b>Read before running a <code>curl | bash</code>.</b> It is the official method, but it runs a script from the internet. Download <code>install.sh</code> first, read it, and only then run it. Per the documentation, the installer fetches Python 3.14, Node.js, ripgrep and FFmpeg managed by itself, installs Chromium (for browser automation) and creates <code>~/.hermes</code>; <code>--skip-browser</code> and <code>--non-interactive</code> exist. There are also apps for macOS (Apple Silicon) and Windows, and a package for Android/Termux.</span></div>
+<h3><span class="pt">Quais LLMs ele suporta</span><span class="en">Which LLMs it supports</span></h3>
+<p><span class="pt">Quase todos: o Hermes não é preso a um fornecedor. Você escolhe com <code>hermes model</code>, ou troca no meio da conversa com <code>/model provedor:modelo</code>. A tabela traz os principais da documentação:</span><span class="en">Almost all of them: Hermes is not tied to one vendor. You choose with <code>hermes model</code>, or switch mid-conversation with <code>/model provider:model</code>. The table lists the main ones from the documentation:</span></p>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th><span class="pt">Provedor (id)</span><span class="en">Provider (id)</span></th><th><span class="pt">Credencial</span><span class="en">Credential</span></th></tr></thead>
+<tbody>
+<tr><td><code>anthropic</code></td><td><code>ANTHROPIC_API_KEY</code></td></tr>
+<tr><td><code>openai-api</code></td><td><code>OPENAI_API_KEY</code> (<code>OPENAI_BASE_URL</code> opcional)</td></tr>
+<tr><td><code>gemini</code> / <code>vertex</code></td><td><code>GEMINI_API_KEY</code> / <span class="pt">conta de serviço</span><span class="en">service account</span></td></tr>
+<tr><td><code>bedrock</code></td><td><span class="pt">cadeia de credenciais da AWS (boto3)</span><span class="en">AWS credentials chain (boto3)</span></td></tr>
+<tr><td><code>openrouter</code></td><td><code>OPENROUTER_API_KEY</code> <span class="pt">(centenas de modelos)</span><span class="en">(hundreds of models)</span></td></tr>
+<tr><td><code>nous</code></td><td><span class="pt">OAuth (<code>hermes setup --portal</code>): o Nous Portal, com 200+ modelos e ferramentas hospedadas</span><span class="en">OAuth (<code>hermes setup --portal</code>): Nous Portal, with 200+ models and hosted tools</span></td></tr>
+<tr><td><code>deepseek</code>, <code>zai</code> (GLM), <code>kimi-coding</code>, <code>minimax</code>, <code>alibaba</code> (Qwen), <code>xai</code>, <code>nvidia</code>, <code>huggingface</code>, <code>fireworks</code>...</td><td><span class="pt">uma chave por provedor, em <code>~/.hermes/.env</code></span><span class="en">one key per provider, in <code>~/.hermes/.env</code></span></td></tr>
+<tr><td><code>custom</code></td><td><span class="pt">qualquer endpoint compatível com a API da OpenAI: Ollama, vLLM, llama.cpp</span><span class="en">any OpenAI-compatible endpoint: Ollama, vLLM, llama.cpp</span></td></tr>
+</tbody>
+</table>
+</div>
+<pre><code># ~/.hermes/config.yaml: modelo principal e reserva se o principal cair
+model:
+  provider: "anthropic"
+  default: "claude-sonnet-4-6"
+fallback_providers:
+  - provider: openrouter
+    model: anthropic/claude-sonnet-4
+
+# modelo local (Ollama): a documentação exige 64 mil tokens de contexto, no mínimo
+model:
+  provider: custom
+  default: qwen2.5-coder:32b
+  base_url: http://localhost:11434/v1
+  context_length: 64000          # e suba o servidor com OLLAMA_CONTEXT_LENGTH=64000</code></pre>
+<ul class="ds-list">
+<li><span class="pt"><b>Contexto mínimo de 64 mil tokens:</b> o Hermes recusa, na partida, um modelo com janela menor. Com Ollama, o contexto padrão costuma ser bem menor, então defina-o no servidor. No vLLM use <code>--enable-auto-tool-choice --tool-call-parser hermes</code>, e no llama.cpp <code>--jinja</code> (necessário para chamada de ferramentas).</span><span class="en"><b>64k tokens minimum context:</b> Hermes refuses, at startup, a model with a smaller window. With Ollama the default context is usually much smaller, so set it on the server. On vLLM use <code>--enable-auto-tool-choice --tool-call-parser hermes</code>, and on llama.cpp <code>--jinja</code> (required for tool calling).</span></li>
+<li><span class="pt"><b>Modelo pequeno local não é o mesmo que um de ponta.</b> Um agente faz muitas chamadas de ferramenta seguidas; modelos fracos erram o formato ou se perdem. Para um bot que mexe em servidor, use um modelo forte. Veja a <a href="../llm-agents-open-source/index.html">nota de LLMs open-source</a> para rodar modelos locais e alugar GPU.</span><span class="en"><b>A small local model is not the same as a frontier one.</b> An agent makes many tool calls in a row; weak models get the format wrong or lose the thread. For a bot that touches a server, use a strong model. See the <a href="../llm-agents-open-source/index.html">open-source LLMs note</a> for running local models and renting a GPU.</span></li>
+<li><span class="pt"><b>Custo:</b> um agente que roda 24/7 com tarefas agendadas gasta tokens sem você estar olhando. Use <code>/usage</code>, defina um limite de gasto no painel do provedor e prefira cache de prompt (o Hermes monta o prompt justamente para isso).</span><span class="en"><b>Cost:</b> an agent running 24/7 with scheduled tasks spends tokens while you are not looking. Use <code>/usage</code>, set a spend limit in the provider's dashboard and rely on prompt caching (Hermes builds the prompt exactly for that).</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, sobre as fontes:</b> a página da documentação diz que o login OAuth da Anthropic exige um plano Claude Max com créditos extras, e que o Claude Pro não serve; para o caminho simples use uma chave de API. Os ids de modelo (<code>claude-sonnet-4-6</code>, <code>qwen2.5-coder:32b</code>) são os do exemplo da documentação e envelhecem: use o que o seu provedor listar hoje.</span><span class="en"><b>Personal note, on sources:</b> the documentation page says Anthropic's OAuth login requires a Claude Max plan with extra credits, and that Claude Pro does not work; for the simple path use an API key. The model ids (<code>claude-sonnet-4-6</code>, <code>qwen2.5-coder:32b</code>) are the documentation's examples and age: use what your provider lists today.</span></div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/getting-started/installation">Hermes docs · Installation</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/integrations/providers">Hermes docs · AI Providers</a></li><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/configuration">Hermes docs · Configuration</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="server">
+<h2 id="server"><span class="pt">7. Deixar rodando 24/7 (Hostinger ou AWS)</span><span class="en">7. Running 24/7 (Hostinger or AWS)</span></h2>
+<p><span class="pt">Para o agente responder sempre, ele precisa rodar numa máquina que fica ligada: um servidor virtual (VPS). O desenho é simples e, graças ao polling do Telegram, <b>não precisa de nenhuma porta aberta</b>:</span><span class="en">For the agent to always answer, it must run on a machine that stays on: a virtual server (VPS). The design is simple and, thanks to Telegram polling, <b>needs no open port</b>:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 210" role="img" aria-label="Hermes num servidor 24/7 / Hermes on a 24/7 server" style="min-width:640px">
+<rect x="4" y="50" width="110" height="60" rx="4" class="ln fillsoft"/><text x="59" y="76" class="pt" text-anchor="middle">Seu celular</text><text x="59" y="76" class="en" text-anchor="middle">Your phone</text><text x="59" y="94" class="mut" text-anchor="middle">Telegram</text>
+<rect x="170" y="50" width="110" height="60" rx="4" class="ln fillsoft"/><text x="225" y="76" class="pt" text-anchor="middle">Servidores do</text><text x="225" y="76" class="en" text-anchor="middle">Telegram's</text><text x="225" y="94" class="pt" text-anchor="middle">Telegram</text><text x="225" y="94" class="en" text-anchor="middle">servers</text>
+<rect x="336" y="10" width="220" height="150" rx="6" class="ln dash"/><text x="346" y="26" class="mut mono pt" text-anchor="start">VPS (Hostinger ou EC2)</text><text x="346" y="26" class="mut mono en" text-anchor="start">VPS (Hostinger or EC2)</text>
+<rect x="352" y="40" width="188" height="70" rx="4" class="ln brandfill"/><text x="446" y="64" class="mono" text-anchor="middle">hermes gateway run</text><text x="446" y="82" class="mut pt" text-anchor="middle">contêiner, restart: unless-stopped</text><text x="446" y="82" class="mut en" text-anchor="middle">container, restart: unless-stopped</text><text x="446" y="98" class="mut mono" text-anchor="middle">/opt/data ← ~/.hermes</text>
+<text x="446" y="140" class="mut pt" text-anchor="middle">entrada: só SSH (ou nenhuma)</text><text x="446" y="140" class="mut en" text-anchor="middle">inbound: SSH only (or none)</text>
+<rect x="596" y="50" width="100" height="60" rx="4" class="ln fillsoft"/><text x="646" y="76" class="pt" text-anchor="middle">API do LLM</text><text x="646" y="76" class="en" text-anchor="middle">LLM API</text><text x="646" y="94" class="mut pt" text-anchor="middle">HTTPS</text><text x="646" y="94" class="mut en" text-anchor="middle">HTTPS</text>
+<path d="M114 80L170 80" class="ln"/><path d="M336 80L280 80" class="ln"/><path d="M556 80L596 80" class="ln"/>
+<path d="M287 80L280 77M287 80L280 83" class="ln"/><path d="M589 80L596 77M589 80L596 83" class="ln"/>
+<text x="308" y="70" class="mut mono pt" text-anchor="middle">polling (saída)</text><text x="308" y="70" class="mut mono en" text-anchor="middle">polling (outbound)</text>
+<text x="350" y="190" class="mut pt" text-anchor="middle">as setas saem do servidor; ninguém na internet inicia uma conexão com ele</text><text x="350" y="190" class="mut en" text-anchor="middle">the arrows leave the server; nobody on the internet starts a connection to it</text>
+</svg></div><figcaption><span class="pt">O servidor só faz conexões de saída (para o Telegram e para o LLM). Sem portas de entrada abertas, a superfície de ataque é pequena.</span><span class="en">The server only makes outbound connections (to Telegram and to the LLM). With no inbound ports open, the attack surface is small.</span></figcaption></figure>
+<h3><span class="pt">Tamanho do servidor</span><span class="en">Server size</span></h3>
+<p><span class="pt">Com um modelo na nuvem (API), o servidor não roda o LLM, só o agente. As fontes divergem: o container usa cerca de 1 GB de RAM, 2 a 4 GB se você ligar a automação de navegador; o tutorial da Hostinger recomenda no mínimo 2 vCPU e 8 GB; um guia de VPS fala em uns 2 GB para modelos na nuvem. Eu começaria com <b>2 vCPU e 4 GB</b> e subiria se usar navegador. <b>Não rode o LLM local no mesmo VPS</b> barato: modelo de verdade pede GPU (veja a nota de LLMs).</span><span class="en">With a cloud model (API), the server does not run the LLM, only the agent. Sources differ: the container uses about 1 GB of RAM, 2 to 4 GB if you turn on browser automation; the Hostinger tutorial recommends at least 2 vCPU and 8 GB; a VPS guide mentions about 2 GB for cloud models. I would start with <b>2 vCPU and 4 GB</b> and go up if you use the browser. <b>Do not run the local LLM on the same cheap VPS</b>: a real model needs a GPU (see the LLMs note).</span></p>
+<h3><span class="pt">Passo a passo (serve para Hostinger e AWS)</span><span class="en">Step by step (works for Hostinger and AWS)</span></h3>
+<ol class="ds-steps">
+<li><span class="pt"><b>Crie o servidor</b> com Ubuntu 24.04 e acesso por <b>chave SSH</b>. Detalhes por provedor logo abaixo.</span><span class="en"><b>Create the server</b> with Ubuntu 24.04 and <b>SSH key</b> access. Provider details just below.</span></li>
+<li><span class="pt"><b>Endureça o básico:</b> usuário comum com <code>sudo</code> (nada de operar como root), login root por SSH desligado, senha por SSH desligada, firewall liberando só o SSH, <code>fail2ban</code> e atualizações automáticas de segurança.</span><span class="en"><b>Harden the basics:</b> a regular user with <code>sudo</code> (no operating as root), SSH root login off, SSH password login off, a firewall allowing only SSH, <code>fail2ban</code> and automatic security updates.</span></li>
+<li><span class="pt"><b>Instale o Docker</b> pelo repositório oficial dele e ponha seu usuário no grupo <code>docker</code>.</span><span class="en"><b>Install Docker</b> from its official repository and add your user to the <code>docker</code> group.</span></li>
+<li><span class="pt"><b>Configure uma vez</b>, com o assistente dentro de um contêiner (ele grava a chave do modelo em <code>~/.hermes/.env</code>).</span><span class="en"><b>Configure once</b>, with the wizard inside a container (it writes the model key to <code>~/.hermes/.env</code>).</span></li>
+<li><span class="pt"><b>Suba o gateway</b> com <code>--restart unless-stopped</code>, para ele voltar sozinho após uma queda ou reinício do servidor.</span><span class="en"><b>Start the gateway</b> with <code>--restart unless-stopped</code>, so it comes back by itself after a crash or server reboot.</span></li>
+<li><span class="pt"><b>Mande uma mensagem pelo celular</b> e confira os logs.</span><span class="en"><b>Message it from your phone</b> and check the logs.</span></li>
+</ol>
+<pre><code># no servidor (Ubuntu), como usuário comum
+sudo ufw default deny incoming && sudo ufw allow OpenSSH && sudo ufw enable
+sudo apt update &amp;&amp; sudo apt install -y fail2ban unattended-upgrades
+
+mkdir -p ~/.hermes
+# 1) assistente de configuração: informe o provedor e a chave do modelo
+docker run -it --rm -v ~/.hermes:/opt/data nousresearch/hermes-agent setup
+
+# 2) credenciais do Telegram (token do BotFather e o seu ID)
+cat &gt;&gt; ~/.hermes/.env &lt;&lt;'EOF'
+TELEGRAM_BOT_TOKEN=123456:ABC...
+TELEGRAM_ALLOWED_USERS=123456789
+EOF
+chmod 600 ~/.hermes/.env</code></pre>
+<p><span class="pt"><code>compose.yaml</code> (baseado no exemplo oficial, sem publicar portas, já que só usamos o chat):</span><span class="en"><code>compose.yaml</code> (based on the official example, publishing no ports since we only use chat):</span></p>
+<pre><code>services:
+  hermes:
+    image: nousresearch/hermes-agent:stable   # "stable" em vez de "latest" também é aceito
+    container_name: hermes
+    restart: unless-stopped
+    command: gateway run
+    volumes:
+      - ~/.hermes:/opt/data
+    environment:
+      - HERMES_UID=1000      # dono da pasta ~/.hermes no host (confira com: id -u)
+      - HERMES_GID=1000
+    deploy:
+      resources:
+        limits:
+          memory: 4G
+          cpus: "2.0"</code></pre>
+<pre><code>docker compose up -d
+docker compose logs -f                 # deve mostrar o adaptador do Telegram conectado
+
+# monitorar e operar
+docker exec hermes hermes gateway status
+docker exec -u hermes hermes hermes pairing list
+
+# atualizar (os dados ficam em ~/.hermes, que é um volume)
+docker compose pull &amp;&amp; docker compose up -d</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Não publique as portas 8642 e 9119.</b> A 8642 é a API do gateway e a 9119 é o painel web. Para chat, nenhuma das duas é necessária. Se quiser o painel, ligue-o só em <code>127.0.0.1</code> e acesse por túnel SSH (<code>ssh -L 9119:127.0.0.1:9119 usuario@servidor</code>). Se expuser a API, defina <code>API_SERVER_KEY</code> forte. Nunca rode dois contêineres sobre o mesmo <code>~/.hermes</code>.</span><span class="en"><b>Do not publish ports 8642 and 9119.</b> 8642 is the gateway API and 9119 is the web dashboard. For chat, neither is needed. If you want the dashboard, bind it only to <code>127.0.0.1</code> and reach it through an SSH tunnel (<code>ssh -L 9119:127.0.0.1:9119 user@server</code>). If you expose the API, set a strong <code>API_SERVER_KEY</code>. Never run two containers over the same <code>~/.hermes</code>.</span></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>O contêiner do Hermes não é o backend Docker.</b> Rodando o agente no contêiner, os comandos dele rodam <i>dentro</i> desse contêiner (backend <code>local</code> dentro dele), o que já o separa do servidor. Isso é diferente do backend <code>docker</code> da seção 5, que cria um contêiner por tarefa. As aprovações de comando continuam valendo no primeiro caso. Mantenha o <code>approvals.mode</code> em <code>smart</code> ou <code>manual</code> e não monte o <code>docker.sock</code> do host dentro dele: quem controla o socket controla a máquina.</span><span class="en"><b>The Hermes container is not the Docker backend.</b> Running the agent in the container, its commands run <i>inside</i> that container (the <code>local</code> backend inside it), which already separates it from the server. This differs from the section 5 <code>docker</code> backend, which creates a container per task. Command approvals still apply in the first case. Keep <code>approvals.mode</code> at <code>smart</code> or <code>manual</code> and do not mount the host's <code>docker.sock</code> into it: whoever controls the socket controls the machine.</span></div>
+
+<h3>Hostinger</h3>
+<ul class="ds-list">
+<li><span class="pt"><b>Modelo pronto:</b> a Hostinger oferece um template de <b>Hermes Agent</b> para VPS. Ao criar o VPS (ou em <i>VPS → OS &amp; Panel → Operating System → Change OS</i>, procurando "Hermes Agent"), ele instala sozinho, e você abre o projeto no <b>Docker Manager</b> e acessa o terminal web. Atualizar é o menu de três pontos do projeto → <b>Update</b>.</span><span class="en"><b>Ready-made template:</b> Hostinger offers a <b>Hermes Agent</b> VPS template. When creating the VPS (or in <i>VPS → OS &amp; Panel → Operating System → Change OS</i>, searching "Hermes Agent"), it installs itself, and you open the project in <b>Docker Manager</b> and reach the web terminal. To update, use the project's three-dot menu → <b>Update</b>.</span></li>
+<li><span class="pt"><b>Do zero:</b> escolha um VPS com Ubuntu, acesse por SSH e siga o passo a passo acima. É o mesmo caminho do tutorial deles.</span><span class="en"><b>From scratch:</b> pick an Ubuntu VPS, connect over SSH and follow the step-by-step above. It is the same path as their tutorial.</span></li>
+<li><span class="pt">Se usar o painel, o firewall da Hostinger também pode bloquear tudo menos o SSH; faça nos dois lugares (painel e <code>ufw</code>).</span><span class="en">If you use the panel, Hostinger's firewall can also block everything but SSH; do it in both places (panel and <code>ufw</code>).</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Nota pessoal, discrepância nas fontes:</b> o tutorial da Hostinger indica liberar o usuário do Telegram em <code>gateway → telegram → allowed_user_ids</code> no <code>config.yaml</code>, mas a documentação oficial de segurança e de Telegram usa a variável <code>TELEGRAM_ALLOWED_USERS</code> no <code>.env</code>. Usei a oficial. Também não vi preços; confira o plano na Hostinger.</span><span class="en"><b>Personal note, a discrepancy in the sources:</b> the Hostinger tutorial says to allow the Telegram user at <code>gateway → telegram → allowed_user_ids</code> in <code>config.yaml</code>, but the official security and Telegram documentation uses the <code>TELEGRAM_ALLOWED_USERS</code> variable in <code>.env</code>. I used the official one. I also did not see prices; check the plan at Hostinger.</span></div>
+
+<h3>AWS</h3>
+<p><span class="pt">Não encontrei um guia oficial do Hermes para a AWS. O que segue é a minha adaptação do mesmo passo a passo, e <b>não foi testado</b>:</span><span class="en">I did not find an official Hermes guide for AWS. What follows is my adaptation of the same step-by-step, and it is <b>untested</b>:</span></p>
+<ul class="ds-list">
+<li><span class="pt"><b>Instância EC2</b> (ou Lightsail, mais simples) com Ubuntu 24.04, tipo com 2 vCPU e 4 GB (a família <code>t3</code>/<code>t4g</code> serve) e um volume EBS criptografado de uns 30 GB. Não precisa de Elastic IP: o agente só faz conexões de saída.</span><span class="en"><b>An EC2 instance</b> (or Lightsail, simpler) with Ubuntu 24.04, a 2 vCPU and 4 GB type (the <code>t3</code>/<code>t4g</code> family works) and an encrypted EBS volume of about 30 GB. No Elastic IP needed: the agent only makes outbound connections.</span></li>
+<li><span class="pt"><b>Security group sem nenhuma regra de entrada.</b> Para administrar, use o <b>SSM Session Manager</b> (anexe à instância um perfil IAM com <code>AmazonSSMManagedInstanceCore</code>) em vez de abrir a porta 22. Se preferir SSH, libere a 22 só para o seu IP.</span><span class="en"><b>A security group with no inbound rules.</b> To administer, use <b>SSM Session Manager</b> (attach an IAM profile with <code>AmazonSSMManagedInstanceCore</code> to the instance) instead of opening port 22. If you prefer SSH, allow 22 only from your IP.</span></li>
+<li><span class="pt"><b>IMDSv2 obrigatório</b> nas opções de metadados da instância. Combina com a proteção SSRF do Hermes (seção 5): um agente que lê páginas da web é exatamente o tipo de coisa que tenta alcançar o <code>169.254.169.254</code>.</span><span class="en"><b>Require IMDSv2</b> in the instance metadata options. It pairs with Hermes's SSRF protection (section 5): an agent that reads web pages is exactly the kind of thing that tries to reach <code>169.254.169.254</code>.</span></li>
+<li><span class="pt"><b>Modelo pelo Bedrock, sem chave nenhuma:</b> o provedor <code>bedrock</code> usa a cadeia de credenciais da AWS, então um <b>perfil IAM da instância</b> com permissão mínima (<code>bedrock:InvokeModel*</code> nos modelos que você usa) dispensa guardar uma chave de API no <code>.env</code>. É o mesmo princípio da nota de <a href="../github-aws-oidc/index.html">OIDC</a>: credencial temporária em vez de segredo fixo.</span><span class="en"><b>Model through Bedrock, with no key at all:</b> the <code>bedrock</code> provider uses the AWS credentials chain, so an <b>instance IAM profile</b> with minimal permission (<code>bedrock:InvokeModel*</code> on the models you use) removes the need to store an API key in <code>.env</code>. It is the same principle as the <a href="../github-aws-oidc/index.html">OIDC</a> note: temporary credentials instead of a fixed secret.</span></li>
+<li><span class="pt"><b>Cuidado com o perfil IAM:</b> tudo o que o perfil permite, o agente (e quem o enganar) consegue fazer. Dê só o Bedrock, nada de S3 amplo ou administração.</span><span class="en"><b>Watch the IAM profile:</b> whatever the profile allows, the agent (and anyone who tricks it) can do. Give only Bedrock, no broad S3 or admin.</span></li>
+<li><span class="pt">Depois, é o mesmo: instalar o Docker, <code>setup</code>, <code>.env</code> e <code>docker compose up -d</code>. Os logs podem ir ao CloudWatch com o driver de log do Docker, e um alarme de custo (AWS Budgets) protege contra um agente em loop.</span><span class="en">After that, it is the same: install Docker, <code>setup</code>, <code>.env</code> and <code>docker compose up -d</code>. Logs can go to CloudWatch with Docker's log driver, and a cost alarm (AWS Budgets) protects against an agent in a loop.</span></li>
+</ul>
+<h3><span class="pt">Hostinger ou AWS?</span><span class="en">Hostinger or AWS?</span></h3>
+<div class="scroll-x">
+<table class="ds-table">
+<thead><tr><th/><th>Hostinger</th><th>AWS</th></tr></thead>
+<tbody>
+<tr><td><span class="pt">Começo</span><span class="en">Getting started</span></td><td><span class="pt">Template pronto + Docker Manager; minutos</span><span class="en">Ready template + Docker Manager; minutes</span></td><td><span class="pt">Você monta tudo (EC2, rede, IAM)</span><span class="en">You assemble everything (EC2, network, IAM)</span></td></tr>
+<tr><td><span class="pt">Credenciais do modelo</span><span class="en">Model credentials</span></td><td><span class="pt">Chave de API no <code>.env</code></span><span class="en">API key in <code>.env</code></span></td><td><span class="pt">Perfil IAM + Bedrock: sem chave guardada</span><span class="en">IAM profile + Bedrock: no stored key</span></td></tr>
+<tr><td><span class="pt">Acesso administrativo</span><span class="en">Admin access</span></td><td>SSH / <span class="pt">terminal web</span><span class="en">web terminal</span></td><td><span class="pt">SSM, sem porta aberta</span><span class="en">SSM, no open port</span></td></tr>
+<tr><td><span class="pt">Custo e previsibilidade</span><span class="en">Cost and predictability</span></td><td><span class="pt">Mensalidade fixa de VPS</span><span class="en">Fixed monthly VPS fee</span></td><td><span class="pt">Pago por uso; defina alarme de custo</span><span class="en">Pay per use; set a cost alarm</span></td></tr>
+<tr><td><span class="pt">Bom para</span><span class="en">Good for</span></td><td><span class="pt">Bot pessoal, simples e barato</span><span class="en">A personal bot, simple and cheap</span></td><td><span class="pt">Quem já está na AWS e quer IAM e logs integrados</span><span class="en">Those already on AWS wanting integrated IAM and logs</span></td></tr>
+</tbody>
+</table>
+</div>
+<div class="sources"><b><span class="pt">Fontes · verificadas em 2026-10-27</span><span class="en">Sources · checked on 2026-10-27</span></b><ul><li><a href="https://hermes-agent.nousresearch.com/docs/user-guide/docker">Hermes docs · Docker</a></li><li><a href="https://www.hostinger.com/tutorials/?p=146279">Hostinger · How to set up Hermes Agent with Docker</a></li><li><a href="https://www.virtua.cloud/learn/en/tutorials/run-hermes-agent-docker-compose-vps">Virtua Cloud · Run Hermes Agent with Docker Compose on a VPS (guia de terceiros / third-party guide)</a></li></ul></div>
+</section>
+
+<section class="content-section" aria-labelledby="cheat">
+<h2 id="cheat"><span class="pt">8. Checklist</span><span class="en">8. Checklist</span></h2>
+<ul class="ds-list">
+<li><span class="pt">Modelo forte e com 64 mil tokens de contexto ou mais; limite de gasto no provedor.</span><span class="en">A strong model with 64k tokens of context or more; a spend limit at the provider.</span></li>
+<li><span class="pt">Allowlist ou pareamento em toda plataforma; <code>GATEWAY_ALLOW_ALL_USERS</code> desligado.</span><span class="en">Allowlist or pairing on every platform; <code>GATEWAY_ALLOW_ALL_USERS</code> off.</span></li>
+<li><span class="pt"><code>approvals.mode: manual</code> (ou <code>smart</code> com atenção); nunca <code>--yolo</code> permanente.</span><span class="en"><code>approvals.mode: manual</code> (or <code>smart</code> with care); never a permanent <code>--yolo</code>.</span></li>
+<li><span class="pt">Agente em contêiner, sem <code>docker.sock</code>, sem root, sem portas publicadas.</span><span class="en">Agent in a container, no <code>docker.sock</code>, no root, no published ports.</span></li>
+<li><span class="pt">Segredos só em <code>~/.hermes/.env</code> (<code>chmod 600</code>); no WhatsApp, a pasta da sessão com <code>chmod 700</code> e número dedicado.</span><span class="en">Secrets only in <code>~/.hermes/.env</code> (<code>chmod 600</code>); on WhatsApp, the session folder with <code>chmod 700</code> and a dedicated number.</span></li>
+<li><span class="pt"><code>skills.write_approval</code> e <code>memory.write_approval</code> ligados no começo; revisar <code>~/.hermes/skills/</code> de vez em quando.</span><span class="en"><code>skills.write_approval</code> and <code>memory.write_approval</code> on at first; review <code>~/.hermes/skills/</code> from time to time.</span></li>
+<li><span class="pt">Servidor: SSH por chave, firewall só com o necessário, fail2ban, atualizações automáticas, <code>restart: unless-stopped</code>.</span><span class="en">Server: SSH keys, firewall with only what is needed, fail2ban, automatic updates, <code>restart: unless-stopped</code>.</span></li>
+<li><span class="pt">Na AWS: sem entrada no security group, SSM, IMDSv2, perfil IAM mínimo, alarme de custo.</span><span class="en">On AWS: no inbound in the security group, SSM, IMDSv2, minimal IAM profile, cost alarm.</span></li>
+<li><span class="pt">Backup de <code>~/.hermes</code> (é a memória, as skills e as sessões do agente) e <code>hermes update</code> ou <code>docker compose pull</code> regularmente.</span><span class="en">Back up <code>~/.hermes</code> (it is the agent's memory, skills and sessions) and run <code>hermes update</code> or <code>docker compose pull</code> regularly.</span></li>
+</ul>
+<div class="callout personal"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><b>Limites desta nota.</b> A documentação do Hermes, o README e o tutorial da Hostinger foram lidos em 27/10/2026. <b>Eu não rodei o Hermes com um modelo real</b>: só baixei a imagem oficial e vi a estrutura de pastas criada na primeira partida; nenhum outro comando desta nota foi executado por mim, e a seção da AWS é minha adaptação, sem teste. O projeto muda rápido (chaves de configuração, tags de imagem, plataformas); confira a documentação da versão que instalar antes de depender de um detalhe.</span><span class="en"><b>Limits of this note.</b> The Hermes documentation, the README and the Hostinger tutorial were read on 2026-10-27. <b>I did not run Hermes against a real model</b>: I only pulled the official image and saw the folder structure created on first start; no other command in this note was executed by me, and the AWS section is my untested adaptation. The project moves fast (configuration keys, image tags, platforms); check the documentation for the version you install before relying on a detail.</span></div>
+</section>
+
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
