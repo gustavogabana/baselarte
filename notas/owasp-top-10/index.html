@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="ow.metaTitle">OWASP Top 10 (2025): how apps break and how to protect yours</title>
+  <meta name="description" data-i18n-attributes="content:ow.metaDescription" content="A practical guide to the OWASP Top 10:2025: each risk with an example of the flaw, the fix that matters and an action plan with checklists to protect a web application.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/owasp-top-10/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/owasp-top-10/">
+  <meta property="og:title" data-i18n-attributes="content:ow.metaTitle" content="OWASP Top 10 (2025): how apps break and how to protect yours">
+  <meta property="og:description" data-i18n-attributes="content:ow.metaDescription" content="A practical guide to the OWASP Top 10:2025: each risk with an example of the flaw, the fix that matters and an action plan with checklists to protect a web application.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:ow.metaTitle" content="OWASP Top 10 (2025): how apps break and how to protect yours">
+  <meta name="twitter:description" data-i18n-attributes="content:ow.metaDescription" content="A practical guide to the OWASP Top 10:2025: each risk with an example of the flaw, the fix that matters and an action plan with checklists to protect a web application.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="ow.kicker">Practical guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="ow.heroTitle">OWASP Top 10 (2025): <em>how apps break and what to do about it.</em></h1>
+  <p class="hero-lede" data-i18n="ow.heroLede">The ten most common web application risks according to OWASP, each with a short example of the flaw, the fix that matters and a checklist you can apply to your own app this week.</p>
+</section>
+<aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é o Top 10</span><span class="en">What the Top 10 is</span></a></li>
+<li><a href="#list"><span class="pt">A lista de 2025 de relance</span><span class="en">The 2025 list at a glance</span></a></li>
+<li><a href="#a01"><span class="pt">A01: Controle de acesso quebrado</span><span class="en">A01: Broken access control</span></a></li>
+<li><a href="#a02"><span class="pt">A02: Configuração incorreta de segurança</span><span class="en">A02: Security misconfiguration</span></a></li>
+<li><a href="#a03"><span class="pt">A03: Falhas na cadeia de suprimentos</span><span class="en">A03: Software supply chain failures</span></a></li>
+<li><a href="#a04"><span class="pt">A04: Falhas criptográficas</span><span class="en">A04: Cryptographic failures</span></a></li>
+<li><a href="#a05"><span class="pt">A05: Injeção</span><span class="en">A05: Injection</span></a></li>
+<li><a href="#a06"><span class="pt">A06: Design inseguro</span><span class="en">A06: Insecure design</span></a></li>
+<li><a href="#a07"><span class="pt">A07: Falhas de autenticação</span><span class="en">A07: Authentication failures</span></a></li>
+<li><a href="#a08"><span class="pt">A08: Integridade de software e dados</span><span class="en">A08: Software or data integrity failures</span></a></li>
+<li><a href="#a09"><span class="pt">A09: Falhas de log e alerta</span><span class="en">A09: Logging and alerting failures</span></a></li>
+<li><a href="#a10"><span class="pt">A10: Tratamento de condições excepcionais</span><span class="en">A10: Mishandling of exceptional conditions</span></a></li>
+<li><a href="#plan"><span class="pt">Plano de ação para o seu app</span><span class="en">Action plan for your app</span></a></li>
+<li><a href="#cheat-ow"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é o Top 10</span><span class="en">What the Top 10 is</span></h2>
+<p><span class="pt">O OWASP Top 10 é um documento de conscientização da Open Worldwide Application Security Project: as dez categorias de risco mais críticas em aplicações web, montadas a partir de dados de testes de segurança reais e de uma pesquisa com a comunidade. A edição mais recente é a de 2025. Ele não é uma lista de tudo que pode dar errado nem um padrão de conformidade; é um ponto de partida para decidir o que corrigir primeiro.</span><span class="en">The OWASP Top 10 is an awareness document from the Open Worldwide Application Security Project: the ten most critical risk categories for web applications, built from real security-testing data and a community survey. The latest edition is 2025. It is not a list of everything that can go wrong nor a compliance standard; it is a starting point for deciding what to fix first.</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Como usar:</strong> uma categoria é um <em>grupo</em> de falhas (CWEs), não uma falha só. Leia cada seção como “o que procurar no meu código” e “qual controle impede”. Para cabeçalhos HTTP, SQL injection e XSS em detalhe, veja as notas de segurança já publicadas aqui.</span><span class="en"><strong>How to use it:</strong> a category is a <em>group</em> of flaws (CWEs), not a single flaw. Read each section as “what to look for in my code” and “which control stops it”. For HTTP headers, SQL injection and XSS in depth, see the other security notes published here.</span></div>
+</section>
+<section class="content-section" aria-labelledby="list">
+<h2 id="list"><span class="pt">A lista de 2025 de relance</span><span class="en">The 2025 list at a glance</span></h2>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th>ID</th><th><span class="pt">Categoria</span><span class="en">Category</span></th><th><span class="pt">Defesa principal</span><span class="en">Main defence</span></th></tr></thead><tbody>
+<tr><td>A01</td><td>Broken Access Control</td><td><span class="pt">Checar permissão no servidor, em toda requisição, negando por padrão</span><span class="en">Check permission on the server, on every request, deny by default</span></td></tr>
+<tr><td>A02</td><td>Security Misconfiguration</td><td><span class="pt">Configuração segura repetível, sem padrões nem debug em produção</span><span class="en">Repeatable secure configuration, no defaults or debug in production</span></td></tr>
+<tr><td>A03</td><td>Software Supply Chain Failures</td><td><span class="pt">Lockfile, SBOM, varredura de dependências, CI com permissões mínimas</span><span class="en">Lockfile, SBOM, dependency scanning, least-privilege CI</span></td></tr>
+<tr><td>A04</td><td>Cryptographic Failures</td><td><span class="pt">TLS em tudo, algoritmos modernos, hash de senha lento, chaves fora do código</span><span class="en">TLS everywhere, modern algorithms, slow password hashing, keys outside code</span></td></tr>
+<tr><td>A05</td><td>Injection</td><td><span class="pt">Consultas parametrizadas e codificação de saída</span><span class="en">Parameterised queries and output encoding</span></td></tr>
+<tr><td>A06</td><td>Insecure Design</td><td><span class="pt">Modelagem de ameaças e limites de abuso desde o projeto</span><span class="en">Threat modelling and abuse limits from the design stage</span></td></tr>
+<tr><td>A07</td><td>Authentication Failures</td><td><span class="pt">MFA, proteção contra força bruta, sessões seguras</span><span class="en">MFA, brute-force protection, secure sessions</span></td></tr>
+<tr><td>A08</td><td>Software or Data Integrity Failures</td><td><span class="pt">Verificar assinatura e origem de código e dados; evitar desserialização insegura</span><span class="en">Verify signature and origin of code and data; avoid unsafe deserialisation</span></td></tr>
+<tr><td>A09</td><td>Security Logging and Alerting Failures</td><td><span class="pt">Registrar eventos de segurança e alertar de verdade</span><span class="en">Log security events and actually alert on them</span></td></tr>
+<tr><td>A10</td><td>Mishandling of Exceptional Conditions</td><td><span class="pt">Falhar de forma fechada, tratar todos os erros, não vazar detalhes</span><span class="en">Fail closed, handle every error, leak no details</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Em relação à edição de 2021, a de 2025 mantém o controle de acesso quebrado em primeiro lugar (a SSRF, antes categoria própria, foi incorporada a ele), sobe a configuração incorreta para o segundo lugar, amplia “componentes vulneráveis” para falhas na cadeia de suprimentos e acrescenta o tratamento de condições excepcionais. Confira a lista oficial para os detalhes de cada mudança.</span><span class="en">Compared with 2021, the 2025 edition keeps broken access control first (SSRF, previously its own category, was folded into it), moves misconfiguration up to second, widens “vulnerable components” into supply chain failures and adds the mishandling of exceptional conditions. Check the official list for the details of each change.</span></p>
+</section>
+<section class="content-section" aria-labelledby="a01">
+<h2 id="a01"><span class="pt">A01: Controle de acesso quebrado</span><span class="en">A01: Broken access control</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o usuário consegue fazer ou ver o que não deveria. Exemplo clássico: <code>GET /api/faturas/1042</code> devolve a fatura de outra pessoa quando você troca o número (IDOR). Também entram aqui acesso a rotas de admin sem checar o papel, CORS aberto demais e SSRF, quando o servidor busca uma URL escolhida pelo atacante (por exemplo o endereço de metadados da nuvem).</span><span class="en"><strong>The flaw:</strong> the user can do or see what they should not. Classic example: <code>GET /api/invoices/1042</code> returns someone else’s invoice when you change the number (IDOR). Also here: admin routes without a role check, overly open CORS and SSRF, when the server fetches a URL chosen by the attacker (for example the cloud metadata address).</span></p>
+<pre><code>// ruim: confia no id da URL
+app.get('/api/invoices/:id', auth, async (req, res) => {
+  res.json(await db.invoice.findById(req.params.id));
+});
+
+// bom: o dono vem da sessão, não do cliente
+app.get('/api/invoices/:id', auth, async (req, res) => {
+  const inv = await db.invoice.findOne({ id: req.params.id, ownerId: req.user.id });
+  if (!inv) return res.sendStatus(404);
+  res.json(inv);
+});</code></pre>
+<ul class="ds-list"><li><span class="pt">Negar por padrão; liberar por papel e por dono do recurso, <strong>no servidor</strong>. Esconder o botão no front não é controle.</span><span class="en">Deny by default; allow by role and by resource owner, <strong>on the server</strong>. Hiding the button in the front end is not a control.</span></li><li><span class="pt">Centralizar a checagem (middleware ou política) em vez de repetir <code>if</code> em cada rota.</span><span class="en">Centralise the check (middleware or policy) instead of repeating <code>if</code> in every route.</span></li><li><span class="pt">Contra SSRF: lista de destinos permitidos, bloquear IPs internos e de metadados, não seguir redirecionamentos às cegas.</span><span class="en">Against SSRF: allow-list of destinations, block internal and metadata IPs, do not follow redirects blindly.</span></li><li><span class="pt">Testes automáticos: “o usuário A não lê o recurso do usuário B” para cada endpoint.</span><span class="en">Automated tests: “user A cannot read user B’s resource” for each endpoint.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a02">
+<h2 id="a02"><span class="pt">A02: Configuração incorreta de segurança</span><span class="en">A02: Security misconfiguration</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o software é seguro, a configuração não. Senhas padrão, bucket público, modo debug ligado, listagem de diretório, mensagens de erro com stack trace, cabeçalhos de segurança ausentes, portas abertas à toa, permissões amplas demais na nuvem.</span><span class="en"><strong>The flaw:</strong> the software is secure, the configuration is not. Default passwords, public buckets, debug mode on, directory listing, error messages with stack traces, missing security headers, needlessly open ports, overly broad cloud permissions.</span></p>
+<ul class="ds-list"><li><span class="pt">Definir a configuração como código (Terraform, Docker, Nginx versionados) e revisar em PR; o mesmo molde para dev, teste e produção, mudando só os segredos.</span><span class="en">Define configuration as code (Terraform, Docker, Nginx under version control) and review it in PRs; the same template for dev, test and production, changing only the secrets.</span></li><li><span class="pt">Remover o que não é usado: contas, rotas de exemplo, portas, recursos e funcionalidades.</span><span class="en">Remove what is unused: accounts, sample routes, ports, features.</span></li><li><span class="pt">Cabeçalhos HTTP e CSP: veja a nota de segurança de apps web. Parsers de XML sem entidades externas (XXE) também ficam aqui.</span><span class="en">HTTP headers and CSP: see the web app security note. XML parsers with external entities disabled (XXE) also belong here.</span></li><li><span class="pt">Varrer a infraestrutura com regularidade (por exemplo, um scanner de IaC no CI) e alertar em desvio de configuração.</span><span class="en">Scan infrastructure regularly (for example an IaC scanner in CI) and alert on configuration drift.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a03">
+<h2 id="a03"><span class="pt">A03: Falhas na cadeia de suprimentos</span><span class="en">A03: Software supply chain failures</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o problema vem de código que você não escreveu: dependências vulneráveis ou desatualizadas, pacote malicioso com nome parecido (typosquatting), mantenedor comprometido, imagem de contêiner adulterada, pipeline de CI que roda código não confiável com acesso a segredos.</span><span class="en"><strong>The flaw:</strong> the problem comes from code you did not write: vulnerable or outdated dependencies, a malicious package with a look-alike name (typosquatting), a compromised maintainer, a tampered container image, a CI pipeline running untrusted code with access to secrets.</span></p>
+<pre><code>npm ci                 # instala exatamente o lockfile
+npm audit --omit=dev   # vulnerabilidades conhecidas
+pip-audit              # equivalente em Python
+trivy fs .             # dependências e IaC no repositório</code></pre>
+<ul class="ds-list"><li><span class="pt">Versionar o lockfile e instalar com <code>npm ci</code>/equivalente; fixar imagens por digest.</span><span class="en">Commit the lockfile and install with <code>npm ci</code>/equivalent; pin images by digest.</span></li><li><span class="pt">Automatizar atualizações (Dependabot ou Renovate) e varredura no CI; ter um prazo para corrigir vulnerabilidades críticas.</span><span class="en">Automate updates (Dependabot or Renovate) and scan in CI; set a deadline for fixing critical vulnerabilities.</span></li><li><span class="pt">Gerar um SBOM (lista de componentes) e saber o que está em produção.</span><span class="en">Generate an SBOM (component list) and know what runs in production.</span></li><li><span class="pt">No CI: permissões mínimas no token, ações de terceiros fixadas por commit, segredos nunca expostos a PRs de forks, credenciais de nuvem por OIDC em vez de chaves longas.</span><span class="en">In CI: minimal token permissions, third-party actions pinned by commit, secrets never exposed to fork PRs, cloud credentials via OIDC instead of long-lived keys.</span></li><li><span class="pt">Antes de adicionar uma dependência, pergunte se precisa dela; menos pacotes, menos superfície.</span><span class="en">Before adding a dependency, ask whether you need it; fewer packages, less surface.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a04">
+<h2 id="a04"><span class="pt">A04: Falhas criptográficas</span><span class="en">A04: Cryptographic failures</span></h2>
+<p><span class="pt"><strong>A falha:</strong> dado sensível sem proteção ou com cripto fraca: tráfego em HTTP, senha com MD5/SHA-1 sem sal, algoritmos antigos, chaves no repositório, números aleatórios previsíveis (<code>Math.random()</code> para tokens), certificados sem validação.</span><span class="en"><strong>The flaw:</strong> sensitive data unprotected or protected by weak crypto: HTTP traffic, passwords hashed with MD5/SHA-1 without salt, old algorithms, keys in the repository, predictable random numbers (<code>Math.random()</code> for tokens), unvalidated certificates.</span></p>
+<ul class="ds-list"><li><span class="pt">Classificar os dados e guardar só o necessário; o que não existe não vaza.</span><span class="en">Classify data and keep only what is needed; what does not exist cannot leak.</span></li><li><span class="pt">TLS 1.2+ em tudo, com HSTS; cifrar em repouso os dados sensíveis (disco, banco, backup).</span><span class="en">TLS 1.2+ everywhere, with HSTS; encrypt sensitive data at rest (disk, database, backup).</span></li><li><span class="pt">Senhas: Argon2id, scrypt ou bcrypt (nunca SHA simples). Tokens: gerador criptográfico (<code>crypto.randomBytes</code>, <code>secrets.token_urlsafe</code>).</span><span class="en">Passwords: Argon2id, scrypt or bcrypt (never plain SHA). Tokens: a cryptographic generator (<code>crypto.randomBytes</code>, <code>secrets.token_urlsafe</code>).</span></li><li><span class="pt">Chaves em um gerenciador de segredos (KMS, Vault, Secrets Manager), com rotação; nunca no Git. Não inventar algoritmo próprio.</span><span class="en">Keys in a secrets manager (KMS, Vault, Secrets Manager), with rotation; never in Git. Never invent your own algorithm.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a05">
+<h2 id="a05"><span class="pt">A05: Injeção</span><span class="en">A05: Injection</span></h2>
+<p><span class="pt"><strong>A falha:</strong> dado do usuário é interpretado como comando: SQL, NoSQL, comandos do sistema, LDAP, templates e também XSS (injeção no navegador). A causa é sempre a mesma: concatenar texto não confiável numa linguagem interpretada.</span><span class="en"><strong>The flaw:</strong> user data is interpreted as a command: SQL, NoSQL, OS commands, LDAP, templates and also XSS (injection in the browser). The cause is always the same: concatenating untrusted text into an interpreted language.</span></p>
+<pre><code>// ruim
+db.query("SELECT * FROM users WHERE email = '" + email + "'");
+
+// bom: parâmetro separado do comando
+db.query("SELECT * FROM users WHERE email = $1", [email]);</code></pre>
+<ul class="ds-list"><li><span class="pt">Consultas parametrizadas ou ORM bem usado; nunca montar SQL por concatenação, nem em <code>ORDER BY</code> (use lista permitida de colunas).</span><span class="en">Parameterised queries or a well-used ORM; never build SQL by concatenation, not even in <code>ORDER BY</code> (use an allow-list of columns).</span></li><li><span class="pt">Comandos do sistema: evitar o shell; chamar o programa com lista de argumentos (<code>subprocess.run([...])</code>, sem <code>shell=True</code>).</span><span class="en">OS commands: avoid the shell; call the program with an argument list (<code>subprocess.run([...])</code>, without <code>shell=True</code>).</span></li><li><span class="pt">XSS: codificar a saída conforme o contexto (HTML, atributo, JS), usar o auto-escape do framework, evitar <code>innerHTML</code>/<code>dangerouslySetInnerHTML</code> e adicionar CSP.</span><span class="en">XSS: encode output for its context (HTML, attribute, JS), use the framework’s auto-escaping, avoid <code>innerHTML</code>/<code>dangerouslySetInnerHTML</code> and add CSP.</span></li><li><span class="pt">Validar a entrada (tipo, tamanho, formato) como defesa em camadas, mas sem confiar só nela. O usuário do banco da aplicação deve ter o mínimo de privilégio.</span><span class="en">Validate input (type, length, format) as defence in depth, but do not rely on it alone. The application’s database user should have minimum privilege.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a06">
+<h2 id="a06"><span class="pt">A06: Design inseguro</span><span class="en">A06: Insecure design</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o erro está no projeto, e código perfeito não o conserta. Exemplos: recuperação de senha por “pergunta secreta”, cupom que pode ser reusado em paralelo, fluxo de compra sem limite por usuário, API que devolve o objeto inteiro e confia que o front esconda os campos.</span><span class="en"><strong>The flaw:</strong> the mistake is in the design, and perfect code cannot fix it. Examples: password recovery by “secret question”, a coupon that can be reused in parallel, a purchase flow with no per-user limit, an API that returns the whole object and trusts the front end to hide fields.</span></p>
+<ul class="ds-list"><li><span class="pt">Modelar ameaças antes de codar (STRIDE: falsificação, adulteração, repúdio, vazamento, negação de serviço, elevação de privilégio) e escrever “casos de abuso” junto com as histórias de usuário.</span><span class="en">Threat-model before coding (STRIDE: spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege) and write “abuse cases” next to user stories.</span></li><li><span class="pt">Limites de uso (rate limit, cotas, tamanho de upload), separação de ambientes e de privilégios, menor privilégio por padrão.</span><span class="en">Usage limits (rate limit, quotas, upload size), separation of environments and privileges, least privilege by default.</span></li><li><span class="pt">Regras de negócio críticas com transações e checagens atômicas (condição de corrida); nunca confiar em preço ou desconto vindo do cliente.</span><span class="en">Critical business rules with transactions and atomic checks (race conditions); never trust a price or discount coming from the client.</span></li><li><span class="pt">Revisão de segurança de cada recurso novo grande; testes que tentam abusar, não só usar.</span><span class="en">Security review for each large new feature; tests that try to abuse, not only use.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a07">
+<h2 id="a07"><span class="pt">A07: Falhas de autenticação</span><span class="en">A07: Authentication failures</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o app aceita força bruta e <em>credential stuffing</em> (senhas vazadas de outros sites), permite senhas fracas, expõe o ID de sessão na URL, não invalida a sessão no logout, tem recuperação de conta fraca.</span><span class="en"><strong>The flaw:</strong> the app accepts brute force and credential stuffing (passwords leaked from other sites), allows weak passwords, exposes the session ID in the URL, does not invalidate the session on logout, has weak account recovery.</span></p>
+<ul class="ds-list"><li><span class="pt">MFA, de preferência passkeys/WebAuthn; ou delegar a um provedor (OIDC) em vez de reinventar o login (veja a nota de SSO).</span><span class="en">MFA, preferably passkeys/WebAuthn; or delegate to a provider (OIDC) instead of reinventing login (see the SSO note).</span></li><li><span class="pt">Senhas: tamanho mínimo longo (12+), sem regras de composição absurdas, checar contra listas de senhas vazadas, permitir gerenciadores de senha.</span><span class="en">Passwords: long minimum length (12+), no absurd composition rules, check against breached-password lists, allow password managers.</span></li><li><span class="pt">Limitar tentativas por conta e por IP, com atraso crescente; mensagem de erro igual para “usuário não existe” e “senha errada”.</span><span class="en">Limit attempts per account and per IP, with increasing delay; the same error message for “user does not exist” and “wrong password”.</span></li><li><span class="pt">Sessão: ID aleatório novo após o login, cookie <code>HttpOnly; Secure; SameSite=Lax</code>, expiração e invalidação no servidor ao sair.</span><span class="en">Session: new random ID after login, cookie <code>HttpOnly; Secure; SameSite=Lax</code>, expiry and server-side invalidation on logout.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a08">
+<h2 id="a08"><span class="pt">A08: Integridade de software e dados</span><span class="en">A08: Software or data integrity failures</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o app confia em código ou dados sem verificar a origem: atualização automática sem assinatura, script de CDN sem verificação, objeto serializado vindo do cliente (<code>pickle</code>, desserialização Java), artefato de build que ninguém comprova de onde veio.</span><span class="en"><strong>The flaw:</strong> the app trusts code or data without verifying origin: auto-update without signature, a CDN script without verification, a serialised object coming from the client (<code>pickle</code>, Java deserialisation), a build artefact nobody can prove the origin of.</span></p>
+<ul class="ds-list"><li><span class="pt">Nunca desserializar dado não confiável com formatos que executam código; usar JSON com validação de esquema.</span><span class="en">Never deserialise untrusted data with formats that execute code; use JSON with schema validation.</span></li><li><span class="pt">Scripts de terceiros com Subresource Integrity: <code>&lt;script src="…" integrity="sha384-…" crossorigin="anonymous"&gt;</code>.</span><span class="en">Third-party scripts with Subresource Integrity: <code>&lt;script src="…" integrity="sha384-…" crossorigin="anonymous"&gt;</code>.</span></li><li><span class="pt">Assinar e verificar artefatos e imagens (por exemplo com Sigstore/cosign); revisão obrigatória de código e proteção da branch principal.</span><span class="en">Sign and verify artefacts and images (for example with Sigstore/cosign); mandatory code review and a protected main branch.</span></li><li><span class="pt">Proteger a integridade de dados importantes com assinatura ou HMAC (cookies, links de e-mail, webhooks verificados pela assinatura do remetente).</span><span class="en">Protect the integrity of important data with a signature or HMAC (cookies, email links, webhooks verified by the sender’s signature).</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a09">
+<h2 id="a09"><span class="pt">A09: Falhas de log e alerta</span><span class="en">A09: Logging and alerting failures</span></h2>
+<p><span class="pt"><strong>A falha:</strong> um ataque acontece e ninguém vê. Logins falhos não são registrados, os logs ficam só na máquina atacada, ninguém recebe alerta, ou o log guarda senhas e tokens. Sem isso, o tempo entre invasão e descoberta é de meses.</span><span class="en"><strong>The flaw:</strong> an attack happens and nobody sees it. Failed logins are not recorded, logs stay only on the attacked machine, nobody gets an alert, or the log stores passwords and tokens. Without this, the time between breach and discovery is months.</span></p>
+<ul class="ds-list"><li><span class="pt">Registrar eventos de segurança: logins (sucesso e falha), mudança de senha e de permissão, acesso negado, falhas de validação, ações administrativas. Incluir quem, o quê, quando e de onde.</span><span class="en">Log security events: logins (success and failure), password and permission changes, access denied, validation failures, admin actions. Include who, what, when and from where.</span></li><li><span class="pt">Logs estruturados (JSON), enviados para fora do servidor e com retenção definida; nunca registrar senha, token ou dado pessoal desnecessário.</span><span class="en">Structured logs (JSON), shipped off the server with a defined retention; never log passwords, tokens or unneeded personal data.</span></li><li><span class="pt">Alertas acionáveis (picos de 401/403, muitos logins falhos, uso de conta de admin fora do horário) com responsável e um plano de resposta a incidentes testado. Veja a nota de observabilidade.</span><span class="en">Actionable alerts (spikes of 401/403, many failed logins, admin account use out of hours) with an owner and a tested incident-response plan. See the observability note.</span></li><li><span class="pt">Cuidado com injeção em logs: remover quebras de linha do dado do usuário antes de registrar.</span><span class="en">Beware of log injection: strip newlines from user data before logging.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="a10">
+<h2 id="a10"><span class="pt">A10: Tratamento de condições excepcionais</span><span class="en">A10: Mishandling of exceptional conditions</span></h2>
+<p><span class="pt"><strong>A falha:</strong> o app reage mal ao inesperado: erro não tratado que derruba o serviço, exceção que “abre” em vez de “fechar” (a checagem de permissão falha e o acesso é liberado), mensagem de erro que revela o banco ou o caminho de arquivos, recurso não liberado após falha, estado inconsistente no meio de uma transação.</span><span class="en"><strong>The flaw:</strong> the app reacts badly to the unexpected: an unhandled error that takes the service down, an exception that “fails open” (the permission check fails and access is granted), an error message revealing the database or file paths, a resource not released after failure, inconsistent state in the middle of a transaction.</span></p>
+<pre><code>// ruim: se a checagem lançar erro, o acesso passa
+try { allowed = await can(user, 'delete', doc); } catch (e) { log(e); }
+if (allowed !== false) remove(doc);
+
+// bom: falha fechada
+let allowed = false;
+try { allowed = await can(user, 'delete', doc); } catch (e) { log.error(e); }
+if (!allowed) return res.sendStatus(403);</code></pre>
+<ul class="ds-list"><li><span class="pt">Falhar de forma fechada: na dúvida, negar. Definir um tratador de erros global que devolve mensagem genérica ao cliente e registra o detalhe no servidor.</span><span class="en">Fail closed: when in doubt, deny. Define a global error handler that returns a generic message to the client and logs the detail on the server.</span></li><li><span class="pt">Tratar explicitamente entradas ausentes, nulas, grandes demais e timeouts de dependências; usar transações com rollback e liberar recursos em <code>finally</code>.</span><span class="en">Explicitly handle missing, null and oversized input and dependency timeouts; use transactions with rollback and release resources in <code>finally</code>.</span></li><li><span class="pt">Limites de recurso (tamanho, tempo, memória, taxa) para que um erro ou abuso não vire negação de serviço.</span><span class="en">Resource limits (size, time, memory, rate) so an error or abuse does not become denial of service.</span></li><li><span class="pt">Testar o caminho de erro: testes de falha, fuzzing e injeção de falhas das dependências.</span><span class="en">Test the error path: failure tests, fuzzing and fault injection of dependencies.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="plan">
+<h2 id="plan"><span class="pt">Plano de ação para o seu app</span><span class="en">Action plan for your app</span></h2>
+<p><span class="pt">Tudo de uma vez é impossível; ordene por risco e esforço. Uma ordem que costuma funcionar:</span><span class="en">Everything at once is impossible; order by risk and effort. An order that usually works:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quando</span><span class="en">When</span></th><th><span class="pt">Ação</span><span class="en">Action</span></th><th><span class="pt">Categorias</span><span class="en">Categories</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Hoje (1 hora)</span><span class="en">Today (1 hour)</span></td><td><span class="pt">Ligar HTTPS e HSTS; desligar debug; tirar segredos do Git e rotacionar os vazados; ligar MFA nas contas de admin e da nuvem</span><span class="en">Enable HTTPS and HSTS; turn off debug; remove secrets from Git and rotate leaked ones; enable MFA on admin and cloud accounts</span></td><td>A02, A04, A07</td></tr>
+<tr><td><span class="pt">Esta semana</span><span class="en">This week</span></td><td><span class="pt">Dependabot/Renovate e <code>audit</code> no CI; lockfile; consultas parametrizadas em todo lugar; checagem de dono em cada endpoint; cabeçalhos e CSP</span><span class="en">Dependabot/Renovate and <code>audit</code> in CI; lockfile; parameterised queries everywhere; owner check on every endpoint; headers and CSP</span></td><td>A01, A02, A03, A05</td></tr>
+<tr><td><span class="pt">Este mês</span><span class="en">This month</span></td><td><span class="pt">Rate limit e bloqueio de login; tratador de erros global; logs de segurança centralizados com alertas; SBOM; CI com permissões mínimas</span><span class="en">Rate limit and login lockout; global error handler; centralised security logs with alerts; SBOM; least-privilege CI</span></td><td>A03, A07, A09, A10</td></tr>
+<tr><td><span class="pt">Contínuo</span><span class="en">Ongoing</span></td><td><span class="pt">Modelagem de ameaças a cada recurso grande; testes de autorização e de abuso; revisão de código com foco em segurança; teste de invasão periódico</span><span class="en">Threat modelling for each large feature; authorisation and abuse tests; security-focused code review; periodic penetration test</span></td><td>A01, A06, A08</td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Ferramentas ajudam, não substituem:</strong> SAST (Semgrep, CodeQL), DAST (OWASP ZAP), varredura de dependências e de segredos (gitleaks, Trivy) encontram a parte repetitiva. Falhas de autorização e de lógica de negócio (A01, A06) quase sempre exigem teste e revisão humana. Teste apenas sistemas que você é dono ou tem autorização escrita para testar.</span><span class="en"><strong>Tools help, they do not replace:</strong> SAST (Semgrep, CodeQL), DAST (OWASP ZAP), dependency and secret scanning (gitleaks, Trivy) find the repetitive part. Authorisation and business-logic flaws (A01, A06) almost always need human testing and review. Only test systems you own or have written authorisation to test.</span></div>
+<h3><span class="pt">Atividade: auditar um endpoint (45 minutos)</span><span class="en">Activity: audit one endpoint (45 minutes)</span></h3>
+<p><span class="pt"><strong>O que fazer:</strong> escolha um endpoint do seu app que leia ou altere dados de um usuário. Com duas contas de teste, tente: (1) acessar o recurso de A estando logado como B; (2) enviar aspas simples e <code>&lt;script&gt;</code> em cada campo; (3) repetir o login errado 20 vezes; (4) mandar um corpo vazio, enorme e com tipos errados; (5) conferir se cada tentativa apareceu nos logs. Anote o que passou e corrija na ordem A01, A05, A07, A10, A09.</span><span class="en"><strong>What to do:</strong> pick one endpoint of your app that reads or changes a user’s data. With two test accounts, try: (1) accessing A’s resource while logged in as B; (2) sending a single quote and <code>&lt;script&gt;</code> in every field; (3) failing the login 20 times; (4) sending an empty, huge and wrongly typed body; (5) checking that each attempt showed up in the logs. Note what got through and fix in the order A01, A05, A07, A10, A09.</span></p>
+<p><span class="pt"><strong>Resultado esperado:</strong> é comum achar pelo menos uma falha de autorização ou de log na primeira rodada; o valor está em transformar cada achado em um teste automático para que não volte.</span><span class="en"><strong>Expected result:</strong> finding at least one authorisation or logging gap in the first round is common; the value is in turning each finding into an automated test so it does not come back.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-ow">
+<h2 id="cheat-ow"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Regra curta</span><span class="en">Short rule</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Quem pode?</span><span class="en">Who can?</span></td><td><span class="pt">Servidor decide, negar por padrão (A01)</span><span class="en">Server decides, deny by default (A01)</span></td></tr>
+<tr><td><span class="pt">O que é meu código?</span><span class="en">What is my code?</span></td><td><span class="pt">Dependências são código seu: travar, varrer, atualizar (A03, A08)</span><span class="en">Dependencies are your code: lock, scan, update (A03, A08)</span></td></tr>
+<tr><td><span class="pt">O que entra?</span><span class="en">What comes in?</span></td><td><span class="pt">Dado é dado, nunca comando: parametrizar e codificar (A05)</span><span class="en">Data is data, never a command: parameterise and encode (A05)</span></td></tr>
+<tr><td><span class="pt">O que fica?</span><span class="en">What is stored?</span></td><td><span class="pt">Cifrar, guardar pouco, chaves fora do código (A04)</span><span class="en">Encrypt, store little, keys outside code (A04)</span></td></tr>
+<tr><td><span class="pt">E se falhar?</span><span class="en">What if it fails?</span></td><td><span class="pt">Falhar fechado, mensagem genérica, log detalhado (A09, A10)</span><span class="en">Fail closed, generic message, detailed log (A09, A10)</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Por que esconder um botão no front-end não é controle de acesso, e onde a checagem deve ficar?</span><span class="en">Why is hiding a button in the front end not access control, and where should the check live?</span></li><li><span class="pt">Qual a diferença entre a causa de uma injeção SQL e a de um XSS, e o que as duas defesas têm em comum?</span><span class="en">What is the difference between the cause of SQL injection and XSS, and what do the two defences have in common?</span></li><li><span class="pt">Dê um exemplo de falha de design (A06) que nenhuma correção de código resolve.</span><span class="en">Give an example of a design flaw (A06) that no code fix resolves.</span></li><li><span class="pt">O que significa “falhar de forma fechada” e como você testaria isso?</span><span class="en">What does “fail closed” mean and how would you test it?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://top10.owasp.org/2025" rel="noopener">OWASP Top 10:2025</a> · <a href="https://owasp.org/www-project-top-ten/" rel="noopener">OWASP Top Ten project page</a></li>
+<li><a href="https://cheatsheetseries.owasp.org/" rel="noopener">OWASP Cheat Sheet Series</a> (authorization, SQL injection prevention, XSS prevention, password storage, session management, error handling, logging, SSRF prevention, deserialization)</li>
+<li><a href="https://owasp.org/www-project-application-security-verification-standard/" rel="noopener">OWASP Application Security Verification Standard (ASVS)</a> · <a href="https://owasp.org/www-project-web-security-testing-guide/" rel="noopener">OWASP Web Security Testing Guide</a></li>
+<li><a href="https://slsa.dev/" rel="noopener">SLSA: supply-chain levels for software artifacts</a> · <a href="https://www.sigstore.dev/" rel="noopener">Sigstore</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/Security/Subresource_Integrity" rel="noopener">MDN: Subresource Integrity</a></li>
+</ul></div>
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
