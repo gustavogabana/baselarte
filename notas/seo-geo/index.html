@@ -1,0 +1,526 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="seo.metaTitle">SEO and AI search: meta tags, JSON-LD, robots.txt, llms.txt and getting indexed</title>
+  <meta name="description" data-i18n-attributes="content:seo.metaDescription" content="A walkthrough of a real SEO setup for a small site: head meta tags, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt for search and AI crawlers, llms.txt, noindex, IndexNow and a checklist to get a site indexed.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/seo-geo/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/seo-geo/">
+  <meta property="og:title" data-i18n-attributes="content:seo.metaTitle" content="SEO and AI search: meta tags, JSON-LD, robots.txt, llms.txt and getting indexed">
+  <meta property="og:description" data-i18n-attributes="content:seo.metaDescription" content="A walkthrough of a real SEO setup for a small site: head meta tags, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt for search and AI crawlers, llms.txt, noindex, IndexNow and a checklist to get a site indexed.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:seo.metaTitle" content="SEO and AI search: meta tags, JSON-LD, robots.txt, llms.txt and getting indexed">
+  <meta name="twitter:description" data-i18n-attributes="content:seo.metaDescription" content="A walkthrough of a real SEO setup for a small site: head meta tags, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt for search and AI crawlers, llms.txt, noindex, IndexNow and a checklist to get a site indexed.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="seo.kicker">Practical guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="seo.heroTitle">SEO and AI search: <em>how a small site gets found and cited.</em></h1>
+  <p class="hero-lede" data-i18n="seo.heroLede">A walkthrough of a real setup for a small business site: the meta tags in the head, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt for search and AI crawlers, llms.txt, noindex pages and a checklist to make a site indexable.</p>
+</section>
+<aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">SEO, GEO e o exemplo usado aqui</span><span class="en">SEO, GEO and the example used here</span></a></li>
+<li><a href="#pipeline"><span class="pt">Como uma página chega ao índice</span><span class="en">How a page reaches the index</span></a></li>
+<li><a href="#head"><span class="pt">Tags do &lt;head&gt;</span><span class="en">Head tags</span></a></li>
+<li><a href="#social"><span class="pt">Open Graph e Twitter Cards</span><span class="en">Open Graph and Twitter Cards</span></a></li>
+<li><a href="#hreflang"><span class="pt">Dois idiomas: hreflang</span><span class="en">Two languages: hreflang</span></a></li>
+<li><a href="#jsonld"><span class="pt">Dados estruturados: JSON-LD</span><span class="en">Structured data: JSON-LD</span></a></li>
+<li><a href="#sitemap"><span class="pt">sitemap.xml</span><span class="en">sitemap.xml</span></a></li>
+<li><a href="#robots"><span class="pt">robots.txt e rastreadores de IA</span><span class="en">robots.txt and AI crawlers</span></a></li>
+<li><a href="#llms"><span class="pt">llms.txt e llms-full.txt</span><span class="en">llms.txt and llms-full.txt</span></a></li>
+<li><a href="#noindex"><span class="pt">Páginas noindex</span><span class="en">noindex pages</span></a></li>
+<li><a href="#html"><span class="pt">HTML e conteúdo que a IA consegue ler</span><span class="en">HTML and content an AI can read</span></a></li>
+<li><a href="#hosting"><span class="pt">Redirecionamentos, cabeçalhos e cache</span><span class="en">Redirects, headers and cache</span></a></li>
+<li><a href="#extras"><span class="pt">manifest, security.txt e IndexNow</span><span class="en">manifest, security.txt and IndexNow</span></a></li>
+<li><a href="#validate"><span class="pt">Validar e o que ficou de fora</span><span class="en">Validating, and what was left out</span></a></li>
+<li><a href="#plan"><span class="pt">Plano para tornar o site indexável</span><span class="en">Plan to make a site indexable</span></a></li>
+<li><a href="#cheat-seo"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">SEO, GEO e o exemplo usado aqui</span><span class="en">SEO, GEO and the example used here</span></h2>
+<p><span class="pt"><strong>SEO</strong> (otimização para mecanismos de busca) é tornar o site fácil de rastrear, entender e exibir no Google, Bing e similares. <strong>GEO</strong> (otimização para mecanismos generativos) é o mesmo esforço para que ChatGPT, Claude, Perplexity e Gemini consigam ler o site e citá-lo ao responder. As duas coisas se apoiam no mesmo alicerce: HTML claro, URLs estáveis, dados estruturados e permissão explícita para os rastreadores.</span><span class="en"><strong>SEO</strong> (search engine optimisation) is making a site easy to crawl, understand and display in Google, Bing and the like. <strong>GEO</strong> (generative engine optimisation) is the same effort so that ChatGPT, Claude, Perplexity and Gemini can read the site and cite it when answering. Both rest on the same foundation: clear HTML, stable URLs, structured data and explicit permission for crawlers.</span></p>
+<p><span class="pt">O exemplo desta nota é o setup de SEO de um site fictício, a <strong>Arcada Software</strong> (landing pages e sites institucionais), em português e inglês, hospedado na Cloudflare Pages. O domínio <code>arcada.example</code> é reservado para exemplos e não existe de verdade; troque pelo seu. Cada seção mostra o arquivo, explica cada linha e diz o que ele <em>não</em> faz.</span><span class="en">The example in this note is the SEO setup of a fictional site, <strong>Arcada Software</strong> (landing pages and business websites), in Portuguese and English, hosted on Cloudflare Pages. The domain <code>arcada.example</code> is reserved for examples and does not really exist; swap in yours. Each section shows the file, explains each line and says what it does <em>not</em> do.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Sem garantia de posição:</strong> nenhuma tag faz o site subir ao topo. Elas tiram obstáculos (página que o rastreador não acha, duplicada ou mal interpretada). Quem decide a posição é a relevância e a qualidade do conteúdo, e o tempo.</span><span class="en"><strong>No ranking guarantee:</strong> no tag pushes a site to the top. They remove obstacles (a page the crawler cannot find, duplicated or misread). Position is decided by content relevance and quality, and by time.</span></div>
+</section>
+<section class="content-section" aria-labelledby="pipeline">
+<h2 id="pipeline"><span class="pt">Como uma página chega ao índice</span><span class="en">How a page reaches the index</span></h2>
+<p><span class="pt">Um buscador faz quatro coisas em sequência, e cada arquivo desta nota atua em uma delas:</span><span class="en">A search engine does four things in sequence, and each file in this note acts on one of them:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Etapa</span><span class="en">Step</span></th><th><span class="pt">O que acontece</span><span class="en">What happens</span></th><th><span class="pt">O que você controla</span><span class="en">What you control</span></th></tr></thead><tbody>
+<tr><td><span class="pt">1. Descobrir</span><span class="en">1. Discover</span></td><td><span class="pt">O rastreador acha a URL por links, sitemap ou aviso direto</span><span class="en">The crawler finds the URL through links, a sitemap or a direct ping</span></td><td>sitemap.xml, IndexNow, <span class="pt">links internos</span><span class="en">internal links</span></td></tr>
+<tr><td><span class="pt">2. Rastrear</span><span class="en">2. Crawl</span></td><td><span class="pt">Baixa a página, se o robots.txt permitir</span><span class="en">Downloads the page, if robots.txt allows it</span></td><td>robots.txt, <span class="pt">status HTTP, redirecionamentos</span><span class="en">HTTP status, redirects</span></td></tr>
+<tr><td><span class="pt">3. Indexar</span><span class="en">3. Index</span></td><td><span class="pt">Entende o conteúdo, escolhe a URL canônica e decide se guarda</span><span class="en">Understands the content, picks the canonical URL and decides whether to store it</span></td><td>title, description, canonical, noindex, JSON-LD, hreflang</td></tr>
+<tr><td><span class="pt">4. Exibir</span><span class="en">4. Serve</span></td><td><span class="pt">Ordena os resultados e monta o trecho exibido</span><span class="en">Ranks results and builds the displayed snippet</span></td><td><span class="pt">Conteúdo, velocidade, max-snippet, Open Graph</span><span class="en">Content, speed, max-snippet, Open Graph</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Daí sai uma regra importante: <strong>o rastreador precisa conseguir ler a página para obedecer a ela</strong>. Por isso um <code>noindex</code> funciona se a página for rastreável, e deixa de funcionar se o robots.txt a bloquear (veja <a href="#noindex">noindex</a>).</span><span class="en">One important rule follows: <strong>the crawler must be able to read a page in order to obey it</strong>. That is why a <code>noindex</code> works if the page is crawlable, and stops working if robots.txt blocks it (see <a href="#noindex">noindex</a>).</span></p>
+</section>
+<section class="content-section" aria-labelledby="head">
+<h2 id="head"><span class="pt">Tags do &lt;head&gt;</span><span class="en">Head tags</span></h2>
+<p><span class="pt">Este é o <code>&lt;head&gt;</code> da página em português. A versão em inglês (<code>/en/</code>) espelha tudo com <code>lang="en"</code>, textos equivalentes (não tradução seca) e canonical <code>/en/</code>.</span><span class="en">This is the <code>&lt;head&gt;</code> of the Portuguese page. The English version (<code>/en/</code>) mirrors it with <code>lang="en"</code>, equivalent texts (not a literal translation) and a <code>/en/</code> canonical.</span></p>
+<pre><code>&lt;meta charset="utf-8"&gt;
+&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;
+&lt;title&gt;Arcada Software | Landing pages e sites institucionais&lt;/title&gt;
+&lt;meta name="description" content="A Arcada Software cria landing pages, sites institucionais e pequenos projetos web, com escopo, prazo e preço fechados antes de começar."&gt;
+&lt;meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"&gt;
+&lt;link rel="canonical" href="https://arcada.example/"&gt;
+&lt;link rel="manifest" href="/manifest.webmanifest"&gt;
+&lt;link rel="icon" href="/favicon.svg" type="image/svg+xml"&gt;
+&lt;link rel="icon" href="/favicon.ico" sizes="48x48"&gt;
+&lt;link rel="apple-touch-icon" href="/apple-touch-icon.png"&gt;
+&lt;meta name="theme-color" content="#0A0A0A"&gt;
+&lt;link rel="preload" href="/fonts/newsreader.woff2" as="font" type="font/woff2" crossorigin&gt;
+&lt;link rel="stylesheet" href="/style.css?v=0027c125"&gt;
+&lt;script src="/site.js?v=cb853675" defer&gt;&lt;/script&gt;</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th>Tag</th><th><span class="pt">Para que serve</span><span class="en">What it is for</span></th></tr></thead><tbody>
+<tr><td><code>charset</code>, <code>viewport</code></td><td><span class="pt">Codificação correta dos acentos e layout de celular. Sem o viewport, o Google trata a página como não otimizada para mobile.</span><span class="en">Correct accent encoding and mobile layout. Without the viewport tag, Google treats the page as not mobile-friendly.</span></td></tr>
+<tr><td><code>&lt;title&gt;</code></td><td><span class="pt">O título azul nos resultados. Cerca de 50 a 60 caracteres, marca + proposta, <strong>único por página e por idioma</strong>. É o sinal on-page mais forte.</span><span class="en">The blue headline in results. About 50 to 60 characters, brand + proposition, <strong>unique per page and per language</strong>. It is the strongest on-page signal.</span></td></tr>
+<tr><td><code>meta description</code></td><td><span class="pt">A frase sob o título. 120 a 155 caracteres, escrita para humanos. Não é fator de ranqueamento, mas o Google a usa como trecho e ela influencia o clique.</span><span class="en">The sentence under the title. 120 to 155 characters, written for humans. Not a ranking factor, but Google uses it as the snippet and it affects the click.</span></td></tr>
+<tr><td><code>meta robots</code></td><td><span class="pt"><code>index, follow</code> é o padrão (explicitar não faz mal). <code>max-snippet:-1</code>, <code>max-image-preview:large</code> e <code>max-video-preview:-1</code> removem o limite de trecho, para que o buscador possa mostrar e citar mais texto.</span><span class="en"><code>index, follow</code> is the default (spelling it out does no harm). <code>max-snippet:-1</code>, <code>max-image-preview:large</code> and <code>max-video-preview:-1</code> remove the snippet limit so the engine may show and quote more text.</span></td></tr>
+<tr><td><code>canonical</code></td><td><span class="pt">A URL oficial da página, <strong>autorreferente</strong> (aponta para si mesma), absoluta e sem parâmetros. Evita que <code>/?utm=x</code>, <code>/index.html</code> e <code>/</code> sejam tratadas como três páginas duplicadas.</span><span class="en">The official URL of the page, <strong>self-referencing</strong> (points to itself), absolute and without parameters. It stops <code>/?utm=x</code>, <code>/index.html</code> and <code>/</code> being treated as three duplicate pages.</span></td></tr>
+<tr><td>manifest, icons, <code>theme-color</code></td><td><span class="pt">Identidade em abas, atalhos de celular e barra do navegador. O <code>favicon.ico</code> na raiz também é o que o Google exibe ao lado do resultado.</span><span class="en">Identity in tabs, phone shortcuts and the browser bar. The <code>favicon.ico</code> is also what Google shows next to the result.</span></td></tr>
+<tr><td><code>preload</code> <span class="pt">da fonte</span><span class="en">of the font</span></td><td><span class="pt">Faz o navegador baixar a fonte do título cedo, acelerando a pintura do <code>h1</code> (métrica LCP). <code>crossorigin</code> é obrigatório para fontes, mesmo do mesmo domínio.</span><span class="en">Makes the browser fetch the heading font early, speeding up the paint of the <code>h1</code> (the LCP metric). <code>crossorigin</code> is mandatory for fonts, even from the same origin.</span></td></tr>
+<tr><td><code>?v=hash</code></td><td><span class="pt">O build troca o hash quando o CSS/JS muda, o que permite cache imutável de um ano sem servir arquivo velho.</span><span class="en">The build changes the hash when the CSS/JS changes, which allows a one-year immutable cache without serving a stale file.</span></td></tr>
+</tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Não existe <code>meta keywords</code>:</strong> o Google e o Bing ignoram a tag há anos. Adicioná-la só entrega a lista de termos aos concorrentes.</span><span class="en"><strong>There is no <code>meta keywords</code>:</strong> Google and Bing have ignored it for years. Adding it only hands your term list to competitors.</span></div>
+</section>
+<section class="content-section" aria-labelledby="social">
+<h2 id="social"><span class="pt">Open Graph e Twitter Cards</span><span class="en">Open Graph and Twitter Cards</span></h2>
+<p><span class="pt">Open Graph (<code>og:*</code>) controla a pré-visualização quando alguém cola o link no WhatsApp, LinkedIn, Facebook, Slack ou iMessage. Os Twitter Cards fazem o mesmo no X. Não ajudam no ranking, mas decidem se o link compartilhado parece confiável.</span><span class="en">Open Graph (<code>og:*</code>) controls the preview when someone pastes the link into WhatsApp, LinkedIn, Facebook, Slack or iMessage. Twitter Cards do the same on X. They do not help ranking, but they decide whether a shared link looks trustworthy.</span></p>
+<pre><code>&lt;meta property="og:type" content="website"&gt;
+&lt;meta property="og:site_name" content="Arcada Software"&gt;
+&lt;meta property="og:title" content="Arcada Software: landing pages e sites institucionais"&gt;
+&lt;meta property="og:description" content="Landing pages, sites institucionais e pequenos projetos web, com escopo, prazo e preço fechados antes de começar."&gt;
+&lt;meta property="og:url" content="https://arcada.example/"&gt;
+&lt;meta property="og:locale" content="pt_BR"&gt;
+&lt;meta property="og:locale:alternate" content="en_US"&gt;
+&lt;meta property="og:image" content="https://arcada.example/og/arcada-pt.png"&gt;
+&lt;meta property="og:image:width" content="1200"&gt;
+&lt;meta property="og:image:height" content="630"&gt;
+&lt;meta property="og:image:alt" content="Arcada Software: desenho de arcada sobre fundo preto"&gt;
+&lt;meta name="twitter:card" content="summary_large_image"&gt;
+&lt;meta name="twitter:title" content="Arcada Software: landing pages e sites institucionais"&gt;
+&lt;meta name="twitter:description" content="Landing pages, sites institucionais e pequenos projetos web, com escopo, prazo e preço fechados antes de começar."&gt;
+&lt;meta name="twitter:image" content="https://arcada.example/og/arcada-pt.png"&gt;
+&lt;meta name="twitter:image:alt" content="Arcada Software: desenho de arcada sobre fundo preto"&gt;
+&lt;!-- TODO(dono): twitter:site e twitter:creator só com perfil real --&gt;</code></pre>
+<ul class="ds-list"><li><span class="pt"><code>og:image</code> em <strong>1200×630</strong> px (proporção 1,91:1), URL <strong>absoluta</strong> e hospedada no próprio site (aqui em <code>/og/</code>), uma por idioma. Largura e altura declaradas evitam que a primeira partilha saia sem imagem enquanto a rede baixa o arquivo.</span><span class="en"><code>og:image</code> at <strong>1200×630</strong> px (1.91:1 ratio), an <strong>absolute</strong> URL hosted on the site itself (here under <code>/og/</code>), one per language. Declared width and height stop the first share going out without an image while the network fetches the file.</span></li><li><span class="pt"><code>og:locale</code> e <code>og:locale:alternate</code> usam o formato <code>pt_BR</code> (com sublinhado), diferente do <code>hreflang</code>, que usa <code>pt-BR</code> (com hífen).</span><span class="en"><code>og:locale</code> and <code>og:locale:alternate</code> use the <code>pt_BR</code> format (underscore), unlike <code>hreflang</code>, which uses <code>pt-BR</code> (hyphen).</span></li><li><span class="pt"><code>twitter:card = summary_large_image</code> reaproveita a mesma imagem. O X também lê <code>og:*</code> quando faltam as tags próprias.</span><span class="en"><code>twitter:card = summary_large_image</code> reuses the same image. X also reads <code>og:*</code> when its own tags are missing.</span></li><li><span class="pt"><code>twitter:site</code> e <code>twitter:creator</code> só entram com um perfil real. Por isso ficou um <code>TODO</code> no código em vez de um @ inventado.</span><span class="en"><code>twitter:site</code> and <code>twitter:creator</code> only go in with a real profile. That is why a <code>TODO</code> was left in the code instead of an invented handle.</span></li><li><span class="pt">Depois de mudar a imagem, o WhatsApp e o Facebook guardam a antiga em cache; use o Facebook Sharing Debugger ou o LinkedIn Post Inspector para forçar a atualização.</span><span class="en">After changing the image, WhatsApp and Facebook keep the old one cached; use the Facebook Sharing Debugger or the LinkedIn Post Inspector to force a refresh.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="hreflang">
+<h2 id="hreflang"><span class="pt">Dois idiomas: hreflang</span><span class="en">Two languages: hreflang</span></h2>
+<pre><code>&lt;link rel="alternate" hreflang="pt-BR" href="https://arcada.example/"&gt;
+&lt;link rel="alternate" hreflang="en" href="https://arcada.example/en/"&gt;
+&lt;link rel="alternate" hreflang="x-default" href="https://arcada.example/"&gt;</code></pre>
+<p><span class="pt"><code>hreflang</code> diz ao buscador que as duas URLs são o mesmo conteúdo em idiomas diferentes, para mostrar a versão certa a cada pessoa em vez de tratá-las como duplicatas. Regras que costumam dar erro:</span><span class="en"><code>hreflang</code> tells the search engine the two URLs are the same content in different languages, so it shows each person the right version instead of treating them as duplicates. Rules that commonly go wrong:</span></p>
+<ul class="ds-list"><li><span class="pt"><strong>Recíproco:</strong> a página PT lista a EN <em>e</em> a EN lista a PT. Sem a volta, o Google ignora o par.</span><span class="en"><strong>Reciprocal:</strong> the PT page lists the EN one <em>and</em> the EN lists the PT. Without the return link, Google ignores the pair.</span></li><li><span class="pt"><strong>Inclua a própria página</strong> na lista (a PT lista <code>pt-BR</code> apontando para si).</span><span class="en"><strong>Include the page itself</strong> in the list (PT lists <code>pt-BR</code> pointing at itself).</span></li><li><span class="pt"><code>x-default</code> é a versão para quem não casa com nenhum idioma listado; aqui, o português.</span><span class="en"><code>x-default</code> is the version for people who match none of the listed languages; here, Portuguese.</span></li><li><span class="pt">O canonical de cada versão aponta para <strong>ela mesma</strong>, nunca para a outra. Apontar o canonical da EN para a PT diria ao Google que a EN é cópia e a tiraria do índice.</span><span class="en">The canonical of each version points to <strong>itself</strong>, never to the other. Pointing the EN canonical at the PT page would tell Google the EN is a copy and drop it from the index.</span></li><li><span class="pt">Os mesmos três links aparecem também no sitemap (veja abaixo); basta manter um dos dois lugares coerente com o outro.</span><span class="en">The same three links also appear in the sitemap (see below); just keep the two places consistent with each other.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="jsonld">
+<h2 id="jsonld"><span class="pt">Dados estruturados: JSON-LD</span><span class="en">Structured data: JSON-LD</span></h2>
+<p><span class="pt">O HTML descreve como a página <em>aparece</em>; o JSON-LD descreve <em>o que ela é</em> em um vocabulário que máquinas entendem (schema.org). Fica num bloco <code>&lt;script type="application/ld+json"&gt;</code>, e como é dado, não executa nada e não precisa de exceção na CSP. Um bloco só, com <code>@graph</code>, liga as entidades por <code>@id</code>:</span><span class="en">HTML describes how the page <em>looks</em>; JSON-LD describes <em>what it is</em> in a vocabulary machines understand (schema.org). It lives in a <code>&lt;script type="application/ld+json"&gt;</code> block, and being data, it runs nothing and needs no CSP exception. A single block with <code>@graph</code> links the entities by <code>@id</code>:</span></p>
+<pre><code>&lt;script type="application/ld+json"&gt;
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://arcada.example/#org",
+      "name": "Arcada Software",
+      "url": "https://arcada.example/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://arcada.example/icon-512.png",
+        "width": 512,
+        "height": 512
+      },
+      "description": "Landing pages, sites institucionais e pequenos projetos web.",
+      "email": "contato@arcada.example",
+      "areaServed": "BR",
+      "availableLanguage": ["pt-BR", "en"],
+      "knowsAbout": ["landing pages", "sites institucionais", "desenvolvimento web", "SEO técnico"]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://arcada.example/#site",
+      "url": "https://arcada.example/",
+      "name": "Arcada Software",
+      "inLanguage": "pt-BR",
+      "publisher": { "@id": "https://arcada.example/#org" }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://arcada.example/#page",
+      "url": "https://arcada.example/",
+      "name": "Arcada Software | Landing pages e sites institucionais",
+      "inLanguage": "pt-BR",
+      "isPartOf": { "@id": "https://arcada.example/#site" },
+      "about": { "@id": "https://arcada.example/#org" },
+      "dateModified": "2026-10-28"
+    },
+    {
+      "@type": "Service",
+      "@id": "https://arcada.example/#landing",
+      "name": "Landing page",
+      "serviceType": "Desenvolvimento de landing page",
+      "description": "Uma página com um objetivo: captar contatos ou vender, responsiva, com formulário ou WhatsApp e métricas.",
+      "provider": { "@id": "https://arcada.example/#org" },
+      "areaServed": "BR",
+      "inLanguage": "pt-BR"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://arcada.example/#faq",
+      "inLanguage": "pt-BR",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Quanto custa uma landing page?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "O preço é fechado na proposta, antes de começar, e depende do número de seções, de integrações como formulário ou WhatsApp e de quanto material você já tem pronto. [...]"
+          }
+        }
+      ]
+    }
+  ]
+}
+&lt;/script&gt;</code></pre>
+<p><span class="pt">O bloco acima está abreviado: o real tem <strong>três</strong> <code>Service</code> (Landing page, Site institucional, Pequenos projetos web) e <strong>oito</strong> perguntas no <code>FAQPage</code>. A versão em inglês tem a mesma estrutura, com textos e <code>inLanguage</code> em inglês.</span><span class="en">The block above is abridged: the real one has <strong>three</strong> <code>Service</code> entries (Landing page, Business website, Small web projects) and <strong>eight</strong> questions in the <code>FAQPage</code>. The English version has the same structure, with English texts and <code>inLanguage</code>.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">O que declara</span><span class="en">What it declares</span></th></tr></thead><tbody>
+<tr><td><code>Organization</code></td><td><span class="pt">Quem é a empresa: nome, logo (512×512), e-mail, idiomas, temas (<code>knowsAbout</code>). É o que ajuda o buscador e as IAs a reconhecer a marca como uma entidade. <code>sameAs</code> (perfis em redes) só entra com perfis reais; hoje está omitido.</span><span class="en">Who the company is: name, logo (512×512), email, languages, topics (<code>knowsAbout</code>). It helps engines and AIs recognise the brand as an entity. <code>sameAs</code> (social profiles) only goes in with real profiles; it is omitted for now.</span></td></tr>
+<tr><td><code>WebSite</code>, <code>WebPage</code></td><td><span class="pt">O site e a página, com <code>inLanguage</code> e <code>dateModified</code> real (a data da última mudança de conteúdo, não a de hoje).</span><span class="en">The site and the page, with <code>inLanguage</code> and a real <code>dateModified</code> (the date the content last changed, not today's).</span></td></tr>
+<tr><td><code>Service</code></td><td><span class="pt">Cada serviço, igual à tabela visível. <strong>Sem preço</strong>, porque o dono não confirmou nenhum.</span><span class="en">Each service, matching the visible table. <strong>No price</strong>, because the owner confirmed none.</span></td></tr>
+<tr><td><code>FAQPage</code></td><td><span class="pt">Exatamente as mesmas 8 perguntas e respostas do FAQ visível (gerado da mesma fonte de dados), com 40 a 60 palavras cada: curtas o bastante para serem citadas, longas o bastante para fazerem sentido sozinhas.</span><span class="en">Exactly the same 8 questions and answers as the visible FAQ (generated from the same data source), 40 to 60 words each: short enough to be quoted, long enough to make sense alone.</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>A regra de ouro:</strong> o JSON-LD só pode espelhar o que está <em>visível</em> na página. Não use <code>AggregateRating</code>, <code>Review</code>, <code>LocalBusiness</code>, <code>Product</code>, <code>HowTo</code> nem <code>Speakable</code> se não houver esses dados na tela. Marcar avaliações que não existem viola as diretrizes do Google e pode render uma ação manual contra o site.</span><span class="en"><strong>The golden rule:</strong> JSON-LD may only mirror what is <em>visible</em> on the page. Do not use <code>AggregateRating</code>, <code>Review</code>, <code>LocalBusiness</code>, <code>Product</code>, <code>HowTo</code> or <code>Speakable</code> if that data is not on screen. Marking up reviews that do not exist violates Google's guidelines and can bring a manual action against the site.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Expectativa realista sobre o FAQ:</strong> desde 2023 o Google só exibe o resultado rico de FAQ para sites governamentais e de saúde muito conhecidos. Para um site pequeno o <code>FAQPage</code> <em>não</em> vira o acordeão nos resultados, mas continua sendo uma forma limpa e legível por máquina de entregar perguntas e respostas a buscadores e IAs. Confira o estado atual na documentação do Google antes de prometer o contrário.</span><span class="en"><strong>Realistic expectation about the FAQ:</strong> since 2023 Google only shows the FAQ rich result for well-known government and health sites. For a small site the <code>FAQPage</code> will <em>not</em> turn into the accordion in results, but it is still a clean, machine-readable way to hand questions and answers to search engines and AIs. Check Google's current documentation before promising otherwise.</span></div>
+<ul class="ds-list"><li><span class="pt">Os <code>@id</code> são identificadores, não precisam abrir nada; o <code>#org</code> é reaproveitado pelo <code>WebSite</code> (<code>publisher</code>), <code>WebPage</code> (<code>about</code>) e cada <code>Service</code> (<code>provider</code>). Assim a empresa é descrita uma vez e referenciada.</span><span class="en">The <code>@id</code> values are identifiers; they need not resolve to anything. <code>#org</code> is reused by <code>WebSite</code> (<code>publisher</code>), <code>WebPage</code> (<code>about</code>) and each <code>Service</code> (<code>provider</code>). The company is described once and referenced.</span></li><li><span class="pt">Mantenha os dados e o HTML saindo da <strong>mesma fonte</strong> (um arquivo de dados que gera as duas coisas) para que nunca divirjam.</span><span class="en">Keep the data and the HTML coming from the <strong>same source</strong> (one data file that generates both) so they never diverge.</span></li><li><span class="pt">Valide em <em>Rich Results Test</em> e em <em>validator.schema.org</em> depois que o site estiver num domínio público (eles precisam acessar a URL, ou aceitam o código colado).</span><span class="en">Validate in the <em>Rich Results Test</em> and at <em>validator.schema.org</em> once the site is on a public domain (they need to reach the URL, or accept pasted code).</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="sitemap">
+<h2 id="sitemap"><span class="pt">sitemap.xml</span><span class="en">sitemap.xml</span></h2>
+<pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml"&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://arcada.example/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-10-28&lt;/lastmod&gt;
+    &lt;xhtml:link rel="alternate" hreflang="pt-BR" href="https://arcada.example/"/&gt;
+    &lt;xhtml:link rel="alternate" hreflang="en" href="https://arcada.example/en/"/&gt;
+    &lt;xhtml:link rel="alternate" hreflang="x-default" href="https://arcada.example/"/&gt;
+  &lt;/url&gt;
+  &lt;url&gt;
+    &lt;loc&gt;https://arcada.example/en/&lt;/loc&gt;
+    &lt;lastmod&gt;2026-10-28&lt;/lastmod&gt;
+    &lt;xhtml:link rel="alternate" hreflang="pt-BR" href="https://arcada.example/"/&gt;
+    &lt;xhtml:link rel="alternate" hreflang="en" href="https://arcada.example/en/"/&gt;
+    &lt;xhtml:link rel="alternate" hreflang="x-default" href="https://arcada.example/"/&gt;
+  &lt;/url&gt;
+&lt;/urlset&gt;</code></pre>
+<ul class="ds-list"><li><span class="pt">É a <strong>lista de URLs que você quer indexadas</strong>, não de todas as que existem. Aqui: <code>/</code> e <code>/en/</code>. Ficam de fora <code>/links/</code>, <code>/404.html</code>, <code>/api/</code> e as páginas de agradecimento. Um sitemap que lista páginas <code>noindex</code> ou que redirecionam envia sinais contraditórios.</span><span class="en">It is the <strong>list of URLs you want indexed</strong>, not every URL that exists. Here: <code>/</code> and <code>/en/</code>. Left out: <code>/links/</code>, <code>/404.html</code>, <code>/api/</code> and the thank-you pages. A sitemap that lists <code>noindex</code> or redirecting pages sends contradictory signals.</span></li><li><span class="pt">Todas as URLs são <strong>absolutas</strong>, no mesmo protocolo, domínio e padrão de barra final do canonical (aqui, sempre com barra).</span><span class="en">All URLs are <strong>absolute</strong>, with the same protocol, domain and trailing-slash style as the canonical (here, always with a slash).</span></li><li><span class="pt"><code>lastmod</code> é a data <strong>real</strong> da última mudança de conteúdo. Atualizá-la todo dia sem mudança faz o Google desconfiar e passar a ignorar o campo.</span><span class="en"><code>lastmod</code> is the <strong>real</strong> date of the last content change. Bumping it daily without a change makes Google distrust it and start ignoring the field.</span></li><li><span class="pt"><code>priority</code> e <code>changefreq</code> não são usados: o Google os ignora.</span><span class="en"><code>priority</code> and <code>changefreq</code> are not used: Google ignores them.</span></li><li><span class="pt">O <code>xhtml:link</code> repete o hreflang para cada versão, incluindo ela mesma. É uma alternativa (ou reforço) às tags do <code>&lt;head&gt;</code>.</span><span class="en">The <code>xhtml:link</code> repeats the hreflang for each version, including itself. It is an alternative (or reinforcement) to the <code>&lt;head&gt;</code> tags.</span></li><li><span class="pt">Limite de um sitemap: 50.000 URLs ou 50 MB sem compressão. Acima disso, divida e use um índice de sitemaps.</span><span class="en">Limit of one sitemap: 50,000 URLs or 50 MB uncompressed. Above that, split it and use a sitemap index.</span></li><li><span class="pt">Anuncie o sitemap na última linha do <code>robots.txt</code> e envie no Google Search Console e no Bing Webmaster Tools.</span><span class="en">Announce the sitemap on the last line of <code>robots.txt</code> and submit it in Google Search Console and Bing Webmaster Tools.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="robots">
+<h2 id="robots"><span class="pt">robots.txt e rastreadores de IA</span><span class="en">robots.txt and AI crawlers</span></h2>
+<p><span class="pt">O <code>robots.txt</code> fica na raiz (<code>/robots.txt</code>) e diz a cada rastreador o que ele pode buscar. É um <strong>pedido de boa-fé, não uma barreira</strong>: bots de bem obedecem; bots maliciosos ignoram. Nunca use o robots.txt para esconder algo secreto (ele próprio é público) e nunca para proteger dados: para isso use autenticação.</span><span class="en">The <code>robots.txt</code> sits at the root (<code>/robots.txt</code>) and tells each crawler what it may fetch. It is a <strong>good-faith request, not a barrier</strong>: well-behaved bots obey; malicious ones ignore it. Never use robots.txt to hide something secret (the file itself is public) and never to protect data: use authentication for that.</span></p>
+<pre><code># Rastreadores de busca comuns (Googlebot, Bingbot etc.)
+User-agent: *
+Allow: /
+Disallow: /api/
+
+# Busca e respostas de IA: permitidos (alimentam as recomendações; bloquear tira o site delas).
+# Cada grupo repete Disallow porque um grupo específico não herda as regras de "*".
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: Claude-SearchBot
+User-agent: Claude-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: Applebot
+Allow: /
+Disallow: /api/
+
+# Treino de modelos. Decisão do dono: permitido por padrão. Para bloquear, troque Allow por Disallow.
+# Não afeta a busca comum.
+User-agent: GPTBot
+User-agent: ClaudeBot
+User-agent: Google-Extended
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+
+# /links/ não é bloqueado aqui: a página usa noindex e o rastreador precisa lê-la.
+Sitemap: https://arcada.example/sitemap.xml</code></pre>
+<p><span class="pt">Há três famílias de bots de IA, e a decisão de liberar ou bloquear é diferente para cada uma:</span><span class="en">There are three families of AI bots, and the decision to allow or block differs for each:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Exemplos</span><span class="en">Examples</span></th><th><span class="pt">Para que serve</span><span class="en">What it is for</span></th><th><span class="pt">Decisão do exemplo</span><span class="en">Decision in the example</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Busca e resposta</span><span class="en">Search and answers</span></td><td>OAI-SearchBot, Claude-SearchBot, PerplexityBot, Applebot</td><td><span class="pt">Indexa o site para o assistente poder encontrá-lo e citá-lo com link</span><span class="en">Indexes the site so the assistant can find and cite it with a link</span></td><td><span class="pt">Liberado. Bloquear tira o site das respostas</span><span class="en">Allowed. Blocking removes the site from answers</span></td></tr>
+<tr><td><span class="pt">Ação do usuário</span><span class="en">User action</span></td><td>ChatGPT-User, Claude-User, Perplexity-User</td><td><span class="pt">Busca a página na hora, porque uma pessoa pediu ao assistente para abri-la</span><span class="en">Fetches the page on the spot because a person asked the assistant to open it</span></td><td><span class="pt">Liberado</span><span class="en">Allowed</span></td></tr>
+<tr><td><span class="pt">Treino de modelos</span><span class="en">Model training</span></td><td>GPTBot, ClaudeBot, Google-Extended, Applebot-Extended</td><td><span class="pt">Coleta texto para treinar modelos futuros. Não afeta a busca comum</span><span class="en">Collects text to train future models. Does not affect regular search</span></td><td><span class="pt">Liberado por padrão; o dono pode trocar <code>Allow</code> por <code>Disallow</code></span><span class="en">Allowed by default; the owner may swap <code>Allow</code> for <code>Disallow</code></span></td></tr>
+</tbody></table></div>
+<ul class="ds-list"><li><span class="pt"><strong>Grupos específicos não herdam o <code>*</code>.</strong> Quando um bot encontra um grupo com o seu nome, ele usa só aquele grupo e ignora o <code>User-agent: *</code>. Por isso o <code>Disallow: /api/</code> é repetido em cada grupo; esquecer isso abriria <code>/api/</code> para os bots de IA.</span><span class="en"><strong>Specific groups do not inherit <code>*</code>.</strong> When a bot finds a group with its name, it uses only that group and ignores <code>User-agent: *</code>. That is why <code>Disallow: /api/</code> is repeated in each group; forgetting it would open <code>/api/</code> to the AI bots.</span></li><li><span class="pt"><code>Google-Extended</code> e <code>Applebot-Extended</code> não são rastreadores separados: são <em>tokens</em> que controlam se o conteúdo já rastreado pelo Googlebot/Applebot pode ser usado para treino. Bloqueá-los não tira o site da busca.</span><span class="en"><code>Google-Extended</code> and <code>Applebot-Extended</code> are not separate crawlers: they are <em>tokens</em> controlling whether content already crawled by Googlebot/Applebot may be used for training. Blocking them does not remove the site from search.</span></li><li><span class="pt">Liberar ou bloquear o treino é uma <strong>decisão de negócio</strong> (direitos sobre o conteúdo, visibilidade futura), não técnica. Não há resposta certa; o importante é decidir de propósito.</span><span class="en">Allowing or blocking training is a <strong>business decision</strong> (rights over the content, future visibility), not a technical one. There is no right answer; what matters is deciding on purpose.</span></li><li><span class="pt">Os nomes dos user agents mudam e novos aparecem. Confira cada nome na documentação oficial do fornecedor antes de publicar; a lista deste exemplo não foi reconferida.</span><span class="en">User-agent names change and new ones appear. Check each name in the vendor's official documentation before publishing; the list in this example was not re-verified.</span></li><li><span class="pt"><strong>Não bloqueie CSS, JS ou imagens</strong> que a página usa para renderizar: o Google precisa delas para entender o layout.</span><span class="en"><strong>Do not block CSS, JS or images</strong> the page uses to render: Google needs them to understand the layout.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="llms">
+<h2 id="llms"><span class="pt">llms.txt e llms-full.txt</span><span class="en">llms.txt and llms-full.txt</span></h2>
+<p><span class="pt">O <code>llms.txt</code> (proposta em llmstxt.org) é um arquivo em Markdown na raiz que resume o site para modelos de linguagem: um título, uma citação com a descrição, e seções de links com uma linha explicando cada um. A ideia é entregar a uma IA o mapa do site sem que ela precise ler HTML cheio de menus e scripts. O <code>llms-full.txt</code> é a versão completa, com todo o conteúdo visível em Markdown, em português e inglês.</span><span class="en">The <code>llms.txt</code> (a proposal at llmstxt.org) is a Markdown file at the root that summarises the site for language models: a title, a blockquote with the description, and sections of links with a line explaining each. The idea is to hand an AI the site map without making it read HTML full of menus and scripts. The <code>llms-full.txt</code> is the full version, with all the visible content in Markdown, in Portuguese and English.</span></p>
+<pre><code># Arcada Software
+
+&gt; A Arcada Software cria landing pages, sites institucionais e pequenos projetos web para negócios que querem uma presença online clara, com escopo, prazo e preço fechados antes de começar.
+
+## Serviços
+- [Landing page](https://arcada.example/#landing): Uma página com um objetivo: captar contatos ou vender, responsiva, com formulário ou WhatsApp e métricas.
+- [Site institucional](https://arcada.example/#site): Um site com página inicial e páginas internas que apresenta a empresa, os serviços e o contato.
+- [Pequenos projetos web](https://arcada.example/#pequenos): Projetos web pequenos e bem delimitados, com escopo definido em conversa e publicação incluída.
+
+## Como trabalhamos
+- [Processo em cinco passos](https://arcada.example/#processo): conversa, estrutura, design e código, revisão e publicação.
+
+## Perguntas frequentes
+- [Perguntas frequentes](https://arcada.example/#faq): custo, prazo, material necessário, revisões, manutenção, edição do site, celular e pagamento.
+
+## Contato
+- [Pedir orçamento](https://arcada.example/#contato): formulário do site.
+- [E-mail](mailto:contato@arcada.example): contato@arcada.example
+
+## English
+- [Arcada Software in English](https://arcada.example/en/): Landing pages, business websites and small web projects.
+
+## Optional
+- [Texto completo do site](https://arcada.example/llms-full.txt): todo o conteúdo da página em Markdown.</code></pre>
+<p><span class="pt">O <code>llms-full.txt</code> repete o conteúdo visível em Markdown puro: a tabela de serviços, "para quem é e para quem não é", o processo em cinco passos, as 8 perguntas e respostas, o contato e a data de atualização. Abaixo, um trecho:</span><span class="en">The <code>llms-full.txt</code> repeats the visible content in plain Markdown: the services table, "who it is for and who it is not for", the five-step process, the 8 questions and answers, the contact and the update date. An excerpt:</span></p>
+<pre><code># Arcada Software (português)
+
+&gt; A Arcada Software cria landing pages, sites institucionais e pequenos projetos web [...]
+
+## Serviços
+
+| Serviço | Para quem serve | O que inclui | Prazo de referência | Preço |
+|---|---|---|---|---|
+| Landing page | Quem quer captar contatos ou vender uma oferta específica. | Uma página com um objetivo, design responsivo, formulário ou WhatsApp, medição de visitas e publicação. | 1 a 2 semanas | Fechado na proposta |
+
+## Perguntas frequentes
+
+### Quanto custa uma landing page?
+
+O preço é fechado na proposta, antes de começar [...]
+
+Atualizado em 28 de outubro de 2026.
+
+---
+
+# Arcada Software (English)
+[...]</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Honestidade sobre o llms.txt:</strong> o Google diz que não usa o arquivo; Anthropic e Perplexity dizem ler, sem confirmação independente do efeito. Custa pouco e não faz mal, mas <strong>não é fator de ranqueamento</strong> e ninguém deve contar com ele para aparecer em respostas de IA. O que mais pesa continua sendo o conteúdo claro no HTML.</span><span class="en"><strong>Honesty about llms.txt:</strong> Google says it does not use the file; Anthropic and Perplexity say they read it, with no independent confirmation of the effect. It costs little and does no harm, but <strong>it is not a ranking factor</strong> and nobody should count on it to appear in AI answers. What matters most remains clear content in the HTML.</span></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>E o "agents.llm"?</strong> Esse nome não existe como padrão; o arquivo do exemplo é o <code>llms.txt</code>. Não confunda com o <code>AGENTS.md</code>, que é outra coisa: instruções para <em>agentes de código</em> (Claude Code, Codex, Cursor) dentro de um repositório, e não ajuda em SEO. Para controlar quais bots de IA entram no site, o arquivo é o <code>robots.txt</code>. Veja a nota de agent harness para o <code>AGENTS.md</code>.</span><span class="en"><strong>What about "agents.llm"?</strong> That name does not exist as a standard; the file in the example is <code>llms.txt</code>. Do not confuse it with <code>AGENTS.md</code>, which is something else: instructions for <em>coding agents</em> (Claude Code, Codex, Cursor) inside a repository, and it does nothing for SEO. To control which AI bots enter the site, the file is <code>robots.txt</code>. See the agent harness note for <code>AGENTS.md</code>.</span></div>
+</section>
+<section class="content-section" aria-labelledby="noindex">
+<h2 id="noindex"><span class="pt">Páginas noindex</span><span class="en">noindex pages</span></h2>
+<pre><code>&lt;meta name="robots" content="noindex, follow"&gt;   &lt;!-- /links/, obrigado.html, en/thanks.html --&gt;
+&lt;meta name="robots" content="noindex"&gt;           &lt;!-- 404.html --&gt;</code></pre>
+<p><span class="pt">Nem toda página deve aparecer no Google. A página de bio (<code>/links/</code>), a de erro 404 e as de agradecimento (que só fazem sentido depois de um formulário) usam <code>noindex</code>. As duas primeiras ficam fora do sitemap.</span><span class="en">Not every page should appear in Google. The bio page (<code>/links/</code>), the 404 error page and the thank-you pages (which only make sense after a form) use <code>noindex</code>. The first two are kept out of the sitemap.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>noindex e Disallow se anulam.</strong> Se você bloqueia <code>/links/</code> no robots.txt, o rastreador não baixa a página, nunca vê o <code>noindex</code>, e a URL ainda pode aparecer nos resultados (sem descrição) por causa de links externos. Para tirar uma página do índice: <strong>permita o rastreamento e use <code>noindex</code></strong>. Use <code>Disallow</code> só para poupar o servidor de trechos sem valor, como <code>/api/</code>.</span><span class="en"><strong>noindex and Disallow cancel each other out.</strong> If you block <code>/links/</code> in robots.txt, the crawler does not download the page, never sees the <code>noindex</code>, and the URL can still appear in results (without a description) because of external links. To remove a page from the index: <strong>allow crawling and use <code>noindex</code></strong>. Use <code>Disallow</code> only to spare the server from valueless areas, such as <code>/api/</code>.</span></div>
+<ul class="ds-list"><li><span class="pt"><code>follow</code> deixa o rastreador seguir os links da página mesmo sem indexá-la.</span><span class="en"><code>follow</code> lets the crawler follow the page's links even without indexing it.</span></li><li><span class="pt">O 404 precisa responder com o <strong>status HTTP 404</strong> de verdade (não 200 com a mensagem "não encontrado", o chamado soft 404).</span><span class="en">The 404 page must answer with a real <strong>HTTP 404 status</strong> (not 200 with a "not found" message, the so-called soft 404).</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="html">
+<h2 id="html"><span class="pt">HTML e conteúdo que a IA consegue ler</span><span class="en">HTML and content an AI can read</span></h2>
+<p><span class="pt">Meta tags e dados estruturados só ajudam se a página em si for boa de ler. As regras aplicadas no exemplo:</span><span class="en">Meta tags and structured data only help if the page itself reads well. The rules applied in the example:</span></p>
+<ul class="ds-list"><li><span class="pt"><strong>Um <code>h1</code> por página</strong>, e <code>h2</code> com <code>id</code> estáveis (<code>servicos</code>, <code>para-quem</code>, <code>processo</code>, <code>projetos</code>, <code>sobre</code>, <code>faq</code>, <code>contato</code>). Âncoras estáveis permitem links diretos para a seção, usados no <code>llms.txt</code> e nos resultados.</span><span class="en"><strong>One <code>h1</code> per page</strong>, and <code>h2</code> with stable <code>id</code>s (<code>servicos</code>, <code>para-quem</code>, <code>processo</code>, <code>projetos</code>, <code>sobre</code>, <code>faq</code>, <code>contato</code>). Stable anchors allow direct links to a section, used in <code>llms.txt</code> and in results.</span></li><li><span class="pt"><strong>Marcos semânticos</strong> (<code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code>), link "Ir para o conteúdo" e <strong>texto de link descritivo</strong> ("Pedir orçamento", não "clique aqui").</span><span class="en"><strong>Semantic landmarks</strong> (<code>header</code>, <code>nav</code>, <code>main</code>, <code>section</code>, <code>footer</code>), a "Skip to content" link and <strong>descriptive link text</strong> ("Request a quote", not "click here").</span></li><li><span class="pt"><strong>A primeira frase visível define a empresa</strong>: "A Arcada Software cria landing pages, sites institucionais e pequenos projetos web para negócios que querem uma presença online clara, com escopo, prazo e preço fechados antes de começar." Um modelo que leia só o começo já sabe quem é e o que faz.</span><span class="en"><strong>The first visible sentence defines the company</strong>: "Arcada Software builds landing pages, business websites and small web projects for companies that want a clear online presence, with scope, deadline and price agreed before work begins." A model that reads only the start already knows who it is and what it does.</span></li><li><span class="pt">Formatos fáceis de extrair: <strong>tabela HTML</strong> de serviços, "para quem é / não é", processo em <code>&lt;ol&gt;</code>, FAQ em <code>&lt;details&gt;&lt;summary&gt;</code> (nativo, sem JavaScript), seção de provas honesta (sem casos inventados) e "Atualizado em" no rodapé.</span><span class="en">Easy-to-extract formats: an <strong>HTML table</strong> of services, "who it is / is not for", the process in an <code>&lt;ol&gt;</code>, the FAQ in <code>&lt;details&gt;&lt;summary&gt;</code> (native, no JavaScript), an honest proof section (no invented cases) and "Updated on" in the footer.</span></li><li><span class="pt"><strong>Todo o conteúdo existe no HTML sem JavaScript.</strong> Muitos rastreadores de IA não executam JS; se o texto só aparece depois de um script, para eles a página está vazia. Teste com <code>curl https://seu-site/ | less</code> e veja se o texto está lá.</span><span class="en"><strong>All content exists in the HTML without JavaScript.</strong> Many AI crawlers do not execute JS; if the text only appears after a script, the page is empty to them. Test with <code>curl https://your-site/ | less</code> and check the text is there.</span></li><li><span class="pt">Fontes hospedadas localmente (WOFF2), um CSS só, JS apenas para tema, formulário e eventos (<code>defer</code>). Menos requisições, página mais rápida.</span><span class="en">Locally hosted fonts (WOFF2), a single CSS file, JS only for theme, form and events (<code>defer</code>). Fewer requests, a faster page.</span></li><li><span class="pt"><strong>Medição sem cookies</strong> (Plausible, Cloudflare Web Analytics ou PostHog), com eventos por atributo <code>data-evento</code> (<code>pedir-orcamento</code>, <code>enviar-formulario</code>, <code>whatsapp</code>). Sem banner de cookies e sem script pesado.</span><span class="en"><strong>Cookie-free analytics</strong> (Plausible, Cloudflare Web Analytics or PostHog), with events via a <code>data-evento</code> attribute (<code>pedir-orcamento</code>, <code>enviar-formulario</code>, <code>whatsapp</code>). No cookie banner and no heavy script.</span></li></ul>
+<p><span class="pt">Velocidade também conta: o Google mede <em>Core Web Vitals</em> (LCP, INP, CLS). O exemplo mira LCP abaixo de 2,5 s e CLS próximo de 0, o que o preload da fonte, o CSS único e a ausência de scripts bloqueantes ajudam a alcançar.</span><span class="en">Speed counts too: Google measures <em>Core Web Vitals</em> (LCP, INP, CLS). The example aims for LCP under 2.5 s and CLS near 0, which the font preload, the single CSS file and the absence of blocking scripts help achieve.</span></p>
+</section>
+<section class="content-section" aria-labelledby="hosting">
+<h2 id="hosting"><span class="pt">Redirecionamentos, cabeçalhos e cache</span><span class="en">Redirects, headers and cache</span></h2>
+<p><span class="pt">Duas URLs para a mesma página diluem o sinal. O arquivo <code>_redirects</code> da Cloudflare Pages unifica tudo numa forma só (<strong>sempre com barra final</strong>, igual ao canonical e ao sitemap):</span><span class="en">Two URLs for the same page dilute the signal. Cloudflare Pages' <code>_redirects</code> file unifies everything into one form (<strong>always with a trailing slash</strong>, matching the canonical and the sitemap):</span></p>
+<pre><code># Padrão do site: sempre COM barra final (canonical, sitemap e links).
+https://www.arcada.example/* https://arcada.example/:splat 301
+/index.html / 301
+/en/index.html /en/ 301
+/en /en/ 301
+/links /links/ 301</code></pre>
+<p><span class="pt">O <code>301</code> é o redirecionamento permanente, e o buscador transfere o sinal para o destino. Aqui o <code>www</code> vai para o domínio sem <code>www</code> e <code>/index.html</code> vai para <code>/</code>. Escolha uma forma (com ou sem <code>www</code>) e mantenha-a em todos os lugares.</span><span class="en">The <code>301</code> is the permanent redirect, and the engine transfers the signal to the target. Here <code>www</code> goes to the bare domain and <code>/index.html</code> goes to <code>/</code>. Pick one form (with or without <code>www</code>) and keep it everywhere.</span></p>
+<p><span class="pt">O arquivo <code>_headers</code> define segurança e cache. A segurança importa para SEO indiretamente (HTTPS é sinal de confiança e site invadido é desindexado); o cache importa para velocidade:</span><span class="en">The <code>_headers</code> file sets security and cache. Security matters for SEO indirectly (HTTPS is a trust signal and a hacked site gets deindexed); cache matters for speed:</span></p>
+<pre><code>/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; manifest-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# HTML sempre revalidado.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+/en/
+  Cache-Control: public, max-age=0, must-revalidate
+
+# CSS e JS têm ?v=&lt;hash&gt;, por isso podem ser imutáveis.
+/style.css
+  Cache-Control: public, max-age=31536000, immutable
+/site.js
+  Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/og/*
+  Cache-Control: public, max-age=86400
+/api/*
+  Cache-Control: no-store</code></pre>
+<ul class="ds-list"><li><span class="pt"><strong>CSP estrita</strong> (sem <code>unsafe-inline</code>): como o JSON-LD é dado e não script executável, não precisa de exceção. Se ligar uma medição como o Plausible, acrescente o domínio do script em <code>script-src</code> e <code>connect-src</code>. Detalhes na nota de apps web seguros.</span><span class="en"><strong>Strict CSP</strong> (no <code>unsafe-inline</code>): since JSON-LD is data and not executable script, it needs no exception. If you add analytics such as Plausible, add the script's domain to <code>script-src</code> and <code>connect-src</code>. Details in the secure web apps note.</span></li><li><span class="pt"><strong>HTML sempre revalidado</strong> (<code>max-age=0, must-revalidate</code>): uma mudança de texto aparece na hora. <strong>CSS, JS e fontes imutáveis por um ano</strong>, porque o nome do arquivo muda (<code>?v=hash</code>) quando o conteúdo muda.</span><span class="en"><strong>HTML always revalidated</strong> (<code>max-age=0, must-revalidate</code>): a text change shows up at once. <strong>CSS, JS and fonts immutable for a year</strong>, because the file URL changes (<code>?v=hash</code>) when the content changes.</span></li><li><span class="pt">A compressão Brotli vem da Cloudflare e deve ser conferida no site real (<code>curl -I -H "Accept-Encoding: br" ...</code>).</span><span class="en">Brotli compression comes from Cloudflare and should be checked on the live site (<code>curl -I -H "Accept-Encoding: br" ...</code>).</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="extras">
+<h2 id="extras"><span class="pt">manifest, security.txt e IndexNow</span><span class="en">manifest, security.txt and IndexNow</span></h2>
+<h3>manifest.webmanifest</h3>
+<pre><code>{
+  "name": "Arcada Software",
+  "short_name": "Arcada",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0A0A0A",
+  "theme_color": "#0A0A0A",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}</code></pre>
+<p><span class="pt">Nome, ícones, cores e <code>start_url</code> para quando alguém adiciona o site à tela inicial do celular. Não afeta o ranking, mas completa a identidade e é exigido por auditorias como o Lighthouse. O ícone <code>maskable</code> tem margem de segurança para o sistema recortá-lo em círculo ou quadrado arredondado.</span><span class="en">Name, icons, colours and <code>start_url</code> for when someone adds the site to their phone's home screen. It does not affect ranking, but it completes the identity and is required by audits like Lighthouse. The <code>maskable</code> icon has a safe margin so the system can crop it into a circle or rounded square.</span></p>
+<h3>.well-known/security.txt (RFC 9116)</h3>
+<pre><code>Contact: mailto:contato@arcada.example
+Expires: 2027-10-01T00:00:00.000Z
+Preferred-Languages: pt-BR, en
+Canonical: https://arcada.example/.well-known/security.txt</code></pre>
+<p><span class="pt">Diz a quem achar uma vulnerabilidade para onde reportá-la. Não é SEO, é boa prática de confiança. O campo <code>Expires</code> é obrigatório e <strong>precisa ser renovado antes de vencer</strong>; um arquivo vencido é tratado como obsoleto.</span><span class="en">Tells anyone who finds a vulnerability where to report it. It is not SEO, it is a trust best practice. The <code>Expires</code> field is mandatory and <strong>must be renewed before it lapses</strong>; an expired file is treated as stale.</span></p>
+<h3>IndexNow</h3>
+<p><span class="pt">IndexNow é um protocolo para <em>avisar</em> os buscadores quando uma URL muda, em vez de esperar o rastreador voltar. Funciona com Bing, Yandex, Seznam e outros; o <strong>Google não o usa</strong>. Você gera uma chave, publica um arquivo <code>/&lt;chave&gt;.txt</code> na raiz contendo a própria chave (prova de que o domínio é seu) e, depois de cada publicação, envia as URLs:</span><span class="en">IndexNow is a protocol to <em>notify</em> search engines when a URL changes, instead of waiting for the crawler to return. It works with Bing, Yandex, Seznam and others; <strong>Google does not use it</strong>. You generate a key, publish a file <code>/&lt;key&gt;.txt</code> at the root containing the key itself (proof the domain is yours) and, after each deploy, submit the URLs:</span></p>
+<pre><code>curl -X POST https://api.indexnow.org/indexnow \
+  -H "Content-Type: application/json; charset=utf-8" \
+  -d '{
+    "host": "arcada.example",
+    "key": "7c1e5a90b2d44f68a3e9d5c07b816f2a",
+    "keyLocation": "https://arcada.example/7c1e5a90b2d44f68a3e9d5c07b816f2a.txt",
+    "urlList": ["https://arcada.example/", "https://arcada.example/en/"]
+  }'</code></pre>
+<p><span class="pt">Só faz sentido depois de publicar com o domínio real. A chave do exemplo é fictícia; gere a sua.</span><span class="en">It only makes sense after publishing on the real domain. The key in the example is fictional; generate your own.</span></p>
+</section>
+<section class="content-section" aria-labelledby="validate">
+<h2 id="validate"><span class="pt">Validar e o que ficou de fora</span><span class="en">Validating, and what was left out</span></h2>
+<p><span class="pt">Um bom relatório separa o que foi <strong>verificado</strong> do que <strong>não foi</strong>. No exemplo:</span><span class="en">A good report separates what was <strong>verified</strong> from what was <strong>not</strong>. In the example:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Feito</span><span class="en">Done</span></th><th><span class="pt">Não feito (exige o site público)</span><span class="en">Not done (needs the public site)</span></th></tr></thead><tbody>
+<tr><td><span class="pt">W3C Nu Validator sem erros (páginas principais, 404, links, agradecimento)</span><span class="en">W3C Nu Validator with no errors (main pages, 404, links, thank-you)</span></td><td>Rich Results Test, validator.schema.org</td></tr>
+<tr><td><span class="pt">Lighthouse mobile local: PT 96/100/100/100 e EN 99/100/100/100 (Desempenho, Acessibilidade, Boas práticas, SEO); LCP 1,8 s; CLS 0</span><span class="en">Local mobile Lighthouse: PT 96/100/100/100 and EN 99/100/100/100 (Performance, Accessibility, Best practices, SEO); LCP 1.8 s; CLS 0</span></td><td>PageSpeed Insights, <span class="pt">cabeçalhos e Brotli reais da Cloudflare</span><span class="en">real Cloudflare headers and Brotli</span></td></tr>
+<tr><td><span class="pt">Sem violações de CSP no console; sem rolagem horizontal em 320 px</span><span class="en">No CSP violations in the console; no horizontal scroll at 320 px</span></td><td>Facebook Debugger, LinkedIn Post Inspector</td></tr>
+<tr><td><span class="pt">5 user agents de busca/IA receberam 200 e o 404 real foi servido (servidor local); JSON-LD válido e coerente com o HTML; 31 testes automáticos passando</span><span class="en">5 search/AI user agents received 200 and the real 404 was served (local server); JSON-LD valid and consistent with the HTML; 31 automated tests passing</span></td><td><span class="pt">Painel de bots de IA da Cloudflare; nomes dos user agents na documentação oficial</span><span class="en">Cloudflare AI-bot dashboard; user-agent names against official documentation</span></td></tr>
+</tbody></table></div>
+<pre><code># Teste rápido de user agents (servidor local ou site real)
+curl -sI -A "Googlebot" https://arcada.example/ | head -1
+curl -sI -A "ClaudeBot" https://arcada.example/ | head -1
+curl -sI https://arcada.example/nao-existe | head -1     # deve ser 404
+
+# O texto está no HTML sem JavaScript?
+curl -s https://arcada.example/ | grep -c "landing pages"
+
+# Valida o JSON-LD (extrai o bloco e confere se é JSON)
+curl -s https://arcada.example/ \
+  | python3 -c "import sys,re,json; m=re.search(r'application/ld\+json\"&gt;(.*?)&lt;/script&gt;', sys.stdin.read(), re.S); json.loads(m.group(1)); print('ok')"</code></pre>
+<p><span class="pt">Os primeiros testes só mostram que o servidor responde; o que o <strong>Google decide indexar</strong> só aparece no Search Console (relatório "Páginas", ferramenta "Inspeção de URL").</span><span class="en">The first tests only show that the server responds; what <strong>Google decides to index</strong> only shows up in Search Console (the "Pages" report, the "URL Inspection" tool).</span></p>
+</section>
+<section class="content-section" aria-labelledby="plan">
+<h2 id="plan"><span class="pt">Plano para tornar o site indexável</span><span class="en">Plan to make a site indexable</span></h2>
+<p><span class="pt">Escrever os arquivos é metade do caminho; o resto é publicar com o domínio real e avisar os buscadores. Uma ordem que costuma funcionar:</span><span class="en">Writing the files is half the way; the rest is publishing on the real domain and telling the search engines. An order that usually works:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quando</span><span class="en">When</span></th><th><span class="pt">Ação</span><span class="en">Action</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Antes de publicar</span><span class="en">Before publishing</span></td><td><span class="pt">Definir o domínio definitivo e usá-lo em canonical, sitemap, Open Graph e JSON-LD; confirmar que o site não tem <code>noindex</code> esquecido de um ambiente de teste; conferir que o texto está no HTML sem JS; preencher TODOs (e-mail real, perfis para <code>sameAs</code>, WhatsApp)</span><span class="en">Define the final domain and use it in canonical, sitemap, Open Graph and JSON-LD; make sure no <code>noindex</code> is left over from a test environment; check the text is in the HTML without JS; fill in the TODOs (real email, profiles for <code>sameAs</code>, WhatsApp)</span></td></tr>
+<tr><td><span class="pt">No dia da publicação</span><span class="en">On launch day</span></td><td><span class="pt">Verificar o domínio no <strong>Google Search Console</strong> e no <strong>Bing Webmaster Tools</strong> (registro DNS TXT); enviar o <code>sitemap.xml</code>; usar "Inspeção de URL" → "Solicitar indexação" nas páginas principais; rodar o IndexNow</span><span class="en">Verify the domain in <strong>Google Search Console</strong> and <strong>Bing Webmaster Tools</strong> (DNS TXT record); submit <code>sitemap.xml</code>; use "URL Inspection" → "Request indexing" on the main pages; run IndexNow</span></td></tr>
+<tr><td><span class="pt">Primeira semana</span><span class="en">First week</span></td><td><span class="pt">Rodar Rich Results Test, validator.schema.org, PageSpeed Insights e os depuradores de Open Graph; conferir cabeçalhos reais com <code>curl -I</code>; ver no Search Console se há erros de cobertura</span><span class="en">Run the Rich Results Test, validator.schema.org, PageSpeed Insights and the Open Graph debuggers; check real headers with <code>curl -I</code>; look for coverage errors in Search Console</span></td></tr>
+<tr><td><span class="pt">Primeiro mês</span><span class="en">First month</span></td><td><span class="pt">Ganhar links de fora (perfis de empresa, diretórios sérios, parceiros, clientes), o fator que mais move um site novo; criar o <strong>Google Business Profile</strong> se houver atendimento local, com o mesmo nome e descrição do site; publicar os primeiros projetos e depoimentos reais, com permissão</span><span class="en">Earn external links (company profiles, serious directories, partners, clients), the factor that moves a new site most; create a <strong>Google Business Profile</strong> if there is local service, with the same name and description as the site; publish the first real projects and testimonials, with permission</span></td></tr>
+<tr><td><span class="pt">Contínuo</span><span class="en">Ongoing</span></td><td><span class="pt">Renovar o <code>Expires</code> do security.txt; atualizar <code>lastmod</code> e <code>dateModified</code> só quando o conteúdo mudar; rodar o IndexNow após cada publicação; <strong>rotina mensal:</strong> perguntar a ChatGPT, Claude, Perplexity e Gemini "quem cria landing pages?" e registrar se a marca aparece</span><span class="en">Renew the security.txt <code>Expires</code>; update <code>lastmod</code> and <code>dateModified</code> only when content changes; run IndexNow after each deploy; <strong>monthly routine:</strong> ask ChatGPT, Claude, Perplexity and Gemini "who builds landing pages?" and record whether the brand shows up</span></td></tr>
+</tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Quanto tempo leva:</strong> a indexação de um site novo costuma levar de dias a algumas semanas, e a posição para buscas competitivas, meses. Se uma página não entra, as causas mais comuns são: <code>noindex</code> esquecido, bloqueio no robots.txt, canonical apontando para outra URL, conteúdo fino ou duplicado, ou a página não estar ligada a nenhuma outra. O relatório "Páginas" do Search Console diz qual delas é.</span><span class="en"><strong>How long it takes:</strong> a new site usually takes days to a few weeks to be indexed, and months to rank for competitive searches. If a page does not get in, the most common causes are: a forgotten <code>noindex</code>, a robots.txt block, a canonical pointing to another URL, thin or duplicate content, or the page not being linked from any other. The Search Console "Pages" report says which one it is.</span></div>
+<h3><span class="pt">Atividade: auditar o seu site (30 minutos)</span><span class="en">Activity: audit your site (30 minutes)</span></h3>
+<p><span class="pt"><strong>O que fazer:</strong> escolha uma página do seu site e confira, nesta ordem: (1) <code>curl -I</code> devolve 200 e a URL final, sem cadeia de redirecionamentos; (2) o texto principal aparece em <code>curl -s</code> sem JS; (3) title e description são únicos e dentro do tamanho; (4) o canonical aponta para a própria URL; (5) a URL está no sitemap e não está bloqueada no robots.txt; (6) o JSON-LD bate com o que se vê na tela; (7) o link colado no WhatsApp mostra título e imagem. Anote cada falha e corrija na mesma ordem.</span><span class="en"><strong>What to do:</strong> pick one page of your site and check, in this order: (1) <code>curl -I</code> returns 200 and the final URL, with no redirect chain; (2) the main text shows up in <code>curl -s</code> without JS; (3) title and description are unique and within length; (4) the canonical points to its own URL; (5) the URL is in the sitemap and not blocked in robots.txt; (6) the JSON-LD matches what is on screen; (7) the link pasted into WhatsApp shows title and image. Note each failure and fix in the same order.</span></p>
+<p><span class="pt"><strong>Resultado esperado:</strong> é comum achar no mínimo um canonical errado, um title duplicado ou um texto que só existe via JavaScript. Corrigir isso costuma pesar mais do que qualquer tag nova.</span><span class="en"><strong>Expected result:</strong> finding at least one wrong canonical, a duplicate title or text that only exists via JavaScript is common. Fixing that usually weighs more than any new tag.</span></p>
+</section>
+<section class="content-section" aria-labelledby="cheat-seo">
+<h2 id="cheat-seo"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Arquivo ou tag</span><span class="en">File or tag</span></th><th><span class="pt">Papel</span><span class="en">Role</span></th><th><span class="pt">Cuidado</span><span class="en">Watch out</span></th></tr></thead><tbody>
+<tr><td>title + description</td><td><span class="pt">Aparência nos resultados</span><span class="en">Look in results</span></td><td><span class="pt">Únicos por página e idioma</span><span class="en">Unique per page and language</span></td></tr>
+<tr><td>canonical</td><td><span class="pt">Escolhe a URL oficial</span><span class="en">Picks the official URL</span></td><td><span class="pt">Aponta para si mesmo, nunca para outro idioma</span><span class="en">Points to itself, never to another language</span></td></tr>
+<tr><td>hreflang</td><td><span class="pt">Liga idiomas</span><span class="en">Links languages</span></td><td><span class="pt">Recíproco e com <code>x-default</code></span><span class="en">Reciprocal and with <code>x-default</code></span></td></tr>
+<tr><td>Open Graph / Twitter</td><td><span class="pt">Pré-visualização ao compartilhar</span><span class="en">Preview when sharing</span></td><td><span class="pt">Imagem 1200×630, URL absoluta</span><span class="en">1200×630 image, absolute URL</span></td></tr>
+<tr><td>JSON-LD</td><td><span class="pt">Diz o que a página é</span><span class="en">Says what the page is</span></td><td><span class="pt">Só espelha o que está visível</span><span class="en">Only mirrors what is visible</span></td></tr>
+<tr><td>sitemap.xml</td><td><span class="pt">Lista o que indexar</span><span class="en">Lists what to index</span></td><td><span class="pt"><code>lastmod</code> real; sem páginas noindex</span><span class="en">Real <code>lastmod</code>; no noindex pages</span></td></tr>
+<tr><td>robots.txt</td><td><span class="pt">Quem rastreia o quê</span><span class="en">Who crawls what</span></td><td><span class="pt">Pedido, não barreira; grupos não herdam <code>*</code></span><span class="en">A request, not a barrier; groups do not inherit <code>*</code></span></td></tr>
+<tr><td>noindex</td><td><span class="pt">Tira uma página do índice</span><span class="en">Removes a page from the index</span></td><td><span class="pt">Não bloqueie a mesma URL no robots.txt</span><span class="en">Do not block the same URL in robots.txt</span></td></tr>
+<tr><td>llms.txt</td><td><span class="pt">Resumo do site para IAs</span><span class="en">Site summary for AIs</span></td><td><span class="pt">Não é fator de ranqueamento</span><span class="en">Not a ranking factor</span></td></tr>
+<tr><td>IndexNow</td><td><span class="pt">Avisa mudanças</span><span class="en">Announces changes</span></td><td><span class="pt">Bing e outros; o Google não usa</span><span class="en">Bing and others; Google does not use it</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Por que bloquear <code>/links/</code> no robots.txt e ao mesmo tempo usar <code>noindex</code> nela não funciona?</span><span class="en">Why does blocking <code>/links/</code> in robots.txt and also using <code>noindex</code> on it not work?</span></li><li><span class="pt">Qual a diferença entre um bot de busca de IA, um bot de ação do usuário e um de treino, e por que você trataria cada um diferente?</span><span class="en">What is the difference between an AI search bot, a user-action bot and a training bot, and why would you treat each differently?</span></li><li><span class="pt">Por que o JSON-LD não deve conter avaliações ou preços que não aparecem na página?</span><span class="en">Why must JSON-LD not contain reviews or prices that do not appear on the page?</span></li><li><span class="pt">O que acontece se o canonical da versão em inglês apontar para a versão em português?</span><span class="en">What happens if the canonical of the English version points to the Portuguese version?</span></li><li><span class="pt">Por que um texto que só aparece depois de um script pode ser invisível para uma IA?</span><span class="en">Why can text that only appears after a script be invisible to an AI?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://developers.google.com/search/docs" rel="noopener">Google Search Central: documentation</a> (title links, snippets, canonicalization, localized versions/hreflang, sitemaps, robots.txt, robots meta tag, structured data, FAQ rich results)</li>
+<li><a href="https://schema.org/" rel="noopener">schema.org</a> · <a href="https://json-ld.org/" rel="noopener">JSON-LD</a> · <a href="https://validator.schema.org/" rel="noopener">Schema Markup Validator</a></li>
+<li><a href="https://ogp.me/" rel="noopener">The Open Graph protocol</a> · <a href="https://www.sitemaps.org/protocol.html" rel="noopener">sitemaps.org protocol</a> · <a href="https://www.rfc-editor.org/rfc/rfc9309" rel="noopener">RFC 9309: Robots Exclusion Protocol</a></li>
+<li><a href="https://llmstxt.org/" rel="noopener">llmstxt.org</a> · <a href="https://www.indexnow.org/documentation" rel="noopener">IndexNow documentation</a> · <a href="https://www.rfc-editor.org/rfc/rfc9116" rel="noopener">RFC 9116: security.txt</a></li>
+<li><a href="https://platform.openai.com/docs/bots" rel="noopener">OpenAI crawlers</a> · <a href="https://support.anthropic.com/" rel="noopener">Anthropic crawler documentation</a> · <a href="https://docs.perplexity.ai/guides/bots" rel="noopener">Perplexity crawlers</a> (check each vendor for the current user-agent names)</li>
+<li><a href="https://web.dev/articles/vitals" rel="noopener">web.dev: Core Web Vitals</a> · <a href="https://developers.cloudflare.com/pages/configuration/redirects/" rel="noopener">Cloudflare Pages: redirects</a> and <a href="https://developers.cloudflare.com/pages/configuration/headers/" rel="noopener">headers</a></li>
+</ul></div>
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
