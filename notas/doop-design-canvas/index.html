@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="dp.metaTitle">Doop: an open-source design canvas where humans and AI agents design together, and how to run it</title>
+  <meta name="description" data-i18n-attributes="content:dp.metaDescription" content="What Doop is (an open-source, AGPL-3.0 alternative to Paper.design), how it is built, how to run it on your computer (Bun, Docker) or in a cloud (Railway, Fly, a VPS with Postgres), the environment variables that matter and how to connect Claude Code, Codex and other agents through its MCP server.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/doop-design-canvas/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/doop-design-canvas/">
+  <meta property="og:title" data-i18n-attributes="content:dp.metaTitle" content="Doop: an open-source design canvas where humans and AI agents design together, and how to run it">
+  <meta property="og:description" data-i18n-attributes="content:dp.metaDescription" content="What Doop is (an open-source, AGPL-3.0 alternative to Paper.design), how it is built, how to run it on your computer (Bun, Docker) or in a cloud (Railway, Fly, a VPS with Postgres), the environment variables that matter and how to connect Claude Code, Codex and other agents through its MCP server.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:dp.metaTitle" content="Doop: an open-source design canvas where humans and AI agents design together, and how to run it">
+  <meta name="twitter:description" data-i18n-attributes="content:dp.metaDescription" content="What Doop is (an open-source, AGPL-3.0 alternative to Paper.design), how it is built, how to run it on your computer (Bun, Docker) or in a cloud (Railway, Fly, a VPS with Postgres), the environment variables that matter and how to connect Claude Code, Codex and other agents through its MCP server.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="dp.kicker">Practical guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="dp.heroTitle">Doop: <em>a design canvas where you and your agents work side by side.</em></h1>
+  <p class="hero-lede" data-i18n="dp.heroLede">An analysis of the open-source Doop: what it is, how it is built, how to run it on your computer or in a cloud of yours, which settings matter and how to plug Claude Code, Codex and other agents into it.</p>
+</section>
+<aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é o Doop</span><span class="en">What Doop is</span></a></li>
+<li><a href="#arch"><span class="pt">Como ele é por dentro</span><span class="en">How it works inside</span></a></li>
+<li><a href="#local"><span class="pt">Rodar no seu computador</span><span class="en">Run it on your computer</span></a></li>
+<li><a href="#docker"><span class="pt">Rodar com Docker</span><span class="en">Run it with Docker</span></a></li>
+<li><a href="#cloud"><span class="pt">Rodar numa nuvem</span><span class="en">Run it in a cloud</span></a></li>
+<li><a href="#env"><span class="pt">Variáveis de ambiente que importam</span><span class="en">Environment variables that matter</span></a></li>
+<li><a href="#agents"><span class="pt">Conectar agentes de IA</span><span class="en">Connecting AI agents</span></a></li>
+<li><a href="#care"><span class="pt">Cuidados antes de abrir para outras pessoas</span><span class="en">Care before opening it to other people</span></a></li>
+<li><a href="#cheat-dp"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>O que eu fiz e o que não fiz.</strong> Li o README e a documentação pública do repositório <a href="https://github.com/kgoedecke/doop" rel="noopener">kgoedecke/doop</a> em 2026-10-29. <strong>Não executei</strong> o Doop: os comandos abaixo vêm da documentação do projeto e não foram testados por mim. Confira no README do commit que você baixar, porque o projeto muda rápido.</span><span class="en"><strong>What I did and did not do.</strong> I read the README and the public documentation of the <a href="https://github.com/kgoedecke/doop" rel="noopener">kgoedecke/doop</a> repository on 2026-10-29. I <strong>did not run</strong> Doop: the commands below come from the project documentation and were not tested by me. Check the README of the commit you download, because the project moves fast.</span></div>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é o Doop</span><span class="en">What Doop is</span></h2>
+<p><span class="pt">O <a href="https://github.com/kgoedecke/doop" rel="noopener">Doop</a> é uma alternativa de código aberto ao Paper.design: uma tela de design multiusuário onde pessoas e agentes de IA desenham juntos, em tempo real. Cada design vive numa tela compartilhável (<code>/c/&lt;id&gt;</code>) feita de frames que renderizam HTML dentro de iframes isolados. Pessoas editam no navegador; agentes editam por um servidor MCP embutido. A licença é AGPL-3.0; o nome e o logo são marcas registradas e a licença não os cobre.</span><span class="en"><a href="https://github.com/kgoedecke/doop" rel="noopener">Doop</a> is an open-source alternative to Paper.design: a multiplayer design canvas where people and AI agents design together in real time. Each design lives on a shareable canvas (<code>/c/&lt;id&gt;</code>) made of frames that render HTML inside sandboxed iframes. People edit in the browser; agents edit through a built-in MCP server. The license is AGPL-3.0; the name and logo are trademarks and the license does not cover them.</span></p><div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Função</span><span class="en">Feature</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Design por agentes (MCP)</span><span class="en">Agent design (MCP)</span></td><td><span class="pt">Claude Code, Codex, ChatGPT, Cursor, OpenCode e outros clientes MCP desenham na tela, tiram screenshots e revisam o próprio trabalho.</span><span class="en">Claude Code, Codex, ChatGPT, Cursor, OpenCode and other MCP clients draw on the canvas, take screenshots and review their own work.</span></td></tr>
+<tr><td><span class="pt">Agente embutido</span><span class="en">Built-in agent</span></td><td><span class="pt">O Doop Agent roda numa conta de modelo que você conecta (inclusive assinatura do ChatGPT) ou numa chave OpenAI, Claude, Gemini ou OpenRouter. Há uma camada gratuita opcional paga pelo servidor.</span><span class="en">The Doop Agent runs on a model account you connect (including a ChatGPT subscription) or on an OpenAI, Claude, Gemini or OpenRouter key. There is an optional free tier paid by the server.</span></td></tr>
+<tr><td><span class="pt">Editor</span><span class="en">Editor</span></td><td><span class="pt">Frames, retângulos, círculos, caminhos de caneta e texto, com layout flex, réguas, guias e zoom de 8% a 1600%.</span><span class="en">Frames, rectangles, circles, pen paths and text, with flex layout, rulers, guides and zoom from 8% to 1600%.</span></td></tr>
+<tr><td><span class="pt">Multiusuário</span><span class="en">Multiplayer</span></td><td><span class="pt">Cursores ao vivo, presença, modo seguir, comentários em fio e feed de atividade, numa sala WebSocket por tela.</span><span class="en">Live cursors, presence, follow mode, threaded comments and an activity feed, over one WebSocket room per canvas.</span></td></tr>
+<tr><td><span class="pt">Protótipo e aprovação</span><span class="en">Prototype and approval</span></td><td><span class="pt">Interações clicáveis entre frames (<code>/c/&lt;id&gt;/proto</code>) e frames marcados “pronto para dev”, que os agentes podem consultar.</span><span class="en">Clickable interactions between frames (<code>/c/&lt;id&gt;/proto</code>) and frames marked “ready for dev”, which agents can query.</span></td></tr>
+<tr><td><span class="pt">Memória de design</span><span class="en">Design memory</span></td><td><span class="pt">Guias de estilo, referências fixadas e decisões registradas que os agentes seguem.</span><span class="en">Style guides, pinned references and recorded decisions that agents follow.</span></td></tr>
+<tr><td><span class="pt">Importar e exportar</span><span class="en">Import and export</span></td><td><span class="pt">Captura de sites e apps, revisão de repositório do GitHub; exporta PNG, JPG e PDF. Figma, Canva e PSD só no Doop Cloud.</span><span class="en">Website and app capture, GitHub repo review; exports PNG, JPG and PDF. Figma, Canva and PSD are Doop Cloud only.</span></td></tr>
+<tr><td><span class="pt">Contas</span><span class="en">Accounts</span></td><td><span class="pt">E-mail e senha, OIDC SSO, Google, Microsoft e Apple, workspaces e plano Team opcional com Stripe.</span><span class="en">Email and password, OIDC SSO, Google, Microsoft and Apple, workspaces and an optional Stripe-backed Team plan.</span></td></tr>
+</tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="arch">
+<h2 id="arch"><span class="pt">Como ele é por dentro</span><span class="en">How it works inside</span></h2>
+<p><span class="pt">O repositório separa o servidor, o cliente e o código compartilhado. Isso importa na hora de hospedar: <strong>em produção é um único processo Node na porta 4400</strong> que serve a API, o WebSocket, o MCP e o cliente já compilado.</span><span class="en">The repository splits the server, the client and the shared code. That matters when hosting: <strong>in production it is a single Node process on port 4400</strong> that serves the API, the WebSocket, the MCP and the built client.</span></p><div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pasta</span><span class="en">Folder</span></th><th><span class="pt">Papel</span><span class="en">Role</span></th></tr></thead><tbody>
+<tr><td><code>server/</code></td><td><span class="pt">Node na porta 4400: API REST (Express), salas WebSocket, presença, servidor MCP (HTTP em streaming sem estado em <code>/mcp</code>), better-auth, Doop Agent e automações. O estado quente fica em memória e é gravado no banco.</span><span class="en">Node on port 4400: REST API (Express), WebSocket rooms, presence, the MCP server (stateless streamable HTTP at <code>/mcp</code>), better-auth, the Doop Agent and automations. Hot state is in memory and written through to the database.</span></td></tr>
+<tr><td><code>src/</code></td><td><span class="pt">Cliente React + Vite + zustand na porta 4300 (só no desenvolvimento; ele repassa <code>/api</code>, <code>/ws</code> e <code>/mcp</code> ao servidor).</span><span class="en">React + Vite + zustand client on port 4300 (development only; it proxies <code>/api</code>, <code>/ws</code> and <code>/mcp</code> to the server).</span></td></tr>
+<tr><td><code>shared/</code></td><td><span class="pt">Tipos e lógica usados pelos dois lados.</span><span class="en">Types and logic used by both sides.</span></td></tr>
+<tr><td><code>desktop/</code>, <code>ios/</code>, <code>claude-extension/</code>, <code>cursor-plugin/</code>, <code>chatgpt-plugin/</code></td><td><span class="pt">Pacotes de clientes: app desktop em Tauri (macOS e Windows), app iOS em SwiftUI (em desenvolvimento) e plugins.</span><span class="en">Client packages: a Tauri desktop app (macOS and Windows), a SwiftUI iOS app (in development) and plugins.</span></td></tr>
+</tbody></table></div><p><span class="pt">Stack: Bun (instalar e compilar), Node (rodar o servidor), TypeScript, Express, ws, Drizzle ORM, PGlite (Postgres embutido) ou Postgres, better-auth, React, Tailwind e Vitest. Cada frame é um iframe com <code>sandbox="allow-scripts"</code>, atualizado por “morph” do DOM em vez de recarregar. As imagens dos frames vêm do <code>puppeteer-core</code> dirigindo o Chrome ou Chromium do sistema.</span><span class="en">Stack: Bun (install and build), Node (server runtime), TypeScript, Express, ws, Drizzle ORM, PGlite (embedded Postgres) or Postgres, better-auth, React, Tailwind and Vitest. Each frame is an iframe with <code>sandbox="allow-scripts"</code>, updated by DOM morphing instead of reloading. Frame screenshots come from <code>puppeteer-core</code> driving the system Chrome or Chromium.</span></p>
+</section>
+<section class="content-section" aria-labelledby="local">
+<h2 id="local"><span class="pt">Rodar no seu computador</span><span class="en">Run it on your computer</span></h2>
+<p><span class="pt">Requisitos: <strong>Bun</strong> (instala e compila), <strong>Node</strong> no <code>PATH</code> (o <code>bun run dev</code> e o <code>bun run build</code> também empacotam a extensão do Claude Desktop com Node) e <strong>Chrome ou Chromium</strong> para os screenshots (detectado sozinho, ou defina <code>CHROME_PATH</code>).</span><span class="en">Requirements: <strong>Bun</strong> (install and build), <strong>Node</strong> on your <code>PATH</code> (<code>bun run dev</code> and <code>bun run build</code> also package the Claude Desktop extension with Node) and <strong>Chrome or Chromium</strong> for screenshots (auto-detected, or set <code>CHROME_PATH</code>).</span></p><pre><code>git clone https://github.com/kgoedecke/doop &amp;&amp; cd doop
+bun install
+bun run dev</code></pre><p><span class="pt">Abra <code>http://localhost:4300</code> (o app). A API, o WebSocket e o MCP ficam em <code>http://localhost:4400</code>. Não precisa de configuração: os dados vão para um Postgres embutido (PGlite) em <code>data/pg</code>. Apague essa pasta para zerar tudo.</span><span class="en">Open <code>http://localhost:4300</code> (the app). The API, WebSocket and MCP are on <code>http://localhost:4400</code>. No configuration is needed: data goes to an embedded Postgres (PGlite) in <code>data/pg</code>. Delete that folder to reset everything.</span></p><p><span class="pt">Para testar o build de produção sem Docker, num único processo:</span><span class="en">To try the production build without Docker, as a single process:</span></p><pre><code>bun run build &amp;&amp; bun run start
+# tudo em http://localhost:4400
+# com um Postgres de verdade: DATABASE_URL=postgres://usuario:senha@host:5432/doop bun run start</code></pre>
+</section>
+<section class="content-section" aria-labelledby="docker">
+<h2 id="docker"><span class="pt">Rodar com Docker</span><span class="en">Run it with Docker</span></h2>
+<p><span class="pt">O Compose do projeto sobe o app e um Postgres, na porta 4400. O <code>BETTER_AUTH_SECRET</code> assina as sessões: gere um valor longo e aleatório e guarde-o, porque trocá-lo derruba os logins.</span><span class="en">The project Compose file starts the app and a Postgres on port 4400. <code>BETTER_AUTH_SECRET</code> signs sessions: generate a long random value and keep it, because changing it logs everyone out.</span></p><pre><code>BETTER_AUTH_SECRET=$(openssl rand -hex 32) docker compose up -d</code></pre><p><span class="pt">Para só conferir a imagem de produção na sua máquina:</span><span class="en">To just check the production image on your machine:</span></p><pre><code>docker build -t doop .
+docker run -p 4400:4400 \
+  -e BETTER_AUTH_URL=http://localhost:4400 \
+  -e BETTER_AUTH_SECRET=dev-only doop</code></pre><div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O segredo <code>dev-only</code> serve apenas para esse teste local. Nunca o use numa máquina acessível de fora. Sem <code>DATABASE_URL</code> o contêiner usa PGlite: monte um volume em <code>/app/data</code> ou os dados somem quando o contêiner for recriado.</span><span class="en">The <code>dev-only</code> secret is for that local test only. Never use it on a machine reachable from outside. Without <code>DATABASE_URL</code> the container uses PGlite: mount a volume at <code>/app/data</code> or the data disappears when the container is recreated.</span></div>
+</section>
+<section class="content-section" aria-labelledby="cloud">
+<h2 id="cloud"><span class="pt">Rodar numa nuvem</span><span class="en">Run it in a cloud</span></h2>
+<p><span class="pt">O <code>Dockerfile</code> de produção já inclui o cliente compilado e o Chromium. A documentação indica o Railway e o Fly como o caminho de menor atrito, mas qualquer lugar que rode um contêiner serve (uma VPS com Docker Compose, ECS, Cloud Run).</span><span class="en">The production <code>Dockerfile</code> already bundles the built client and Chromium. The documentation names Railway and Fly as the least-friction path, but anywhere that runs a container works (a VPS with Docker Compose, ECS, Cloud Run).</span></p><ol>
+<li><span class="pt">Crie o app a partir do repositório. As duas plataformas detectam o Dockerfile sozinhas.</span><span class="en">Create the app from the repository. Both platforms detect the Dockerfile on their own.</span></li>
+<li><span class="pt">Adicione um Postgres gerenciado e defina <code>DATABASE_URL</code>. O PGlite é de um processo só: só serve para uma instância com um volume persistente em <code>/app/data</code>.</span><span class="en">Add a managed Postgres and set <code>DATABASE_URL</code>. PGlite is single-process: it only suits one instance with a persistent volume at <code>/app/data</code>.</span></li>
+<li><span class="pt">Defina <code>BETTER_AUTH_SECRET</code> (string longa e aleatória, obrigatória em produção) e <code>BETTER_AUTH_URL</code> (a origem pública, como <code>https://doop.exemplo.com</code>, também obrigatória). Use <code>TRUSTED_ORIGINS</code> para outras origens permitidas.</span><span class="en">Set <code>BETTER_AUTH_SECRET</code> (a long random string, required in production) and <code>BETTER_AUTH_URL</code> (the public origin, such as <code>https://doop.example.com</code>, also required). Use <code>TRUSTED_ORIGINS</code> for any other allowed origins.</span></li>
+<li><span class="pt">Use <code>GET /healthz</code> como health check. O servidor confia em um salto de proxy, então terminar o TLS na borda da plataforma funciona.</span><span class="en">Use <code>GET /healthz</code> as the health check. The server trusts one proxy hop, so terminating TLS at the platform edge works.</span></li>
+<li><span class="pt">Se quiser, defina um SMTP, o armazenamento S3 e os logins sociais (próxima seção).</span><span class="en">Optionally set SMTP, S3 storage and social sign-in (next section).</span></li>
+</ol>
+<p><span class="pt">Exemplo numa VPS qualquer, com Postgres no mesmo Compose e HTTPS na frente (Caddy ou Cloudflare Tunnel, que não precisam de portas abertas além da 443):</span><span class="en">Example on any VPS, with Postgres in the same Compose and HTTPS in front (Caddy or a Cloudflare Tunnel, which need no ports open besides 443):</span></p><pre><code># no servidor, dentro de uma cópia do repositório
+cat &gt; .env &lt;&lt;EOF
+BETTER_AUTH_SECRET=$(openssl rand -hex 32)
+BETTER_AUTH_URL=https://doop.exemplo.com
+EOF
+docker compose up -d
+curl -fsS http://127.0.0.1:4400/healthz   # health check
+# coloque o proxy HTTPS na frente da porta 4400</code></pre><div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Se o SMTP estiver bloqueado (comum em PaaS), o cadastro ou a recuperação de senha pode travar. A documentação cita o Resend com <code>SMTP_PORT=2587</code> como contorno. Sem SMTP configurado, os e-mails só aparecem no log do servidor.</span><span class="en">If SMTP is blocked (common on PaaS hosts), signup or password reset can hang. The documentation mentions Resend with <code>SMTP_PORT=2587</code> as a workaround. With no SMTP configured, emails only show up in the server log.</span></div>
+</section>
+<section class="content-section" aria-labelledby="env">
+<h2 id="env"><span class="pt">Variáveis de ambiente que importam</span><span class="en">Environment variables that matter</span></h2>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Área</span><span class="en">Area</span></th><th><span class="pt">Variáveis</span><span class="en">Variables</span></th><th><span class="pt">Sem elas</span><span class="en">Without them</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Núcleo</span><span class="en">Core</span></td><td><code>BETTER_AUTH_SECRET</code>, <code>BETTER_AUTH_URL</code>, <code>DATABASE_URL</code>, <code>TRUSTED_ORIGINS</code>, <code>PORT</code></td><td><span class="pt">PGlite embutido em <code>data/pg</code>; origens localhost (as duas primeiras são obrigatórias em produção)</span><span class="en">Embedded PGlite in <code>data/pg</code>; localhost origins (the first two are required in production)</span></td></tr>
+<tr><td><span class="pt">E-mail</span><span class="en">Email</span></td><td><code>SMTP_HOST</code>, <code>SMTP_PORT</code>, <code>SMTP_USER</code>, <code>SMTP_PASS</code>, <code>SMTP_SECURE</code>, <code>EMAIL_FROM</code>, <code>REQUIRE_EMAIL_VERIFICATION</code></td><td><span class="pt">E-mails vão para o log; sem verificação</span><span class="en">Emails go to the log; no verification</span></td></tr>
+<tr><td><span class="pt">Login</span><span class="en">Sign-in</span></td><td><code>OIDC_*</code>, <code>GOOGLE_*</code>, <code>MICROSOFT_*</code>, <code>APPLE_*</code>, <code>SIGNUP_EMAIL_DOMAINS</code>, <code>ADMIN_EMAILS</code></td><td><span class="pt">Só e-mail e senha; cadastro aberto</span><span class="en">Email and password only; open signup</span></td></tr>
+<tr><td><span class="pt">Doop Agent</span><span class="en">Doop Agent</span></td><td><code>ANTHROPIC_API_KEY</code>, <code>RESIDENT_TASK_LIMIT</code>, <code>DOOP_AGENT_PROVIDER</code>, <code>DOOP_AGENT_MODEL</code>, <code>AZURE_OPENAI_*</code></td><td><span class="pt">Só roda em contas que os usuários conectam (<code>RESIDENT_TASK_LIMIT</code> padrão <code>0</code>)</span><span class="en">Only runs on accounts users connect (<code>RESIDENT_TASK_LIMIT</code> defaults to <code>0</code>)</span></td></tr>
+<tr><td><span class="pt">Armazenamento</span><span class="en">Storage</span></td><td><code>BUCKET</code>, <code>ACCESS_KEY_ID</code>, <code>SECRET_ACCESS_KEY</code>, <code>ENDPOINT</code>, <code>REGION</code></td><td><span class="pt">Arquivos em <code>data/assets</code> (S3 compatível se definido)</span><span class="en">Files in <code>data/assets</code> (S3-compatible if set)</span></td></tr>
+<tr><td><span class="pt">Screenshots</span><span class="en">Screenshots</span></td><td><code>CHROME_PATH</code>, <code>CHROME_NO_SANDBOX</code></td><td><span class="pt">Chrome ou Chromium detectado sozinho</span><span class="en">Chrome or Chromium auto-detected</span></td></tr>
+<tr><td><span class="pt">Cobrança</span><span class="en">Billing</span></td><td><code>STRIPE_SECRET_KEY</code>, <code>STRIPE_PRICE_TEAM_*</code>, <code>STRIPE_WEBHOOK_SECRET</code></td><td><span class="pt">Cobrança desligada; todo workspace ativo</span><span class="en">Billing off; every workspace active</span></td></tr>
+</tbody></table></div><p><span class="pt">O arquivo <code>.env.example</code> do repositório lista o conjunto completo (endpoints, chaves de geração de imagem e busca, limites de taxa).</span><span class="en">The repository <code>.env.example</code> lists the full set (endpoint overrides, image generation and search keys, rate limits).</span></p>
+</section>
+<section class="content-section" aria-labelledby="agents">
+<h2 id="agents"><span class="pt">Conectar agentes de IA</span><span class="en">Connecting AI agents</span></h2>
+<p><span class="pt">O endpoint MCP é <code>/mcp</code>. Em desenvolvimento, <code>http://localhost:4300/mcp</code>; em produção, a sua origem pública mais <code>/mcp</code>.</span><span class="en">The MCP endpoint is <code>/mcp</code>. In development, <code>http://localhost:4300/mcp</code>; in production, your public origin plus <code>/mcp</code>.</span></p><pre><code># Claude Code (login pelo navegador, OAuth)
+claude mcp add --transport http doop http://localhost:4300/mcp
+
+# Codex
+codex mcp add doop --url http://localhost:4300/mcp
+codex mcp login doop</code></pre><p><span class="pt">Configuração genérica para qualquer cliente MCP:</span><span class="en">Generic configuration for any MCP client:</span></p><pre><code>{ "mcpServers": { "doop": { "type": "http", "url": "http://localhost:4300/mcp" } } }</code></pre><p><span class="pt">Para agentes sem navegador (CI, servidores), crie uma <strong>chave de agente</strong> em Configurações → Agent keys e envie-a como cabeçalho <code>Authorization: Bearer</code>. Ela dispensa o login e, ao ser revogada, corta o acesso na hora. Use uma chave por agente. O Doop Agent embutido fica desligado até um usuário conectar uma conta de modelo ou o operador definir <code>ANTHROPIC_API_KEY</code> e um <code>RESIDENT_TASK_LIMIT</code> maior que 0; agentes ligados por MCP usam as próprias assinaturas.</span><span class="en">For agents without a browser (CI, servers), create an <strong>agent key</strong> under Settings → Agent keys and send it as an <code>Authorization: Bearer</code> header. It skips the sign-in and, once revoked, cuts access immediately. Use one key per agent. The built-in Doop Agent stays off until a user connects a model account or the operator sets <code>ANTHROPIC_API_KEY</code> and a <code>RESIDENT_TASK_LIMIT</code> above 0; agents connected over MCP use their own subscriptions.</span></p>
+</section>
+<section class="content-section" aria-labelledby="care">
+<h2 id="care"><span class="pt">Cuidados antes de abrir para outras pessoas</span><span class="en">Care before opening it to other people</span></h2>
+<ul>
+<li><span class="pt"><strong>Cadastro aberto por padrão.</strong> Sem <code>SIGNUP_EMAIL_DOMAINS</code>, qualquer pessoa que alcance o endereço cria uma conta. Restrinja por domínio, ou deixe o serviço atrás de VPN, Tailscale ou Cloudflare Access.</span><span class="en"><strong>Open signup by default.</strong> Without <code>SIGNUP_EMAIL_DOMAINS</code>, anyone who can reach the address creates an account. Restrict by domain, or keep the service behind a VPN, Tailscale or Cloudflare Access.</span></li>
+<li><span class="pt"><strong>Um agente com acesso à tela escreve HTML que roda.</strong> Os frames ficam em iframes com <code>sandbox="allow-scripts"</code>, mas trate o conteúdo gerado por agentes como não confiável e não cole nele segredos.</span><span class="en"><strong>An agent with canvas access writes HTML that runs.</strong> Frames sit in iframes with <code>sandbox="allow-scripts"</code>, but treat agent-generated content as untrusted and do not paste secrets into it.</span></li>
+<li><span class="pt"><strong>O servidor dirige um Chrome.</strong> <code>CHROME_NO_SANDBOX</code> existe para contêineres sem as permissões do sandbox; só o ligue se precisar e dentro de um contêiner sem privilégios.</span><span class="en"><strong>The server drives a Chrome.</strong> <code>CHROME_NO_SANDBOX</code> exists for containers without sandbox permissions; only turn it on if you must, and inside an unprivileged container.</span></li>
+<li><span class="pt"><strong>Backup.</strong> Faça backup do Postgres (<code>pg_dump</code>) e do armazenamento de arquivos (<code>data/assets</code> ou o bucket S3).</span><span class="en"><strong>Backup.</strong> Back up Postgres (<code>pg_dump</code>) and file storage (<code>data/assets</code> or the S3 bucket).</span></li>
+<li><span class="pt"><strong>AGPL-3.0.</strong> Se você modificar o Doop e oferecê-lo a outras pessoas pela rede, precisa disponibilizar o código modificado a elas. As marcas “doop” e o logo não vêm com a licença.</span><span class="en"><strong>AGPL-3.0.</strong> If you modify Doop and offer it to other people over a network, you must make the modified source available to them. The “doop” name and logo do not come with the license.</span></li>
+</ul>
+</section>
+<section class="content-section" aria-labelledby="cheat-dp">
+<h2 id="cheat-dp"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Assunto</span><span class="en">Topic</span></th><th><span class="pt">Regra</span><span class="en">Rule</span></th></tr></thead><tbody>
+<tr><td>Doop</td><td><span class="pt">Tela de design multiusuário com agentes via MCP; AGPL-3.0; um processo Node na 4400 em produção.</span><span class="en">Multiplayer design canvas with agents over MCP; AGPL-3.0; one Node process on 4400 in production.</span></td></tr>
+<tr><td><span class="pt">Local</span><span class="en">Local</span></td><td><span class="pt"><code>bun install</code> e <code>bun run dev</code>; app em 4300, API e MCP em 4400; dados em <code>data/pg</code>.</span><span class="en"><code>bun install</code> and <code>bun run dev</code>; app on 4300, API and MCP on 4400; data in <code>data/pg</code>.</span></td></tr>
+<tr><td>Docker</td><td><span class="pt"><code>docker compose up -d</code> com <code>BETTER_AUTH_SECRET</code>; volume em <code>/app/data</code> se usar PGlite.</span><span class="en"><code>docker compose up -d</code> with <code>BETTER_AUTH_SECRET</code>; a volume at <code>/app/data</code> if using PGlite.</span></td></tr>
+<tr><td><span class="pt">Nuvem</span><span class="en">Cloud</span></td><td><span class="pt">Dockerfile + Postgres gerenciado + <code>BETTER_AUTH_SECRET</code> e <code>BETTER_AUTH_URL</code> + <code>/healthz</code>.</span><span class="en">Dockerfile + managed Postgres + <code>BETTER_AUTH_SECRET</code> and <code>BETTER_AUTH_URL</code> + <code>/healthz</code>.</span></td></tr>
+<tr><td><span class="pt">Agentes</span><span class="en">Agents</span></td><td><span class="pt"><code>/mcp</code>; OAuth no navegador, ou chave de agente em <code>Authorization: Bearer</code>.</span><span class="en"><code>/mcp</code>; browser OAuth, or an agent key in <code>Authorization: Bearer</code>.</span></td></tr>
+<tr><td><span class="pt">Cuidados</span><span class="en">Care</span></td><td><span class="pt">Cadastro aberto por padrão; restrinja domínios; backup do banco e dos arquivos.</span><span class="en">Open signup by default; restrict domains; back up the database and files.</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Por que o Doop usa duas portas no desenvolvimento e uma só em produção?</span><span class="en">Why does Doop use two ports in development and only one in production?</span></li><li><span class="pt">Quando o PGlite basta e quando você precisa de um Postgres gerenciado?</span><span class="en">When is PGlite enough and when do you need a managed Postgres?</span></li><li><span class="pt">Quais duas variáveis são obrigatórias em produção, e por quê?</span><span class="en">Which two variables are required in production, and why?</span></li><li><span class="pt">Qual a diferença entre o login por OAuth e uma chave de agente?</span><span class="en">What is the difference between OAuth sign-in and an agent key?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://github.com/kgoedecke/doop" rel="noopener">kgoedecke/doop</a>: <code>README.md</code>, <code>Dockerfile</code>, <code>.env.example</code> (lido em 2026-10-29)</li>
+<li><a href="https://modelcontextprotocol.io/" rel="noopener">Model Context Protocol</a> · <a href="https://www.better-auth.com/" rel="noopener">better-auth</a> · <a href="https://pglite.dev/" rel="noopener">PGlite</a> · <a href="https://bun.sh/docs" rel="noopener">Bun</a></li>
+<li><a href="https://docs.railway.com/" rel="noopener">Railway</a> · <a href="https://fly.io/docs/" rel="noopener">Fly.io</a> · <a href="https://www.gnu.org/licenses/agpl-3.0.html" rel="noopener">GNU AGPL-3.0</a></li>
+</ul></div>
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
