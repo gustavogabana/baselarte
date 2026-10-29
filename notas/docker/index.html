@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="dk.metaTitle">Docker: images, containers, Compose, networks and a smaller attack surface</title>
+  <meta name="description" data-i18n-attributes="content:dk.metaDescription" content="Docker from zero: images and containers, essential commands, Dockerfile, Ubuntu versus Alpine, multi-stage builds, reducing the attack surface, port mapping, networks, Compose, health checks, logs and a hands-on lab.">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/docker/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/docker/">
+  <meta property="og:title" data-i18n-attributes="content:dk.metaTitle" content="Docker: images, containers, Compose, networks and a smaller attack surface">
+  <meta property="og:description" data-i18n-attributes="content:dk.metaDescription" content="Docker from zero: images and containers, essential commands, Dockerfile, Ubuntu versus Alpine, multi-stage builds, reducing the attack surface, port mapping, networks, Compose, health checks, logs and a hands-on lab.">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" data-i18n-attributes="content:dk.metaTitle" content="Docker: images, containers, Compose, networks and a smaller attack surface">
+  <meta name="twitter:description" data-i18n-attributes="content:dk.metaDescription" content="Docker from zero: images and containers, essential commands, Dockerfile, Ubuntu versus Alpine, multi-stage builds, reducing the attack surface, port mapping, networks, Compose, health checks, logs and a hands-on lab.">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="stylesheet" href="../../styles.css">
+
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="dk.kicker">Practical guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="dk.heroTitle">Docker: <em>from the first container to a smaller attack surface.</em></h1>
+  <p class="hero-lede" data-i18n="dk.heroLede">What images and containers are, the commands you use every day, how to write a Dockerfile, choose between Ubuntu and Alpine, shrink the image with multi-stage builds and remove what an attacker would use, plus ports, networks, Compose, health checks and logs, with a lab you can run.</p>
+</section>
+<aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é Docker: contêiner, imagem e por que usar</span><span class="en">What Docker is: container, image and why use it</span></a></li>
+<li><a href="#lifecycle"><span class="pt">Do Dockerfile ao contêiner: o ciclo de vida</span><span class="en">From Dockerfile to container: the life cycle</span></a></li>
+<li><a href="#commands"><span class="pt">Comandos essenciais</span><span class="en">Essential commands</span></a></li>
+<li><a href="#dockerfile"><span class="pt">Dockerfile: escrevendo a receita</span><span class="en">Dockerfile: writing the recipe</span></a></li>
+<li><a href="#base"><span class="pt">Ubuntu ou Alpine? Escolhendo a imagem base</span><span class="en">Ubuntu or Alpine? Choosing the base image</span></a></li>
+<li><a href="#multistage"><span class="pt">Multi-stage build: levar para produção só o que roda</span><span class="en">Multi-stage build: ship only what runs</span></a></li>
+<li><a href="#hardening"><span class="pt">Reduzir a superfície de ataque</span><span class="en">Reducing the attack surface</span></a></li>
+<li><a href="#ports"><span class="pt">Mapeamento de portas</span><span class="en">Port mapping</span></a></li>
+<li><a href="#networks"><span class="pt">Redes e comunicação entre contêineres</span><span class="en">Networks and container-to-container communication</span></a></li>
+<li><a href="#volumes"><span class="pt">Volumes: dados que sobrevivem</span><span class="en">Volumes: data that survives</span></a></li>
+<li><a href="#compose"><span class="pt">Docker Compose: vários contêineres num arquivo YAML</span><span class="en">Docker Compose: several containers in one YAML file</span></a></li>
+<li><a href="#health"><span class="pt">Saúde do contêiner: HEALTHCHECK</span><span class="en">Container health: HEALTHCHECK</span></a></li>
+<li><a href="#logs"><span class="pt">Logs e observabilidade</span><span class="en">Logs and observability</span></a></li>
+<li><a href="#lab"><span class="pt">Praticar na sua máquina</span><span class="en">Practise on your machine</span></a></li>
+<li><a href="#trouble"><span class="pt">Quando algo dá errado</span><span class="en">When something goes wrong</span></a></li>
+<li><a href="#cheat-dk"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é Docker: contêiner, imagem e por que usar</span><span class="en">What Docker is: container, image and why use it</span></h2>
+<p><span class="pt">Todo mundo já ouviu “na minha máquina funciona”. O <strong>Docker</strong> resolve isso empacotando o app <em>junto com tudo que ele precisa para rodar</em> (runtime, bibliotecas, arquivos de sistema) numa unidade que se comporta igual no seu notebook, no CI e no servidor. Essa unidade em execução é um <strong>contêiner</strong>.</span><span class="en">Everyone has heard “it works on my machine”. <strong>Docker</strong> fixes that by packaging the app <em>together with everything it needs to run</em> (runtime, libraries, system files) into a unit that behaves the same on your laptop, in CI and on the server. That unit, running, is a <strong>container</strong>.</span></p>
+<p><span class="pt">Um contêiner <strong>não é uma máquina virtual</strong>. A VM simula um computador e roda um sistema operacional inteiro por cima. O contêiner é só um <em>processo comum do Linux</em>, isolado por recursos do próprio kernel (<em>namespaces</em> escondem o resto do sistema; <em>cgroups</em> limitam CPU e memória). Por isso sobe em milissegundos e pesa megabytes em vez de gigabytes.</span><span class="en">A container is <strong>not a virtual machine</strong>. A VM simulates a computer and runs a whole operating system on top. A container is just an <em>ordinary Linux process</em>, isolated by features of the kernel itself (<em>namespaces</em> hide the rest of the system; <em>cgroups</em> cap CPU and memory). That is why it starts in milliseconds and weighs megabytes instead of gigabytes.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 214" role="img" aria-label="Máquina virtual versus contêiner / Virtual machine versus container" style="min-width:620px">
+<text x="175" y="22" class="pt mut" text-anchor="middle">Máquina virtual</text><text x="175" y="22" class="en mut" text-anchor="middle">Virtual machine</text>
+<rect x="10" y="32" width="330" height="170" rx="4" class="ln dash"/>
+<rect x="20" y="44" width="94" height="92" rx="4" class="ln"/>
+<text x="67" y="62" text-anchor="middle">app</text>
+<text x="67" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="26" y="90" width="82" height="38" rx="4" class="ln fillsoft"/>
+<text x="67" y="113" class="pt mut" text-anchor="middle">SO inteiro</text><text x="67" y="113" class="en mut" text-anchor="middle">full OS</text>
+<rect x="128" y="44" width="94" height="92" rx="4" class="ln"/>
+<text x="175" y="62" text-anchor="middle">app</text>
+<text x="175" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="134" y="90" width="82" height="38" rx="4" class="ln fillsoft"/>
+<text x="175" y="113" class="pt mut" text-anchor="middle">SO inteiro</text><text x="175" y="113" class="en mut" text-anchor="middle">full OS</text>
+<rect x="236" y="44" width="94" height="92" rx="4" class="ln"/>
+<text x="283" y="62" text-anchor="middle">app</text>
+<text x="283" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="242" y="90" width="82" height="38" rx="4" class="ln fillsoft"/>
+<text x="283" y="113" class="pt mut" text-anchor="middle">SO inteiro</text><text x="283" y="113" class="en mut" text-anchor="middle">full OS</text>
+<rect x="20" y="146" width="310" height="24" rx="4" class="ln"/>
+<text x="175" y="162" class="mut" text-anchor="middle">hypervisor</text>
+<rect x="20" y="174" width="310" height="20" rx="4" class="brandfill"/>
+<text x="175" y="188" class="pt" text-anchor="middle">SO do host + hardware</text><text x="175" y="188" class="en" text-anchor="middle">host OS + hardware</text>
+<text x="525" y="22" class="pt mut" text-anchor="middle">Contêineres</text><text x="525" y="22" class="en mut" text-anchor="middle">Containers</text>
+<rect x="360" y="32" width="330" height="170" rx="4" class="ln dash"/>
+<rect x="372" y="44" width="82" height="62" rx="4" class="ln"/>
+<text x="413" y="62" text-anchor="middle">app</text>
+<text x="413" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="484" y="44" width="82" height="62" rx="4" class="ln"/>
+<text x="525" y="62" text-anchor="middle">app</text>
+<text x="525" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="596" y="44" width="82" height="62" rx="4" class="ln"/>
+<text x="637" y="62" text-anchor="middle">app</text>
+<text x="637" y="80" class="mut" text-anchor="middle">libs</text>
+<rect x="372" y="116" width="306" height="24" rx="4" class="ln"/>
+<text x="525" y="132" class="mut" text-anchor="middle">Docker Engine (runtime)</text>
+<rect x="372" y="146" width="306" height="48" rx="4" class="brandfill"/>
+<text x="525" y="166" class="pt" text-anchor="middle">kernel do host (compartilhado)</text><text x="525" y="166" class="en" text-anchor="middle">host kernel (shared)</text>
+<text x="525" y="184" class="mut" text-anchor="middle">+ hardware</text>
+</svg></div><figcaption><span class="pt">Cada VM carrega um sistema operacional inteiro; os contêineres dividem o kernel do host e só levam o app e suas bibliotecas.</span><span class="en">Each VM carries a whole operating system; containers share the host kernel and carry only the app and its libraries.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Termo</span><span class="en">Term</span></th><th><span class="pt">O que é</span><span class="en">What it is</span></th><th><span class="pt">Analogia</span><span class="en">Analogy</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Imagem</span><span class="en">Image</span></td><td><span class="pt">Pacote imutável e em camadas com o sistema de arquivos e o comando de partida do app. Tem nome e tag (<code>postgres:17-alpine</code>).</span><span class="en">Immutable, layered package with the app's file system and start command. It has a name and a tag (<code>postgres:17-alpine</code>).</span></td><td><span class="pt">A receita pronta e congelada</span><span class="en">The finished, frozen recipe</span></td></tr>
+<tr><td><span class="pt">Contêiner</span><span class="en">Container</span></td><td><span class="pt">Uma imagem em execução: processo isolado + uma camada gravável por cima.</span><span class="en">An image running: an isolated process + a writable layer on top.</span></td><td><span class="pt">O prato servido</span><span class="en">The dish served</span></td></tr>
+<tr><td>Dockerfile</td><td><span class="pt">Texto com os passos para construir uma imagem.</span><span class="en">Text with the steps to build an image.</span></td><td><span class="pt">O caderno de receitas</span><span class="en">The recipe book</span></td></tr>
+<tr><td>Registry</td><td><span class="pt">Servidor de imagens: Docker Hub, GitHub Container Registry, AWS ECR.</span><span class="en">Image server: Docker Hub, GitHub Container Registry, AWS ECR.</span></td><td><span class="pt">A estante de onde se pega a receita</span><span class="en">The shelf the recipe comes from</span></td></tr>
+<tr><td><span class="pt">Volume</span><span class="en">Volume</span></td><td><span class="pt">Pasta gerenciada pelo Docker que sobrevive ao contêiner.</span><span class="en">Docker-managed folder that outlives the container.</span></td><td><span class="pt">O armário externo</span><span class="en">The storage locker</span></td></tr>
+<tr><td><span class="pt">Rede</span><span class="en">Network</span></td><td><span class="pt">Rede virtual que liga contêineres e dá DNS por nome.</span><span class="en">Virtual network that connects containers and gives DNS by name.</span></td><td><span class="pt">O ramal interno</span><span class="en">The internal phone line</span></td></tr>
+<tr><td>Compose</td><td><span class="pt">Um arquivo YAML que descreve vários contêineres, redes e volumes e sobe tudo junto.</span><span class="en">A YAML file describing several containers, networks and volumes, started together.</span></td><td><span class="pt">O cardápio completo</span><span class="en">The full menu</span></td></tr>
+</tbody></table></div>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Em Mac e Windows</strong> o Docker Desktop roda uma VM Linux escondida, porque contêineres precisam de um kernel Linux. No Linux ele usa o kernel da própria máquina. Os comandos desta nota são os mesmos nos três.</span><span class="en"><strong>On Mac and Windows</strong> Docker Desktop runs a hidden Linux VM, because containers need a Linux kernel. On Linux it uses the machine's own kernel. The commands in this note are the same on all three.</span></div>
+<p><span class="pt">O exemplo que acompanha a nota é um mini serviço em Go (o código completo está na <a href="#lab">atividade 0</a>) com três rotas: <code>/</code> responde com o nome do contêiner, <code>/health</code> diz que está vivo e <code>/db</code> tenta abrir uma conexão com um Postgres vizinho. Go foi escolhido porque gera um binário único, o que deixa o multi-stage build (mais abaixo) bem visível; nada aqui depende de Go.</span><span class="en">The example that runs through the note is a tiny Go service (full code in <a href="#lab">activity 0</a>) with three routes: <code>/</code> answers with the container name, <code>/health</code> says it is alive and <code>/db</code> tries to open a connection to a neighbouring Postgres. Go was chosen because it produces a single binary, which makes the multi-stage build (below) very visible; nothing here depends on Go.</span></p>
+</section>
+<section class="content-section" aria-labelledby="lifecycle">
+<h2 id="lifecycle"><span class="pt">Do Dockerfile ao contêiner: o ciclo de vida</span><span class="en">From Dockerfile to container: the life cycle</span></h2>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 186" role="img" aria-label="Do Dockerfile ao contêiner / From Dockerfile to container" style="min-width:620px">
+<rect x="10" y="50" width="110" height="56" rx="4" class="ln fillsoft"/>
+<text x="65.0" y="75.0" class="mono" text-anchor="middle">Dockerfile</text>
+<text x="65.0" y="91.0" class="pt mut" text-anchor="middle">a receita</text><text x="65.0" y="91.0" class="en mut" text-anchor="middle">the recipe</text>
+<path d="M120 78L190 78" class="ln"/><path d="M183.7 81.0L190 78L183.7 75.0" class="ln"/>
+<text x="155" y="68" class="mono mut" text-anchor="middle">build</text>
+<rect x="190" y="50" width="110" height="56" rx="4" class="ln fillsoft"/>
+<text x="245.0" y="75.0" text-anchor="middle">imagem</text>
+<text x="245.0" y="91.0" class="pt mut" text-anchor="middle">somente leitura</text><text x="245.0" y="91.0" class="en mut" text-anchor="middle">read-only</text>
+<path d="M300 78L370 78" class="ln"/><path d="M363.7 81.0L370 78L363.7 75.0" class="ln"/>
+<text x="335" y="68" class="mono mut" text-anchor="middle">run</text>
+<rect x="370" y="50" width="110" height="56" rx="4" class="brandfill"/>
+<text x="425.0" y="75.0" text-anchor="middle">contêiner</text>
+<text x="425.0" y="91.0" class="pt mut" text-anchor="middle">processo vivo</text><text x="425.0" y="91.0" class="en mut" text-anchor="middle">running process</text>
+<rect x="190" y="130" width="110" height="36" rx="4" class="ln"/>
+<text x="245" y="152" class="mono" text-anchor="middle">registry</text>
+<path d="M245 106L245 130" class="ln"/><path d="M242.0 123.7L245 130L248.0 123.7" class="ln"/>
+<text x="255" y="122" class="mono mut" text-anchor="start">push / pull</text>
+<text x="425" y="128" class="mono mut" text-anchor="middle">stop · rm</text>
+<text x="500" y="62" class="pt mut" text-anchor="start">1 imagem</text><text x="500" y="62" class="en mut" text-anchor="start">1 image</text>
+<text x="500" y="80" class="pt mut" text-anchor="start">→ N contêineres</text><text x="500" y="80" class="en mut" text-anchor="start">→ N containers</text>
+<text x="500" y="98" class="pt mut" text-anchor="start">(cada um com sua</text><text x="500" y="98" class="en mut" text-anchor="start">(each with its own</text>
+<text x="500" y="114" class="pt mut" text-anchor="start">camada gravável)</text><text x="500" y="114" class="en mut" text-anchor="start">writable layer)</text>
+</svg></div><figcaption><span class="pt">O Dockerfile gera uma imagem imutável; a imagem pode ser guardada num registry e iniciada quantas vezes quiser como contêiner.</span><span class="en">The Dockerfile builds an immutable image; the image can be stored in a registry and started as a container as many times as you like.</span></figcaption></figure>
+<p><span class="pt">O fluxo é sempre o mesmo: <strong>build</strong> (Dockerfile → imagem), <strong>push/pull</strong> (levar a imagem de e para um registry) e <strong>run</strong> (imagem → contêiner). Uma imagem pode virar muitos contêineres, e apagar um contêiner nunca apaga a imagem.</span><span class="en">The flow is always the same: <strong>build</strong> (Dockerfile → image), <strong>push/pull</strong> (move the image to and from a registry) and <strong>run</strong> (image → container). One image can become many containers, and deleting a container never deletes the image.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 214" role="img" aria-label="Camadas da imagem e do contêiner / Image and container layers" style="min-width:620px">
+<text x="110" y="22" class="pt mut" text-anchor="middle">Imagem (camadas, só leitura)</text><text x="110" y="22" class="en mut" text-anchor="middle">Image (layers, read-only)</text>
+<rect x="20" y="160" width="180" height="24" rx="4" class="ln fillsoft"/>
+<text x="110" y="176" class="mono" text-anchor="middle">FROM distroless</text>
+<rect x="20" y="132" width="180" height="24" rx="4" class="ln fillsoft"/>
+<text x="110" y="148" class="mono" text-anchor="middle">COPY go.mod</text>
+<rect x="20" y="104" width="180" height="24" rx="4" class="ln fillsoft"/>
+<text x="110" y="120" class="mono" text-anchor="middle">RUN go mod download</text>
+<rect x="20" y="76" width="180" height="24" rx="4" class="ln fillsoft"/>
+<text x="110" y="92" class="mono" text-anchor="middle">COPY . .</text>
+<rect x="20" y="48" width="180" height="24" rx="4" class="ln"/>
+<text x="110" y="64" class="mono" text-anchor="middle">RUN go build</text>
+<text x="20" y="204" class="pt mut" text-anchor="start">cada instrução = uma camada em cache</text><text x="20" y="204" class="en mut" text-anchor="start">each instruction = one cached layer</text>
+<path d="M215 80L290 80" class="ln"/><path d="M283.7 83.0L290 80L283.7 77.0" class="ln"/>
+<text x="252" y="70" class="mono mut" text-anchor="middle">run</text>
+<text x="430" y="22" class="pt mut" text-anchor="middle">Contêiner</text><text x="430" y="22" class="en mut" text-anchor="middle">Container</text>
+<rect x="300" y="40" width="260" height="36" rx="4" class="brandfill"/>
+<text x="430" y="62" class="pt" text-anchor="middle">camada gravável (some no rm)</text><text x="430" y="62" class="en" text-anchor="middle">writable layer (gone on rm)</text>
+<rect x="300" y="80" width="260" height="24" rx="4" class="ln fillsoft"/>
+<text x="430" y="96" class="pt mut" text-anchor="middle">camadas da imagem (compartilhadas)</text><text x="430" y="96" class="en mut" text-anchor="middle">image layers (shared)</text>
+<rect x="300" y="124" width="260" height="30" rx="4" class="ln"/>
+<text x="430" y="143" class="pt" text-anchor="middle">volume (dados que sobrevivem)</text><text x="430" y="143" class="en" text-anchor="middle">volume (data that survives)</text>
+<path d="M430 124L430 104" class="ln"/><path d="M433.0 110.3L430 104L427.0 110.3" class="ln"/>
+</svg></div><figcaption><span class="pt">Mudou uma linha, só as camadas dali para baixo são refeitas. O que o contêiner grava vai numa camada temporária; o que precisa sobreviver vai num volume.</span><span class="en">Change one line and only the layers from there down are rebuilt. What the container writes goes into a temporary layer; what must survive goes into a volume.</span></figcaption></figure>
+<p><span class="pt">A imagem é feita de <strong>camadas</strong>, uma por instrução do Dockerfile. O Docker guarda cada camada em cache: se a instrução e tudo acima dela não mudaram, ele reaproveita. Por isso a <em>ordem</em> das linhas importa (veja a seção do Dockerfile). Dois contêineres da mesma imagem compartilham as camadas de leitura e só cada um tem a sua camada gravável, que <strong>desaparece junto com o contêiner</strong>.</span><span class="en">The image is made of <strong>layers</strong>, one per Dockerfile instruction. Docker caches each layer: if the instruction and everything above it did not change, it reuses it. That is why the <em>order</em> of the lines matters (see the Dockerfile section). Two containers from the same image share the read-only layers and each has its own writable layer, which <strong>vanishes with the container</strong>.</span></p>
+</section>
+<section class="content-section" aria-labelledby="commands">
+<h2 id="commands"><span class="pt">Comandos essenciais</span><span class="en">Essential commands</span></h2>
+<pre><code># --- imagens ---
+docker pull alpine:3.22                 # baixa do registry
+docker images                           # lista imagens locais
+docker build -t meu-app:1.0 .           # constroi a imagem a partir do ./Dockerfile
+docker history meu-app:1.0              # camadas e tamanho de cada uma
+docker rmi meu-app:1.0                  # apaga a imagem
+
+# --- contêineres ---
+docker run -d --name web -p 8080:8080 meu-app:1.0   # cria + inicia em segundo plano
+docker run --rm -it alpine:3.22 sh                  # descartavel e interativo
+docker ps                               # os que estao rodando (-a: todos)
+docker stop web                         # SIGTERM, espera 10 s, depois SIGKILL
+docker start web                        # liga de novo o mesmo contêiner
+docker rm web                           # apaga o contêiner parado (-f: forca)
+docker exec -it web sh                  # abre um shell DENTRO de um contêiner rodando
+docker cp web:/app/arquivo.txt .        # copia arquivo para fora
+
+# --- investigar ---
+docker logs -f --tail 50 web            # ultimas 50 linhas e segue
+docker inspect web                      # JSON com tudo (IP, volumes, saude, usuario)
+docker stats                            # CPU e memoria ao vivo
+docker top web                          # processos dentro do contêiner
+
+# --- limpeza ---
+docker system df                        # quanto espaco o Docker usa
+docker system prune                     # apaga parados, redes e imagens sem tag</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Flag do <code>docker run</code></span><span class="en"><code>docker run</code> flag</span></th><th><span class="pt">Efeito</span><span class="en">Effect</span></th></tr></thead><tbody>
+<tr><td><code>-d</code></td><td><span class="pt">Roda em segundo plano (<em>detached</em>); sem ele o terminal fica preso ao contêiner.</span><span class="en">Runs in the background (<em>detached</em>); without it the terminal stays attached to the container.</span></td></tr>
+<tr><td><code>--name</code></td><td><span class="pt">Nome fixo. Sem ele o Docker inventa um (<code>vigilant_curie</code>), e o nome também vira o host na rede.</span><span class="en">A fixed name. Without it Docker invents one (<code>vigilant_curie</code>), and the name also becomes the host on the network.</span></td></tr>
+<tr><td><code>-p H:C</code></td><td><span class="pt">Publica a porta C do contêiner na porta H do host (veja <a href="#ports">portas</a>).</span><span class="en">Publishes container port C on host port H (see <a href="#ports">ports</a>).</span></td></tr>
+<tr><td><code>-e CHAVE=valor</code></td><td><span class="pt">Variável de ambiente. <code>--env-file .env</code> lê de um arquivo.</span><span class="en">Environment variable. <code>--env-file .env</code> reads from a file.</span></td></tr>
+<tr><td><code>-v nome:/caminho</code></td><td><span class="pt">Monta um volume (veja <a href="#volumes">volumes</a>).</span><span class="en">Mounts a volume (see <a href="#volumes">volumes</a>).</span></td></tr>
+<tr><td><code>--rm</code></td><td><span class="pt">Apaga o contêiner quando ele termina. Ótimo para testes.</span><span class="en">Deletes the container when it exits. Great for experiments.</span></td></tr>
+<tr><td><code>--restart</code></td><td><span class="pt"><code>no</code> (padrão), <code>on-failure</code>, <code>always</code>, <code>unless-stopped</code>: o que fazer quando o processo sai.</span><span class="en"><code>no</code> (default), <code>on-failure</code>, <code>always</code>, <code>unless-stopped</code>: what to do when the process exits.</span></td></tr>
+<tr><td><code>--memory</code>, <code>--cpus</code></td><td><span class="pt">Limites de recurso. Sem eles um contêiner com bug pode consumir a máquina inteira.</span><span class="en">Resource limits. Without them a buggy container can eat the whole machine.</span></td></tr>
+<tr><td><code>--network</code></td><td><span class="pt">Em qual rede o contêiner entra (veja <a href="#networks">redes</a>).</span><span class="en">Which network the container joins (see <a href="#networks">networks</a>).</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Contêiner é descartável.</strong> Tudo o que o app grava dentro do contêiner some no <code>docker rm</code>. Dados que importam vão em volume (ou num banco gerenciado); configuração vai em variável de ambiente; logs vão para a saída padrão. É a base de tudo que vem a seguir.</span><span class="en"><strong>A container is disposable.</strong> Anything the app writes inside the container disappears on <code>docker rm</code>. Data that matters goes in a volume (or a managed database); configuration goes in environment variables; logs go to standard output. This is the basis of everything that follows.</span></div>
+</section>
+<section class="content-section" aria-labelledby="dockerfile">
+<h2 id="dockerfile"><span class="pt">Dockerfile: escrevendo a receita</span><span class="en">Dockerfile: writing the recipe</span></h2>
+<p><span class="pt">Primeiro uma versão <em>ingênua</em>, de um único estágio, para entender as instruções. Ela funciona, e é exatamente o tipo de imagem que você <strong>não</strong> quer em produção (veja o motivo na seção de multi-stage):</span><span class="en">First a <em>naive</em>, single-stage version, to understand the instructions. It works, and it is exactly the kind of image you do <strong>not</strong> want in production (see why in the multi-stage section):</span></p>
+<pre><code>FROM golang:1.25-alpine          # imagem base: ponto de partida
+WORKDIR /app                     # pasta de trabalho (criada se nao existir)
+COPY go.mod ./                   # 1) so o arquivo de dependencias...
+RUN go mod download              #    ...e baixa as dependencias (camada em cache)
+COPY . .                         # 2) depois o codigo (muda toda hora)
+RUN go build -o /app/server .    # compila
+EXPOSE 8080                      # documenta a porta (nao publica nada)
+CMD ["/app/server"]              # comando de partida</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Instrução</span><span class="en">Instruction</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody>
+<tr><td><code>FROM</code></td><td><span class="pt">Escolhe a imagem base. Toda imagem começa em outra. Use tag fixa (<code>1.25-alpine</code>), nunca <code>latest</code>.</span><span class="en">Picks the base image. Every image starts from another. Use a fixed tag (<code>1.25-alpine</code>), never <code>latest</code>.</span></td></tr>
+<tr><td><code>WORKDIR</code></td><td><span class="pt">Define a pasta atual para as instruções seguintes.</span><span class="en">Sets the current folder for the following instructions.</span></td></tr>
+<tr><td><code>COPY</code></td><td><span class="pt">Copia arquivos do seu projeto para a imagem. Prefira <code>COPY</code> a <code>ADD</code> (que também baixa URLs e descompacta, comportamento surpreendente).</span><span class="en">Copies files from your project into the image. Prefer <code>COPY</code> to <code>ADD</code> (which also fetches URLs and unpacks archives, surprising behaviour).</span></td></tr>
+<tr><td><code>RUN</code></td><td><span class="pt">Executa um comando <strong>durante o build</strong> e grava o resultado numa camada (instalar pacote, compilar).</span><span class="en">Runs a command <strong>at build time</strong> and stores the result in a layer (install a package, compile).</span></td></tr>
+<tr><td><code>ENV</code> / <code>ARG</code></td><td><span class="pt"><code>ENV</code> vale também em execução. <code>ARG</code> só no build. <strong>Nenhum dos dois é lugar de segredo</strong>: ficam visíveis em <code>docker history</code> e <code>docker inspect</code>.</span><span class="en"><code>ENV</code> also applies at run time. <code>ARG</code> only at build time. <strong>Neither is a place for secrets</strong>: both show up in <code>docker history</code> and <code>docker inspect</code>.</span></td></tr>
+<tr><td><code>EXPOSE</code></td><td><span class="pt">Só <em>documenta</em> a porta em que o app escuta. Não abre nada para fora (isso é o <code>-p</code>).</span><span class="en">Only <em>documents</em> the port the app listens on. It opens nothing to the outside (that is <code>-p</code>).</span></td></tr>
+<tr><td><code>USER</code></td><td><span class="pt">Roda o que vem depois (e o contêiner) como esse usuário, em vez de root.</span><span class="en">Runs what follows (and the container) as that user instead of root.</span></td></tr>
+<tr><td><code>HEALTHCHECK</code></td><td><span class="pt">Ensina o Docker a testar se o app está bem (veja <a href="#health">saúde</a>).</span><span class="en">Teaches Docker how to test whether the app is well (see <a href="#health">health</a>).</span></td></tr>
+<tr><td><code>ENTRYPOINT</code> / <code>CMD</code></td><td><span class="pt">O que executar quando o contêiner inicia. <code>ENTRYPOINT</code> é o programa; <code>CMD</code> são os argumentos padrão, que o <code>docker run imagem args</code> substitui.</span><span class="en">What to run when the container starts. <code>ENTRYPOINT</code> is the program; <code>CMD</code> are the default arguments, which <code>docker run image args</code> replaces.</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Cache: a ordem das linhas importa</span><span class="en">Cache: line order matters</span></h3>
+<p><span class="pt">Repare que o Dockerfile acima copia o <code>go.mod</code> e baixa as dependências <em>antes</em> de copiar o resto do código. Como o código muda a cada commit e as dependências quase nunca, o Docker reaproveita a camada pesada do <code>go mod download</code> e só refaz o <code>COPY . .</code> e o build. A regra geral: <strong>o que muda menos vem primeiro</strong>. No Node seria <code>COPY package*.json</code> + <code>npm ci</code> antes do <code>COPY . .</code>; no Python, <code>requirements.txt</code> + <code>pip install</code>.</span><span class="en">Notice that the Dockerfile above copies <code>go.mod</code> and downloads dependencies <em>before</em> copying the rest of the code. Since code changes on every commit and dependencies almost never do, Docker reuses the heavy <code>go mod download</code> layer and only redoes <code>COPY . .</code> and the build. General rule: <strong>what changes least comes first</strong>. In Node it would be <code>COPY package*.json</code> + <code>npm ci</code> before <code>COPY . .</code>; in Python, <code>requirements.txt</code> + <code>pip install</code>.</span></p>
+<h3><span class="pt">.dockerignore</span><span class="en">.dockerignore</span></h3>
+<p><span class="pt">O <code>COPY . .</code> leva a pasta inteira. O arquivo <code>.dockerignore</code> (mesma sintaxe do <code>.gitignore</code>) diz o que ficar de fora: acelera o build e, mais importante, <strong>evita que <code>.env</code>, chaves e a pasta <code>.git</code> entrem na imagem</strong>, onde qualquer pessoa com a imagem os encontraria.</span><span class="en">The <code>COPY . .</code> takes the whole folder. The <code>.dockerignore</code> file (same syntax as <code>.gitignore</code>) says what to leave out: it speeds up the build and, more importantly, <strong>keeps <code>.env</code>, keys and the <code>.git</code> folder out of the image</strong>, where anyone holding the image would find them.</span></p>
+<pre><code>.git
+.env
+*.pem
+node_modules
+*.md
+Dockerfile*
+compose.yaml</code></pre>
+<h3><span class="pt">Executar o app: PID 1, sinais e um processo por contêiner</span><span class="en">Running the app: PID 1, signals and one process per container</span></h3>
+<ul class="ds-list"><li><span class="pt"><strong>Um processo principal por contêiner.</strong> O contêiner vive enquanto esse processo viver; quando ele sai, o contêiner para. Banco, API e fila ficam em contêineres separados, ligados por rede (veja <a href="#compose">Compose</a>), não todos dentro de um só com systemd ou <code>supervisord</code>.</span><span class="en"><strong>One main process per container.</strong> The container lives as long as that process lives; when it exits, the container stops. Database, API and queue go in separate containers, joined by a network (see <a href="#compose">Compose</a>), not all inside one with systemd or <code>supervisord</code>.</span></li><li><span class="pt"><strong>Use a forma <em>exec</em></strong> (<code>CMD ["/server"]</code>, com colchetes), não a forma <em>shell</em> (<code>CMD /server</code>). A forma shell executa <code>sh -c "/server"</code>: o shell vira o PID 1 e <strong>não repassa o SIGTERM</strong> ao app, então o <code>docker stop</code> espera 10 s e acaba matando com SIGKILL, sem desligamento limpo.</span><span class="en"><strong>Use the <em>exec</em> form</strong> (<code>CMD ["/server"]</code>, with brackets), not the <em>shell</em> form (<code>CMD /server</code>). The shell form runs <code>sh -c "/server"</code>: the shell becomes PID 1 and <strong>does not forward SIGTERM</strong> to the app, so <code>docker stop</code> waits 10 s and ends up killing it with SIGKILL, with no clean shutdown.</span></li><li><span class="pt">O app deve tratar o <strong>SIGTERM</strong> (parar de aceitar requisições, terminar as em andamento, fechar conexões). Se ele cria processos filhos, rode com <code>--init</code> (ou <code>init: true</code> no Compose) para um init mínimo recolher os zumbis.</span><span class="en">The app should handle <strong>SIGTERM</strong> (stop accepting requests, finish in-flight ones, close connections). If it spawns child processes, run with <code>--init</code> (or <code>init: true</code> in Compose) so a minimal init reaps the zombies.</span></li><li><span class="pt">O app deve <strong>escutar em <code>0.0.0.0</code></strong>, não em <code>127.0.0.1</code>: dentro do contêiner, “localhost” é o próprio contêiner, e a porta publicada chega pela interface de rede dele, não pelo loopback.</span><span class="en">The app must <strong>listen on <code>0.0.0.0</code></strong>, not <code>127.0.0.1</code>: inside the container “localhost” is the container itself, and the published port arrives through its network interface, not the loopback.</span></li><li><span class="pt">Configuração por <strong>variáveis de ambiente</strong> (<code>PORT</code>, <code>DB_ADDR</code>), e logs na <strong>saída padrão</strong>. Assim a mesma imagem serve para dev, teste e produção.</span><span class="en">Configuration through <strong>environment variables</strong> (<code>PORT</code>, <code>DB_ADDR</code>) and logs on <strong>standard output</strong>. That way the same image serves dev, test and production.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="base">
+<h2 id="base"><span class="pt">Ubuntu ou Alpine? Escolhendo a imagem base</span><span class="en">Ubuntu or Alpine? Choosing the base image</span></h2>
+<p><span class="pt">Quando um Dockerfile diz <code>FROM ubuntu:24.04</code>, o contêiner <strong>não roda o Ubuntu</strong> como sistema: ele roda o <em>kernel do host</em> com o sistema de arquivos do Ubuntu por cima (<code>/bin</code>, <code>/etc</code>, o <code>apt</code>, a glibc). Não há boot, systemd nem login. A escolha da base decide <em>quais ferramentas e bibliotecas existem dentro</em>, e portanto o tamanho e a superfície de ataque.</span><span class="en">When a Dockerfile says <code>FROM ubuntu:24.04</code>, the container <strong>does not run Ubuntu</strong> as a system: it runs the <em>host kernel</em> with the Ubuntu file system on top (<code>/bin</code>, <code>/etc</code>, <code>apt</code>, glibc). There is no boot, no systemd, no login. The base you pick decides <em>which tools and libraries exist inside</em>, and therefore the size and the attack surface.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th></th><th>Ubuntu / Debian</th><th>Alpine</th><th>Distroless / scratch</th></tr></thead><tbody>
+<tr><td><span class="pt">Tamanho da base</span><span class="en">Base size</span></td><td><span class="pt">≈ 30 a 80 MB (<code>-slim</code> é menor)</span><span class="en">≈ 30 to 80 MB (<code>-slim</code> is smaller)</span></td><td>≈ 8 MB</td><td><span class="pt">≈ 2 MB (static) a 20 MB</span><span class="en">≈ 2 MB (static) to 20 MB</span></td></tr>
+<tr><td><span class="pt">Biblioteca C</span><span class="en">C library</span></td><td>glibc</td><td>musl</td><td><span class="pt">glibc ou nenhuma</span><span class="en">glibc or none</span></td></tr>
+<tr><td><span class="pt">Gerenciador de pacotes</span><span class="en">Package manager</span></td><td><code>apt</code></td><td><code>apk</code></td><td><span class="pt">nenhum</span><span class="en">none</span></td></tr>
+<tr><td>Shell</td><td>bash</td><td><span class="pt">sh (BusyBox)</span><span class="en">sh (BusyBox)</span></td><td><span class="pt">nenhum</span><span class="en">none</span></td></tr>
+<tr><td><span class="pt">Compatibilidade</span><span class="en">Compatibility</span></td><td><span class="pt">A mais ampla; quase todo binário pré-compilado funciona</span><span class="en">The widest; nearly every prebuilt binary works</span></td><td><span class="pt">Alguns binários e wheels Python assumem glibc e quebram ou compilam devagar</span><span class="en">Some binaries and Python wheels assume glibc and break or build slowly</span></td><td><span class="pt">Só roda o que você já trouxe pronto (binário estático)</span><span class="en">Only runs what you bring prebuilt (static binary)</span></td></tr>
+<tr><td><span class="pt">Depuração</span><span class="en">Debugging</span></td><td><span class="pt">Fácil (tem tudo)</span><span class="en">Easy (has everything)</span></td><td><span class="pt">Boa (BusyBox)</span><span class="en">Good (BusyBox)</span></td><td><span class="pt">Difícil de propósito</span><span class="en">Hard on purpose</span></td></tr>
+<tr><td><span class="pt">Superfície de ataque</span><span class="en">Attack surface</span></td><td><span class="pt">Maior (muitos pacotes, mais CVEs a acompanhar)</span><span class="en">Larger (many packages, more CVEs to follow)</span></td><td><span class="pt">Pequena</span><span class="en">Small</span></td><td><span class="pt">Mínima</span><span class="en">Minimal</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Medido no exemplo desta nota (o <strong>mesmo binário</strong> copiado para cada base, tamanho descomprimido de <code>docker image inspect</code>; varia com a versão e a arquitetura):</span><span class="en">Measured on this note's example (the <strong>same binary</strong> copied onto each base, uncompressed size from <code>docker image inspect</code>; varies with version and architecture):</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Imagem final</span><span class="en">Final image</span></th><th><span class="pt">Tamanho</span><span class="en">Size</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Um estágio, sobre <code>golang:1.25-alpine</code> (compilador e fontes inclusos)</span><span class="en">Single stage on <code>golang:1.25-alpine</code> (compiler and sources included)</span></td><td>452 MB</td></tr>
+<tr><td><code>ubuntu:24.04</code> <span class="pt">+ binário</span><span class="en">+ binary</span></td><td>126 MB</td></tr>
+<tr><td><code>alpine:3.22</code> <span class="pt">+ binário</span><span class="en">+ binary</span></td><td>22 MB</td></tr>
+<tr><td><code>distroless/static:nonroot</code> <span class="pt">+ binário</span><span class="en">+ binary</span></td><td>15 MB</td></tr>
+</tbody></table></div>
+<h3><span class="pt">Como decidir</span><span class="en">How to decide</span></h3>
+<ul class="ds-list"><li><span class="pt"><strong>Comece pela variante <code>-slim</code> (Debian) ou <code>-alpine</code></strong> da imagem oficial da sua linguagem (<code>node:22-slim</code>, <code>python:3.13-slim</code>), em vez de partir de <code>ubuntu</code> e instalar o runtime. Já vem configurada, atualizada e menor.</span><span class="en"><strong>Start from the <code>-slim</code> (Debian) or <code>-alpine</code> variant</strong> of your language's official image (<code>node:22-slim</code>, <code>python:3.13-slim</code>) instead of starting from <code>ubuntu</code> and installing the runtime. It comes configured, maintained and smaller.</span></li><li><span class="pt"><strong>Alpine</strong> quando o app roda bem em musl (Go, Node, a maioria dos apps Java e Python puros) e você quer uma base pequena. Cuidado com dependências nativas: se algo falhar com erros de biblioteca ou o <code>pip install</code> demorar para compilar, troque para <code>-slim</code>.</span><span class="en"><strong>Alpine</strong> when the app runs fine on musl (Go, Node, most Java and pure Python apps) and you want a small base. Mind native dependencies: if something fails with library errors or <code>pip install</code> takes forever compiling, switch to <code>-slim</code>.</span></li><li><span class="pt"><strong>Ubuntu</strong> quando você precisa de pacotes específicos do <code>apt</code>, de compatibilidade máxima ou segue o padrão da empresa. Não é “errado”, só maior; mantenha-o enxuto (exemplo abaixo).</span><span class="en"><strong>Ubuntu</strong> when you need specific <code>apt</code> packages, maximum compatibility, or your company standard. It is not “wrong”, just larger; keep it lean (example below).</span></li><li><span class="pt"><strong>Distroless ou <code>scratch</code></strong> para produção de binários estáticos (Go, Rust) ou apps com runtime mínimo, geralmente como estágio final de um multi-stage.</span><span class="en"><strong>Distroless or <code>scratch</code></strong> for production of static binaries (Go, Rust) or minimal-runtime apps, usually as the final stage of a multi-stage build.</span></li></ul>
+<pre><code># Ubuntu enxuto: um RUN so, sem recomendados, limpando o cache do apt na mesma camada
+FROM ubuntu:24.04
+RUN apt-get update \
+ &amp;&amp; apt-get install -y --no-install-recommends ca-certificates curl \
+ &amp;&amp; rm -rf /var/lib/apt/lists/* \
+ &amp;&amp; useradd --system --uid 10001 app
+USER app
+
+# Alpine equivalente
+FROM alpine:3.22
+RUN apk add --no-cache ca-certificates curl \
+ &amp;&amp; adduser -S -u 10001 app
+USER app</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>Por que “limpar na mesma camada”:</strong> uma camada nunca encolhe. Se você instala no <code>RUN</code> A e apaga no <code>RUN</code> B, os arquivos continuam na camada A e a imagem não diminui. Instalar e limpar precisam estar no <strong>mesmo</strong> <code>RUN</code>.</span><span class="en"><strong>Why “clean in the same layer”:</strong> a layer never shrinks. If you install in <code>RUN</code> A and delete in <code>RUN</code> B, the files stay in layer A and the image does not get smaller. Installing and cleaning must happen in the <strong>same</strong> <code>RUN</code>.</span></div>
+</section>
+<section class="content-section" aria-labelledby="multistage">
+<h2 id="multistage"><span class="pt">Multi-stage build: levar para produção só o que roda</span><span class="en">Multi-stage build: ship only what runs</span></h2>
+<p><span class="pt">Compilar um app exige compilador, cabeçalhos, gerenciador de pacotes, código-fonte e, às vezes, chaves de acesso a repositórios privados. <strong>Nada disso é necessário para executar o resultado</strong>, mas num Dockerfile de um estágio tudo fica na imagem final, pesando e dando ao atacante ferramentas prontas (um compilador, <code>curl</code>, <code>apk</code>). O <em>multi-stage build</em> usa vários <code>FROM</code> no mesmo arquivo: o primeiro estágio constrói, o último recebe só o artefato.</span><span class="en">Compiling an app needs a compiler, headers, a package manager, source code and sometimes access keys for private repositories. <strong>None of that is needed to run the result</strong>, but in a single-stage Dockerfile it all stays in the final image, adding weight and handing an attacker ready-made tools (a compiler, <code>curl</code>, <code>apk</code>). A <em>multi-stage build</em> uses several <code>FROM</code> lines in one file: the first stage builds, the last receives only the artifact.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 190" role="img" aria-label="Multi-stage build / Multi-stage build" style="min-width:620px">
+<rect x="10" y="20" width="290" height="150" rx="4" class="ln dash"/>
+<text x="155" y="40" class="pt mut" text-anchor="middle">Estágio 1: build</text><text x="155" y="40" class="en mut" text-anchor="middle">Stage 1: build</text>
+<rect x="20" y="52" width="150" height="40" rx="4" class="ln fillsoft"/>
+<text x="95.0" y="76.0" class="mono" text-anchor="middle">golang:1.25-alpine</text>
+<rect x="180" y="52" width="105" height="40" rx="4" class="ln"/>
+<text x="232.5" y="76.0" class="mono" text-anchor="middle">go build</text>
+<text x="155" y="118" class="pt mut" text-anchor="middle">compilador · shell · apk · código-fonte</text><text x="155" y="118" class="en mut" text-anchor="middle">compiler · shell · apk · source code</text>
+<text x="155" y="140" class="pt mut" text-anchor="middle">(≈ 450 MB, descartado)</text><text x="155" y="140" class="en mut" text-anchor="middle">(≈ 450 MB, thrown away)</text>
+<path d="M300 80L370 80" class="ln"/><path d="M363.7 83.0L370 80L363.7 77.0" class="ln"/>
+<text x="335" y="56" class="mono mut" text-anchor="middle">COPY</text>
+<text x="335" y="69" class="mono mut" text-anchor="middle">--from</text>
+<text x="335" y="100" class="pt mut" text-anchor="middle">binário</text><text x="335" y="100" class="en mut" text-anchor="middle">binary</text>
+<rect x="370" y="20" width="320" height="150" rx="4" class="ln dash"/>
+<text x="530" y="40" class="pt mut" text-anchor="middle">Estágio 2: imagem final</text><text x="530" y="40" class="en mut" text-anchor="middle">Stage 2: final image</text>
+<rect x="380" y="52" width="160" height="40" rx="4" class="brandfill"/>
+<text x="460.0" y="76.0" class="mono" text-anchor="middle">distroless:nonroot</text>
+<rect x="550" y="52" width="130" height="40" rx="4" class="ln fillsoft"/>
+<text x="615.0" y="76.0" class="mono" text-anchor="middle">/server</text>
+<text x="530" y="118" class="pt mut" text-anchor="middle">sem shell · sem apt/apk · usuário não-root</text><text x="530" y="118" class="en mut" text-anchor="middle">no shell · no apt/apk · non-root user</text>
+<text x="530" y="140" class="pt mut" text-anchor="middle">(≈ 15 MB, é o que vai para produção)</text><text x="530" y="140" class="en mut" text-anchor="middle">(≈ 15 MB, the one that ships)</text>
+</svg></div><figcaption><span class="pt">O primeiro estágio tem tudo para compilar; o segundo recebe só o resultado. Só o último estágio vira a imagem publicada.</span><span class="en">The first stage has everything to compile; the second receives only the result. Only the last stage becomes the published image.</span></figcaption></figure>
+<pre><code># ---- estagio 1: compila (tem compilador, shell, apk; nada disso vai para o final)
+FROM golang:1.25-alpine AS build
+WORKDIR /src
+COPY go.mod ./
+RUN go mod download
+COPY . .
+RUN CGO_ENABLED=0 go build -trimpath -ldflags="-s -w" -o /out/server .
+
+# ---- estagio 2: so o binario, sem shell, sem apt/apk, usuario nao-root
+FROM gcr.io/distroless/static-debian12:nonroot
+COPY --from=build /out/server /server
+EXPOSE 8080
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD ["/server", "healthcheck"]
+ENTRYPOINT ["/server"]</code></pre>
+<ul class="ds-list"><li><span class="pt"><code>AS build</code> dá nome ao primeiro estágio; <code>COPY --from=build</code> traz de lá <strong>apenas</strong> o binário. Os outros arquivos do estágio 1 são descartados e não entram na imagem final nem nas suas camadas.</span><span class="en"><code>AS build</code> names the first stage; <code>COPY --from=build</code> brings over <strong>only</strong> the binary. The other files of stage 1 are discarded and do not enter the final image or its layers.</span></li><li><span class="pt"><code>CGO_ENABLED=0</code> gera um binário <strong>estático</strong> (não depende de glibc nem musl), o que permite rodar sobre a base mínima <code>distroless/static</code> ou até <code>scratch</code> (imagem vazia). <code>-s -w</code> remove símbolos de depuração e <code>-trimpath</code> tira caminhos da máquina de build.</span><span class="en"><code>CGO_ENABLED=0</code> produces a <strong>static</strong> binary (depends on neither glibc nor musl), which lets it run on the minimal <code>distroless/static</code> base or even <code>scratch</code> (an empty image). <code>-s -w</code> strips debug symbols and <code>-trimpath</code> removes build-machine paths.</span></li><li><span class="pt">A tag <code>:nonroot</code> da distroless já define <code>USER 65532</code>: o app não roda como root.</span><span class="en">The distroless <code>:nonroot</code> tag already sets <code>USER 65532</code>: the app does not run as root.</span></li><li><span class="pt">Em linguagens interpretadas o desenho é o mesmo: estágio de build instala dependências de desenvolvimento e gera o bundle (<code>npm run build</code>, <code>pip wheel</code>); o final copia só <code>dist/</code> ou o virtualenv para uma imagem <code>-slim</code> ou distroless do runtime (<code>gcr.io/distroless/nodejs22-debian12</code>).</span><span class="en">In interpreted languages the design is the same: the build stage installs development dependencies and produces the bundle (<code>npm run build</code>, <code>pip wheel</code>); the final one copies only <code>dist/</code> or the virtualenv onto a <code>-slim</code> or distroless runtime image (<code>gcr.io/distroless/nodejs22-debian12</code>).</span></li><li><span class="pt">É possível construir só um estágio com <code>docker build --target build .</code>, útil para rodar testes dentro do estágio de build.</span><span class="en">You can build just one stage with <code>docker build --target build .</code>, handy for running tests inside the build stage.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="hardening">
+<h2 id="hardening"><span class="pt">Reduzir a superfície de ataque</span><span class="en">Reducing the attack surface</span></h2>
+<p><span class="pt">Se alguém conseguir executar código dentro do seu contêiner (uma falha no app, uma dependência comprometida), o estrago depende do <strong>que existe lá dentro</strong>. Um shell permite navegar e rodar comandos; um <code>curl</code> baixa ferramentas; o root altera o que quiser; capacidades extras permitem mexer na rede. A estratégia é tirar tudo o que o app não usa, em camadas:</span><span class="en">If someone manages to execute code inside your container (a flaw in the app, a compromised dependency), the damage depends on <strong>what exists in there</strong>. A shell lets them roam and run commands; <code>curl</code> downloads tools; root can change anything; extra capabilities let them touch the network. The strategy is to remove everything the app does not use, in layers:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Camada</span><span class="en">Layer</span></th><th><span class="pt">O que fazer</span><span class="en">What to do</span></th><th><span class="pt">O que o atacante perde</span><span class="en">What the attacker loses</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Imagem</span><span class="en">Image</span></td><td><span class="pt">Base mínima (alpine, <code>-slim</code>, distroless) + multi-stage. <strong>Sem shell, sem gerenciador de pacotes, sem curl</strong> na imagem final.</span><span class="en">Minimal base (alpine, <code>-slim</code>, distroless) + multi-stage. <strong>No shell, no package manager, no curl</strong> in the final image.</span></td><td><span class="pt">Terminal interativo, <code>apt install</code>, download de ferramentas, compilador</span><span class="en">Interactive terminal, <code>apt install</code>, tool download, compiler</span></td></tr>
+<tr><td><span class="pt">Usuário</span><span class="en">User</span></td><td><span class="pt"><code>USER</code> não-root (uid fixo, ex.: 10001 ou 65532).</span><span class="en">Non-root <code>USER</code> (fixed uid, e.g. 10001 or 65532).</span></td><td><span class="pt">Escrever em áreas do sistema, instalar, abrir portas &lt; 1024</span><span class="en">Writing to system areas, installing, opening ports &lt; 1024</span></td></tr>
+<tr><td><span class="pt">Sistema de arquivos</span><span class="en">File system</span></td><td><span class="pt"><code>--read-only</code> (e <code>--tmpfs /tmp</code> se o app precisar de temporários).</span><span class="en"><code>--read-only</code> (and <code>--tmpfs /tmp</code> if the app needs temp files).</span></td><td><span class="pt">Gravar um binário ou script e executá-lo</span><span class="en">Writing a binary or script and running it</span></td></tr>
+<tr><td><span class="pt">Capacidades</span><span class="en">Capabilities</span></td><td><span class="pt"><code>--cap-drop ALL</code> (devolva só as necessárias com <code>--cap-add</code>) e <code>--security-opt no-new-privileges</code>.</span><span class="en"><code>--cap-drop ALL</code> (add back only what is needed with <code>--cap-add</code>) and <code>--security-opt no-new-privileges</code>.</span></td><td><span class="pt">Operações privilegiadas de rede e de sistema; escalar privilégios via binários setuid</span><span class="en">Privileged network and system operations; escalating through setuid binaries</span></td></tr>
+<tr><td><span class="pt">Recursos</span><span class="en">Resources</span></td><td><span class="pt"><code>--memory</code>, <code>--cpus</code>, <code>--pids-limit</code>.</span><span class="en"><code>--memory</code>, <code>--cpus</code>, <code>--pids-limit</code>.</span></td><td><span class="pt">Derrubar o host por consumo (DoS), fork bomb</span><span class="en">Taking the host down by consumption (DoS), fork bombs</span></td></tr>
+<tr><td><span class="pt">Rede</span><span class="en">Network</span></td><td><span class="pt">Só as portas necessárias, em <code>127.0.0.1</code> quando possível; redes <code>internal</code> para o que não precisa de internet (veja <a href="#networks">redes</a>).</span><span class="en">Only the necessary ports, on <code>127.0.0.1</code> when possible; <code>internal</code> networks for what does not need the internet (see <a href="#networks">networks</a>).</span></td><td><span class="pt">Alcançar o banco de fora; exfiltrar dados pela internet</span><span class="en">Reaching the database from outside; exfiltrating data to the internet</span></td></tr>
+<tr><td><span class="pt">Segredos</span><span class="en">Secrets</span></td><td><span class="pt">Nunca em <code>ENV</code>, <code>ARG</code> ou <code>COPY</code>. Em execução, <em>secrets</em> do Compose/orquestrador (arquivo em <code>/run/secrets</code>); no build, <code>RUN --mount=type=secret</code>.</span><span class="en">Never in <code>ENV</code>, <code>ARG</code> or <code>COPY</code>. At run time, Compose/orchestrator <em>secrets</em> (a file in <code>/run/secrets</code>); at build time, <code>RUN --mount=type=secret</code>.</span></td><td><span class="pt">Ler senhas com <code>docker inspect</code>, <code>docker history</code> ou no <code>env</code> do processo</span><span class="en">Reading passwords with <code>docker inspect</code>, <code>docker history</code> or the process <code>env</code></span></td></tr>
+<tr><td><span class="pt">Cadeia de suprimentos</span><span class="en">Supply chain</span></td><td><span class="pt">Tags fixas ou digest (<code>FROM img@sha256:…</code>), imagens oficiais, escaneamento (Trivy, Docker Scout) no CI, rebuild periódico para pegar correções.</span><span class="en">Fixed tags or digest (<code>FROM img@sha256:…</code>), official images, scanning (Trivy, Docker Scout) in CI, periodic rebuilds to pick up fixes.</span></td><td><span class="pt">Explorar CVEs conhecidos de pacotes que você nem usa</span><span class="en">Exploiting known CVEs in packages you do not even use</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Na prática, as opções de execução ficam assim (e viram campos do Compose, veja adiante):</span><span class="en">In practice the run options look like this (and become Compose fields, see below):</span></p>
+<pre><code>docker run -d --name app \
+  --read-only --tmpfs /tmp \
+  --cap-drop ALL --security-opt no-new-privileges:true \
+  --memory 128m --pids-limit 100 \
+  -p 127.0.0.1:8080:8080 \
+  meu-app:1.0</code></pre>
+<h3><span class="pt">“Mas e se eu precisar de um terminal para depurar?”</span><span class="en">“But what if I need a terminal to debug?”</span></h3>
+<p><span class="pt">Em uma imagem sem shell, <code>docker exec -it app sh</code> falha de propósito:</span><span class="en">On an image with no shell, <code>docker exec -it app sh</code> fails on purpose:</span></p>
+<pre><code>$ docker exec -it app sh
+OCI runtime exec failed: exec failed: unable to start container process: exec: "sh": executable file not found in $PATH</code></pre>
+<p><span class="pt">Isso é o objetivo, mas você ainda consegue investigar sem pôr ferramentas na imagem de produção: use <code>docker logs</code> e <code>docker inspect</code>; ou suba um <strong>contêiner de depuração descartável</strong> que <em>compartilha a rede e os processos</em> do alvo:</span><span class="en">That is the point, but you can still investigate without putting tools in the production image: use <code>docker logs</code> and <code>docker inspect</code>; or start a <strong>throwaway debug container</strong> that <em>shares the network and processes</em> of the target:</span></p>
+<pre><code>docker run --rm -it --network container:app --pid container:app nicolaka/netshoot
+# dentro dele: ss -ltn, curl localhost:8080, ps aux (veem o alvo)</code></pre>
+<p><span class="pt">Outra opção é construir uma variante de depuração da mesma imagem (por exemplo, a tag <code>:debug</code> da distroless inclui um BusyBox) e usá-la só em desenvolvimento. O que não se faz é deixar o shell na imagem de produção “para o caso de precisar”.</span><span class="en">Another option is to build a debug variant of the same image (for example, the distroless <code>:debug</code> tag includes a BusyBox) and use it in development only. What you do not do is leave the shell in the production image “just in case”.</span></p>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Três coisas que anulam todo o resto:</strong> <code>--privileged</code> (o contêiner ganha quase os poderes do host), montar <code>/var/run/docker.sock</code> dentro de um contêiner (quem controla o socket controla o Docker e, na prática, o host) e rodar como root com o diretório do host montado. Se uma ferramenta pede isso, procure outra forma. Veja também <a href="../owasp-top-10/index.html">OWASP Top 10</a> (configuração insegura e cadeia de suprimentos).</span><span class="en"><strong>Three things that undo everything else:</strong> <code>--privileged</code> (the container gets nearly the host's powers), mounting <code>/var/run/docker.sock</code> inside a container (whoever controls the socket controls Docker and, in practice, the host) and running as root with a host directory mounted. If a tool asks for that, look for another way. See also the <a href="../owasp-top-10/index.html">OWASP Top 10</a> (security misconfiguration and supply chain).</span></div>
+</section>
+<section class="content-section" aria-labelledby="ports">
+<h2 id="ports"><span class="pt">Mapeamento de portas</span><span class="en">Port mapping</span></h2>
+<p><span class="pt">Cada contêiner tem sua própria rede, e as portas dele <strong>não são visíveis fora</strong> até você publicá-las. O <code>-p</code> liga uma porta do host a uma porta do contêiner:</span><span class="en">Each container has its own network, and its ports are <strong>not visible outside</strong> until you publish them. <code>-p</code> ties a host port to a container port:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 184" role="img" aria-label="Mapeamento de portas / Port mapping" style="min-width:620px">
+<rect x="10" y="60" width="100" height="48" rx="4" class="ln fillsoft"/>
+<text x="60.0" y="81.0" text-anchor="middle">navegador</text>
+<text x="60.0" y="97.0" class="pt mut" text-anchor="middle">ou curl</text><text x="60.0" y="97.0" class="en mut" text-anchor="middle">or curl</text>
+<path d="M110 84L185 84" class="ln"/><path d="M178.7 87.0L185 84L178.7 81.0" class="ln"/>
+<rect x="185" y="20" width="505" height="150" rx="4" class="ln dash"/>
+<text x="200" y="40" class="pt mut" text-anchor="start">host (sua máquina)</text><text x="200" y="40" class="en mut" text-anchor="start">host (your machine)</text>
+<rect x="195" y="62" width="115" height="44" rx="4" class="ln"/>
+<text x="252.5" y="81.0" text-anchor="middle">127.0.0.1</text>
+<text x="252.5" y="97.0" class="mut" text-anchor="middle">:8080</text>
+<path d="M310 84L400 84" class="ln"/><path d="M393.7 87.0L400 84L393.7 81.0" class="ln"/>
+<text x="195" y="124" class="mono mut" text-anchor="start">-p 8080:8080</text>
+<rect x="395" y="50" width="285" height="108" rx="4" class="ln"/>
+<text x="540" y="70" class="pt mut" text-anchor="middle">contêiner app</text><text x="540" y="70" class="en mut" text-anchor="middle">app container</text>
+<rect x="405" y="84" width="160" height="44" rx="4" class="brandfill"/>
+<text x="485.0" y="103.0" text-anchor="middle">processo Go</text>
+<text x="485.0" y="119.0" class="pt mut" text-anchor="middle">escuta 0.0.0.0:8080</text><text x="485.0" y="119.0" class="en mut" text-anchor="middle">listens 0.0.0.0:8080</text>
+<text x="624" y="100" class="pt mut" text-anchor="middle">porta 8080</text><text x="624" y="100" class="en mut" text-anchor="middle">port 8080</text>
+<text x="624" y="118" class="pt mut" text-anchor="middle">(interna)</text><text x="624" y="118" class="en mut" text-anchor="middle">(inside)</text>
+<text x="195" y="150" class="pt mut" text-anchor="start">host:contêiner</text><text x="195" y="150" class="en mut" text-anchor="start">host:container</text>
+</svg></div><figcaption><span class="pt">-p HOST:CONTÊINER abre uma porta no host e encaminha para dentro. Prefixar com 127.0.0.1 deixa só a sua máquina acessar.</span><span class="en">-p HOST:CONTAINER opens a port on the host and forwards it inside. Prefixing 127.0.0.1 lets only your own machine reach it.</span></figcaption></figure>
+<pre><code>-p 8080:8080                  # host:contêiner  (escuta em TODAS as interfaces do host)
+-p 127.0.0.1:8080:8080        # só a sua própria máquina acessa
+-p 3000:8080                  # porta 3000 do host -&gt; 8080 do contêiner
+-p 8080                       # porta aleatória do host -&gt; 8080 (veja com docker port)
+-p 8080:8080/udp              # UDP em vez de TCP (o padrão é TCP)
+-P                            # publica todas as portas do EXPOSE em portas aleatórias</code></pre>
+<ul class="ds-list"><li><span class="pt"><strong>Ordem é <code>HOST:CONTÊINER</code>.</strong> A do contêiner é a que o app escuta (variável <code>PORT</code>); a do host é livre, mas dois contêineres não podem usar a mesma porta do host.</span><span class="en"><strong>The order is <code>HOST:CONTAINER</code>.</strong> The container side is the one the app listens on (the <code>PORT</code> variable); the host side is your choice, but two containers cannot use the same host port.</span></li><li><span class="pt"><code>EXPOSE</code> no Dockerfile <strong>não publica nada</strong>: é documentação (e o que o <code>-P</code> usa). Quem abre a porta é o <code>-p</code> ou o campo <code>ports</code> do Compose.</span><span class="en"><code>EXPOSE</code> in the Dockerfile <strong>publishes nothing</strong>: it is documentation (and what <code>-P</code> uses). What opens the port is <code>-p</code> or the Compose <code>ports</code> field.</span></li><li><span class="pt">Para <strong>conversa entre contêineres você não precisa publicar porta nenhuma</strong>: eles se falam pela rede interna, direto na porta do contêiner (veja <a href="#networks">redes</a>). Publique só o que precisa ser acessado de fora, como a API ou um proxy reverso.</span><span class="en">For <strong>container-to-container traffic you do not need to publish any port</strong>: they talk over the internal network, straight to the container port (see <a href="#networks">networks</a>). Publish only what must be reached from outside, like the API or a reverse proxy.</span></li><li><span class="pt">Pergunte ao Docker o que está publicado: <code>docker port app</code> ou a coluna PORTS do <code>docker ps</code>.</span><span class="en">Ask Docker what is published: <code>docker port app</code> or the PORTS column of <code>docker ps</code>.</span></li></ul>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>O Docker fura o firewall do host.</strong> Ao publicar com <code>-p 5432:5432</code>, ele escreve suas próprias regras de iptables, que valem <em>antes</em> do UFW e do firewalld. Resultado clássico: o banco “protegido” pelo UFW fica aberto para a internet. Para bancos e painéis internos, <strong>não publique</strong> ou publique em <code>127.0.0.1</code> (e acesse por túnel SSH).</span><span class="en"><strong>Docker bypasses the host firewall.</strong> When you publish with <code>-p 5432:5432</code> it writes its own iptables rules, which apply <em>before</em> UFW and firewalld. The classic result: the database “protected” by UFW is open to the internet. For databases and internal dashboards, <strong>do not publish</strong> or publish on <code>127.0.0.1</code> (and reach it through an SSH tunnel).</span></div>
+</section>
+<section class="content-section" aria-labelledby="networks">
+<h2 id="networks"><span class="pt">Redes e comunicação entre contêineres</span><span class="en">Networks and container-to-container communication</span></h2>
+<p><span class="pt">O Docker cria redes virtuais e liga cada contêiner a uma ou mais. Os tipos que importam:</span><span class="en">Docker creates virtual networks and attaches each container to one or more. The types that matter:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Driver</span><span class="en">Driver</span></th><th><span class="pt">Como funciona</span><span class="en">How it works</span></th><th><span class="pt">Quando usar</span><span class="en">When to use</span></th></tr></thead><tbody>
+<tr><td><code>bridge</code> (<span class="pt">padrão</span><span class="en">default</span>)</td><td><span class="pt">Rede privada no host; os contêineres ganham IPs internos e saem para a internet por NAT.</span><span class="en">Private network on the host; containers get internal IPs and reach the internet through NAT.</span></td><td><span class="pt">Quase sempre. Use uma bridge <strong>criada por você</strong> (ou pelo Compose), não a rede <code>bridge</code> padrão.</span><span class="en">Almost always. Use a bridge <strong>you create</strong> (or Compose creates), not the built-in default <code>bridge</code> network.</span></td></tr>
+<tr><td><code>host</code></td><td><span class="pt">O contêiner usa diretamente a rede do host: sem isolamento e sem <code>-p</code>.</span><span class="en">The container uses the host network directly: no isolation and no <code>-p</code>.</span></td><td><span class="pt">Raro (desempenho extremo, ferramentas de rede). Perde o isolamento.</span><span class="en">Rare (extreme performance, network tools). Loses isolation.</span></td></tr>
+<tr><td><code>none</code></td><td><span class="pt">Sem rede além do loopback.</span><span class="en">No network except loopback.</span></td><td><span class="pt">Jobs que processam arquivos e nunca devem falar com a rede.</span><span class="en">Jobs that process files and must never talk to the network.</span></td></tr>
+<tr><td><code>overlay</code>, <code>macvlan</code></td><td><span class="pt">Redes entre vários hosts (Swarm) ou com IP próprio na LAN.</span><span class="en">Networks across several hosts (Swarm) or with their own LAN IP.</span></td><td><span class="pt">Cenários avançados; em vários hosts o normal é Kubernetes/ECS.</span><span class="en">Advanced scenarios; across several hosts the norm is Kubernetes/ECS.</span></td></tr>
+</tbody></table></div>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 260" role="img" aria-label="Redes do Compose / Compose networks" style="min-width:620px">
+<rect x="10" y="100" width="100" height="48" rx="4" class="ln fillsoft"/>
+<text x="60.0" y="121.0" text-anchor="middle">você</text>
+<text x="60.0" y="137.0" class="mut" text-anchor="middle">127.0.0.1:8080</text>
+<path d="M110 124L195 124" class="ln"/><path d="M188.7 127.0L195 124L188.7 121.0" class="ln"/>
+<rect x="180" y="12" width="220" height="236" rx="4" class="ln dash"/>
+<text x="290" y="30" class="pt mut" text-anchor="middle">rede frontend</text><text x="290" y="30" class="en mut" text-anchor="middle">frontend network</text>
+<rect x="440" y="12" width="250" height="236" rx="4" class="ln dash"/>
+<text x="565" y="30" class="pt mut" text-anchor="middle">rede backend (internal)</text><text x="565" y="30" class="en mut" text-anchor="middle">backend network (internal)</text>
+<rect x="205" y="90" width="170" height="70" rx="4" class="brandfill"/>
+<text x="290.0" y="122.0" class="mono" text-anchor="middle">app</text>
+<text x="290.0" y="138.0" class="pt mut" text-anchor="middle">chama db:5432</text><text x="290.0" y="138.0" class="en mut" text-anchor="middle">calls db:5432</text>
+<path d="M375 125L465 125" class="ln"/><path d="M458.7 128.0L465 125L458.7 122.0" class="ln"/>
+<rect x="465" y="90" width="200" height="70" rx="4" class="ln fillsoft"/>
+<text x="565.0" y="122.0" class="mono" text-anchor="middle">db</text>
+<text x="565.0" y="138.0" class="pt mut" text-anchor="middle">Postgres, sem porta publicada</text><text x="565.0" y="138.0" class="en mut" text-anchor="middle">Postgres, no published port</text>
+<rect x="205" y="190" width="170" height="44" rx="4" class="ln"/>
+<text x="290" y="216" class="pt mut" text-anchor="middle">saída para a internet: sim</text><text x="290" y="216" class="en mut" text-anchor="middle">outbound internet: yes</text>
+<rect x="465" y="190" width="200" height="44" rx="4" class="ln"/>
+<text x="565" y="216" class="pt mut" text-anchor="middle">saída para a internet: não</text><text x="565" y="216" class="en mut" text-anchor="middle">outbound internet: no</text>
+</svg></div><figcaption><span class="pt">O app participa das duas redes e fala com o banco pelo nome (db). O banco só existe na rede interna: ninguém de fora o alcança.</span><span class="en">The app sits on both networks and reaches the database by name (db). The database only exists on the internal network: nobody outside can reach it.</span></figcaption></figure>
+<h3><span class="pt">DNS por nome: a regra mais importante</span><span class="en">DNS by name: the most important rule</span></h3>
+<p><span class="pt">Numa rede criada pelo usuário (e em toda rede do Compose), o Docker roda um DNS interno: <strong>o nome do contêiner (ou do serviço) vira o endereço</strong>. O app não precisa saber o IP do banco, que muda a cada recriação; ele conecta em <code>db:5432</code>. Na rede <code>bridge</code> padrão isso <em>não</em> funciona, e é por isso que ela deve ser evitada.</span><span class="en">On a user-created network (and every Compose network), Docker runs an internal DNS: <strong>the container (or service) name becomes the address</strong>. The app does not need to know the database IP, which changes on every recreation; it connects to <code>db:5432</code>. On the default <code>bridge</code> network this does <em>not</em> work, which is why it should be avoided.</span></p>
+<pre><code>docker network create minha-rede
+docker run -d --name db  --network minha-rede -e POSTGRES_PASSWORD=dev postgres:17-alpine
+docker run --rm --network minha-rede alpine:3.22 nc -zv db 5432    # db (172.x.x.x:5432) open
+
+docker network ls                       # redes existentes
+docker network inspect minha-rede       # quem esta nela, sub-rede, IPs
+docker network connect minha-rede app   # liga um contêiner existente a outra rede</code></pre>
+<ul class="ds-list"><li><span class="pt"><strong>Dentro de um contêiner, <code>localhost</code> é ele mesmo.</strong> O erro mais comum é configurar o app com <code>DB_HOST=localhost</code>: ele procura o banco dentro de si. Use o nome do serviço (<code>db</code>).</span><span class="en"><strong>Inside a container, <code>localhost</code> is itself.</strong> The most common mistake is configuring the app with <code>DB_HOST=localhost</code>: it looks for the database inside itself. Use the service name (<code>db</code>).</span></li><li><span class="pt"><strong>Entre contêineres vale a porta do contêiner</strong>, não a publicada. Se o Compose diz <code>"5433:5432"</code>, os outros serviços usam <code>db:5432</code>; o 5433 é só para você, no host.</span><span class="en"><strong>Between containers the container port applies</strong>, not the published one. If Compose says <code>"5433:5432"</code>, other services use <code>db:5432</code>; 5433 is only for you, on the host.</span></li><li><span class="pt"><strong>Para o contêiner falar com algo no host</strong> (um banco rodando fora do Docker), use <code>host.docker.internal</code> (Docker Desktop; no Linux adicione <code>extra_hosts: ["host.docker.internal:host-gateway"]</code>).</span><span class="en"><strong>For a container to reach something on the host</strong> (a database running outside Docker), use <code>host.docker.internal</code> (Docker Desktop; on Linux add <code>extra_hosts: ["host.docker.internal:host-gateway"]</code>).</span></li><li><span class="pt"><strong>Segmentação:</strong> contêineres só se enxergam se estiverem em uma rede em comum. Separe em <code>frontend</code> (proxy e API) e <code>backend</code> (API e banco): o proxy nunca alcança o banco. Marcar a rede como <code>internal: true</code> também corta a saída para a internet, o que impede um banco comprometido de “ligar para casa”.</span><span class="en"><strong>Segmentation:</strong> containers only see each other if they share a network. Split into <code>frontend</code> (proxy and API) and <code>backend</code> (API and database): the proxy never reaches the database. Marking the network <code>internal: true</code> also cuts outbound internet, which stops a compromised database from “phoning home”.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="volumes">
+<h2 id="volumes"><span class="pt">Volumes: dados que sobrevivem</span><span class="en">Volumes: data that survives</span></h2>
+<p><span class="pt">Como a camada gravável some com o contêiner, o que precisa persistir (arquivos do Postgres, uploads) fica fora dela:</span><span class="en">Since the writable layer vanishes with the container, whatever must persist (Postgres files, uploads) lives outside it:</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Tipo</span><span class="en">Type</span></th><th><span class="pt">Sintaxe</span><span class="en">Syntax</span></th><th><span class="pt">Para quê</span><span class="en">What for</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Volume nomeado</span><span class="en">Named volume</span></td><td><code>-v dbdata:/var/lib/postgresql/data</code></td><td><span class="pt">Dados de produção; o Docker gerencia onde ficam. Sobrevive a <code>docker rm</code>.</span><span class="en">Production data; Docker manages where it lives. Survives <code>docker rm</code>.</span></td></tr>
+<tr><td>Bind mount</td><td><code>-v ./src:/app/src</code></td><td><span class="pt">Mapeia uma pasta do host. Bom em desenvolvimento (editar sem rebuild); em produção expõe o host, use com cuidado e <code>:ro</code>.</span><span class="en">Maps a host folder. Good in development (edit without rebuilding); in production it exposes the host, use with care and <code>:ro</code>.</span></td></tr>
+<tr><td>tmpfs</td><td><code>--tmpfs /tmp</code></td><td><span class="pt">Memória RAM, some ao parar. Ideal para temporários com <code>--read-only</code>.</span><span class="en">RAM, gone on stop. Ideal for temp files with <code>--read-only</code>.</span></td></tr>
+</tbody></table></div>
+<pre><code>docker volume ls
+docker volume inspect dbdata            # onde fica no host
+docker volume rm dbdata                 # APAGA os dados</code></pre>
+</section>
+<section class="content-section" aria-labelledby="compose">
+<h2 id="compose"><span class="pt">Docker Compose: vários contêineres num arquivo YAML</span><span class="en">Docker Compose: several containers in one YAML file</span></h2>
+<p><span class="pt">Subir app, banco e proxy com três <code>docker run</code> cheios de flags não escala. O <strong>Compose</strong> descreve tudo num <code>compose.yaml</code> (também aceita <code>docker-compose.yml</code>) e sobe com um comando. É <em>declarativo</em>, como o <a href="../kubernetes/index.html">Kubernetes</a> ou o <a href="../terraform/index.html">Terraform</a>, só que para uma máquina só.</span><span class="en">Starting app, database and proxy with three flag-heavy <code>docker run</code> commands does not scale. <strong>Compose</strong> describes everything in a <code>compose.yaml</code> (<code>docker-compose.yml</code> is also accepted) and starts it with one command. It is <em>declarative</em>, like <a href="../kubernetes/index.html">Kubernetes</a> or <a href="../terraform/index.html">Terraform</a>, only for a single machine.</span></p>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt"><strong>YAML em 30 segundos.</strong> A estrutura é dada pela <em>indentação</em> (use espaços, nunca tabs). <code>chave: valor</code> é um mapa; linhas começando com <code>- </code> são uma lista; <code>[a, b]</code> e <code>{x: 1}</code> são as versões numa linha; <code>#</code> comenta. Valores como <code>"8080:8080"</code> ficam entre aspas para o YAML não interpretar <code>:</code> como número. A chave <code>version:</code> do topo é obsoleta e pode ser omitida. O comando <code>docker compose</code> (com espaço) é o atual; <code>docker-compose</code> com hífen é a versão antiga.</span><span class="en"><strong>YAML in 30 seconds.</strong> Structure comes from <em>indentation</em> (spaces, never tabs). <code>key: value</code> is a map; lines starting with <code>- </code> are a list; <code>[a, b]</code> and <code>{x: 1}</code> are the one-line forms; <code>#</code> comments. Values like <code>"8080:8080"</code> are quoted so YAML does not read <code>:</code> as a number. The top-level <code>version:</code> key is obsolete and can be omitted. The <code>docker compose</code> command (with a space) is the current one; <code>docker-compose</code> with a hyphen is the old version.</span></div>
+<pre><code>services:
+  app:
+    build: .                              # constroi a imagem do ./Dockerfile
+    ports:
+      - "127.0.0.1:8080:8080"             # so a sua maquina acessa
+    environment:
+      DB_ADDR: db:5432                    # o NOME do servico e o host
+    depends_on:
+      db:
+        condition: service_healthy        # so inicia quando o db estiver saudavel
+    networks: [frontend, backend]
+    restart: unless-stopped
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    mem_limit: 128m
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    networks: [backend]                   # sem "ports": ninguem de fora chega aqui
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+networks:
+  frontend:
+  backend:
+    internal: true                        # sem saida para a internet
+
+volumes:
+  dbdata:
+
+secrets:
+  db_password:
+    file: ./db_password.txt</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Campo</span><span class="en">Field</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody>
+<tr><td><code>services</code></td><td><span class="pt">Cada entrada é um contêiner (ou vários, com <code>deploy.replicas</code>). O nome da chave (<code>app</code>, <code>db</code>) é o nome DNS na rede.</span><span class="en">Each entry is a container (or several, with <code>deploy.replicas</code>). The key name (<code>app</code>, <code>db</code>) is the DNS name on the network.</span></td></tr>
+<tr><td><code>build</code> / <code>image</code></td><td><span class="pt"><code>build</code> constrói a partir de um Dockerfile; <code>image</code> baixa pronta de um registry. Pode ter os dois (constrói e nomeia).</span><span class="en"><code>build</code> builds from a Dockerfile; <code>image</code> pulls a ready one from a registry. You can have both (builds and names).</span></td></tr>
+<tr><td><code>ports</code></td><td><span class="pt">Publica portas, igual ao <code>-p</code>. Ausente = só acessível por outros serviços da mesma rede.</span><span class="en">Publishes ports, same as <code>-p</code>. Absent = reachable only by other services on the same network.</span></td></tr>
+<tr><td><code>environment</code> / <code>env_file</code></td><td><span class="pt">Variáveis de ambiente. <code>${VAR}</code> é substituída pelo valor do seu shell ou de um arquivo <code>.env</code> ao lado do compose.</span><span class="en">Environment variables. <code>${VAR}</code> is replaced by your shell's value or by a <code>.env</code> file next to the compose file.</span></td></tr>
+<tr><td><code>depends_on</code></td><td><span class="pt">Ordem de partida. Sem <code>condition</code>, espera só o contêiner <em>iniciar</em>, não o app estar pronto; com <code>service_healthy</code>, espera o healthcheck passar.</span><span class="en">Start order. Without <code>condition</code> it waits only for the container to <em>start</em>, not for the app to be ready; with <code>service_healthy</code> it waits for the healthcheck to pass.</span></td></tr>
+<tr><td><code>networks</code></td><td><span class="pt">Em quais redes o serviço entra. Sem a chave, o Compose cria uma rede <code>default</code> para o projeto.</span><span class="en">Which networks the service joins. Without the key, Compose creates a <code>default</code> network for the project.</span></td></tr>
+<tr><td><code>volumes</code></td><td><span class="pt">Monta volumes nomeados (declarados no bloco <code>volumes:</code> de baixo) ou pastas do host.</span><span class="en">Mounts named volumes (declared in the bottom <code>volumes:</code> block) or host folders.</span></td></tr>
+<tr><td><code>restart</code></td><td><span class="pt"><code>unless-stopped</code> religa se o processo cair ou o Docker reiniciar, exceto se você parou de propósito.</span><span class="en"><code>unless-stopped</code> restarts if the process dies or Docker restarts, unless you stopped it on purpose.</span></td></tr>
+<tr><td><code>secrets</code></td><td><span class="pt">Monta o arquivo em <code>/run/secrets/NOME</code> dentro do contêiner. A imagem oficial do Postgres lê a senha de <code>POSTGRES_PASSWORD_FILE</code>.</span><span class="en">Mounts the file at <code>/run/secrets/NAME</code> inside the container. The official Postgres image reads the password from <code>POSTGRES_PASSWORD_FILE</code>.</span></td></tr>
+</tbody></table></div>
+<pre><code>docker compose up -d --build     # constroi (se preciso) e sobe tudo em segundo plano
+docker compose ps                # estado e saude de cada servico
+docker compose logs -f app       # logs de um servico (sem o nome: de todos)
+docker compose exec db psql -U postgres   # comando dentro de um servico rodando
+docker compose config            # valida o YAML e mostra o resultado final
+docker compose stop              # para sem apagar
+docker compose down              # para e APAGA contêineres e redes (volumes ficam)
+docker compose down -v           # idem, e apaga os volumes: os dados vao junto</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt"><strong>Não versione segredos.</strong> O <code>db_password.txt</code> do exemplo é só para o laboratório: ponha-o no <code>.gitignore</code>, e em produção use o gerenciador de segredos da plataforma (AWS Secrets Manager, Docker Swarm secrets, Kubernetes Secrets). Um <code>.env</code> com senhas também fica fora do Git.</span><span class="en"><strong>Do not commit secrets.</strong> The example's <code>db_password.txt</code> is for the lab only: put it in <code>.gitignore</code>, and in production use the platform's secret manager (AWS Secrets Manager, Docker Swarm secrets, Kubernetes Secrets). A <code>.env</code> with passwords also stays out of Git.</span></div>
+</section>
+<section class="content-section" aria-labelledby="health">
+<h2 id="health"><span class="pt">Saúde do contêiner: HEALTHCHECK</span><span class="en">Container health: HEALTHCHECK</span></h2>
+<p><span class="pt">“Contêiner rodando” só diz que o <em>processo</em> existe. Um app pode estar de pé e travado, sem conexão com o banco ou sem memória. O <strong>healthcheck</strong> é um comando que o Docker executa de tempos em tempos <em>dentro</em> do contêiner; o código de saída decide o estado: <code>0</code> saudável, <code>1</code> doente.</span><span class="en">“Container running” only says the <em>process</em> exists. An app can be up and stuck, with no database connection or out of memory. The <strong>healthcheck</strong> is a command Docker runs from time to time <em>inside</em> the container; the exit code decides the state: <code>0</code> healthy, <code>1</code> unhealthy.</span></p>
+<pre><code># no Dockerfile
+HEALTHCHECK --interval=10s --timeout=3s --start-period=5s --retries=3 \
+  CMD ["/server", "healthcheck"]
+
+# ou no Compose (sobrepoe o do Dockerfile)
+healthcheck:
+  test: ["CMD", "/server", "healthcheck"]
+  interval: 10s
+  timeout: 3s
+  start_period: 5s
+  retries: 3</code></pre>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Parâmetro</span><span class="en">Parameter</span></th><th><span class="pt">Significado</span><span class="en">Meaning</span></th></tr></thead><tbody>
+<tr><td><code>interval</code></td><td><span class="pt">De quanto em quanto tempo testar (padrão 30 s).</span><span class="en">How often to test (default 30 s).</span></td></tr>
+<tr><td><code>timeout</code></td><td><span class="pt">Quanto esperar pelo comando antes de contar como falha (padrão 30 s).</span><span class="en">How long to wait for the command before counting a failure (default 30 s).</span></td></tr>
+<tr><td><code>retries</code></td><td><span class="pt">Falhas seguidas até virar <code>unhealthy</code> (padrão 3).</span><span class="en">Consecutive failures until it becomes <code>unhealthy</code> (default 3).</span></td></tr>
+<tr><td><code>start_period</code></td><td><span class="pt">Tempo de graça na partida: falhas aqui não contam. Dê ao app o tempo que ele leva para subir.</span><span class="en">Grace time at start: failures here do not count. Give the app the time it takes to boot.</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Os estados são <code>starting</code> → <code>healthy</code> ou <code>unhealthy</code>, visíveis em <code>docker ps</code> (coluna STATUS) e em <code>docker inspect</code>:</span><span class="en">The states are <code>starting</code> → <code>healthy</code> or <code>unhealthy</code>, visible in <code>docker ps</code> (STATUS column) and in <code>docker inspect</code>:</span></p>
+<pre><code>$ docker compose ps
+NAME        SERVICE   STATUS
+lab-app-1   app       Up 12 seconds (healthy)
+lab-db-1    db        Up 18 seconds (healthy)
+
+$ docker inspect --format '{{.State.Health.Status}}' lab-app-1
+healthy
+$ docker inspect --format '{{json .State.Health.Log}}' lab-app-1   # ultimas execucoes e saidas</code></pre>
+<ul class="ds-list"><li><span class="pt"><strong>O que o Docker faz com um contêiner <code>unhealthy</code>?</strong> Sozinho, <em>nada</em>: <code>restart: unless-stopped</code> só reage a um processo que <em>saiu</em>. O estado serve para o <code>depends_on: service_healthy</code>, para balanceadores e para orquestradores (Kubernetes, ECS, Swarm), que trocam a instância doente. Em um host único, alerte sobre ele (veja <a href="#logs">observabilidade</a>) ou use uma ferramenta que reinicie por saúde.</span><span class="en"><strong>What does Docker do with an <code>unhealthy</code> container?</strong> By itself, <em>nothing</em>: <code>restart: unless-stopped</code> only reacts to a process that <em>exited</em>. The state serves <code>depends_on: service_healthy</code>, load balancers and orchestrators (Kubernetes, ECS, Swarm), which replace the sick instance. On a single host, alert on it (see <a href="#logs">observability</a>) or use a tool that restarts on health.</span></li><li><span class="pt"><strong>Teste algo que importa, mas barato.</strong> Um <code>/health</code> que só devolve 200 prova que o servidor HTTP responde. Um que também testa uma consulta simples ao banco prova mais, mas se o banco cair <em>todas</em> as instâncias ficam doentes ao mesmo tempo. Separe <em>liveness</em> (“estou vivo?”) de <em>readiness</em> (“posso receber tráfego?”) quando usar orquestrador.</span><span class="en"><strong>Test something that matters, but cheap.</strong> A <code>/health</code> that only returns 200 proves the HTTP server answers. One that also runs a simple database query proves more, but if the database goes down <em>every</em> instance turns sick at once. Separate <em>liveness</em> (“am I alive?”) from <em>readiness</em> (“can I take traffic?”) when you use an orchestrator.</span></li><li><span class="pt"><strong>Imagens sem <code>curl</code> e sem shell</strong> (distroless, scratch) não conseguem rodar <code>curl localhost/health</code>. A saída é o próprio binário ter um modo de checagem, como no exemplo (<code>/server healthcheck</code> faz a requisição e sai com 0 ou 1). Em Alpine, <code>wget -qO- http://127.0.0.1:8080/health</code> (BusyBox) dispensa instalar o curl.</span><span class="en"><strong>Images with no <code>curl</code> and no shell</strong> (distroless, scratch) cannot run <code>curl localhost/health</code>. The way out is for the binary itself to have a check mode, as in the example (<code>/server healthcheck</code> makes the request and exits 0 or 1). On Alpine, <code>wget -qO- http://127.0.0.1:8080/health</code> (BusyBox) saves installing curl.</span></li></ul>
+</section>
+<section class="content-section" aria-labelledby="logs">
+<h2 id="logs"><span class="pt">Logs e observabilidade</span><span class="en">Logs and observability</span></h2>
+<p><span class="pt">A regra do contêiner é simples: <strong>o app escreve seus logs na saída padrão (stdout) e de erro (stderr)</strong>, não em arquivos dentro dele. O Docker captura esses dois fluxos por um <em>driver de log</em> e deixa você ler com <code>docker logs</code>.</span><span class="en">The container rule is simple: <strong>the app writes its logs to standard output (stdout) and standard error (stderr)</strong>, not to files inside it. Docker captures those two streams through a <em>log driver</em> and lets you read them with <code>docker logs</code>.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 190" role="img" aria-label="Caminho dos logs / Log path" style="min-width:620px">
+<rect x="10" y="50" width="165" height="56" rx="4" class="brandfill"/>
+<text x="92.5" y="75.0" class="mono" text-anchor="middle">app</text>
+<text x="92.5" y="91.0" class="pt mut" text-anchor="middle">escreve em stdout/stderr</text><text x="92.5" y="91.0" class="en mut" text-anchor="middle">writes to stdout/stderr</text>
+<path d="M175 78L230 78" class="ln"/><path d="M223.7 81.0L230 78L223.7 75.0" class="ln"/>
+<rect x="230" y="50" width="130" height="56" rx="4" class="ln fillsoft"/>
+<text x="295.0" y="75.0" text-anchor="middle">driver de log</text>
+<text x="295.0" y="91.0" class="pt mut" text-anchor="middle">json-file (padrão)</text><text x="295.0" y="91.0" class="en mut" text-anchor="middle">json-file (default)</text>
+<path d="M360 78L420 78" class="ln"/><path d="M413.7 81.0L420 78L413.7 75.0" class="ln"/>
+<rect x="420" y="50" width="130" height="56" rx="4" class="ln"/>
+<text x="485.0" y="75.0" class="mono" text-anchor="middle">docker logs</text>
+<text x="485.0" y="91.0" class="pt mut" text-anchor="middle">você lê aqui</text><text x="485.0" y="91.0" class="en mut" text-anchor="middle">you read here</text>
+<path d="M330 106L420 150" class="ln"/><path d="M413.0 150.0L420 150L415.7 144.5" class="ln"/>
+<rect x="420" y="130" width="130" height="44" rx="4" class="ln"/>
+<text x="485.0" y="149.0" text-anchor="middle">coletor</text>
+<text x="485.0" y="165.0" class="mut" text-anchor="middle">Alloy · Fluent Bit</text>
+<path d="M550 152L595 152" class="ln"/><path d="M588.7 155.0L595 152L588.7 149.0" class="ln"/>
+<rect x="595" y="130" width="95" height="44" rx="4" class="ln fillsoft"/>
+<text x="642.5" y="156.0" text-anchor="middle">Loki · ELK</text>
+<text x="230" y="130" class="pt mut" text-anchor="start">rotação:</text><text x="230" y="130" class="en mut" text-anchor="start">rotation:</text>
+<text x="230" y="146" class="mono mut" text-anchor="start">max-size, max-file</text>
+</svg></div><figcaption><span class="pt">O app só escreve na saída padrão; o Docker guarda, você lê com docker logs, e um coletor pode levar tudo para um sistema central.</span><span class="en">The app only writes to standard output; Docker stores it, you read it with docker logs, and a collector can ship it all to a central system.</span></figcaption></figure>
+<pre><code>docker logs web                        # tudo
+docker logs -f --tail 100 web          # ultimas 100 linhas e segue (Ctrl+C sai)
+docker logs --since 10m -t web         # ultimos 10 min, com data/hora
+docker compose logs -f --no-log-prefix app | jq 'select(.path == "/db")'   # filtra JSON</code></pre>
+<ul class="ds-list"><li><span class="pt"><strong>Logue em JSON</strong> (uma linha por evento, como no exemplo: <code>{"msg":"request","method":"GET","path":"/db"}</code>). Texto livre é difícil de filtrar; JSON entra direto em <code>jq</code>, Loki ou Elasticsearch.</span><span class="en"><strong>Log in JSON</strong> (one line per event, as in the example: <code>{"msg":"request","method":"GET","path":"/db"}</code>). Free text is hard to filter; JSON feeds straight into <code>jq</code>, Loki or Elasticsearch.</span></li><li><span class="pt"><strong>Sem rotação, o log enche o disco.</strong> O driver padrão (<code>json-file</code>) guarda tudo sem limite. Configure <code>max-size</code> e <code>max-file</code> (como no Compose acima) ou global em <code>/etc/docker/daemon.json</code>. O driver <code>local</code> já faz rotação por padrão.</span><span class="en"><strong>Without rotation, logs fill the disk.</strong> The default driver (<code>json-file</code>) keeps everything with no limit. Set <code>max-size</code> and <code>max-file</code> (as in the Compose above) or globally in <code>/etc/docker/daemon.json</code>. The <code>local</code> driver rotates by default.</span></li><li><span class="pt"><strong>Não registre segredos nem dados pessoais</strong>: o log é copiado, indexado e guardado por meses. Veja <em>Logging and alerting failures</em> no <a href="../owasp-top-10/index.html">OWASP Top 10</a>.</span><span class="en"><strong>Do not log secrets or personal data</strong>: logs are copied, indexed and kept for months. See <em>Logging and alerting failures</em> in the <a href="../owasp-top-10/index.html">OWASP Top 10</a>.</span></li><li><span class="pt">Para centralizar, um coletor (Grafana Alloy, Fluent Bit, Promtail) lê os logs dos contêineres e envia ao Loki/Elasticsearch; alternativamente, um driver como <code>syslog</code>, <code>fluentd</code> ou <code>awslogs</code> envia direto. Isso é montado passo a passo na nota de <a href="../observability/index.html">observabilidade</a>.</span><span class="en">To centralise, a collector (Grafana Alloy, Fluent Bit, Promtail) reads the containers' logs and ships them to Loki/Elasticsearch; alternatively a driver such as <code>syslog</code>, <code>fluentd</code> or <code>awslogs</code> ships directly. This is built step by step in the <a href="../observability/index.html">observability</a> note.</span></li></ul>
+<h3><span class="pt">Além dos logs: o que olhar num contêiner</span><span class="en">Beyond logs: what to look at in a container</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Pergunta</span><span class="en">Question</span></th><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Está de pé e saudável? Quantas vezes reiniciou?</span><span class="en">Is it up and healthy? How many times has it restarted?</span></td><td><code>docker ps</code>, <code>docker inspect --format '{{.State.Health.Status}} {{.RestartCount}}' app</code></td></tr>
+<tr><td><span class="pt">Por que parou? Foi falta de memória?</span><span class="en">Why did it stop? Was it out of memory?</span></td><td><code>docker inspect --format '{{.State.ExitCode}} {{.State.OOMKilled}}' app</code> (137 = SIGKILL; <code>OOMKilled=true</code> = <span class="pt">estourou o limite de memória</span><span class="en">hit the memory limit</span>)</td></tr>
+<tr><td><span class="pt">Quanta CPU e memória usa agora?</span><span class="en">How much CPU and memory does it use now?</span></td><td><code>docker stats --no-stream</code></td></tr>
+<tr><td><span class="pt">Que processos rodam lá dentro e com qual usuário?</span><span class="en">Which processes run in there and as which user?</span></td><td><code>docker top app -o user,pid,comm</code></td></tr>
+<tr><td><span class="pt">O que aconteceu no Docker (start, die, oom, health_status)?</span><span class="en">What happened in Docker (start, die, oom, health_status)?</span></td><td><code>docker events --since 30m</code></td></tr>
+<tr><td><span class="pt">Histórico de métricas e alertas?</span><span class="en">Metrics history and alerts?</span></td><td><span class="pt">cAdvisor expõe CPU, memória, rede e disco por contêiner ao Prometheus; Grafana desenha e alerta (<a href="../observability/index.html">nota de observabilidade</a>)</span><span class="en">cAdvisor exposes per-container CPU, memory, network and disk to Prometheus; Grafana draws and alerts (<a href="../observability/index.html">observability note</a>)</span></td></tr>
+</tbody></table></div>
+<p><span class="pt">Resumindo: <code>docker logs</code> e <code>docker stats</code> resolvem o dia a dia numa máquina; assim que você tem vários contêineres ou hosts, precisa de métricas históricas e logs centralizados, senão só descobre o problema depois que o usuário reclama.</span><span class="en">In short: <code>docker logs</code> and <code>docker stats</code> cover day-to-day work on one machine; as soon as you have several containers or hosts you need historical metrics and centralised logs, or you only learn about the problem after the user complains.</span></p>
+</section>
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">Praticar na sua máquina</span><span class="en">Practise on your machine</span></h2>
+<p><span class="pt">Pré-requisito: Docker com Compose v2 (<code>docker version</code> e <code>docker compose version</code> funcionando). Todos os comandos abaixo foram executados nesta ordem para escrever a nota. Cada atividade é pequena e usa a anterior.</span><span class="en">Prerequisite: Docker with Compose v2 (<code>docker version</code> and <code>docker compose version</code> working). Every command below was run in this order while writing the note. Each activity is small and builds on the previous one.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th>#</th><th><span class="pt">Atividade</span><span class="en">Activity</span></th><th><span class="pt">Você aprende</span><span class="en">You learn</span></th></tr></thead><tbody>
+<tr><td>0</td><td><span class="pt">Criar os arquivos</span><span class="en">Create the files</span></td><td><span class="pt">Estrutura do projeto</span><span class="en">Project layout</span></td></tr>
+<tr><td>1</td><td><span class="pt">Build ingênuo × multi-stage</span><span class="en">Naive × multi-stage build</span></td><td><span class="pt">Camadas, tamanho, <code>docker images</code></span><span class="en">Layers, size, <code>docker images</code></span></td></tr>
+<tr><td>2</td><td><span class="pt">Rodar, mapear porta, ler logs</span><span class="en">Run, map a port, read logs</span></td><td><code>run</code>, <code>-p</code>, <code>logs</code>, <code>stats</code></td></tr>
+<tr><td>3</td><td><span class="pt">Tentar abrir um terminal</span><span class="en">Try to open a terminal</span></td><td><span class="pt">Superfície de ataque reduzida</span><span class="en">Reduced attack surface</span></td></tr>
+<tr><td>4</td><td><span class="pt">Subir app + banco com Compose</span><span class="en">Start app + database with Compose</span></td><td><span class="pt">Redes, DNS por nome, healthcheck</span><span class="en">Networks, DNS by name, healthcheck</span></td></tr>
+<tr><td>5</td><td><span class="pt">Provar o isolamento da rede</span><span class="en">Prove the network isolation</span></td><td><code>internal</code>, <span class="pt">porta não publicada</span><span class="en">unpublished port</span></td></tr>
+<tr><td>6</td><td><span class="pt">Derrubar o banco e observar</span><span class="en">Take the database down and observe</span></td><td><span class="pt">Logs JSON, falha de dependência</span><span class="en">JSON logs, dependency failure</span></td></tr>
+<tr><td>7</td><td><span class="pt">Limpar tudo</span><span class="en">Clean up</span></td><td><code>down -v</code>, <code>prune</code></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Atividade 0: criar os arquivos</span><span class="en">Activity 0: create the files</span></h3>
+<pre><code>mkdir lab &amp;&amp; cd lab
+# arquivos: main.go  go.mod  .dockerignore  Dockerfile  compose.yaml  db_password.txt
+echo "troque-esta-senha" &gt; db_password.txt
+printf 'db_password.txt\n' &gt; .gitignore</code></pre>
+<p><span class="pt"><code>main.go</code> (o serviço de exemplo; a rota <code>/db</code> só abre uma conexão TCP com <code>db:5432</code> para provar a rede, sem driver de banco):</span><span class="en"><code>main.go</code> (the example service; the <code>/db</code> route just opens a TCP connection to <code>db:5432</code> to prove the network, no database driver):</span></p>
+<pre><code>package main
+
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"net"
+	"net/http"
+	"os"
+	"time"
+)
+
+func main() {
+	port := getenv("PORT", "8080")
+
+	// Modo healthcheck: o proprio binario testa /health e sai com 0 ou 1.
+	if len(os.Args) &gt; 1 &amp;&amp; os.Args[1] == "healthcheck" {
+		c := http.Client{Timeout: 2 * time.Second}
+		res, err := c.Get("http://127.0.0.1:" + port + "/health")
+		if err != nil || res.StatusCode != 200 {
+			os.Exit(1)
+		}
+		return
+	}
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		host, _ := os.Hostname()
+		fmt.Fprintf(w, "ola do container %s\n", host)
+	})
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintln(w, "ok")
+	})
+	// Prova a comunicacao entre containers: abre TCP para o banco pelo NOME do servico.
+	http.HandleFunc("/db", func(w http.ResponseWriter, r *http.Request) {
+		addr := getenv("DB_ADDR", "db:5432")
+		conn, err := net.DialTimeout("tcp", addr, 2*time.Second)
+		if err != nil {
+			http.Error(w, "db inacessivel: "+err.Error(), http.StatusBadGateway)
+			return
+		}
+		conn.Close()
+		fmt.Fprintf(w, "db alcancavel em %s\n", addr)
+	})
+
+	logJSON("start", map[string]any{"port": port})
+	log.Fatal(http.ListenAndServe(":"+port, logged(http.DefaultServeMux)))
+}
+
+func logged(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/health" { // o healthcheck roda a cada 10 s; nao polui o log
+			logJSON("request", map[string]any{"method": r.Method, "path": r.URL.Path})
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
+func logJSON(msg string, fields map[string]any) {
+	fields["msg"], fields["time"] = msg, time.Now().UTC().Format(time.RFC3339)
+	b, _ := json.Marshal(fields)
+	fmt.Println(string(b))
+}
+
+func getenv(k, def string) string {
+	if v := os.Getenv(k); v != "" {
+		return v
+	}
+	return def
+}</code></pre>
+<pre><code># go.mod
+module hello
+
+go 1.25</code></pre>
+<p><span class="pt">O <code>.dockerignore</code> é o da seção do Dockerfile; o <code>Dockerfile</code> é o do multi-stage e o <code>compose.yaml</code> é o da seção do Compose. Para o contraste da próxima atividade, salve também o Dockerfile ingênuo como <code>Dockerfile.naive</code>.</span><span class="en">The <code>.dockerignore</code> is the one from the Dockerfile section; the <code>Dockerfile</code> is the multi-stage one and <code>compose.yaml</code> is the one from the Compose section. For the next activity's contrast, also save the naive Dockerfile as <code>Dockerfile.naive</code>.</span></p>
+<h3><span class="pt">Atividade 1: build ingênuo × multi-stage</span><span class="en">Activity 1: naive × multi-stage build</span></h3>
+<pre><code>docker build -f Dockerfile.naive -t lab:naive .
+docker build -t lab:final .
+docker images lab
+docker history lab:final            # poucas camadas, nenhuma com compilador</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> <code>lab:naive</code> com centenas de megabytes (452 MB nesta máquina) e <code>lab:final</code> com cerca de 15 MB. Rode o build de novo sem mudar nada e veja as linhas <code>CACHED</code>; depois mude uma linha do <code>main.go</code> e note que o <code>go mod download</code> continua em cache.</span><span class="en"><strong>Expected result:</strong> <code>lab:naive</code> at hundreds of megabytes (452 MB on this machine) and <code>lab:final</code> at about 15 MB. Run the build again without changes and watch the <code>CACHED</code> lines; then change one line of <code>main.go</code> and notice that <code>go mod download</code> stays cached.</span></p>
+<h3><span class="pt">Atividade 2: rodar, mapear porta, ler logs</span><span class="en">Activity 2: run, map a port, read logs</span></h3>
+<pre><code>docker run -d --name app -p 127.0.0.1:8080:8080 lab:final
+curl localhost:8080/                 # ola do container 3f2a...
+curl localhost:8080/db               # 502: nao existe "db" nesta rede (ainda)
+docker ps                            # STATUS: Up ... (healthy)
+docker logs app                      # linhas JSON: start, request, request
+docker stats --no-stream app         # poucos MB de memoria
+docker stop app &amp;&amp; docker rm app</code></pre>
+<p><span class="pt">Troque o mapeamento para <code>-p 3000:8080</code> e acesse <code>localhost:3000</code>; depois use <code>-e PORT=9090 -p 9090:9090</code> e veja que a porta do contêiner acompanha a variável.</span><span class="en">Change the mapping to <code>-p 3000:8080</code> and reach <code>localhost:3000</code>; then use <code>-e PORT=9090 -p 9090:9090</code> and see that the container port follows the variable.</span></p>
+<h3><span class="pt">Atividade 3: tentar abrir um terminal</span><span class="en">Activity 3: try to open a terminal</span></h3>
+<pre><code>docker run -d --name app lab:final
+docker exec -it app sh               # falha: "sh": executable file not found
+docker exec app id                   # falha tambem: nao ha nem o comando id
+docker inspect app --format '{{.Config.User}}'    # 65532 (nao e root)
+docker top app -o user,pid,comm      # 65532  ...  server
+docker rm -f app
+
+# compare com uma base que tem tudo:
+docker run --rm -it ubuntu:24.04 bash    # aqui voce teria shell, apt, e seria root
+whoami                                   # root</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> na imagem final não há shell, gerenciador de pacotes nem root. Quem invadir o app encontra um único binário.</span><span class="en"><strong>Expected result:</strong> the final image has no shell, no package manager and no root. Whoever breaks into the app finds a single binary.</span></p>
+<h3><span class="pt">Atividade 4: app + banco com Compose</span><span class="en">Activity 4: app + database with Compose</span></h3>
+<pre><code>docker compose up -d --build
+docker compose ps                    # db healthy primeiro, depois app healthy
+curl localhost:8080/db               # db alcancavel em db:5432
+docker compose logs app              # o app resolveu "db" pelo DNS do Docker
+docker inspect lab-app-1 --format 'user={{.Config.User}} ro={{.HostConfig.ReadonlyRootfs}} caps={{.HostConfig.CapDrop}}'
+# user=65532 ro=true caps=[ALL]</code></pre>
+<p><span class="pt">Repare na ordem: o Compose esperou o Postgres ficar <code>healthy</code> antes de iniciar o app (<code>service_healthy</code>). Sem isso, o app subiria antes do banco aceitar conexões.</span><span class="en">Notice the order: Compose waited for Postgres to be <code>healthy</code> before starting the app (<code>service_healthy</code>). Without it the app would start before the database accepts connections.</span></p>
+<h3><span class="pt">Atividade 5: provar o isolamento da rede</span><span class="en">Activity 5: prove the network isolation</span></h3>
+<pre><code># 1) o banco NAO tem porta publicada: PORTS mostra so "5432/tcp", sem "0.0.0.0:"
+docker compose ps db
+ss -ltn | grep 5432                  # nada escutando no host
+
+# 2) a rede backend e interna: quem esta so nela nao sai para a internet
+docker run --rm --network lab_backend alpine:3.22 wget -qO- -T2 http://example.com
+# wget: bad address 'example.com'
+
+# 3) mas dentro da rede os nomes resolvem
+docker run --rm --network lab_backend alpine:3.22 wget -qO- -T2 http://app:8080/db
+# db alcancavel em db:5432</code></pre>
+<p><span class="pt">O nome da rede é <code>&lt;pasta&gt;_&lt;rede&gt;</code>: se sua pasta não se chama <code>lab</code>, veja o nome real em <code>docker network ls</code>.</span><span class="en">The network name is <code>&lt;folder&gt;_&lt;network&gt;</code>: if your folder is not called <code>lab</code>, see the real name in <code>docker network ls</code>.</span></p>
+<h3><span class="pt">Atividade 6: derrubar o banco e observar</span><span class="en">Activity 6: take the database down and observe</span></h3>
+<pre><code>docker compose stop db
+curl -i localhost:8080/db            # 502 Bad Gateway: db inacessivel
+docker compose logs --no-log-prefix app | jq .     # cada requisicao como JSON
+docker compose start db
+curl localhost:8080/db               # volta a responder
+docker events --since 2m --filter type=container   # start, die, health_status...</code></pre>
+<p><span class="pt">Desafio: coloque <code>healthcheck</code> no app que também chama <code>/db</code> (um modo <code>healthcheck</code> que testa o banco) e veja o estado do app virar <code>unhealthy</code> quando o banco cai. Depois discuta: isso é desejável? (Dica: leia o texto sobre liveness e readiness.)</span><span class="en">Challenge: give the app a <code>healthcheck</code> that also calls <code>/db</code> (a <code>healthcheck</code> mode that tests the database) and watch the app turn <code>unhealthy</code> when the database goes down. Then discuss: is that desirable? (Hint: re-read the liveness and readiness text.)</span></p>
+<h3><span class="pt">Atividade 7: limpar tudo</span><span class="en">Activity 7: clean up</span></h3>
+<pre><code>docker compose down -v               # contêineres, redes e o volume dbdata
+docker rmi lab:naive lab:final
+docker system df                     # confira o que sobrou
+docker system prune                  # apaga o que esta parado e sem uso</code></pre>
+<h3><span class="pt">Para ir além</span><span class="en">Going further</span></h3>
+<ol class="ds-steps"><li><span class="pt"><strong>Escaneie a imagem:</strong> <code>docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image lab:final</code> (ou <code>docker scout cves lab:final</code>) e compare o número de vulnerabilidades com a variante Ubuntu. Note que aqui você montou o socket <em>de propósito</em>, num contêiner descartável de ferramenta confiável; é o tipo de exceção que deve ser consciente.</span><span class="en"><strong>Scan the image:</strong> <code>docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy image lab:final</code> (or <code>docker scout cves lab:final</code>) and compare the number of vulnerabilities with the Ubuntu variant. Note that you mounted the socket <em>on purpose</em> here, in a throwaway container of a trusted tool; that is the kind of exception that should be a conscious one.</span></li><li><span class="pt"><strong>Reverse proxy:</strong> adicione um serviço <code>caddy</code> ou <code>nginx</code> na rede <code>frontend</code>, publique só a porta dele e remova o <code>ports</code> do app.</span><span class="en"><strong>Reverse proxy:</strong> add a <code>caddy</code> or <code>nginx</code> service on the <code>frontend</code> network, publish only its port and remove the app's <code>ports</code>.</span></li><li><span class="pt"><strong>Tag por digest:</strong> troque o <code>FROM</code> por <code>gcr.io/distroless/static-debian12:nonroot@sha256:…</code> (veja o digest com <code>docker buildx imagetools inspect</code>) e entenda por que isso torna o build reproduzível.</span><span class="en"><strong>Pin by digest:</strong> change the <code>FROM</code> to <code>gcr.io/distroless/static-debian12:nonroot@sha256:…</code> (see the digest with <code>docker buildx imagetools inspect</code>) and understand why that makes the build reproducible.</span></li><li><span class="pt"><strong>Observabilidade:</strong> acrescente Prometheus, Grafana e Loki como na nota de <a href="../observability/index.html">observabilidade</a> e leve os logs JSON deste app para o Grafana.</span><span class="en"><strong>Observability:</strong> add Prometheus, Grafana and Loki as in the <a href="../observability/index.html">observability</a> note and ship this app's JSON logs to Grafana.</span></li><li><span class="pt"><strong>Para produção em mais de uma máquina:</strong> publique a imagem num registry e rode no <a href="../ecs-todo-app/index.html">ECS</a> ou no <a href="../kubernetes/index.html">Kubernetes</a>; os conceitos de imagem, porta, healthcheck e variáveis são os mesmos.</span><span class="en"><strong>For production on more than one machine:</strong> push the image to a registry and run it on <a href="../ecs-todo-app/index.html">ECS</a> or <a href="../kubernetes/index.html">Kubernetes</a>; the concepts of image, port, healthcheck and variables are the same.</span></li></ol>
+</section>
+<section class="content-section" aria-labelledby="trouble">
+<h2 id="trouble"><span class="pt">Quando algo dá errado</span><span class="en">When something goes wrong</span></h2>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Causa comum</span><span class="en">Common cause</span></th><th><span class="pt">Como investigar</span><span class="en">How to investigate</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Contêiner sai logo ao iniciar</span><span class="en">Container exits right after start</span></td><td><span class="pt">O processo principal terminou ou falhou (config faltando, porta ocupada, comando errado)</span><span class="en">The main process finished or failed (missing config, busy port, wrong command)</span></td><td><code>docker ps -a</code>, <code>docker logs</code>, <code>docker inspect --format '{{.State.ExitCode}}'</code></td></tr>
+<tr><td><span class="pt">Código de saída 137</span><span class="en">Exit code 137</span></td><td><span class="pt">Morto por SIGKILL: falta de memória (<code>OOMKilled</code>) ou <code>docker stop</code> que estourou o prazo</span><span class="en">Killed by SIGKILL: out of memory (<code>OOMKilled</code>) or a <code>docker stop</code> that hit the timeout</span></td><td><code>docker inspect --format '{{.State.OOMKilled}}'</code>; <span class="pt">aumente <code>--memory</code> ou trate o SIGTERM</span><span class="en">raise <code>--memory</code> or handle SIGTERM</span></td></tr>
+<tr><td><span class="pt">“Connection refused” no <code>localhost:8080</code></span><span class="en">“Connection refused” on <code>localhost:8080</code></span></td><td><span class="pt">Faltou o <code>-p</code>, ou o app escuta em <code>127.0.0.1</code> dentro do contêiner</span><span class="en">Missing <code>-p</code>, or the app listens on <code>127.0.0.1</code> inside the container</span></td><td><code>docker port app</code>; <span class="pt">configure o app para <code>0.0.0.0</code></span><span class="en">set the app to <code>0.0.0.0</code></span></td></tr>
+<tr><td><span class="pt">App não acha o banco (<code>no such host</code>, <code>connection refused</code>)</span><span class="en">App cannot find the database (<code>no such host</code>, <code>connection refused</code>)</span></td><td><span class="pt">Usou <code>localhost</code>; contêineres em redes diferentes; banco ainda subindo</span><span class="en">Used <code>localhost</code>; containers on different networks; database still starting</span></td><td><code>docker network inspect</code>; <span class="pt">use o nome do serviço; adicione <code>depends_on</code> com <code>service_healthy</code></span><span class="en">use the service name; add <code>depends_on</code> with <code>service_healthy</code></span></td></tr>
+<tr><td><span class="pt">Fica <code>starting</code> ou vira <code>unhealthy</code></span><span class="en">Stays <code>starting</code> or turns <code>unhealthy</code></span></td><td><span class="pt">O comando do healthcheck usa uma ferramenta que não existe na imagem (<code>curl</code>), ou o app demora mais que o <code>start_period</code></span><span class="en">The healthcheck command uses a tool missing from the image (<code>curl</code>), or the app takes longer than <code>start_period</code></span></td><td><code>docker inspect --format '{{json .State.Health.Log}}'</code></td></tr>
+<tr><td><span class="pt">Dados sumiram depois de recriar</span><span class="en">Data vanished after recreating</span></td><td><span class="pt">Gravava na camada do contêiner, sem volume; ou rodou <code>down -v</code></span><span class="en">Was writing to the container layer, with no volume; or ran <code>down -v</code></span></td><td><code>docker volume ls</code>, <code>docker inspect</code> <span class="pt">(seção Mounts)</span><span class="en">(Mounts section)</span></td></tr>
+<tr><td><span class="pt">Build lento ou sempre refaz tudo</span><span class="en">Build slow or always redoes everything</span></td><td><span class="pt"><code>COPY . .</code> antes das dependências; falta <code>.dockerignore</code></span><span class="en"><code>COPY . .</code> before the dependencies; no <code>.dockerignore</code></span></td><td><span class="pt">Reordene as linhas; veja o que o <code>docker build</code> marca como <code>CACHED</code></span><span class="en">Reorder the lines; see what <code>docker build</code> marks as <code>CACHED</code></span></td></tr>
+<tr><td><span class="pt">Disco cheio</span><span class="en">Disk full</span></td><td><span class="pt">Logs sem rotação, imagens e volumes antigos</span><span class="en">Logs with no rotation, old images and volumes</span></td><td><code>docker system df</code>, <code>docker system prune</code>; <span class="pt">configure <code>max-size</code></span><span class="en">set <code>max-size</code></span></td></tr>
+</tbody></table></div>
+</section>
+<section class="content-section" aria-labelledby="cheat-dk">
+<h2 id="cheat-dk"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Assunto</span><span class="en">Topic</span></th><th><span class="pt">Regra</span><span class="en">Rule</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Imagem × contêiner</span><span class="en">Image × container</span></td><td><span class="pt">Imagem é imutável; contêiner é descartável. O que importa vai em volume.</span><span class="en">The image is immutable; the container is disposable. What matters goes in a volume.</span></td></tr>
+<tr><td>Dockerfile</td><td><span class="pt">O que muda menos vem primeiro; tag fixa; exec form; <code>.dockerignore</code>; sem segredos.</span><span class="en">What changes least goes first; fixed tag; exec form; <code>.dockerignore</code>; no secrets.</span></td></tr>
+<tr><td><span class="pt">Base</span><span class="en">Base</span></td><td><span class="pt">Comece em <code>-slim</code> ou <code>alpine</code>; Ubuntu quando precisar do <code>apt</code>; distroless/scratch no final.</span><span class="en">Start from <code>-slim</code> or <code>alpine</code>; Ubuntu when you need <code>apt</code>; distroless/scratch at the end.</span></td></tr>
+<tr><td>Multi-stage</td><td><span class="pt">Estágio 1 compila, o último recebe só o artefato com <code>COPY --from</code>.</span><span class="en">Stage 1 compiles, the last one receives only the artifact via <code>COPY --from</code>.</span></td></tr>
+<tr><td><span class="pt">Superfície de ataque</span><span class="en">Attack surface</span></td><td><span class="pt">Sem shell, não-root, <code>--read-only</code>, <code>--cap-drop ALL</code>, limites, escaneamento. Nunca <code>--privileged</code> nem <code>docker.sock</code>.</span><span class="en">No shell, non-root, <code>--read-only</code>, <code>--cap-drop ALL</code>, limits, scanning. Never <code>--privileged</code> or <code>docker.sock</code>.</span></td></tr>
+<tr><td><span class="pt">Portas</span><span class="en">Ports</span></td><td><span class="pt"><code>-p HOST:CONTÊINER</code>; <code>EXPOSE</code> só documenta; <code>127.0.0.1:</code> para uso local; o app escuta em <code>0.0.0.0</code>.</span><span class="en"><code>-p HOST:CONTAINER</code>; <code>EXPOSE</code> only documents; <code>127.0.0.1:</code> for local use; the app listens on <code>0.0.0.0</code>.</span></td></tr>
+<tr><td><span class="pt">Redes</span><span class="en">Networks</span></td><td><span class="pt">Rede criada por você + DNS por nome; <code>localhost</code> é o próprio contêiner; <code>internal</code> para o que não sai.</span><span class="en">A network you create + DNS by name; <code>localhost</code> is the container itself; <code>internal</code> for what must not go out.</span></td></tr>
+<tr><td>Compose</td><td><span class="pt"><code>up -d --build</code>, <code>ps</code>, <code>logs -f</code>, <code>down</code>; <code>down -v</code> apaga dados.</span><span class="en"><code>up -d --build</code>, <code>ps</code>, <code>logs -f</code>, <code>down</code>; <code>down -v</code> deletes data.</span></td></tr>
+<tr><td><span class="pt">Saúde</span><span class="en">Health</span></td><td><span class="pt"><code>HEALTHCHECK</code> + <code>start_period</code>; Docker sozinho não reinicia <code>unhealthy</code>; use <code>service_healthy</code>.</span><span class="en"><code>HEALTHCHECK</code> + <code>start_period</code>; Docker alone does not restart <code>unhealthy</code>; use <code>service_healthy</code>.</span></td></tr>
+<tr><td>Logs</td><td><span class="pt">stdout/stderr, em JSON, com <code>max-size</code>; <code>docker logs -f</code>; coletor para centralizar.</span><span class="en">stdout/stderr, in JSON, with <code>max-size</code>; <code>docker logs -f</code>; a collector to centralise.</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul><li><span class="pt">Por que um contêiner sobe em milissegundos e uma VM não? O que eles compartilham com o host?</span><span class="en">Why does a container start in milliseconds and a VM does not? What do they share with the host?</span></li><li><span class="pt">Apagar o contêiner apaga a imagem? E os dados gravados dentro dele? Onde você os guardaria?</span><span class="en">Does deleting the container delete the image? And the data written inside it? Where would you keep it?</span></li><li><span class="pt">Por que <code>CMD ["/server"]</code> é melhor que <code>CMD /server</code> para o <code>docker stop</code>?</span><span class="en">Why is <code>CMD ["/server"]</code> better than <code>CMD /server</code> for <code>docker stop</code>?</span></li><li><span class="pt">Quando você escolheria Alpine, <code>-slim</code>, Ubuntu e distroless? Dê um exemplo de dependência que quebra no Alpine.</span><span class="en">When would you choose Alpine, <code>-slim</code>, Ubuntu and distroless? Give an example of a dependency that breaks on Alpine.</span></li><li><span class="pt">Por que apagar um arquivo em um <code>RUN</code> posterior não reduz a imagem? Como o multi-stage resolve isso?</span><span class="en">Why does deleting a file in a later <code>RUN</code> not shrink the image? How does multi-stage solve it?</span></li><li><span class="pt">Liste cinco medidas que reduzem a superfície de ataque de um contêiner e o que cada uma impede.</span><span class="en">List five measures that reduce a container's attack surface and what each prevents.</span></li><li><span class="pt">O que <code>-p 5433:5432</code> faz? Que porta um outro contêiner usa para falar com esse banco? E por que publicar o banco pode abrir a internet mesmo com o UFW ativo?</span><span class="en">What does <code>-p 5433:5432</code> do? Which port does another container use to talk to that database? And why can publishing the database open it to the internet even with UFW enabled?</span></li><li><span class="pt">Por que <code>DB_HOST=localhost</code> falha dentro de um contêiner? O que usar no lugar?</span><span class="en">Why does <code>DB_HOST=localhost</code> fail inside a container? What to use instead?</span></li><li><span class="pt">O que o Docker faz quando um contêiner fica <code>unhealthy</code>? E o que muda num orquestrador?</span><span class="en">What does Docker do when a container turns <code>unhealthy</code>? And what changes in an orchestrator?</span></li><li><span class="pt">Seu contêiner morreu com código 137. Quais são as duas causas prováveis e como diferenciá-las?</span><span class="en">Your container died with exit code 137. What are the two likely causes and how do you tell them apart?</span></li></ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://docs.docker.com/get-started/docker-overview/" rel="noopener">Docker docs: What is Docker?</a> · <a href="https://docs.docker.com/reference/dockerfile/" rel="noopener">Dockerfile reference</a> · <a href="https://docs.docker.com/build/building/best-practices/" rel="noopener">Building best practices</a> · <a href="https://docs.docker.com/build/building/multi-stage/" rel="noopener">Multi-stage builds</a></li>
+<li><a href="https://docs.docker.com/engine/containers/run/" rel="noopener">Running containers (docker run)</a> · <a href="https://docs.docker.com/engine/network/" rel="noopener">Networking overview</a> · <a href="https://docs.docker.com/engine/network/port-publishing/" rel="noopener">Port publishing and mapping</a> · <a href="https://docs.docker.com/engine/network/packet-filtering-firewalls/" rel="noopener">Packet filtering and firewalls</a></li>
+<li><a href="https://docs.docker.com/reference/compose-file/" rel="noopener">Compose file reference</a> · <a href="https://docs.docker.com/compose/how-tos/startup-order/" rel="noopener">Control startup order</a> · <a href="https://docs.docker.com/compose/how-tos/use-secrets/" rel="noopener">Secrets in Compose</a></li>
+<li><a href="https://docs.docker.com/engine/logging/configure/" rel="noopener">Configure logging drivers</a> · <a href="https://docs.docker.com/reference/cli/docker/container/stats/" rel="noopener">docker stats</a> · <a href="https://github.com/google/cadvisor" rel="noopener">cAdvisor</a></li>
+<li><a href="https://cheatsheetseries.owasp.org/cheatsheets/Docker_Security_Cheat_Sheet.html" rel="noopener">OWASP Docker Security Cheat Sheet</a> · <a href="https://www.cisecurity.org/benchmark/docker" rel="noopener">CIS Docker Benchmark</a> · <a href="https://docs.docker.com/engine/security/" rel="noopener">Docker Engine security</a></li>
+<li><a href="https://github.com/GoogleContainerTools/distroless" rel="noopener">Distroless images</a> · <a href="https://hub.docker.com/_/alpine" rel="noopener">Alpine on Docker Hub</a> · <a href="https://trivy.dev/" rel="noopener">Trivy</a> · <a href="https://docs.docker.com/scout/" rel="noopener">Docker Scout</a> · <a href="https://github.com/hadolint/hadolint" rel="noopener">hadolint</a> · <a href="https://github.com/nicolaka/netshoot" rel="noopener">netshoot</a></li>
+</ul></div>
+</article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
