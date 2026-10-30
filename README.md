@@ -23,7 +23,7 @@ styles.css   tokens, page chrome, prose components
 i18n.js      English / Brazilian Portuguese strings
 main.js      theme switch, code copy buttons, footer year
 notas/       notes: index plus one folder per note
-assets/      PNG icons (favicon.svg and favicon.ico live at the root)
+assets/      PNG icons and og-image.png, the 1200×630 share preview (favicon.svg and favicon.ico live at the root)
 ```
 
 The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons, manifest) is hosting and SEO.
@@ -34,6 +34,7 @@ The rest (`404.html`, `CNAME`, `robots.txt`, `sitemap.xml`, `llms.txt`, favicons
 - **Logo:** the five-petal flower in `favicon.svg`, drawn with white petals and a black outline (the inline copy uses the `petal`/`vein`/`heart` classes, so the outline follows the theme ink). The installable icons in `assets/` are the same flower on a black tile.
 - **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock, defined only in `boot.js`), or pinned with the `auto / light / dark` links in the footer. All colours are tokens at the top of `styles.css`; the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer links. All copy lives in `i18n.js`; keep the English in the HTML in sync.
+- **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags (share image `assets/og-image.png`), a `TechArticle` + `BreadcrumbList` JSON-LD block whose dates come from the git history, and a link to `llms.txt`. `sitemap.xml` has a `lastmod` per page, `robots.txt` names the search, assistant and training bots, and the footer links `llms.txt`, `sitemap.xml` and `robots.txt`. A new note needs its entry in `sitemap.xml` and `llms.txt`.
 - **Preferences** are saved in `localStorage`, a cookie and `window.name`.
 - Works without JavaScript (English text is in the HTML) and from `file://`.
 

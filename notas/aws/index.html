@@ -24,17 +24,24 @@
   <meta property="og:description" data-i18n-attributes="content:aws.metaDescription" content="Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.">
   <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
   <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+  <meta property="og:image" content="https://baselarte.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" data-i18n-attributes="content:aws.metaTitle" content="AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more">
   <meta name="twitter:description" data-i18n-attributes="content:aws.metaDescription" content="Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.">
+  <meta name="twitter:image" content="https://baselarte.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Icons & manifest -->
   <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
   <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
+  <link rel="alternate" type="text/plain" href="../../llms.txt" title="LLM-readable summary">
   <link rel="stylesheet" href="../../styles.css">
   <link rel="stylesheet" href="aws.css">
 
@@ -52,6 +59,65 @@
     "about": ["Amazon Web Services", "Cloud computing", "IAM", "AWS Organizations", "IAM Identity Center", "OIDC", "EC2", "VPC", "ECR", "ECS", "S3", "RDS", "Route 53"],
     "hasCourseInstance": { "@type": "CourseInstance", "courseMode": "online", "courseWorkload": "PT4H" }
   }
+  </script>
+  <!-- Structured data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://baselarte.com/notas/aws/#article",
+      "headline": "AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more",
+      "name": "AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more",
+      "description": "Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.",
+      "url": "https://baselarte.com/notas/aws/",
+      "mainEntityOfPage": {
+        "@id": "https://baselarte.com/notas/aws/"
+      },
+      "inLanguage": [
+        "en",
+        "pt-BR"
+      ],
+      "datePublished": "2026-10-13",
+      "dateModified": "2026-10-25",
+      "image": "https://baselarte.com/assets/og-image.png",
+      "author": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://baselarte.com/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://baselarte.com/notas/aws/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://baselarte.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://baselarte.com/notas/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more",
+          "item": "https://baselarte.com/notas/aws/"
+        }
+      ]
+    }
+  ]
+}
   </script>
 </head>
 <body>
@@ -2242,6 +2308,7 @@ docker push 111122223333.dkr.ecr.us-east-1.amazonaws.com/minha-app:1.4.2</code><
 
   <footer class="site-footer">
     <span>© <span data-current-year></span></span>
+    <nav class="footer-links" data-i18n-attributes="aria-label:footer.files" aria-label="Files for machines"><a href="../../llms.txt">llms.txt</a><a href="../../sitemap.xml">sitemap.xml</a><a href="../../robots.txt">robots.txt</a></nav>
     <div class="footer-tools requires-js">
       <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
         <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
