@@ -377,6 +377,14 @@ main {
   gap: 4px 16px;
 }
 
+.site-footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-left: auto;
+}
+
+.site-footer a,
 .site-footer button {
   color: var(--fg-faint);
   text-decoration: underline;
@@ -384,6 +392,7 @@ main {
   text-underline-offset: 3px;
 }
 
+.site-footer a:hover,
 .site-footer button:hover,
 .site-footer button[aria-pressed="true"] {
   color: var(--fg-strong);

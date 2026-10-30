@@ -24,19 +24,85 @@
   <meta property="og:description" data-i18n-attributes="content:wa.metaDescription" content="HTTPS and security headers (HSTS, CSP with nonces, building your own middleware, Next.js and Nginx), cookie attributes, stateful sessions vs. stateless JWT (access + refresh tokens), CSRF, SQL injection and XSS from the builder's side, and the new frontier: AI agent security (prompt injection, excessive agency, MCP risks), per OWASP.">
   <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
   <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+  <meta property="og:image" content="https://baselarte.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" data-i18n-attributes="content:wa.metaTitle" content="Secure web apps: headers, auth and AI agents">
   <meta name="twitter:description" data-i18n-attributes="content:wa.metaDescription" content="HTTPS and security headers (HSTS, CSP with nonces, building your own middleware, Next.js and Nginx), cookie attributes, stateful sessions vs. stateless JWT (access + refresh tokens), CSRF, SQL injection and XSS from the builder's side, and the new frontier: AI agent security (prompt injection, excessive agency, MCP risks), per OWASP.">
+  <meta name="twitter:image" content="https://baselarte.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Icons & manifest -->
   <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
   <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
+  <link rel="alternate" type="text/plain" href="../../llms.txt" title="LLM-readable summary">
   <link rel="stylesheet" href="../../styles.css">
 
+  <!-- Structured data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://baselarte.com/notas/web-app-security/#article",
+      "headline": "Secure web apps: headers, auth and AI agents",
+      "name": "Secure web apps: headers, auth and AI agents",
+      "description": "HTTPS and security headers (HSTS, CSP with nonces, building your own middleware, Next.js and Nginx), cookie attributes, stateful sessions vs. stateless JWT (access + refresh tokens), CSRF, SQL injection and XSS from the builder's side, and the new frontier: AI agent security (prompt injection, excessive agency, MCP risks), per OWASP.",
+      "url": "https://baselarte.com/notas/web-app-security/",
+      "mainEntityOfPage": {
+        "@id": "https://baselarte.com/notas/web-app-security/"
+      },
+      "inLanguage": [
+        "en",
+        "pt-BR"
+      ],
+      "datePublished": "2026-10-18",
+      "dateModified": "2026-10-23",
+      "image": "https://baselarte.com/assets/og-image.png",
+      "author": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://baselarte.com/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://baselarte.com/notas/web-app-security/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://baselarte.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://baselarte.com/notas/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Secure web apps: headers, auth and AI agents",
+          "item": "https://baselarte.com/notas/web-app-security/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body>
 <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -462,6 +528,7 @@ const query = `<span class="tok-k">SELECT</span> * <span class="tok-k">FROM</spa
 
   <footer class="site-footer">
     <span>© <span data-current-year></span></span>
+    <nav class="footer-links" data-i18n-attributes="aria-label:footer.files" aria-label="Files for machines"><a href="../../llms.txt">llms.txt</a><a href="../../sitemap.xml">sitemap.xml</a><a href="../../robots.txt">robots.txt</a></nav>
     <div class="footer-tools requires-js">
       <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
         <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>

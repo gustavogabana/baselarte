@@ -24,19 +24,85 @@
   <meta property="og:description" data-i18n-attributes="content:kimi.metaDescription" content="Kimi K2 and K3 explained: Mixture-of-Experts (why 2.8T parameters cost 104B per token), hybrid linear attention, 1M context, how to use them by app, API or open weights, cost with a worked example, benchmarks and license.">
   <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
   <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+  <meta property="og:image" content="https://baselarte.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Twitter / X -->
-  <meta name="twitter:card" content="summary">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" data-i18n-attributes="content:kimi.metaTitle" content="Kimi K2 and K3: Moonshot AI’s open-weight models">
   <meta name="twitter:description" data-i18n-attributes="content:kimi.metaDescription" content="Kimi K2 and K3 explained: Mixture-of-Experts (why 2.8T parameters cost 104B per token), hybrid linear attention, 1M context, how to use them by app, API or open weights, cost with a worked example, benchmarks and license.">
+  <meta name="twitter:image" content="https://baselarte.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
 
   <!-- Icons & manifest -->
   <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
   <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
   <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
   <link rel="manifest" href="../../site.webmanifest">
+  <link rel="alternate" type="text/plain" href="../../llms.txt" title="LLM-readable summary">
   <link rel="stylesheet" href="../../styles.css">
 
+  <!-- Structured data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://baselarte.com/notas/kimi-k2-k3/#article",
+      "headline": "Kimi K2 and K3: Moonshot AI’s open-weight models",
+      "name": "Kimi K2 and K3: Moonshot AI’s open-weight models",
+      "description": "Kimi K2 and K3 explained: Mixture-of-Experts (why 2.8T parameters cost 104B per token), hybrid linear attention, 1M context, how to use them by app, API or open weights, cost with a worked example, benchmarks and license.",
+      "url": "https://baselarte.com/notas/kimi-k2-k3/",
+      "mainEntityOfPage": {
+        "@id": "https://baselarte.com/notas/kimi-k2-k3/"
+      },
+      "inLanguage": [
+        "en",
+        "pt-BR"
+      ],
+      "datePublished": "2026-10-26",
+      "dateModified": "2026-10-26",
+      "image": "https://baselarte.com/assets/og-image.png",
+      "author": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://baselarte.com/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://baselarte.com/notas/kimi-k2-k3/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://baselarte.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://baselarte.com/notas/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Kimi K2 and K3: Moonshot AI’s open-weight models",
+          "item": "https://baselarte.com/notas/kimi-k2-k3/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body>
 <svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
@@ -289,6 +355,7 @@ saída              5.000 tokens x US$ 15 / 1.000.000 = US$ 0,075
 
   <footer class="site-footer">
     <span>© <span data-current-year></span></span>
+    <nav class="footer-links" data-i18n-attributes="aria-label:footer.files" aria-label="Files for machines"><a href="../../llms.txt">llms.txt</a><a href="../../sitemap.xml">sitemap.xml</a><a href="../../robots.txt">robots.txt</a></nav>
     <div class="footer-tools requires-js">
       <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
         <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>

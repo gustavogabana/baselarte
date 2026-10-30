@@ -41,6 +41,7 @@
       "principles.quote": "A computer can never be held accountable, therefore a computer must never make a management decision.",
       "principles.citation": "IBM internal training presentation, 1979",
       "footer.language": "Language",
+      "footer.files": "Files for machines",
 
       "notes.metaTitle": "Notes",
       "notes.metaDescription": "Study notes: short, practical references on the tools and platforms we build with.",
@@ -394,6 +395,7 @@
       "principles.quote": "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão.",
       "principles.citation": "Apresentação interna de treinamento da IBM, 1979",
       "footer.language": "Idioma",
+      "footer.files": "Arquivos para máquinas",
 
       "notes.metaTitle": "Notas",
       "notes.metaDescription": "Notas de estudo: referências curtas e práticas sobre as ferramentas e plataformas com que construímos.",
