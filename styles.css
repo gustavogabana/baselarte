@@ -618,6 +618,7 @@ main {
 .ds-guide p + p,
 .ds-guide pre + p,
 .ds-guide .ds-list + p,
+.ds-guide .content-section > :is(ul, ol):not([class]) + p,
 .ds-guide .ds-steps + p {
   margin-top: 16px;
 }
@@ -726,8 +727,10 @@ pre:hover .copy-button,
 .tok-n { color: var(--code-number); }
 .tok-a { color: var(--code-attr); }
 
-/* Lists */
-.ds-list {
+/* Lists (a bare <ul>/<ol> in a note section gets the same look as .ds-list) */
+.ds-list,
+.content-section > ul:not([class]),
+.content-section > ol:not([class]) {
   margin-top: 16px;
   padding-left: 1.4em;
   display: grid;
@@ -735,7 +738,12 @@ pre:hover .copy-button,
   list-style: disc;
 }
 
-.ds-list li::marker {
+.content-section > ol:not([class]) {
+  list-style: decimal;
+}
+
+.ds-list li::marker,
+.content-section > :is(ul, ol):not([class]) li::marker {
   color: var(--fg-faint);
 }
 
