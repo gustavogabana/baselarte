@@ -277,7 +277,7 @@ services:
 
 <h3><span class="pt">Banco que já existe: baseline</span><span class="en">An existing database: baseline</span></h3>
 <p><span class="pt">Se o projeto já tem um banco em produção criado na mão (ou com <code>ddl-auto=update</code>, <code>create_all()</code>, <code>synchronize: true</code>), você não pode rodar um <code>V1</code> com <code>CREATE TABLE users</code>: a tabela já existe e vai dar erro. O caminho é o <strong>baseline</strong>:</span><span class="en">If the project already has a production database created by hand (or with <code>ddl-auto=update</code>, <code>create_all()</code>, <code>synchronize: true</code>), you cannot run a <code>V1</code> with <code>CREATE TABLE users</code>: the table exists and it will fail. The way out is a <strong>baseline</strong>:</span></p>
-<ol class="ds-list" style="list-style: decimal">
+<ol>
 <li><span class="pt">Gere o SQL do esquema atual (<code>pg_dump --schema-only</code> ou o diff da ferramenta) e salve como a primeira migration.</span><span class="en">Generate the SQL of the current schema (<code>pg_dump --schema-only</code> or the tool's diff) and save it as the first migration.</span></li>
 <li><span class="pt">Nos bancos que <em>já têm</em> essas tabelas, <strong>marque essa migration como aplicada sem executá-la</strong>.</span><span class="en">On databases that <em>already have</em> those tables, <strong>mark that migration as applied without running it</strong>.</span></li>
 <li><span class="pt">Bancos novos (dev, CI) rodam o baseline normalmente e chegam ao mesmo esquema.</span><span class="en">New databases (dev, CI) run the baseline normally and reach the same schema.</span></li>
@@ -656,6 +656,7 @@ docker exec pg-mig psql -U postgres -d app -c \
 <li><a href="https://docs.spring.io/spring-boot/how-to/data-initialization.html" rel="noopener">Spring Boot: Database Initialization (Flyway)</a></li>
 <li><a href="https://www.prisma.io/docs/orm/prisma-migrate" rel="noopener">Prisma Migrate</a></li>
 <li><a href="https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining" rel="noopener">Prisma: Baselining a database</a></li>
+<li><a href="https://www.prisma.io/docs/orm/v7/reference/prisma-config-reference" rel="noopener">Prisma 7: Config API (prisma.config.ts)</a></li>
 <li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html" rel="noopener">Alembic tutorial</a></li>
 <li><a href="https://alembic.sqlalchemy.org/en/latest/branches.html" rel="noopener">Alembic: Working with branches</a></li>
 <li><a href="https://www.postgresql.org/docs/current/sql-createindex.html#SQL-CREATEINDEX-CONCURRENTLY" rel="noopener">PostgreSQL: CREATE INDEX CONCURRENTLY</a></li>
