@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+  <title data-i18n="mig.metaTitle">Database migrations: Flyway, Prisma and Alembic</title>
+  <meta name="description" data-i18n-attributes="content:mig.metaDescription" content="What database migrations are and the problem they solve, how to start them in a new project, what the database must look like, the first migration versus the next ones, baselining an existing database, avoiding conflicts in a team and running them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <meta name="author" content="Baselarte Ltda.">
+  <meta name="application-name" content="Baselarte">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#0d0e12">
+
+  <!-- Sets theme (by local time) and language before first paint. -->
+  <script src="../../boot.js"></script>
+  <link rel="canonical" href="https://baselarte.com/notas/db-migrations/">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Baselarte">
+  <meta property="og:url" content="https://baselarte.com/notas/db-migrations/">
+  <meta property="og:title" data-i18n-attributes="content:mig.metaTitle" content="Database migrations: Flyway, Prisma and Alembic">
+  <meta property="og:description" data-i18n-attributes="content:mig.metaDescription" content="What database migrations are and the problem they solve, how to start them in a new project, what the database must look like, the first migration versus the next ones, baselining an existing database, avoiding conflicts in a team and running them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).">
+  <meta property="og:locale" data-i18n-attributes="content:meta.locale" content="en_US">
+  <meta property="og:locale:alternate" data-i18n-attributes="content:meta.localeAlternate" content="pt_BR">
+  <meta property="og:image" content="https://baselarte.com/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" data-i18n-attributes="content:mig.metaTitle" content="Database migrations: Flyway, Prisma and Alembic">
+  <meta name="twitter:description" data-i18n-attributes="content:mig.metaDescription" content="What database migrations are and the problem they solve, how to start them in a new project, what the database must look like, the first migration versus the next ones, baselining an existing database, avoiding conflicts in a team and running them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).">
+  <meta name="twitter:image" content="https://baselarte.com/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Baselarte: a five-petal flower and the site name on a dark background">
+
+  <!-- Icons & manifest -->
+  <link rel="icon" href="../../favicon.svg?v=5" type="image/svg+xml">
+  <link rel="icon" href="../../favicon.ico?v=5" sizes="any">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <link rel="alternate" type="text/plain" href="../../llms.txt" title="LLM-readable summary">
+  <link rel="stylesheet" href="../../styles.css">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TechArticle",
+      "@id": "https://baselarte.com/notas/db-migrations/#article",
+      "headline": "Database migrations: Flyway, Prisma and Alembic",
+      "name": "Database migrations: Flyway, Prisma and Alembic",
+      "description": "What database migrations are and the problem they solve, how to start them in a new project, what the database must look like, the first migration versus the next ones, baselining an existing database, avoiding conflicts in a team and running them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).",
+      "url": "https://baselarte.com/notas/db-migrations/",
+      "mainEntityOfPage": {
+        "@id": "https://baselarte.com/notas/db-migrations/"
+      },
+      "inLanguage": [
+        "en",
+        "pt-BR"
+      ],
+      "datePublished": "2026-10-31",
+      "dateModified": "2026-10-31",
+      "image": "https://baselarte.com/assets/og-image.png",
+      "author": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "publisher": {
+        "@id": "https://baselarte.com/#organization"
+      },
+      "isPartOf": {
+        "@id": "https://baselarte.com/#website"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://baselarte.com/notas/db-migrations/#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://baselarte.com/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://baselarte.com/notas/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Database migrations: Flyway, Prisma and Alembic",
+          "item": "https://baselarte.com/notas/db-migrations/"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <symbol id="i-alert" viewBox="0 0 32 32"><path d="M16 4 2 28h28zM16 13v7M16 24h.01"/></symbol>
+  <symbol id="i-check" viewBox="0 0 32 32"><circle cx="16" cy="16" r="12"/><path d="M10.5 16.5l4 4 7-8"/></symbol>
+</svg>
+  <a class="skip-link" href="#main" data-i18n="skipLink">Skip to content</a>
+
+  <header class="site-header">
+    <a class="site-wordmark" href="../../" aria-label="Home"><svg class="logo-mark" viewBox="0 0 32 32" aria-hidden="true"><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(54.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(126.0 16 16) translate(16 16)"/><path class="petal" d="M -4.75,-2.5 C -9.025,-6.5 -5.35,-11.5 0,-15.0 C 5.35,-11.5 9.025,-6.5 4.75,-2.5 C 2.09,0.5 -2.09,0.5 -4.75,-2.5 Z" transform="rotate(198.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-90.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(-18.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(54.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(126.0 16 16) translate(16 16)"/><path class="vein" d="M 0,-3.5 C 1.1,-7.5 0.6,-11.875 0,-13.7" transform="rotate(198.0 16 16) translate(16 16)"/><circle class="heart" cx="16" cy="16" r="1.9"/></svg></a>
+  </header>
+
+  <main id="main">
+      <article class="reading-column ds-guide">
+<p class="back-link"><a href="../index.html"><span aria-hidden="true">← </span><span data-i18n="nav.notes">Notes</span></a></p>
+<section class="hero" aria-labelledby="hero-title">
+  <p class="monospace-label hero-kicker" data-i18n="mig.kicker">Study guide</p>
+  <h1 id="hero-title" class="hero-title" data-i18n="mig.heroTitle">The schema is code, <em>and it has a history.</em></h1>
+  <p class="hero-lede" data-i18n="mig.heroLede">What database migrations are, the problem they solve, how to start them in a new project, what the database must look like before the first one, how to avoid conflicts in a team and how to run them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).</p>
+</section>
+<aside class="side-nav" id="side-nav">
+  <nav data-i18n-attributes="aria-label:sideNav.label" aria-label="On this page">
+    <h2 data-i18n="sideNav.onThisPage">On this page</h2>
+<ul>
+<li><a href="#what"><span class="pt">O que é uma migration</span><span class="en">What a migration is</span></a></li>
+<li><a href="#how"><span class="pt">Como a ferramenta funciona</span><span class="en">How the tool works</span></a></li>
+<li><a href="#start"><span class="pt">Começando do zero</span><span class="en">Starting from scratch</span></a></li>
+<li><a href="#flyway"><span class="pt">Java + Spring: Flyway</span><span class="en">Java + Spring: Flyway</span></a></li>
+<li><a href="#prisma"><span class="pt">TypeScript: Prisma</span><span class="en">TypeScript: Prisma</span></a></li>
+<li><a href="#alembic"><span class="pt">Python + FastAPI: Alembic</span><span class="en">Python + FastAPI: Alembic</span></a></li>
+<li><a href="#conflicts"><span class="pt">Conflitos em equipe</span><span class="en">Conflicts in a team</span></a></li>
+<li><a href="#prod"><span class="pt">Em produção</span><span class="en">In production</span></a></li>
+<li><a href="#lab"><span class="pt">Exercício: Flyway em 10 minutos</span><span class="en">Exercise: Flyway in 10 minutes</span></a></li>
+<li><a href="#cheat-mig"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></a></li>
+</ul>
+  </nav>
+</aside>
+
+<section class="content-section" aria-labelledby="what">
+<h2 id="what"><span class="pt">O que é uma migration</span><span class="en">What a migration is</span></h2>
+<p><span class="pt">Uma <strong>migration</strong> é um arquivo versionado que descreve <em>uma</em> mudança no esquema do banco: criar uma tabela, adicionar uma coluna, criar um índice, renomear algo, mover dados. Os arquivos ficam no repositório, ao lado do código, e são aplicados <strong>em ordem</strong> por uma ferramenta que lembra, dentro do próprio banco, quais já rodaram.</span><span class="en">A <strong>migration</strong> is a versioned file that describes <em>one</em> change to the database schema: create a table, add a column, create an index, rename something, move data. The files live in the repository next to the code and are applied <strong>in order</strong> by a tool that remembers, inside the database itself, which ones have already run.</span></p>
+<p><span class="pt">Pense no Git, só que para o banco: cada migration é um commit do esquema. O estado atual do banco é a soma de todas as migrations aplicadas, da primeira até a última. Qualquer banco (o seu notebook, o CI, staging, produção) que rodar a mesma sequência chega ao mesmo esquema.</span><span class="en">Think of Git, but for the database: each migration is a commit of the schema. The current state of the database is the sum of every applied migration, from the first to the last. Any database (your laptop, CI, staging, production) that runs the same sequence ends up with the same schema.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 220" role="img" aria-label="Arquivos de migration no repositório e tabela de histórico no banco / Migration files in the repository and the history table in the database" style="min-width:620px">
+<text x="20" y="22" class="pt mut" text-anchor="start">repositório (pasta de migrations)</text><text x="20" y="22" class="en mut" text-anchor="start">repository (migrations folder)</text>
+<rect x="10" y="32" width="260" height="140" rx="4" class="ln"/>
+<rect x="22" y="44" width="236" height="32" rx="3" class="ln fillsoft"/>
+<text x="34" y="65" class="mono" text-anchor="start">V1__create_users.sql</text>
+<rect x="22" y="86" width="236" height="32" rx="3" class="ln fillsoft"/>
+<text x="34" y="107" class="mono" text-anchor="start">V2__create_orders.sql</text>
+<rect x="22" y="128" width="236" height="32" rx="3" class="brandfill"/>
+<text x="34" y="149" class="mono" text-anchor="start">V3__add_phone.sql</text>
+<text x="440" y="22" class="pt mut" text-anchor="start">banco: tabela de histórico</text><text x="440" y="22" class="en mut" text-anchor="start">database: history table</text>
+<rect x="430" y="32" width="260" height="140" rx="4" class="ln"/>
+<rect x="442" y="44" width="236" height="32" rx="3" class="ln fillsoft"/>
+<text x="454" y="65" class="mono" text-anchor="start">1 · create_users · ✓</text>
+<rect x="442" y="86" width="236" height="32" rx="3" class="ln fillsoft"/>
+<text x="454" y="107" class="mono" text-anchor="start">2 · create_orders · ✓</text>
+<rect x="442" y="128" width="236" height="32" rx="3" class="ln dash"/>
+<text x="454" y="149" class="pt mono mut" text-anchor="start">3 · (pendente)</text><text x="454" y="149" class="en mono mut" text-anchor="start">3 · (pending)</text>
+<path d="M258 60L442 60" class="ln dash"/>
+<path d="M258 102L442 102" class="ln dash"/>
+<text x="350" y="54" class="pt mut" text-anchor="middle">já aplicada</text><text x="350" y="54" class="en mut" text-anchor="middle">already applied</text>
+<path d="M258 144L442 144" class="ln"/><path d="M435.2 140.7L442 144L435.2 147.3" class="ln"/>
+<text x="350" y="138" class="pt" text-anchor="middle">migrate aplica</text><text x="350" y="138" class="en" text-anchor="middle">migrate applies</text>
+<text x="10" y="200" class="pt mut" text-anchor="start">A ferramenta compara a pasta com o histórico e roda só o que falta, em ordem.</text><text x="10" y="200" class="en mut" text-anchor="start">The tool compares the folder with the history and runs only what is missing, in order.</text>
+</svg></div><figcaption><span class="pt">Os arquivos dizem o que deve existir; a tabela de histórico diz o que já existe. A diferença são as migrations pendentes.</span><span class="en">The files say what should exist; the history table says what already exists. The difference is the pending migrations.</span></figcaption></figure>
+
+<h3><span class="pt">Qual problema resolve</span><span class="en">What problem it solves</span></h3>
+<p><span class="pt">Sem migrations, o esquema muda "na mão": alguém roda um <code>ALTER TABLE</code> no banco de produção, outro esquece de rodar no staging, o colega novo não sabe quais comandos rodar para montar o banco local. O resultado tem nome: <strong>drift</strong>, quando bancos que deveriam ser iguais ficam diferentes e ninguém sabe exatamente como.</span><span class="en">Without migrations, the schema changes "by hand": someone runs an <code>ALTER TABLE</code> on the production database, someone else forgets to run it on staging, the new colleague does not know which commands to run to build the local database. The result has a name: <strong>drift</strong>, when databases that should be identical end up different and nobody knows exactly how.</span></p>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Sem migrations</span><span class="en">Without migrations</span></th><th><span class="pt">Com migrations</span><span class="en">With migrations</span></th></tr></thead><tbody>
+<tr><td><span class="pt">SQL solto em chat, wiki ou na memória de alguém</span><span class="en">SQL scattered in chat, a wiki or someone's memory</span></td><td><span class="pt">cada mudança é um arquivo no Git, revisado em PR</span><span class="en">each change is a file in Git, reviewed in a PR</span></td></tr>
+<tr><td><span class="pt">"funciona na minha máquina" porque o seu banco tem uma coluna a mais</span><span class="en">"works on my machine" because your database has one extra column</span></td><td><span class="pt">todo ambiente roda a mesma sequência e chega ao mesmo esquema</span><span class="en">every environment runs the same sequence and reaches the same schema</span></td></tr>
+<tr><td><span class="pt">deploy do código novo antes da coluna existir: erro 500</span><span class="en">deploying new code before the column exists: 500 error</span></td><td><span class="pt">o deploy aplica as migrations pendentes antes (ou junto) de subir o código</span><span class="en">the deploy applies pending migrations before (or together with) the code</span></td></tr>
+<tr><td><span class="pt">ninguém sabe em que versão o banco de produção está</span><span class="en">nobody knows which version the production database is at</span></td><td><span class="pt">a tabela de histórico responde: versão, data, quem e checksum</span><span class="en">the history table answers: version, date, who and checksum</span></td></tr>
+<tr><td><span class="pt">montar um banco novo exige um dump de produção</span><span class="en">building a new database needs a production dump</span></td><td><span class="pt">banco vazio + <code>migrate</code> = esquema completo</span><span class="en">empty database + <code>migrate</code> = full schema</span></td></tr>
+</tbody></table></div>
+
+<h3><span class="pt">Duas filosofias: SQL escrito ou esquema declarativo</span><span class="en">Two philosophies: hand-written SQL or a declarative schema</span></h3>
+<p><span class="pt">Todas as ferramentas acabam executando SQL, mas diferem em <em>quem escreve</em> esse SQL:</span><span class="en">Every tool ends up running SQL, but they differ in <em>who writes</em> that SQL:</span></p>
+<ul class="ds-list">
+<li><span class="pt"><strong>Versionada por SQL (Flyway, Liquibase):</strong> você escreve o <code>ALTER TABLE</code>. Controle total, nenhuma mágica, mas é você quem mantém o código das entidades e o SQL em sincronia.</span><span class="en"><strong>SQL-versioned (Flyway, Liquibase):</strong> you write the <code>ALTER TABLE</code>. Full control, no magic, but you keep the entity code and the SQL in sync.</span></li>
+<li><span class="pt"><strong>Gerada a partir do modelo (Prisma, Alembic com autogenerate, TypeORM, Django):</strong> você muda o modelo (o <code>schema.prisma</code> ou as classes do SQLAlchemy), a ferramenta compara com o banco e <em>gera</em> o SQL da diferença. Rápido, mas o SQL gerado <strong>precisa ser lido</strong> antes do commit: renomear uma coluna pode virar "apagar e criar", perdendo dados.</span><span class="en"><strong>Generated from the model (Prisma, Alembic with autogenerate, TypeORM, Django):</strong> you change the model (the <code>schema.prisma</code> or the SQLAlchemy classes), the tool diffs it against the database and <em>generates</em> the SQL for the difference. Fast, but the generated SQL <strong>must be read</strong> before committing: renaming a column can turn into "drop and create", losing data.</span></li>
+</ul>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">Nas duas filosofias o artefato que vai para produção é o mesmo: um arquivo de migration imutável, com SQL concreto. O modelo declarativo é só uma forma mais confortável de <em>produzir</em> esse arquivo.</span><span class="en">In both philosophies the artifact that reaches production is the same: an immutable migration file with concrete SQL. The declarative model is just a more comfortable way of <em>producing</em> that file.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="how">
+<h2 id="how"><span class="pt">Como a ferramenta funciona</span><span class="en">How the tool works</span></h2>
+<p><span class="pt">Flyway, Prisma e Alembic seguem o mesmo algoritmo. Entendê-lo uma vez explica as três:</span><span class="en">Flyway, Prisma and Alembic follow the same algorithm. Understanding it once explains all three:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 150" role="img" aria-label="Passos do comando migrate / Steps of the migrate command" style="min-width:620px">
+<rect x="10" y="20" width="120" height="56" rx="4" class="ln fillsoft"/>
+<text x="70" y="44" class="pt" text-anchor="middle">1. trava</text><text x="70" y="44" class="en" text-anchor="middle">1. lock</text>
+<text x="70" y="62" class="pt mut" text-anchor="middle">um por vez</text><text x="70" y="62" class="en mut" text-anchor="middle">one at a time</text>
+<rect x="148" y="20" width="120" height="56" rx="4" class="ln"/>
+<text x="208" y="44" class="pt" text-anchor="middle">2. lê arquivos</text><text x="208" y="44" class="en" text-anchor="middle">2. read files</text>
+<text x="208" y="62" class="pt mut" text-anchor="middle">e ordena</text><text x="208" y="62" class="en mut" text-anchor="middle">and sort them</text>
+<rect x="286" y="20" width="120" height="56" rx="4" class="ln"/>
+<text x="346" y="44" class="pt" text-anchor="middle">3. lê histórico</text><text x="346" y="44" class="en" text-anchor="middle">3. read history</text>
+<text x="346" y="62" class="pt mut" text-anchor="middle">valida checksums</text><text x="346" y="62" class="en mut" text-anchor="middle">check checksums</text>
+<rect x="424" y="20" width="120" height="56" rx="4" class="brandfill"/>
+<text x="484" y="44" class="pt" text-anchor="middle">4. aplica</text><text x="484" y="44" class="en" text-anchor="middle">4. apply</text>
+<text x="484" y="62" class="pt" text-anchor="middle">as pendentes</text><text x="484" y="62" class="en" text-anchor="middle">pending ones</text>
+<rect x="562" y="20" width="128" height="56" rx="4" class="ln fillsoft"/>
+<text x="626" y="44" class="pt" text-anchor="middle">5. registra</text><text x="626" y="44" class="en" text-anchor="middle">5. record</text>
+<text x="626" y="62" class="pt mut" text-anchor="middle">linha no histórico</text><text x="626" y="62" class="en mut" text-anchor="middle">row in history</text>
+<path d="M130 48L148 48" class="ln"/><path d="M142 45L148 48L142 51" class="ln"/>
+<path d="M268 48L286 48" class="ln"/><path d="M280 45L286 48L280 51" class="ln"/>
+<path d="M406 48L424 48" class="ln"/><path d="M418 45L424 48L418 51" class="ln"/>
+<path d="M544 48L562 48" class="ln"/><path d="M556 45L562 48L556 51" class="ln"/>
+<text x="10" y="110" class="pt mut" text-anchor="start">Se um arquivo já aplicado mudou (checksum diferente), a ferramenta para no passo 3.</text><text x="10" y="110" class="en mut" text-anchor="start">If an already-applied file changed (different checksum), the tool stops at step 3.</text>
+<text x="10" y="130" class="pt mut" text-anchor="start">Os passos 4 e 5 se repetem para cada pendente, uma de cada vez e em ordem.</text><text x="10" y="130" class="en mut" text-anchor="start">Steps 4 and 5 repeat for each pending migration, one at a time and in order.</text>
+</svg></div><figcaption><span class="pt">O mesmo ciclo em Flyway, Prisma e Alembic: travar, comparar, aplicar o que falta e registrar.</span><span class="en">The same cycle in Flyway, Prisma and Alembic: lock, compare, apply what is missing and record it.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th></th><th>Flyway</th><th>Prisma</th><th>Alembic</th></tr></thead><tbody>
+<tr><td><span class="pt">Tabela de histórico</span><span class="en">History table</span></td><td><code>flyway_schema_history</code></td><td><code>_prisma_migrations</code></td><td><code>alembic_version</code></td></tr>
+<tr><td><span class="pt">O que guarda</span><span class="en">What it stores</span></td><td><span class="pt">uma linha por migration: versão, descrição, checksum, data, sucesso</span><span class="en">one row per migration: version, description, checksum, date, success</span></td><td><span class="pt">uma linha por migration: nome, checksum, início, fim, logs</span><span class="en">one row per migration: name, checksum, start, finish, logs</span></td><td><span class="pt">só <em>uma</em> linha: o id da revisão atual (a "head")</span><span class="en">just <em>one</em> row: the id of the current revision (the "head")</span></td></tr>
+<tr><td><span class="pt">Como ordena</span><span class="en">How it orders</span></td><td><span class="pt">pelo número da versão no nome (<code>V3</code> &lt; <code>V10</code>)</span><span class="en">by the version number in the name (<code>V3</code> &lt; <code>V10</code>)</span></td><td><span class="pt">pelo timestamp no nome da pasta</span><span class="en">by the timestamp in the folder name</span></td><td><span class="pt">por uma lista encadeada: cada arquivo aponta para o anterior (<code>down_revision</code>)</span><span class="en">by a linked list: each file points to the previous one (<code>down_revision</code>)</span></td></tr>
+<tr><td><span class="pt">Detecta arquivo editado</span><span class="en">Detects an edited file</span></td><td><span class="pt">sim (checksum)</span><span class="en">yes (checksum)</span></td><td><span class="pt">sim (checksum)</span><span class="en">yes (checksum)</span></td><td><span class="pt">não: confia em você</span><span class="en">no: it trusts you</span></td></tr>
+<tr><td><span class="pt">Trava contra execuções simultâneas</span><span class="en">Lock against simultaneous runs</span></td><td><span class="pt">sim</span><span class="en">yes</span></td><td><span class="pt">sim (advisory lock)</span><span class="en">yes (advisory lock)</span></td><td><span class="pt">não: rode uma vez só, num passo do deploy</span><span class="en">no: run it once, in a deploy step</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">A regra de ouro de qualquer ferramenta: <strong>migration aplicada em qualquer ambiente compartilhado é imutável</strong>. Errou? Escreva uma migration nova que corrige. Editar a antiga não muda nada nos bancos que já a rodaram, e o checksum vai travar o próximo deploy.</span><span class="en">The golden rule of every tool: <strong>a migration applied to any shared environment is immutable</strong>. Made a mistake? Write a new migration that fixes it. Editing the old one changes nothing in databases that already ran it, and the checksum will block the next deploy.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="start">
+<h2 id="start"><span class="pt">Começando do zero</span><span class="en">Starting from scratch</span></h2>
+<h3><span class="pt">Como o banco precisa estar</span><span class="en">What the database must look like</span></h3>
+<p><span class="pt">Migrations cuidam do que fica <em>dentro</em> do banco (tabelas, índices, constraints, dados de referência). O que está <em>em volta</em> normalmente vem antes, por infraestrutura (Docker Compose, Terraform, o painel do provedor):</span><span class="en">Migrations take care of what lives <em>inside</em> the database (tables, indexes, constraints, reference data). What is <em>around</em> it usually comes first, from infrastructure (Docker Compose, Terraform, the provider's console):</span></p>
+<ul class="ds-list">
+<li><span class="pt"><strong>O servidor e o database existem</strong> (<code>CREATE DATABASE app</code>). Flyway e Alembic não criam o database; o <code>prisma migrate dev</code> cria em desenvolvimento, mas em produção você não deve depender disso.</span><span class="en"><strong>The server and the database exist</strong> (<code>CREATE DATABASE app</code>). Flyway and Alembic do not create the database; <code>prisma migrate dev</code> does in development, but in production you should not rely on it.</span></li>
+<li><span class="pt"><strong>Um usuário com permissão de DDL</strong> (criar e alterar tabelas) para rodar as migrations. Em produção, o ideal é separar: um usuário de migration (dono das tabelas) e um usuário da aplicação só com <code>SELECT/INSERT/UPDATE/DELETE</code>.</span><span class="en"><strong>A user with DDL permission</strong> (create and alter tables) to run the migrations. In production, ideally separate them: a migration user (owner of the tables) and an application user with only <code>SELECT/INSERT/UPDATE/DELETE</code>.</span></li>
+<li><span class="pt"><strong>O schema vazio</strong> (sem tabelas) num projeto novo. A ferramenta cria a tabela de histórico sozinha na primeira execução.</span><span class="en"><strong>An empty schema</strong> (no tables) in a new project. The tool creates its history table on its own on the first run.</span></li>
+<li><span class="pt"><strong>Extensões</strong> como <code>pgcrypto</code> ou <code>postgis</code> podem ir numa migration (<code>CREATE EXTENSION IF NOT EXISTS</code>) se o usuário tiver permissão; em bancos gerenciados às vezes só o admin pode, aí ficam na infraestrutura.</span><span class="en"><strong>Extensions</strong> such as <code>pgcrypto</code> or <code>postgis</code> can go in a migration (<code>CREATE EXTENSION IF NOT EXISTS</code>) if the user is allowed; on managed databases sometimes only the admin can, so they stay in the infrastructure.</span></li>
+</ul>
+<pre><code># docker-compose.yml (dev): the server and an empty database, nothing else
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: app          # the database exists, with no tables
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: dev
+    ports: ["5432:5432"]</code></pre>
+
+<h3><span class="pt">A primeira migration tem todas as tabelas?</span><span class="en">Does the first migration have every table?</span></h3>
+<p><span class="pt">A primeira migration contém <strong>tudo o que existe no momento em que você a cria</strong>, e nada além. Num projeto realmente novo, isso costuma ser pouco: <code>users</code> e talvez mais uma ou duas tabelas. Você não precisa (nem deve) desenhar o banco inteiro do futuro no <code>V1</code>.</span><span class="en">The first migration contains <strong>everything that exists at the moment you create it</strong>, and nothing more. In a truly new project, that is usually little: <code>users</code> and maybe one or two more tables. You do not need to (and should not) design the whole future database in <code>V1</code>.</span></p>
+<p><span class="pt">Daí em diante, cada migration é um <strong>delta</strong>: só a mudança daquela tarefa. Feature de pedidos? <code>V2__create_orders.sql</code>. Precisa do telefone do usuário? <code>V3__add_users_phone.sql</code>. Nunca volte ao <code>V1</code> para "encaixar" a coluna nova, nem num projeto que ainda não está em produção, assim que alguém além de você já rodou aquele arquivo.</span><span class="en">From then on, each migration is a <strong>delta</strong>: only the change for that task. Orders feature? <code>V2__create_orders.sql</code>. Need the user's phone? <code>V3__add_users_phone.sql</code>. Never go back to <code>V1</code> to "fit in" the new column, even in a project not yet in production, as soon as anyone other than you has run that file.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 210" role="img" aria-label="Três situações iniciais do banco / Three starting situations for the database" style="min-width:620px">
+<rect x="10" y="80" width="150" height="50" rx="4" class="ln fillsoft"/>
+<text x="85" y="102" class="pt" text-anchor="middle">qual o estado</text><text x="85" y="102" class="en" text-anchor="middle">what state is</text>
+<text x="85" y="120" class="pt" text-anchor="middle">do banco?</text><text x="85" y="120" class="en" text-anchor="middle">the database in?</text>
+<rect x="230" y="14" width="170" height="44" rx="4" class="ln"/>
+<text x="315" y="41" class="pt" text-anchor="middle">vazio (projeto novo)</text><text x="315" y="41" class="en" text-anchor="middle">empty (new project)</text>
+<rect x="230" y="83" width="170" height="44" rx="4" class="ln"/>
+<text x="315" y="102" class="pt" text-anchor="middle">já tem tabelas,</text><text x="315" y="102" class="en" text-anchor="middle">has tables,</text>
+<text x="315" y="118" class="pt" text-anchor="middle">sem histórico</text><text x="315" y="118" class="en" text-anchor="middle">no history</text>
+<rect x="230" y="152" width="170" height="44" rx="4" class="ln"/>
+<text x="315" y="179" class="pt" text-anchor="middle">já tem histórico</text><text x="315" y="179" class="en" text-anchor="middle">already has history</text>
+<rect x="460" y="14" width="230" height="44" rx="4" class="brandfill"/>
+<text x="575" y="33" class="pt" text-anchor="middle">V1 com as tabelas de hoje,</text><text x="575" y="33" class="en" text-anchor="middle">V1 with today's tables,</text>
+<text x="575" y="49" class="pt" text-anchor="middle">depois um delta por tarefa</text><text x="575" y="49" class="en" text-anchor="middle">then one delta per task</text>
+<rect x="460" y="83" width="230" height="44" rx="4" class="ln fillsoft"/>
+<text x="575" y="102" class="pt" text-anchor="middle">baseline: V1 = dump do esquema,</text><text x="575" y="102" class="en" text-anchor="middle">baseline: V1 = schema dump,</text>
+<text x="575" y="118" class="pt" text-anchor="middle">marcado como aplicado</text><text x="575" y="118" class="en" text-anchor="middle">marked as applied</text>
+<rect x="460" y="152" width="230" height="44" rx="4" class="ln fillsoft"/>
+<text x="575" y="179" class="pt" text-anchor="middle">roda só as pendentes</text><text x="575" y="179" class="en" text-anchor="middle">runs only the pending ones</text>
+<path d="M160 105L230 36" class="ln"/><path d="M222.6 38.6L230 36L227.3 43.3" class="ln"/>
+<path d="M160 105L230 105" class="ln"/><path d="M223.2 101.7L230 105L223.2 108.3" class="ln"/>
+<path d="M160 105L230 174" class="ln"/><path d="M227.3 166.7L230 174L222.6 171.4" class="ln"/>
+<path d="M400 36L460 36" class="ln"/><path d="M453.2 32.7L460 36L453.2 39.3" class="ln"/>
+<path d="M400 105L460 105" class="ln"/><path d="M453.2 101.7L460 105L453.2 108.3" class="ln"/>
+<path d="M400 174L460 174" class="ln"/><path d="M453.2 170.7L460 174L453.2 177.3" class="ln"/>
+</svg></div><figcaption><span class="pt">Banco vazio começa pelo V1; banco que já existe sem migrations precisa de um baseline; banco com histórico só recebe o que falta.</span><span class="en">An empty database starts at V1; an existing database without migrations needs a baseline; a database with history only gets what is missing.</span></figcaption></figure>
+
+<h3><span class="pt">Banco que já existe: baseline</span><span class="en">An existing database: baseline</span></h3>
+<p><span class="pt">Se o projeto já tem um banco em produção criado na mão (ou com <code>ddl-auto=update</code>, <code>create_all()</code>, <code>synchronize: true</code>), você não pode rodar um <code>V1</code> com <code>CREATE TABLE users</code>: a tabela já existe e vai dar erro. O caminho é o <strong>baseline</strong>:</span><span class="en">If the project already has a production database created by hand (or with <code>ddl-auto=update</code>, <code>create_all()</code>, <code>synchronize: true</code>), you cannot run a <code>V1</code> with <code>CREATE TABLE users</code>: the table exists and it will fail. The way out is a <strong>baseline</strong>:</span></p>
+<ol class="ds-list" style="list-style: decimal">
+<li><span class="pt">Gere o SQL do esquema atual (<code>pg_dump --schema-only</code> ou o diff da ferramenta) e salve como a primeira migration.</span><span class="en">Generate the SQL of the current schema (<code>pg_dump --schema-only</code> or the tool's diff) and save it as the first migration.</span></li>
+<li><span class="pt">Nos bancos que <em>já têm</em> essas tabelas, <strong>marque essa migration como aplicada sem executá-la</strong>.</span><span class="en">On databases that <em>already have</em> those tables, <strong>mark that migration as applied without running it</strong>.</span></li>
+<li><span class="pt">Bancos novos (dev, CI) rodam o baseline normalmente e chegam ao mesmo esquema.</span><span class="en">New databases (dev, CI) run the baseline normally and reach the same schema.</span></li>
+</ol>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Marcar o baseline como aplicado</span><span class="en">Mark the baseline as applied</span></th></tr></thead><tbody>
+<tr><td>Flyway</td><td><code>flyway baseline</code> <span class="pt">ou</span><span class="en">or</span> <code>spring.flyway.baseline-on-migrate=true</code> <span class="pt">(versão do baseline: <code>baseline-version</code>)</span><span class="en">(baseline version: <code>baseline-version</code>)</span></td></tr>
+<tr><td>Prisma</td><td><code>npx prisma migrate resolve --applied 0_init</code></td></tr>
+<tr><td>Alembic</td><td><code>alembic stamp &lt;revision&gt;</code> <span class="pt">(grava a revisão sem rodar o <code>upgrade</code>)</span><span class="en">(records the revision without running <code>upgrade</code>)</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Desligue a geração automática de esquema assim que adotar migrations: <code>spring.jpa.hibernate.ddl-auto=validate</code> (ou <code>none</code>), nada de <code>Base.metadata.create_all()</code> no startup do FastAPI, <code>synchronize: false</code> no TypeORM. Duas fontes de verdade para o esquema é exatamente o drift que as migrations vieram resolver.</span><span class="en">Turn off automatic schema generation as soon as you adopt migrations: <code>spring.jpa.hibernate.ddl-auto=validate</code> (or <code>none</code>), no <code>Base.metadata.create_all()</code> at FastAPI startup, <code>synchronize: false</code> in TypeORM. Two sources of truth for the schema is exactly the drift migrations came to solve.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="flyway">
+<h2 id="flyway"><span class="pt">Java + Spring: Flyway</span><span class="en">Java + Spring: Flyway</span></h2>
+<p><span class="pt">O Flyway é a escolha mais comum em Spring Boot. Você escreve SQL puro, e o Spring Boot roda o Flyway sozinho no startup, <em>antes</em> do Hibernate/JPA subir.</span><span class="en">Flyway is the most common choice in Spring Boot. You write plain SQL, and Spring Boot runs Flyway on its own at startup, <em>before</em> Hibernate/JPA comes up.</span></p>
+<h3><span class="pt">1. Dependências</span><span class="en">1. Dependencies</span></h3>
+<pre><code>&lt;!-- pom.xml --&gt;
+&lt;!-- Spring Boot 4: the dedicated starter. Spring Boot 3: org.flywaydb:flyway-core instead. --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+  &lt;artifactId&gt;spring-boot-starter-flyway&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- Since Flyway 10, each database has its own module --&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.flywaydb&lt;/groupId&gt;
+  &lt;artifactId&gt;flyway-database-postgresql&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+  &lt;groupId&gt;org.postgresql&lt;/groupId&gt;
+  &lt;artifactId&gt;postgresql&lt;/artifactId&gt;
+  &lt;scope&gt;runtime&lt;/scope&gt;
+&lt;/dependency&gt;</code></pre>
+<h3><span class="pt">2. Configuração</span><span class="en">2. Configuration</span></h3>
+<pre><code># src/main/resources/application.yml
+spring:
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/app}
+    username: ${DB_USER:app}
+    password: ${DB_PASSWORD:dev}
+  jpa:
+    hibernate:
+      ddl-auto: validate        # Hibernate only CHECKS the schema; Flyway is the one who changes it
+  flyway:
+    enabled: true
+    locations: classpath:db/migration   # the default, written out for clarity
+    # baseline-on-migrate: true         # only when adopting Flyway on an existing database</code></pre>
+<h3><span class="pt">3. A primeira migration e as seguintes</span><span class="en">3. The first migration and the next ones</span></h3>
+<p><span class="pt">O nome do arquivo <em>é</em> a configuração: <code>V</code> + versão + <strong>dois</strong> underscores + descrição + <code>.sql</code>.</span><span class="en">The file name <em>is</em> the configuration: <code>V</code> + version + <strong>two</strong> underscores + description + <code>.sql</code>.</span></p>
+<pre><code>src/main/resources/db/migration/
+├── V1__create_users.sql
+├── V2__create_orders.sql
+├── V3__add_users_phone.sql
+└── R__orders_summary_view.sql      # repeatable: re-runs whenever its content changes</code></pre>
+<pre><code>-- V1__create_users.sql  (the first one: only what exists today)
+CREATE TABLE users (
+  id          bigserial    PRIMARY KEY,
+  email       varchar(255) NOT NULL UNIQUE,
+  name        varchar(120) NOT NULL,
+  created_at  timestamptz  NOT NULL DEFAULT now()
+);
+
+-- V2__create_orders.sql  (a delta: the orders feature)
+CREATE TABLE orders (
+  id          bigserial    PRIMARY KEY,
+  user_id     bigint       NOT NULL REFERENCES users(id),
+  total_cents integer      NOT NULL CHECK (total_cents &gt;= 0),
+  created_at  timestamptz  NOT NULL DEFAULT now()
+);
+CREATE INDEX idx_orders_user_id ON orders(user_id);
+
+-- V3__add_users_phone.sql  (another delta: nullable, so existing rows stay valid)
+ALTER TABLE users ADD COLUMN phone varchar(30);</code></pre>
+<pre><code>// The entity must match the schema; with ddl-auto=validate the app refuses to start if it does not
+@Entity
+@Table(name = "users")
+public class User {
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY) private Long id;
+  @Column(nullable = false, unique = true) private String email;
+  @Column(nullable = false) private String name;
+  private String phone;                                   // added in V3
+  @Column(name = "created_at", insertable = false, updatable = false) private OffsetDateTime createdAt;
+}</code></pre>
+<h3><span class="pt">4. Rodar e inspecionar</span><span class="en">4. Run and inspect</span></h3>
+<pre><code>./mvnw spring-boot:run          # applies pending migrations at startup, then starts the app
+
+# Outside the app (CI, a deploy step), with the Flyway CLI or the Docker image:
+flyway -url=jdbc:postgresql://localhost:5432/app -user=app -password=dev \
+       -locations=filesystem:src/main/resources/db/migration info      # what is applied / pending
+flyway ... migrate        # apply pending
+flyway ... validate       # do the files match the history? (checksums)
+flyway ... repair         # fix the history after a failed migration (never to hide an edited file)</code></pre>
+<div class="callout"><svg class="icon" aria-hidden="true"><use href="#i-check"/></svg> <span class="pt">O Flyway Community não tem <code>undo</code> (os scripts <code>U1__...</code> são da edição paga). Na prática isso é bom: em produção, desfazer quase sempre é uma migration nova para frente (<em>roll forward</em>), não um <code>DROP</code> às pressas.</span><span class="en">Flyway Community has no <code>undo</code> (the <code>U1__...</code> scripts are a paid feature). In practice that is fine: in production, undoing is almost always a new forward migration (<em>roll forward</em>), not a rushed <code>DROP</code>.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="prisma">
+<h2 id="prisma"><span class="pt">TypeScript: Prisma</span><span class="en">TypeScript: Prisma</span></h2>
+<p><span class="pt">No Prisma, a fonte da verdade é o arquivo <code>schema.prisma</code>. Você altera o modelo, e o <code>prisma migrate dev</code> gera uma pasta com o SQL da diferença. É o modelo "declarativo": você descreve o destino, a ferramenta escreve o caminho.</span><span class="en">In Prisma, the source of truth is the <code>schema.prisma</code> file. You change the model, and <code>prisma migrate dev</code> generates a folder with the SQL for the difference. It is the "declarative" model: you describe the destination, the tool writes the route.</span></p>
+<h3><span class="pt">1. Instalar e iniciar</span><span class="en">1. Install and initialise</span></h3>
+<pre><code>npm install -D prisma
+npm install @prisma/client @prisma/adapter-pg dotenv
+npx prisma init --datasource-provider postgresql     # creates prisma/schema.prisma, prisma.config.ts and .env
+echo 'DATABASE_URL="postgresql://app:dev@localhost:5432/app"' &gt; .env</code></pre>
+<pre><code>// prisma.config.ts  (Prisma 7: the connection URL lives here; in Prisma 6 it was url = env(...) in the schema)
+import 'dotenv/config';
+import { defineConfig, env } from 'prisma/config';
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
+  migrations: { path: 'prisma/migrations' },
+  datasource: { url: env('DATABASE_URL') },
+});</code></pre>
+<h3><span class="pt">2. O modelo e a primeira migration</span><span class="en">2. The model and the first migration</span></h3>
+<pre><code>// prisma/schema.prisma
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        BigInt   @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  name      String   @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz
+  @@map("users")
+}</code></pre>
+<pre><code>npx prisma migrate dev --name init
+# 1. diffs schema.prisma against the database (using a temporary "shadow database")
+# 2. writes prisma/migrations/20261031120000_init/migration.sql
+# 3. applies it and records it in _prisma_migrations</code></pre>
+<pre><code>prisma/migrations/
+├── migration_lock.toml                       # pins the provider (postgresql); commit it
+├── 20261031120000_init/migration.sql         # the first one: CREATE TABLE "users" ...
+└── 20261104093000_create_orders/migration.sql</code></pre>
+<h3><span class="pt">3. As próximas: altere o modelo, gere, leia o SQL</span><span class="en">3. The next ones: change the model, generate, read the SQL</span></h3>
+<pre><code>model User {
+  // ...
+  phone  String? @db.VarChar(30)      // new, optional
+  orders Order[]
+}
+
+model Order {
+  id         BigInt   @id @default(autoincrement())
+  userId     BigInt   @map("user_id")
+  user       User     @relation(fields: [userId], references: [id])
+  totalCents Int      @map("total_cents")
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
+  @@index([userId])
+  @@map("orders")
+}</code></pre>
+<pre><code>npx prisma migrate dev --name create_orders --create-only   # generate the SQL but do NOT apply yet
+# open prisma/migrations/&lt;timestamp&gt;_create_orders/migration.sql, review (or edit) it
+npx prisma migrate dev                                      # now apply it</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">Renomear um campo no <code>schema.prisma</code> gera <code>DROP COLUMN</code> + <code>ADD COLUMN</code>: os dados somem. Use <code>--create-only</code>, troque o SQL por <code>ALTER TABLE ... RENAME COLUMN</code> e só então aplique. O <code>migrate dev</code> também pode pedir para <strong>resetar</strong> o banco quando detecta drift: tudo bem no seu notebook, nunca em produção.</span><span class="en">Renaming a field in <code>schema.prisma</code> generates <code>DROP COLUMN</code> + <code>ADD COLUMN</code>: the data is gone. Use <code>--create-only</code>, replace the SQL with <code>ALTER TABLE ... RENAME COLUMN</code> and only then apply. <code>migrate dev</code> may also ask to <strong>reset</strong> the database when it detects drift: fine on your laptop, never in production.</span></div>
+<h3><span class="pt">4. dev × deploy</span><span class="en">4. dev × deploy</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Comando</span><span class="en">Command</span></th><th><span class="pt">Onde</span><span class="en">Where</span></th><th><span class="pt">O que faz</span><span class="en">What it does</span></th></tr></thead><tbody>
+<tr><td><code>prisma migrate dev</code></td><td><span class="pt">só no seu notebook</span><span class="en">your laptop only</span></td><td><span class="pt">gera migrations, aplica, pode resetar o banco</span><span class="en">generates migrations, applies, may reset the database</span></td></tr>
+<tr><td><code>prisma migrate deploy</code></td><td><span class="pt">CI, staging, produção</span><span class="en">CI, staging, production</span></td><td><span class="pt">só aplica as pendentes; nunca gera, nunca reseta</span><span class="en">only applies pending ones; never generates, never resets</span></td></tr>
+<tr><td><code>prisma migrate status</code></td><td><span class="pt">qualquer lugar</span><span class="en">anywhere</span></td><td><span class="pt">mostra pendentes e divergências</span><span class="en">shows pending ones and divergences</span></td></tr>
+<tr><td><code>prisma migrate reset</code></td><td><span class="pt">só dev</span><span class="en">dev only</span></td><td><span class="pt">apaga tudo e reaplica do zero (e roda o seed)</span><span class="en">drops everything and re-applies from scratch (and runs the seed)</span></td></tr>
+<tr><td><code>prisma db push</code></td><td><span class="pt">protótipo</span><span class="en">prototype</span></td><td><span class="pt">empurra o modelo direto, <strong>sem</strong> criar migration: não use em projeto com migrations</span><span class="en">pushes the model directly, <strong>without</strong> a migration: do not use in a project with migrations</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">E TypeORM ou Sequelize?</span><span class="en">What about TypeORM or Sequelize?</span></h3>
+<p><span class="pt">Mesmo conceito, outros nomes. No <strong>TypeORM</strong>: <code>synchronize: false</code>, <code>typeorm migration:generate src/migrations/AddPhone -d src/data-source.ts</code> gera uma classe com <code>up()</code>/<code>down()</code> a partir das entidades, e <code>migration:run</code> aplica (histórico na tabela <code>migrations</code>). No <strong>Sequelize</strong>, o <code>sequelize-cli</code> cria arquivos com <code>up</code>/<code>down</code> escritos à mão e guarda o histórico em <code>SequelizeMeta</code>.</span><span class="en">Same concept, different names. In <strong>TypeORM</strong>: <code>synchronize: false</code>, <code>typeorm migration:generate src/migrations/AddPhone -d src/data-source.ts</code> generates a class with <code>up()</code>/<code>down()</code> from the entities, and <code>migration:run</code> applies it (history in the <code>migrations</code> table). In <strong>Sequelize</strong>, <code>sequelize-cli</code> creates files with hand-written <code>up</code>/<code>down</code> and keeps the history in <code>SequelizeMeta</code>.</span></p>
+</section>
+
+<section class="content-section" aria-labelledby="alembic">
+<h2 id="alembic"><span class="pt">Python + FastAPI: Alembic</span><span class="en">Python + FastAPI: Alembic</span></h2>
+<p><span class="pt">O FastAPI não tem ORM próprio; o par mais comum é <strong>SQLAlchemy</strong> (o ORM) + <strong>Alembic</strong> (as migrations, do mesmo autor). O Alembic gera migrations em Python comparando seus modelos com o banco (<code>--autogenerate</code>), e você revisa.</span><span class="en">FastAPI has no ORM of its own; the most common pair is <strong>SQLAlchemy</strong> (the ORM) + <strong>Alembic</strong> (the migrations, by the same author). Alembic generates Python migrations by diffing your models against the database (<code>--autogenerate</code>), and you review them.</span></p>
+<h3><span class="pt">1. Instalar e iniciar</span><span class="en">1. Install and initialise</span></h3>
+<pre><code>uv add fastapi sqlalchemy alembic "psycopg[binary]" pydantic-settings
+uv run alembic init migrations       # creates alembic.ini and migrations/ (env.py, versions/)</code></pre>
+<pre><code># app/db.py
+from datetime import datetime
+from sqlalchemy import BigInteger, String, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+
+class Base(DeclarativeBase):
+    pass
+
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(BigInteger, primary_key=True)
+    email: Mapped[str] = mapped_column(String(255), unique=True)
+    name: Mapped[str] = mapped_column(String(120))
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())</code></pre>
+<pre><code># migrations/env.py (the two lines that matter)
+from app.db import Base
+from app.settings import settings          # pydantic-settings, reads DATABASE_URL from env/.env
+
+config.set_main_option("sqlalchemy.url", settings.database_url)  # e.g. postgresql+psycopg://app:dev@localhost/app
+target_metadata = Base.metadata            # what autogenerate compares against</code></pre>
+<h3><span class="pt">2. A primeira revisão</span><span class="en">2. The first revision</span></h3>
+<pre><code>uv run alembic revision --autogenerate -m "create users"
+# writes migrations/versions/3f1a9c2b7d10_create_users.py
+uv run alembic upgrade head          # apply everything up to the latest revision</code></pre>
+<pre><code># migrations/versions/3f1a9c2b7d10_create_users.py
+from alembic import op
+import sqlalchemy as sa
+
+revision = "3f1a9c2b7d10"
+down_revision = None                 # None = this is the first one (the root of the chain)
+
+def upgrade() -&gt; None:
+    op.create_table(
+        "users",
+        sa.Column("id", sa.BigInteger(), primary_key=True),
+        sa.Column("email", sa.String(255), nullable=False, unique=True),
+        sa.Column("name", sa.String(120), nullable=False),
+        sa.Column("created_at", sa.DateTime(), server_default=sa.func.now(), nullable=False),
+    )
+
+def downgrade() -&gt; None:
+    op.drop_table("users")</code></pre>
+<h3><span class="pt">3. As próximas: a corrente de revisões</span><span class="en">3. The next ones: the chain of revisions</span></h3>
+<p><span class="pt">Cada revisão nova aponta para a anterior com <code>down_revision</code>. É isso, e não o nome do arquivo, que define a ordem.</span><span class="en">Each new revision points to the previous one with <code>down_revision</code>. That, not the file name, defines the order.</span></p>
+<pre><code># add `phone: Mapped[str | None] = mapped_column(String(30))` to User, then:
+uv run alembic revision --autogenerate -m "add users phone"
+#   revision = "8b2e44c0a5f1"
+#   down_revision = "3f1a9c2b7d10"      &lt;- the chain
+#   def upgrade(): op.add_column("users", sa.Column("phone", sa.String(30), nullable=True))
+uv run alembic upgrade head
+
+uv run alembic current               # which revision this database is at
+uv run alembic history               # the whole chain
+uv run alembic downgrade -1          # undo the last one (dev); in production prefer roll forward
+uv run alembic check                 # fails if the models have changes with no migration (great in CI)</code></pre>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O autogenerate não enxerga tudo: renomeações viram "apagar + criar", e mudanças de tipo, constraints sem nome e alguns defaults podem passar batido. Sempre abra o arquivo gerado. E tire o <code>Base.metadata.create_all()</code> do startup da aplicação: quem cria tabela agora é o Alembic.</span><span class="en">Autogenerate does not see everything: renames become "drop + create", and type changes, unnamed constraints and some defaults may slip by. Always open the generated file. And remove <code>Base.metadata.create_all()</code> from the application startup: Alembic creates the tables now.</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="conflicts">
+<h2 id="conflicts"><span class="pt">Conflitos em equipe</span><span class="en">Conflicts in a team</span></h2>
+<p><span class="pt">O conflito clássico: duas pessoas criam migrations ao mesmo tempo, em branches diferentes, a partir do mesmo ponto. Cada branch funciona sozinha; o problema aparece no merge.</span><span class="en">The classic conflict: two people create migrations at the same time, on different branches, from the same starting point. Each branch works alone; the problem shows up at merge time.</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 230" role="img" aria-label="Duas branches criam a mesma versão de migration / Two branches create the same migration version" style="min-width:620px">
+<text x="10" y="44" class="mono mut" text-anchor="start">main</text>
+<path d="M60 40L640 40" class="ln"/>
+<circle cx="90" cy="40" r="14" class="ln fillsoft"/><text x="90" y="45" class="mono" text-anchor="middle">V3</text>
+<circle cx="170" cy="40" r="14" class="ln fillsoft"/><text x="170" y="45" class="mono" text-anchor="middle">V4</text>
+<path d="M170 54C170 90 220 100 260 110" class="ln"/>
+<path d="M170 54C170 150 220 170 260 180" class="ln"/>
+<rect x="260" y="94" width="190" height="32" rx="4" class="ln"/>
+<text x="355" y="115" class="mono" text-anchor="middle">V5__add_phone.sql</text>
+<text x="355" y="143" class="pt mut" text-anchor="middle">branch da Ana</text><text x="355" y="143" class="en mut" text-anchor="middle">Ana's branch</text>
+<rect x="260" y="164" width="190" height="32" rx="4" class="ln"/>
+<text x="355" y="185" class="mono" text-anchor="middle">V5__add_index.sql</text>
+<text x="355" y="213" class="pt mut" text-anchor="middle">branch do Bruno</text><text x="355" y="213" class="en mut" text-anchor="middle">Bruno's branch</text>
+<rect x="430" y="18" width="210" height="44" rx="4" class="brandfill"/>
+<text x="535" y="37" class="pt" text-anchor="middle">merge: dois V5 ✗</text><text x="535" y="37" class="en" text-anchor="middle">merge: two V5s ✗</text>
+<text x="535" y="53" class="pt" text-anchor="middle">(Alembic: duas heads)</text><text x="535" y="53" class="en" text-anchor="middle">(Alembic: two heads)</text>
+<path d="M450 110C520 100 535 80 535 62" class="ln dash"/>
+<path d="M450 180C560 170 560 90 545 62" class="ln dash"/>
+</svg></div><figcaption><span class="pt">Cada branch é válida sozinha. Juntas, duas migrations disputam o mesmo lugar na sequência.</span><span class="en">Each branch is valid alone. Together, two migrations compete for the same place in the sequence.</span></figcaption></figure>
+<h3><span class="pt">Como cada ferramenta reage e como resolver</span><span class="en">How each tool reacts and how to fix it</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ferramenta</span><span class="en">Tool</span></th><th><span class="pt">Sintoma</span><span class="en">Symptom</span></th><th><span class="pt">Resolução</span><span class="en">Fix</span></th></tr></thead><tbody>
+<tr><td>Flyway</td><td><span class="pt">"Found more than one migration with version 5": o app não sobe. Ou, com números diferentes, uma versão menor chega depois de uma maior já aplicada e o <code>validate</code> acusa migration fora de ordem.</span><span class="en">"Found more than one migration with version 5": the app does not start. Or, with different numbers, a lower version arrives after a higher one was applied and <code>validate</code> flags an out-of-order migration.</span></td><td><span class="pt">Quem fizer merge por último renumera a sua (V5 → V6) <em>antes</em> de ela chegar a qualquer ambiente compartilhado. Para reduzir colisões, use versões por timestamp: <code>V20261031_1412__add_phone.sql</code>.</span><span class="en">Whoever merges last renumbers theirs (V5 → V6) <em>before</em> it reaches any shared environment. To reduce collisions, use timestamp versions: <code>V20261031_1412__add_phone.sql</code>.</span></td></tr>
+<tr><td>Prisma</td><td><span class="pt">Os nomes não colidem (têm timestamp), mas uma migration pode ter sido gerada contra um esquema que não incluía a do colega; o <code>migrate dev</code> detecta drift.</span><span class="en">Names do not collide (they have timestamps), but a migration may have been generated against a schema that lacked the colleague's; <code>migrate dev</code> detects drift.</span></td><td><span class="pt">Se a sua ainda não foi para ambiente compartilhado: apague a pasta dela, faça pull/rebase, rode <code>migrate dev</code> de novo para gerar uma migration em cima do esquema atualizado.</span><span class="en">If yours has not reached a shared environment: delete its folder, pull/rebase, run <code>migrate dev</code> again to generate a migration on top of the updated schema.</span></td></tr>
+<tr><td>Alembic</td><td><span class="pt">"Multiple head revisions are present": as duas revisões têm o mesmo <code>down_revision</code>.</span><span class="en">"Multiple head revisions are present": both revisions have the same <code>down_revision</code>.</span></td><td><span class="pt"><code>alembic merge heads -m "merge"</code> cria uma revisão que junta as duas; ou, se a sua não saiu da branch, edite o <code>down_revision</code> dela para apontar para a do colega.</span><span class="en"><code>alembic merge heads -m "merge"</code> creates a revision that joins both; or, if yours never left the branch, edit its <code>down_revision</code> to point at the colleague's.</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Regras que evitam a maior parte dos conflitos</span><span class="en">Rules that avoid most conflicts</span></h3>
+<ul class="ds-list">
+<li><span class="pt"><strong>Nunca edite uma migration que já saiu da sua máquina.</strong> Corrija com outra migration.</span><span class="en"><strong>Never edit a migration that has left your machine.</strong> Fix it with another migration.</span></li>
+<li><span class="pt"><strong>Uma mudança de esquema por migration</strong>, pequena e com nome descritivo. Migrations gigantes conflitam mais e são mais difíceis de revisar.</span><span class="en"><strong>One schema change per migration</strong>, small and descriptively named. Huge migrations conflict more and are harder to review.</span></li>
+<li><span class="pt"><strong>Rebase antes do merge</strong> e rode as migrations de novo localmente (de um banco limpo) para ver a sequência final.</span><span class="en"><strong>Rebase before merging</strong> and run the migrations again locally (from a clean database) to see the final sequence.</span></li>
+<li><span class="pt"><strong>O CI aplica todas as migrations num banco vazio</strong> a cada PR (e roda <code>flyway validate</code>, <code>prisma migrate status</code> ou <code>alembic check</code>). Se a sequência não monta do zero, o PR não entra.</span><span class="en"><strong>CI applies every migration to an empty database</strong> on each PR (and runs <code>flyway validate</code>, <code>prisma migrate status</code> or <code>alembic check</code>). If the sequence does not build from scratch, the PR does not merge.</span></li>
+<li><span class="pt"><strong>Ninguém altera o banco compartilhado na mão.</strong> Um <code>ALTER</code> manual em staging é drift garantido no próximo deploy.</span><span class="en"><strong>Nobody changes the shared database by hand.</strong> A manual <code>ALTER</code> on staging is guaranteed drift on the next deploy.</span></li>
+</ul>
+<pre><code># .github/workflows/migrations.yml (the core of the check)
+services:
+  postgres:
+    image: postgres:17
+    env: { POSTGRES_DB: app, POSTGRES_USER: app, POSTGRES_PASSWORD: dev }
+    ports: ["5432:5432"]
+steps:
+  - uses: actions/checkout@v4
+  # pick the line for your stack:
+  - run: ./mvnw -q flyway:migrate flyway:validate -Dflyway.url=jdbc:postgresql://localhost:5432/app -Dflyway.user=app -Dflyway.password=dev
+  - run: npx prisma migrate deploy &amp;&amp; npx prisma migrate status
+  - run: uv run alembic upgrade head &amp;&amp; uv run alembic check</code></pre>
+</section>
+
+<section class="content-section" aria-labelledby="prod">
+<h2 id="prod"><span class="pt">Em produção</span><span class="en">In production</span></h2>
+<h3><span class="pt">Quando rodar</span><span class="en">When to run</span></h3>
+<p><span class="pt">Duas opções comuns: (a) a aplicação roda as migrations no startup (padrão do Spring Boot com Flyway), ou (b) um <strong>passo separado do deploy</strong> roda <code>migrate</code> antes de subir a versão nova (um job no pipeline, um init container no Kubernetes, uma task one-off no ECS). Com várias réplicas, (b) é mais previsível: uma execução só, logs separados, e se falhar o deploy para antes de trocar o código.</span><span class="en">Two common options: (a) the application runs the migrations at startup (the Spring Boot default with Flyway), or (b) a <strong>separate deploy step</strong> runs <code>migrate</code> before rolling out the new version (a pipeline job, a Kubernetes init container, a one-off ECS task). With several replicas, (b) is more predictable: a single run, separate logs, and if it fails the deploy stops before swapping the code.</span></p>
+<h3><span class="pt">Mudanças sem downtime: expandir e contrair</span><span class="en">Zero-downtime changes: expand and contract</span></h3>
+<p><span class="pt">Durante um deploy, a versão antiga e a nova do código rodam ao mesmo tempo contra o <em>mesmo</em> banco. Então toda migration precisa ser compatível com as duas. Renomear <code>name</code> para <code>full_name</code> num passo só quebra a versão antiga. O jeito seguro é dividir em etapas:</span><span class="en">During a deploy, the old and new versions of the code run at the same time against the <em>same</em> database. So every migration must be compatible with both. Renaming <code>name</code> to <code>full_name</code> in one step breaks the old version. The safe way is to split it into stages:</span></p>
+<figure class="fig"><div class="fig-scroll"><svg viewBox="0 0 700 170" role="img" aria-label="Expandir, migrar, contrair / Expand, migrate, contract" style="min-width:620px">
+<rect x="10" y="20" width="210" height="90" rx="4" class="ln fillsoft"/>
+<text x="115" y="44" class="pt" text-anchor="middle">1. expandir</text><text x="115" y="44" class="en" text-anchor="middle">1. expand</text>
+<text x="115" y="66" class="mono mut" text-anchor="middle">ADD COLUMN full_name</text>
+<text x="115" y="86" class="pt mut" text-anchor="middle">app escreve nas duas</text><text x="115" y="86" class="en mut" text-anchor="middle">app writes to both</text>
+<rect x="245" y="20" width="210" height="90" rx="4" class="brandfill"/>
+<text x="350" y="44" class="pt" text-anchor="middle">2. migrar dados</text><text x="350" y="44" class="en" text-anchor="middle">2. migrate data</text>
+<text x="350" y="66" class="mono" text-anchor="middle">UPDATE ... (em lotes)</text>
+<text x="350" y="86" class="pt" text-anchor="middle">app passa a ler a nova</text><text x="350" y="86" class="en" text-anchor="middle">app reads the new one</text>
+<rect x="480" y="20" width="210" height="90" rx="4" class="ln fillsoft"/>
+<text x="585" y="44" class="pt" text-anchor="middle">3. contrair</text><text x="585" y="44" class="en" text-anchor="middle">3. contract</text>
+<text x="585" y="66" class="mono mut" text-anchor="middle">DROP COLUMN name</text>
+<text x="585" y="86" class="pt mut" text-anchor="middle">nenhum código usa mais</text><text x="585" y="86" class="en mut" text-anchor="middle">no code uses it anymore</text>
+<path d="M220 65L245 65" class="ln"/><path d="M238.2 61.7L245 65L238.2 68.3" class="ln"/>
+<path d="M455 65L480 65" class="ln"/><path d="M473.2 61.7L480 65L473.2 68.3" class="ln"/>
+<text x="10" y="145" class="pt mut" text-anchor="start">Cada etapa é uma migration e um deploy separados; entre elas, as duas versões do código convivem.</text><text x="10" y="145" class="en mut" text-anchor="start">Each stage is a separate migration and deploy; between them, both versions of the code coexist.</text>
+</svg></div><figcaption><span class="pt">Uma mudança incompatível vira três mudanças compatíveis, cada uma segura de aplicar com o código antigo ainda no ar.</span><span class="en">One incompatible change becomes three compatible ones, each safe to apply with the old code still running.</span></figcaption></figure>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Ponto</span><span class="en">Point</span></th><th><span class="pt">Prática</span><span class="en">Practice</span></th></tr></thead><tbody>
+<tr><td><span class="pt">Coluna nova</span><span class="en">New column</span></td><td><span class="pt">crie como <code>NULL</code> (ou com <code>DEFAULT</code> constante); <code>NOT NULL</code> só depois de preencher as linhas existentes</span><span class="en">create it as <code>NULL</code> (or with a constant <code>DEFAULT</code>); <code>NOT NULL</code> only after filling the existing rows</span></td></tr>
+<tr><td><span class="pt">Índice em tabela grande</span><span class="en">Index on a big table</span></td><td><span class="pt"><code>CREATE INDEX CONCURRENTLY</code> não trava escrita, mas não roda dentro de transação: no Flyway, configure <code>executeInTransaction=false</code> para esse script; no Alembic, use <code>op.get_context().autocommit_block()</code></span><span class="en"><code>CREATE INDEX CONCURRENTLY</code> does not block writes, but cannot run inside a transaction: in Flyway, set <code>executeInTransaction=false</code> for that script; in Alembic, use <code>op.get_context().autocommit_block()</code></span></td></tr>
+<tr><td><span class="pt">Locks longos</span><span class="en">Long locks</span></td><td><span class="pt">defina <code>SET lock_timeout = '5s'</code> no início: melhor a migration falhar do que travar a aplicação inteira esperando um lock</span><span class="en">set <code>SET lock_timeout = '5s'</code> at the start: better for the migration to fail than to freeze the whole application waiting on a lock</span></td></tr>
+<tr><td><span class="pt">Transações</span><span class="en">Transactions</span></td><td><span class="pt">no Postgres, DDL é transacional: uma migration que falha volta inteira. No MySQL não: um erro no meio deixa a migration pela metade, e o Flyway exige <code>repair</code> depois de você limpar à mão</span><span class="en">in Postgres, DDL is transactional: a failing migration rolls back entirely. Not in MySQL: an error halfway leaves the migration half-applied, and Flyway requires <code>repair</code> after you clean up by hand</span></td></tr>
+<tr><td><span class="pt">Dados em massa</span><span class="en">Bulk data</span></td><td><span class="pt">backfill de milhões de linhas em lotes, num job à parte, não num único <code>UPDATE</code> dentro da migration</span><span class="en">backfill millions of rows in batches, in a separate job, not in a single <code>UPDATE</code> inside the migration</span></td></tr>
+<tr><td><span class="pt">Backup</span><span class="en">Backup</span></td><td><span class="pt">snapshot ou PITR ligado antes de migrations destrutivas (<code>DROP</code>, mudança de tipo)</span><span class="en">a snapshot or PITR enabled before destructive migrations (<code>DROP</code>, type changes)</span></td></tr>
+<tr><td><span class="pt">Desfazer</span><span class="en">Undo</span></td><td><span class="pt">prefira <em>roll forward</em> (migration nova). <code>down</code>/<code>downgrade</code> ajudam em dev, mas em produção um <code>DROP</code> de volta pode apagar dados escritos depois</span><span class="en">prefer <em>roll forward</em> (a new migration). <code>down</code>/<code>downgrade</code> help in dev, but in production a reverse <code>DROP</code> can erase data written afterwards</span></td></tr>
+<tr><td><span class="pt">Permissões</span><span class="en">Permissions</span></td><td><span class="pt">o deploy usa o usuário de migration; a aplicação roda com um usuário sem DDL</span><span class="en">the deploy uses the migration user; the application runs with a user without DDL</span></td></tr>
+</tbody></table></div>
+<div class="callout warn"><svg class="icon" aria-hidden="true"><use href="#i-alert"/></svg> <span class="pt">O comando que roda em produção é sempre o "só aplica": <code>flyway migrate</code>, <code>prisma migrate deploy</code>, <code>alembic upgrade head</code>. Nunca <code>prisma migrate dev</code>, <code>migrate reset</code>, <code>db push</code>, <code>flyway clean</code> ou <code>ddl-auto=update</code> contra um banco com dados reais. No Spring Boot, mantenha <code>spring.flyway.clean-disabled=true</code> (o padrão).</span><span class="en">The command that runs in production is always the "apply only" one: <code>flyway migrate</code>, <code>prisma migrate deploy</code>, <code>alembic upgrade head</code>. Never <code>prisma migrate dev</code>, <code>migrate reset</code>, <code>db push</code>, <code>flyway clean</code> or <code>ddl-auto=update</code> against a database with real data. In Spring Boot, keep <code>spring.flyway.clean-disabled=true</code> (the default).</span></div>
+</section>
+
+<section class="content-section" aria-labelledby="lab">
+<h2 id="lab"><span class="pt">Exercício: Flyway em 10 minutos</span><span class="en">Exercise: Flyway in 10 minutes</span></h2>
+<p><span class="pt">Pré-requisito: só Docker. Você vai criar um banco vazio, aplicar duas migrations, quebrar o checksum de propósito e ver a ferramenta recusar. Os conceitos valem igual para Prisma e Alembic.</span><span class="en">Prerequisite: just Docker. You will create an empty database, apply two migrations, break the checksum on purpose and watch the tool refuse. The concepts apply the same way to Prisma and Alembic.</span></p>
+<pre><code>mkdir -p mig-lab/sql &amp;&amp; cd mig-lab
+docker network create mig
+docker run -d --name pg-mig --network mig -e POSTGRES_PASSWORD=dev -e POSTGRES_DB=app postgres:17
+
+# a helper so each command stays short
+fw() { docker run --rm --network mig -v "$PWD/sql:/flyway/sql" flyway/flyway \
+  -url=jdbc:postgresql://pg-mig:5432/app -user=postgres -password=dev "$@"; }
+
+cat &gt; sql/V1__create_users.sql &lt;&lt;'SQL'
+CREATE TABLE users (id bigserial PRIMARY KEY, email varchar(255) NOT NULL UNIQUE);
+SQL
+fw info       # V1: Pending
+fw migrate    # creates flyway_schema_history and applies V1
+fw info       # V1: Success</code></pre>
+<p><span class="pt">Agora um delta, e depois a infração:</span><span class="en">Now a delta, and then the violation:</span></p>
+<pre><code>echo "ALTER TABLE users ADD COLUMN phone varchar(30);" &gt; sql/V2__add_users_phone.sql
+fw migrate    # applies only V2
+
+# Edit an already-applied migration:
+echo "-- just a comment" &gt;&gt; sql/V1__create_users.sql
+fw validate   # ERROR: Migration checksum mismatch for migration version 1
+
+docker exec pg-mig psql -U postgres -d app -c \
+  "SELECT version, description, checksum, success FROM flyway_schema_history;"</code></pre>
+<p><span class="pt"><strong>Resultado esperado:</strong> duas linhas no histórico e o <code>validate</code> falhando por checksum. Desfaça a edição (<code>git checkout</code> num projeto real) e o <code>validate</code> volta a passar. Esse erro é o que protege produção de alguém "consertar" uma migration antiga.</span><span class="en"><strong>Expected result:</strong> two rows in the history and <code>validate</code> failing on the checksum. Undo the edit (<code>git checkout</code> in a real project) and <code>validate</code> passes again. That error is what protects production from someone "fixing" an old migration.</span></p>
+<pre><code>docker rm -f pg-mig &amp;&amp; docker network rm mig   # cleanup</code></pre>
+</section>
+
+<section class="content-section" aria-labelledby="cheat-mig">
+<h2 id="cheat-mig"><span class="pt">Cola e revisão</span><span class="en">Cheat sheet and review</span></h2>
+<h3><span class="pt">Cola</span><span class="en">Cheat sheet</span></h3>
+<div class="scroll-x"><table class="ds-table"><thead><tr><th><span class="pt">Quero…</span><span class="en">I want…</span></th><th>Flyway</th><th>Prisma</th><th>Alembic</th></tr></thead><tbody>
+<tr><td><span class="pt">criar uma migration</span><span class="en">create a migration</span></td><td><span class="pt">novo arquivo <code>V&lt;n&gt;__nome.sql</code></span><span class="en">new file <code>V&lt;n&gt;__name.sql</code></span></td><td><code>migrate dev --name x</code></td><td><code>revision --autogenerate -m x</code></td></tr>
+<tr><td><span class="pt">aplicar pendentes</span><span class="en">apply pending</span></td><td><code>migrate</code></td><td><code>migrate deploy</code></td><td><code>upgrade head</code></td></tr>
+<tr><td><span class="pt">ver o estado</span><span class="en">see the state</span></td><td><code>info</code></td><td><code>migrate status</code></td><td><code>current</code> / <code>history</code></td></tr>
+<tr><td><span class="pt">banco existente (baseline)</span><span class="en">existing database (baseline)</span></td><td><code>baseline</code></td><td><code>migrate resolve --applied</code></td><td><code>stamp</code></td></tr>
+<tr><td><span class="pt">checar no CI</span><span class="en">check in CI</span></td><td><code>validate</code></td><td><code>migrate status</code></td><td><code>check</code></td></tr>
+<tr><td><span class="pt">resolver conflito</span><span class="en">resolve a conflict</span></td><td><span class="pt">renumerar a sua</span><span class="en">renumber yours</span></td><td><span class="pt">apagar a sua e regenerar</span><span class="en">delete yours and regenerate</span></td><td><code>merge heads</code></td></tr>
+<tr><td><span class="pt">desfazer</span><span class="en">undo</span></td><td><span class="pt">migration nova</span><span class="en">new migration</span></td><td><span class="pt">migration nova</span><span class="en">new migration</span></td><td><code>downgrade -1</code> <span class="pt">(dev)</span><span class="en">(dev)</span></td></tr>
+</tbody></table></div>
+<h3><span class="pt">Perguntas de revisão</span><span class="en">Review questions</span></h3>
+<ul class="ds-list">
+<li><span class="pt">O que é drift e por que migrations o evitam?</span><span class="en">What is drift and why do migrations prevent it?</span></li>
+<li><span class="pt">O que a primeira migration deve conter num projeto novo? E as seguintes?</span><span class="en">What should the first migration contain in a new project? And the next ones?</span></li>
+<li><span class="pt">O que precisa existir no banco antes da primeira migration rodar?</span><span class="en">What must exist in the database before the first migration runs?</span></li>
+<li><span class="pt">Como adotar migrations num banco que já está em produção?</span><span class="en">How do you adopt migrations on a database already in production?</span></li>
+<li><span class="pt">Por que editar uma migration já aplicada é um erro, e como o Flyway e o Prisma detectam isso?</span><span class="en">Why is editing an applied migration a mistake, and how do Flyway and Prisma detect it?</span></li>
+<li><span class="pt">Duas branches criaram migrations ao mesmo tempo. O que acontece em cada ferramenta e como resolver?</span><span class="en">Two branches created migrations at the same time. What happens in each tool and how do you fix it?</span></li>
+<li><span class="pt">Por que renomear uma coluna exige expandir e contrair num sistema com deploy sem downtime?</span><span class="en">Why does renaming a column require expand and contract in a system with zero-downtime deploys?</span></li>
+</ul>
+</section>
+<div class="sources"><b><span class="pt">Fontes</span><span class="en">Sources</span></b><ul>
+<li><a href="https://documentation.red-gate.com/fd/migrations-271585107.html" rel="noopener">Flyway: Migrations</a></li>
+<li><a href="https://docs.spring.io/spring-boot/how-to/data-initialization.html" rel="noopener">Spring Boot: Database Initialization (Flyway)</a></li>
+<li><a href="https://www.prisma.io/docs/orm/prisma-migrate" rel="noopener">Prisma Migrate</a></li>
+<li><a href="https://www.prisma.io/docs/orm/prisma-migrate/workflows/baselining" rel="noopener">Prisma: Baselining a database</a></li>
+<li><a href="https://alembic.sqlalchemy.org/en/latest/tutorial.html" rel="noopener">Alembic tutorial</a></li>
+<li><a href="https://alembic.sqlalchemy.org/en/latest/branches.html" rel="noopener">Alembic: Working with branches</a></li>
+<li><a href="https://www.postgresql.org/docs/current/sql-createindex.html#SQL-CREATEINDEX-CONCURRENTLY" rel="noopener">PostgreSQL: CREATE INDEX CONCURRENTLY</a></li>
+</ul></div>
+      </article>
+  </main>
+
+  <footer class="site-footer">
+    <span>© <span data-current-year></span></span>
+    <nav class="footer-links" data-i18n-attributes="aria-label:footer.files" aria-label="Files for machines"><a href="../../llms.txt">llms.txt</a><a href="../../sitemap.xml">sitemap.xml</a><a href="../../robots.txt">robots.txt</a></nav>
+    <div class="footer-tools requires-js">
+      <div role="group" data-i18n-attributes="aria-label:theme.label" aria-label="Theme">
+        <button type="button" data-theme-mode="auto" aria-pressed="true" data-i18n="theme.autoShort">auto</button>
+        <button type="button" data-theme-mode="light" aria-pressed="false" data-i18n="theme.lightShort">light</button>
+        <button type="button" data-theme-mode="dark" aria-pressed="false" data-i18n="theme.darkShort">dark</button>
+      </div>
+      <div role="group" data-i18n-attributes="aria-label:footer.language" aria-label="Language">
+        <button type="button" data-language-option="en" lang="en">English</button>
+        <button type="button" data-language-option="pt-BR" lang="pt-BR">Português</button>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../i18n.js"></script>
+  <script src="../../main.js"></script>
+</body>
+</html>
