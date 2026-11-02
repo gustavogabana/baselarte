@@ -12,6 +12,16 @@ Site of **Baselarte Ltda.**, a software engineering and creative technology comp
 
 Every page is rendered to static HTML when the site is built. The browser receives finished pages; JavaScript only adds the few interactive parts.
 
+## Tools (besides HTML, CSS and JavaScript)
+
+| Tool | How it is used | Problem it solves |
+| --- | --- | --- |
+| **React** | Components render every page to HTML at build time; a few (theme, language, player) are hydrated as islands in the browser. | 46 pages used to repeat the same head, header, footer and markup by hand; now each piece is written once. |
+| **TypeScript** | All source, including the notes; `npm run build` type-checks first. | A broken prop, a missing translation or a note without metadata fails the build instead of the live site. |
+| **Vite** | Dev server that renders pages on request, and the bundler for the browser code and CSS. | Fast feedback while writing, and small hashed assets in production. |
+| **Motion** | Animations in the AWS note's simulators, loaded only on that page. | Smooth, interruptible animations without hand-written timing code. |
+| **GitHub Actions** | Builds on every push to `main` and publishes `dist/` to Pages. | GitHub Pages only receives the finished static files, never the source. |
+
 ## Structure
 
 ```
