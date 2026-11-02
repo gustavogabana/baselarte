@@ -7,7 +7,7 @@ Site of **Baselarte Ltda.**, a software engineering and creative technology comp
  src/pages/*  ─┼─▶ React render (build time) ──┤
  src/styles/* ─┘                              └─▶ islands: theme, language (hydrated)
 
- git push ─▶ main ─▶ GitHub Actions ─▶ npm run build ─▶ dist/ ─▶ GitHub Pages ─▶ baselarte.com
+ git push ─▶ main ─▶ GitHub Actions ─▶ pnpm build ─▶ dist/ ─▶ GitHub Pages ─▶ baselarte.com
 ```
 
 Every page is rendered to static HTML when the site is built. The browser receives finished pages; JavaScript only adds the few interactive parts.
@@ -17,7 +17,7 @@ Every page is rendered to static HTML when the site is built. The browser receiv
 | Tool | How it is used | Problem it solves |
 | --- | --- | --- |
 | **React** | Components render every page to HTML at build time; a few (theme, language, player) are hydrated as islands in the browser. | 46 pages used to repeat the same head, header, footer and markup by hand; now each piece is written once. |
-| **TypeScript** | All source, including the notes; `npm run build` type-checks first. | A broken prop, a missing translation or a note without metadata fails the build instead of the live site. |
+| **TypeScript** | All source, including the notes; `pnpm build` type-checks first. | A broken prop, a missing translation or a note without metadata fails the build instead of the live site. |
 | **Vite** | Dev server that renders pages on request, and the bundler for the browser code and CSS. | Fast feedback while writing, and small hashed assets in production. |
 | **Motion** | Animations in the AWS note's simulators, loaded only on that page. | Smooth, interruptible animations without hand-written timing code. |
 | **GitHub Actions** | Builds on every push to `main` and publishes `dist/` to Pages. | GitHub Pages only receives the finished static files, never the source. |
@@ -65,13 +65,13 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Run
 
-Requires Node 22.18 or newer.
+Requires Node 22.18 or newer and [pnpm](https://pnpm.io) (`corepack enable` picks the version pinned in `package.json`).
 
 ```bash
-npm install
-npm run dev       # http://localhost:5173, pages rendered on request
-npm run build     # type-check, then write the static site to dist/
-npm run preview   # serve dist/ as GitHub Pages would
+pnpm install
+pnpm dev          # http://localhost:5173, pages rendered on request
+pnpm build        # type-check, then write the static site to dist/
+pnpm preview      # serve dist/ as GitHub Pages would
 ```
 
 ## Deploy

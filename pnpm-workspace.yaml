@@ -1,0 +1,4 @@
+# pnpm holds back packages published in the last few days (a supply-chain safeguard);
+# these exact versions were reviewed and allowed early.
+minimumReleaseAgeExclude:
+  - '@vitejs/plugin-react@6.2.1'
