@@ -1,0 +1,128 @@
+/* Note pages */
+
+.back-link {
+  margin: 0 0 24px;
+  font-size: 0.875rem;
+}
+
+.hero {
+  margin: 0 0 32px;
+}
+
+.hero-kicker {
+  margin-bottom: 8px;
+  color: var(--fg-faint);
+}
+
+.hero-title {
+  color: var(--fg-strong);
+  font-size: clamp(1.75rem, 4vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+
+.hero-title em {
+  font-style: normal;
+}
+
+.hero-lede {
+  margin: 16px 0 0;
+  color: var(--fg);
+  font-size: 1.0625rem;
+  text-wrap: pretty;
+}
+
+/* Reading progress bar (note pages; created by main.js, or by the AWS note) */
+#scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--brand);
+  transform-origin: 0 50%;
+  transform: scaleX(0);
+  z-index: 100;
+}
+
+/* "On this page": a bulleted list, grouped under small labels (same on every note) */
+.side-nav {
+  margin: 0 0 40px;
+  padding: 0 0 0 16px;
+  border-left: 1px solid var(--border);
+  font-size: 0.9375rem;
+}
+
+.side-nav h2,
+.aws-guide .side-nav h2 {
+  margin: 12px 0 4px;
+  padding: 0;
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.side-nav ul {
+  margin: 0 0 16px;
+  padding: 0 0 0 1.3em;
+  list-style: disc;
+}
+
+.side-nav li {
+  padding: 1px 0;
+}
+
+.side-nav li + li {
+  margin-top: 4px;
+}
+
+/* Wide screens: the list sits to the right of the text, small and out of the way. */
+@media (min-width: 1200px) {
+  .side-nav {
+    position: fixed;
+    top: 32px;
+    left: calc(50% + var(--content-max) / 2 + 40px);
+    width: min(15rem, calc(50vw - var(--content-max) / 2 - 40px - var(--gutter)));
+    max-height: calc(100vh - 64px);
+    margin: 0;
+    overflow-y: auto;
+    padding-left: 12px;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .side-nav li {
+    padding: 3px 0;
+  }
+}
+
+.not-found {
+  padding-top: 48px;
+}
+
+.back-to-top {
+  position: fixed;
+  right: max(var(--gutter), env(safe-area-inset-right, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  display: none;
+  padding: 4px 8px;
+  background: var(--page);
+  color: var(--action);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+}
+
+.back-to-top.is-visible {
+  display: block;
+}
+
+.back-to-top:hover {
+  color: var(--action-hover);
+  text-decoration-color: currentColor;
+}

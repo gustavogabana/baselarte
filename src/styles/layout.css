@@ -1,0 +1,109 @@
+/* Page chrome: the flower, one column, a footer */
+
+.site-header,
+main,
+.site-footer {
+  width: 100%;
+  max-width: calc(var(--content-max) + 2 * var(--gutter));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+main {
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 64px;
+}
+
+.site-header {
+  padding-top: 28px;
+}
+
+/* The flower: white petals, outlined in the ink colour. */
+.logo-mark {
+  display: block;
+  width: 32px;
+  height: 32px;
+  --petal: var(--page);
+  --ink-line: var(--fg-strong);
+}
+
+.logo-mark .petal {
+  fill: var(--petal);
+  stroke: var(--ink-line);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+
+.logo-mark .vein {
+  fill: none;
+  stroke: var(--ink-line);
+  stroke-width: 0.65;
+  stroke-linecap: round;
+}
+
+.logo-mark .heart {
+  fill: var(--ink-line);
+}
+
+.site-wordmark {
+  display: inline-block;
+  line-height: 0;
+}
+
+.site-footer {
+  margin-top: 0;
+  padding-top: 24px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
+  border-top: 1px solid var(--border);
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+}
+
+.site-footer .footer-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.theme-switch,
+.language-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.site-footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-left: auto;
+}
+
+.site-footer a,
+.site-footer button {
+  color: var(--fg-faint);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+}
+
+.site-footer a:hover,
+.site-footer button:hover,
+.site-footer button[aria-pressed="true"] {
+  color: var(--fg-strong);
+}
+
+.site-footer button[aria-pressed="true"] {
+  text-decoration-color: currentColor;
+}
