@@ -59,9 +59,13 @@ export function renderSite(assets: PageAssets): OutputFile[] {
   ];
 }
 
-/** The file answering a URL path, for the dev server. */
+/** The file answering a URL path, rendering only that one (for the dev server). */
 export function findFile(path: string, assets: PageAssets): OutputFile | undefined {
   const wanted = path.replace(/^\//, "");
+  if (wanted === "sitemap.xml") return { file: wanted, contents: sitemap(allPages()) };
+  if (wanted === "llms.txt") return { file: wanted, contents: llmsTxt() };
+
   const asDirectory = wanted === "" || wanted.endsWith("/") ? `${wanted}index.html` : `${wanted}/index.html`;
-  return renderSite(assets).find((output) => output.file === wanted || output.file === asDirectory);
+  const page = allPages().find((candidate) => candidate.file === wanted || candidate.file === asDirectory);
+  return page && { file: page.file, contents: renderPage(page, assets) };
 }

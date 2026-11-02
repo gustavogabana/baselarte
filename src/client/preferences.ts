@@ -44,6 +44,8 @@ function applyLanguage(pageText: PageText | null): void {
 
   for (const attribute of LOCALIZED_ATTRIBUTES) {
     document.querySelectorAll<HTMLElement>(`[data-${attribute}-${suffix}]`).forEach((element) => {
+      // Islands localize their own attributes (useLocalize); touching them would break hydration.
+      if (element.closest("[data-island]")) return;
       element.setAttribute(attribute, element.getAttribute(`data-${attribute}-${suffix}`) ?? "");
     });
   }

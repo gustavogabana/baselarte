@@ -1,4 +1,4 @@
-import { localizedAttribute } from "../i18n/attributes.ts";
+import { useLocalize } from "../i18n/useLocalize.ts";
 import type { Language } from "../i18n/localized.ts";
 import { ui } from "../i18n/ui.ts";
 import { language, usePreference } from "../preferences/store.ts";
@@ -10,9 +10,10 @@ const OPTIONS: { value: Language; name: string }[] = [
 
 /** Each language is named in itself, so a visitor can always find their own. */
 export function LanguageSwitch() {
+  const localize = useLocalize();
   const currentLanguage = usePreference(language);
   return (
-    <div role="group" className="language-switch" {...localizedAttribute("aria-label", ui.language)}>
+    <div role="group" className="language-switch" aria-label={localize(ui.language)}>
       {OPTIONS.map((option) => (
         <button
           key={option.value}
