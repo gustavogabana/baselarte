@@ -112,38 +112,15 @@ function Body() {
       </Section>
       <Section id="ownership" title={<T pt="De quem são as contas" en="Who owns the accounts" />}>
         <p><T pt="Há dois modelos honestos. O que não é honesto é deixar o cliente sem saber qual dos dois ele contratou." en="There are two honest models. What is not honest is leaving the client unaware of which one they signed up for." /></p>
-        <div className="scroll-x">
-          <table className="ds-table">
-            <thead>
-              <tr>
-                <th></th>
-                <th><T pt="Contas do cliente" en="Client-owned accounts" /></th>
-                <th><T pt="Hospedagem gerenciada pela agência" en="Agency-managed hosting" /></th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><T pt="Como funciona" en="How it works" /></td>
-                <td><T pt="o cliente cria as contas (domínio, hospedagem, GitHub) e convida a agência como membro" en="the client creates the accounts (domain, hosting, GitHub) and invites the agency as a member" /></td>
-                <td><T pt="o site roda no time da agência, e a hospedagem é cobrada como parte da mensalidade" en="the site runs in the agency's team, and hosting is billed as part of the monthly fee" /></td>
-              </tr>
-              <tr>
-                <td><T pt="Bom para" en="Good for" /></td>
-                <td><T pt="clientes com equipe técnica ou que querem independência" en="clients with a tech team or who want independence" /></td>
-                <td><T pt={"clientes que querem \"não pensar nisso\" e pagam manutenção"} en={"clients who want to \"not think about it\" and pay for maintenance"} /></td>
-              </tr>
-              <tr>
-                <td><T pt="Risco" en="Risk" /></td>
-                <td><T pt="o cliente perde o acesso ou o cartão expira e ninguém percebe" en="the client loses access or the card expires and nobody notices" /></td>
-                <td><T pt="dependência da agência; precisa de plano de saída no contrato" en="dependence on the agency; needs an exit plan in the contract" /></td>
-              </tr>
-              <tr>
-                <td><T pt="Nunca negociável" en="Never negotiable" /></td>
-                <td colSpan={2}><T pt={<>o <strong>domínio</strong> é sempre registrado no nome e na conta do cliente, nos dois modelos</>} en={<>the <strong>domain</strong> is always registered in the client's name and account, in both models</>} /></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+        <Table
+          head={[null, <T pt="Contas do cliente" en="Client-owned accounts" />, <T pt="Hospedagem gerenciada pela agência" en="Agency-managed hosting" />]}
+          rows={[
+            [<T pt="Como funciona" en="How it works" />, <T pt="o cliente cria as contas (domínio, hospedagem, GitHub) e convida a agência como membro" en="the client creates the accounts (domain, hosting, GitHub) and invites the agency as a member" />, <T pt="o site roda no time da agência, e a hospedagem é cobrada como parte da mensalidade" en="the site runs in the agency's team, and hosting is billed as part of the monthly fee" />],
+            [<T pt="Bom para" en="Good for" />, <T pt="clientes com equipe técnica ou que querem independência" en="clients with a tech team or who want independence" />, <T pt={"clientes que querem \"não pensar nisso\" e pagam manutenção"} en={"clients who want to \"not think about it\" and pay for maintenance"} />],
+            [<T pt="Risco" en="Risk" />, <T pt="o cliente perde o acesso ou o cartão expira e ninguém percebe" en="the client loses access or the card expires and nobody notices" />, <T pt="dependência da agência; precisa de plano de saída no contrato" en="dependence on the agency; needs an exit plan in the contract" />],
+          ]}
+        />
+        <Callout icon="check"><T pt={<>Nos dois modelos, o <strong>domínio</strong> é sempre registrado no nome e na conta do cliente.</>} en={<>In both models, the <strong>domain</strong> is always registered in the client's name and account.</>} /></Callout>
         <Callout tone="warn" icon="alert"><T pt="No modelo gerenciado pela agência, lembre que planos gratuitos com restrição de uso comercial (como o Hobby da Vercel) não servem para site de cliente. Use o plano pago do time da agência e repasse o custo." en="In the agency-managed model, remember that free plans with commercial-use restrictions (like Vercel's Hobby) do not cover client sites. Use the agency team's paid plan and pass the cost on." /></Callout>
       </Section>
       <Section id="handover" title={<T pt="O que entregar ao cliente" en="What to hand over to the client" />}>

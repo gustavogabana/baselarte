@@ -1,5 +1,6 @@
 // Browser entry. The pages arrive as finished HTML; this only adds behaviour on top.
 import { enhanceCodeBlocks } from "./code-blocks.ts";
+import { enhanceDiagrams } from "./diagram-viewer.ts";
 import { hydrateIslands } from "./islands.ts";
 import { keepPreferencesApplied } from "./preferences.ts";
 import { enhanceReading } from "./reading.ts";
@@ -8,6 +9,7 @@ keepPreferencesApplied();
 hydrateIslands();
 enhanceCodeBlocks();
 enhanceReading();
+enhanceDiagrams();
 
 if (document.querySelector(".aws-guide")) {
   import("../notes/aws/interactions.ts").catch((loadError: unknown) => {

@@ -297,7 +297,7 @@ pre:hover .copy-button,
   overflow-x: auto;
 }
 
-.fig svg {
+.fig-scroll > svg {
   display: block;
   width: 100%;
   height: auto;
@@ -381,4 +381,161 @@ pre:hover .copy-button,
   .copy-button {
     display: none !important;
   }
+}
+
+/* Content wider than the column (tables, diagrams) scrolls sideways; a soft shadow on the edge
+   with more content says so. The shadows are backgrounds attached to the scroll position. */
+.scroll-x,
+.fig-scroll {
+  background:
+    linear-gradient(to right, var(--scroll-cover, var(--page)) 30%, transparent) left / 24px 100% no-repeat local,
+    linear-gradient(to left, var(--scroll-cover, var(--page)) 30%, transparent) right / 24px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--border-strong), transparent) left / 10px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--border-strong), transparent) right / 10px 100% no-repeat scroll;
+}
+
+.fig-scroll {
+  --scroll-cover: var(--glass-faint);
+}
+
+/* Table cells repeat their column heading only when the table is stacked (below). */
+.cell-label {
+  display: none;
+}
+
+/* "Expand" a diagram: hidden on wide screens, where every diagram already fits. */
+.fig-expand {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--action);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 760px) {
+  html.js-enabled .fig-expand {
+    display: inline-flex;
+  }
+}
+
+/* Small screens: each table row becomes a card, titled by its first cell. */
+@media (max-width: 640px) {
+  .ds-table--stack,
+  .ds-table--stack tbody,
+  .ds-table--stack tr,
+  .ds-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .ds-table--stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .ds-table--stack tr {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .ds-table--stack td,
+  .ds-table--stack td:first-child {
+    padding: 4px 0;
+    border: 0;
+    white-space: normal;
+  }
+
+  .ds-table--stack tbody tr:hover td {
+    background: none;
+  }
+
+  .ds-table--stack td:first-child {
+    margin-bottom: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-strong);
+    font-weight: 600;
+  }
+
+  .ds-table--stack td:first-child:empty {
+    display: none;
+  }
+
+  .ds-table--stack .cell-label {
+    display: block;
+    color: var(--fg-faint);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+/* Full-screen diagram viewer (DiagramViewer). */
+.diagram-viewer {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--page);
+  color: var(--fg);
+}
+
+.diagram-viewer::backdrop {
+  background: var(--page);
+}
+
+.diagram-viewer[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.diagram-viewer__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: max(12px, env(safe-area-inset-top)) var(--gutter) 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.diagram-viewer__bar button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1.125rem;
+}
+
+.diagram-viewer__zoom {
+  min-width: 4ch;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.diagram-viewer .diagram-viewer__close {
+  margin-left: auto;
+  font-size: 0.9375rem;
+}
+
+.diagram-viewer__canvas.fig {
+  flex: 1;
+  margin: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  touch-action: pan-x pan-y pinch-zoom;
+}
+
+.diagram-viewer__canvas svg {
+  max-width: none;
+  height: auto;
 }

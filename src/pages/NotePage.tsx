@@ -1,4 +1,5 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
+import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
 import { localizedAttribute } from "../i18n/attributes.ts";
 import { ui } from "../i18n/ui.ts";
 import { Text } from "../components/ui/T.tsx";
@@ -23,6 +24,7 @@ export function NotePage({ note }: { note: Note }) {
       </section>
       <TableOfContents groups={note.toc} />
       <Body />
+      <DiagramViewer />
       <div id="scroll-progress" className="requires-js" aria-hidden="true" />
       <button type="button" className="back-to-top requires-js" data-back-to-top="">
         <span aria-hidden="true">↑ </span>

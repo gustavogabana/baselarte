@@ -23,6 +23,7 @@ export const icons = {
   database: <><ellipse cx="16" cy="8" rx="10" ry="3.5" /><path d="M6 8v16c0 2 4.5 3.5 10 3.5s10-1.5 10-3.5V8M6 16c0 2 4.5 3.5 10 3.5s10-1.5 10-3.5" /></>,
   disc: <><circle cx="16" cy="16" r="12" /><circle cx="16" cy="16" r="4" /></>,
   doc: <><path d="M8 3h11l6 6v20H8zM19 3v6h6M12 15h9M12 20h9M12 25h6" /></>,
+  expand: <><path d="M5 12V5h7M27 12V5h-7M5 20v7h7M27 20v7h-7" /></>,
   folder: <><path d="M4 9a2 2 0 0 1 2-2h6l3 3h11a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /></>,
   gateway: <><path d="M6 28V14a10 10 0 0 1 20 0v14M3 28h26M16 28V16" /></>,
   gear: <><circle cx="16" cy="16" r="5" /><path d="M16 3v5M16 24v5M3 16h5M24 16h5M6.8 6.8l3.5 3.5M21.7 21.7l3.5 3.5M25.2 6.8l-3.5 3.5M10.3 21.7l-3.5 3.5" /></>,
