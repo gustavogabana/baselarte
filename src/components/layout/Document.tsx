@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ui } from "../../i18n/ui.ts";
+import { Island } from "../../islands/Island.tsx";
 import { Text } from "../ui/T.tsx";
 import { IconSprite, IconUsageProvider } from "../ui/Icon.tsx";
 import type { IconName } from "../ui/icons.tsx";
@@ -30,6 +31,7 @@ export function Document({ head, assets, runtimeIcons = [], children }: Document
           <main id="main">{children}</main>
           <SiteFooter />
           <IconSprite used={usedIcons} />
+          {assets.song && <Island name="MusicPlayer" props={{ src: assets.song }} />}
         </IconUsageProvider>
       </body>
     </html>

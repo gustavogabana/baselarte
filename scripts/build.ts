@@ -2,11 +2,13 @@
 //   1. Vite bundles the browser code (islands, enhancements) and the stylesheet.
 //   2. Vite bundles the renderer for Node.
 //   3. The renderer writes every page, sitemap.xml and llms.txt as plain files.
+import { existsSync } from "node:fs";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { build, type Manifest } from "vite";
 import { CLIENT_ENTRIES } from "../vite.config.ts";
+import { SONG_PATH } from "../src/easter-egg/chorus.ts";
 import type * as Renderer from "../src/server/render.tsx";
 
 const OUT_DIR = "dist";
@@ -25,7 +27,12 @@ const builtFile = (source: string) => {
   if (!chunk) throw new Error(`${source} is missing from the Vite manifest.`);
   return `/${chunk.file}`;
 };
-const assets = { scripts: [builtFile(CLIENT_ENTRIES.main)], styles: [builtFile(CLIENT_ENTRIES.styles)] };
+const assets = {
+  scripts: [builtFile(CLIENT_ENTRIES.main)],
+  styles: [builtFile(CLIENT_ENTRIES.styles)],
+  // The player only appears when the song file is there.
+  song: existsSync(path.join("public", SONG_PATH)) ? SONG_PATH : undefined,
+};
 
 const renderer = (await import(pathToFileURL(path.resolve(RENDERER_DIR, "render.js")).href)) as typeof Renderer;
 const files = renderer.renderSite(assets);

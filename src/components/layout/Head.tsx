@@ -15,6 +15,8 @@ export interface PageHead {
 export interface PageAssets {
   scripts: string[];
   styles: string[];
+  /** The easter egg's song, when public/audio/hurricane.mp3 exists. */
+  song?: string;
 }
 
 /** Everything in <head>: boot script, SEO, social previews, icons and the built assets. */

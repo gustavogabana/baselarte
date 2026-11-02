@@ -37,6 +37,7 @@ src/
   server/       renders every page, sitemap.xml and llms.txt
   styles/       tokens, base, layout and prose CSS
 public/         copied as is: CNAME, robots.txt, favicons, manifest, share image
+                (and audio/, optional: see src/easter-egg/)
 scripts/build.ts  production build
 ```
 

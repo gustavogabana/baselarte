@@ -211,3 +211,129 @@ main {
   color: #b994cf;
   font-size: 0.8125rem;
 }
+
+/* The easter egg's music player: a small card at the bottom left, a bar on phones. */
+.music-player {
+  position: fixed;
+  left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(26rem, calc(100vw - 2 * var(--gutter)));
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px -16px color-mix(in srgb, var(--action) 70%, transparent);
+  color: var(--fg);
+  font-size: 0.8125rem;
+}
+
+.music-player svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.music-player svg .stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.music-player__play {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--action);
+  color: var(--fg-on-action);
+}
+
+.music-player__play:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.music-player__track {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+}
+
+.music-player__title {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--fg-strong);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-player__time {
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.music-player input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  accent-color: var(--action);
+}
+
+.music-player__volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 6.5rem;
+}
+
+.music-player__volume button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--fg-faint);
+}
+
+.music-player__volume button[aria-pressed="true"] {
+  color: var(--action);
+}
+
+/* Keep "Top" clear of the player. */
+body:has(.music-player) .back-to-top {
+  bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 84px);
+}
+
+@media (max-width: 520px) {
+  .music-player {
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+
+  .music-player__volume {
+    width: auto;
+  }
+
+  /* Phones set volume with their buttons; keep mute only. */
+  .music-player__volume input {
+    display: none;
+  }
+
+  body:has(.music-player) .site-footer {
+    padding-bottom: 96px;
+  }
+}

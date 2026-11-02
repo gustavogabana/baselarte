@@ -1,5 +1,7 @@
+import { existsSync } from "node:fs";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
+import { SONG_PATH } from "./src/easter-egg/chorus.ts";
 import type * as Renderer from "./src/server/render.tsx";
 
 /** The browser bundle: one script for behaviour and one stylesheet, linked from every page. */
@@ -27,7 +29,11 @@ function renderPagesOnRequest(): Plugin {
         const path = new URL(request.url ?? "/", "http://localhost").pathname;
         try {
           const renderer = (await server.ssrLoadModule("/src/server/render.tsx")) as typeof Renderer;
-          const assets = { scripts: [`/${CLIENT_ENTRIES.main}`], styles: [`/${CLIENT_ENTRIES.styles}`] };
+          const assets = {
+            scripts: [`/${CLIENT_ENTRIES.main}`],
+            styles: [`/${CLIENT_ENTRIES.styles}`],
+            song: existsSync(`public${SONG_PATH}`) ? SONG_PATH : undefined,
+          };
           const file = renderer.findFile(path, assets);
           if (!file) return next();
           const contents = file.file.endsWith(".html") ? await server.transformIndexHtml(path, file.contents) : file.contents;
