@@ -120,3 +120,94 @@ main {
 .header-tools button[aria-pressed="true"] {
   text-decoration-color: currentColor;
 }
+
+/* The © in the footer (EasterEgg). */
+.copyright {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The chorus, revealed by the easter egg. */
+.chorus {
+  width: min(32rem, calc(100vw - 2 * var(--gutter)));
+  padding: 32px 28px 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: linear-gradient(170deg, #2a0f4a, #170a2b 60%);
+  color: #f1d8ea;
+  box-shadow: 0 0 60px -10px #ff4fa3aa;
+}
+
+.chorus::backdrop {
+  background: #0b0414cc;
+  backdrop-filter: blur(4px);
+}
+
+.chorus__found {
+  color: #b994cf;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chorus__lines {
+  margin: 20px 0 28px;
+}
+
+.chorus__lines p {
+  font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.45;
+  background: linear-gradient(95deg, #ff4fa3, #ffa552 60%, #ffd36e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: chorus-line 0.9s ease-out forwards;
+}
+
+@keyframes chorus-line {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chorus__lines p {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.chorus__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chorus__actions button {
+  padding: 10px 16px;
+  border: 1px solid #ff4fa366;
+  border-radius: 999px;
+  color: #f1d8ea;
+}
+
+.chorus__actions .chorus__primary {
+  border-color: transparent;
+  background: linear-gradient(95deg, #ff4fa3, #ffa552);
+  color: #170a2b;
+  font-weight: 600;
+}
+
+.chorus__hint {
+  margin-top: 16px;
+  color: #b994cf;
+  font-size: 0.8125rem;
+}

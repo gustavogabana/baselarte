@@ -17,12 +17,12 @@
   --aws-radius: 6px;
 }
 
-[data-theme="dark"] {
+[data-theme="dark"],
+[data-theme="hurricane"] {
   --aws-green: #66bb6a;
   --aws-red: #ef5350;
 }
 
-/* Both languages stay in the HTML (crawlable); the inactive one is hidden. */
 
 .aws-guide .icon {
   margin-right: 0.3em;

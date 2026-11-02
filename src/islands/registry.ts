@@ -1,4 +1,5 @@
 import type { ComponentType } from "react";
+import type { EasterEggProps } from "./EasterEgg.tsx";
 import type { ThemeSwitchProps } from "./ThemeSwitch.tsx";
 
 /**
@@ -9,6 +10,7 @@ import type { ThemeSwitchProps } from "./ThemeSwitch.tsx";
 export interface IslandProps {
   ThemeSwitch: ThemeSwitchProps;
   LanguageSwitch: Record<string, never>;
+  EasterEgg: EasterEggProps;
 }
 
 export type IslandName = keyof IslandProps;
@@ -17,4 +19,5 @@ export type IslandName = keyof IslandProps;
 export const islandLoaders: { [Name in IslandName]: () => Promise<ComponentType<IslandProps[Name]>> } = {
   ThemeSwitch: () => import("./ThemeSwitch.tsx").then((module) => module.ThemeSwitch),
   LanguageSwitch: () => import("./LanguageSwitch.tsx").then((module) => module.LanguageSwitch),
+  EasterEgg: () => import("./EasterEgg.tsx").then((module) => module.EasterEgg),
 };

@@ -7,9 +7,7 @@ const MACHINE_FILES = ["llms.txt", "sitemap.xml", "robots.txt"];
 export function SiteFooter() {
   return (
     <footer className="site-footer">
-      <span>
-        © <span data-current-year="">{new Date().getFullYear()}</span>
-      </span>
+      <Island name="EasterEgg" props={{ year: new Date().getFullYear() }} />
       <nav className="footer-links" {...localizedAttribute("aria-label", ui.filesForMachines)}>
         {MACHINE_FILES.map((file) => (
           <a key={file} href={`/${file}`}>
