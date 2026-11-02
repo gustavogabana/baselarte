@@ -18,7 +18,16 @@ main {
 }
 
 .site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   padding-top: 28px;
+}
+
+.header-tools {
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
 }
 
 /* The flower: white petals, outlined in the ink colour. */
@@ -91,7 +100,8 @@ main {
 }
 
 .site-footer a,
-.site-footer button {
+.site-footer button,
+.header-tools button {
   color: var(--fg-faint);
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
@@ -100,10 +110,13 @@ main {
 
 .site-footer a:hover,
 .site-footer button:hover,
-.site-footer button[aria-pressed="true"] {
+.site-footer button[aria-pressed="true"],
+.header-tools button:hover,
+.header-tools button[aria-pressed="true"] {
   color: var(--fg-strong);
 }
 
-.site-footer button[aria-pressed="true"] {
+.site-footer button[aria-pressed="true"],
+.header-tools button[aria-pressed="true"] {
   text-decoration-color: currentColor;
 }
