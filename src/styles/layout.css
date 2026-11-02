@@ -1,0 +1,339 @@
+/* Page chrome: the flower, one column, a footer */
+
+.site-header,
+main,
+.site-footer {
+  width: 100%;
+  max-width: calc(var(--content-max) + 2 * var(--gutter));
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+main {
+  flex: 1;
+  padding-top: 24px;
+  padding-bottom: 64px;
+}
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-top: 28px;
+}
+
+.header-tools {
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
+}
+
+/* The flower: white petals, outlined in the ink colour. */
+.logo-mark {
+  display: block;
+  width: 32px;
+  height: 32px;
+  --petal: var(--page);
+  --ink-line: var(--fg-strong);
+}
+
+.logo-mark .petal {
+  fill: var(--petal);
+  stroke: var(--ink-line);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
+}
+
+.logo-mark .vein {
+  fill: none;
+  stroke: var(--ink-line);
+  stroke-width: 0.65;
+  stroke-linecap: round;
+}
+
+.logo-mark .heart {
+  fill: var(--ink-line);
+}
+
+.site-wordmark {
+  display: inline-block;
+  line-height: 0;
+}
+
+.site-footer {
+  margin-top: 0;
+  padding-top: 24px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
+  border-top: 1px solid var(--border);
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+}
+
+.site-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+}
+
+.site-footer .footer-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.theme-switch,
+.language-switch {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 4px 10px;
+}
+
+.site-footer .footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-left: auto;
+}
+
+.site-footer a,
+.site-footer button,
+.header-tools button {
+  color: var(--fg-faint);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
+  text-underline-offset: 3px;
+}
+
+.site-footer a:hover,
+.site-footer button:hover,
+.site-footer button[aria-pressed="true"],
+.header-tools button:hover,
+.header-tools button[aria-pressed="true"] {
+  color: var(--fg-strong);
+}
+
+.site-footer button[aria-pressed="true"],
+.header-tools button[aria-pressed="true"] {
+  text-decoration-color: currentColor;
+}
+
+/* The © in the footer (EasterEgg). */
+.copyright {
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* The chorus, revealed by the easter egg. */
+.chorus {
+  width: min(32rem, calc(100vw - 2 * var(--gutter)));
+  padding: 32px 28px 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background: linear-gradient(170deg, #2a0f4a, #170a2b 60%);
+  color: #f1d8ea;
+  box-shadow: 0 0 60px -10px #ff4fa3aa;
+}
+
+.chorus::backdrop {
+  background: #0b0414cc;
+  backdrop-filter: blur(4px);
+}
+
+.chorus__found {
+  color: #b994cf;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.chorus__lines {
+  margin: 20px 0 28px;
+}
+
+.chorus__lines p {
+  font-size: clamp(1.2rem, 4.5vw, 1.5rem);
+  font-weight: 600;
+  line-height: 1.45;
+  background: linear-gradient(95deg, #ff4fa3, #ffa552 60%, #ffd36e);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: chorus-line 0.9s ease-out forwards;
+}
+
+@keyframes chorus-line {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chorus__lines p {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+.chorus__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.chorus__actions button {
+  padding: 10px 16px;
+  border: 1px solid #ff4fa366;
+  border-radius: 999px;
+  color: #f1d8ea;
+}
+
+.chorus__actions .chorus__primary {
+  border-color: transparent;
+  background: linear-gradient(95deg, #ff4fa3, #ffa552);
+  color: #170a2b;
+  font-weight: 600;
+}
+
+.chorus__hint {
+  margin-top: 16px;
+  color: #b994cf;
+  font-size: 0.8125rem;
+}
+
+/* The easter egg's music player: a small card at the bottom left, a bar on phones. */
+.music-player {
+  position: fixed;
+  left: max(var(--gutter), env(safe-area-inset-left, 0px));
+  bottom: max(16px, env(safe-area-inset-bottom, 0px));
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(26rem, calc(100vw - 2 * var(--gutter)));
+  padding: 10px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--page) 88%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 40px -16px color-mix(in srgb, var(--action) 70%, transparent);
+  color: var(--fg);
+  font-size: 0.8125rem;
+}
+
+.music-player svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+.music-player svg .stroke {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.music-player__play {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--action);
+  color: var(--fg-on-action);
+}
+
+.music-player__play:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.music-player__track {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 2px 8px;
+}
+
+.music-player__title {
+  grid-column: 1 / -1;
+  overflow: hidden;
+  color: var(--fg-strong);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-player__time {
+  color: var(--fg-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.music-player input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  accent-color: var(--action);
+}
+
+.music-player__volume {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: 6.5rem;
+}
+
+.music-player__volume button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  color: var(--fg-faint);
+}
+
+.music-player__volume button[aria-pressed="true"] {
+  color: var(--action);
+}
+
+/* Keep "Top" clear of the player. */
+body:has(.music-player) .back-to-top {
+  bottom: calc(max(16px, env(safe-area-inset-bottom, 0px)) + 84px);
+}
+
+@media (max-width: 520px) {
+  .music-player {
+    left: 0;
+    bottom: 0;
+    width: 100vw;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 0px));
+    border-width: 1px 0 0;
+    border-radius: 0;
+  }
+
+  .music-player__volume {
+    width: auto;
+  }
+
+  /* Phones set volume with their buttons; keep mute only. */
+  .music-player__volume input {
+    display: none;
+  }
+
+  body:has(.music-player) .site-footer {
+    padding-bottom: 96px;
+  }
+}

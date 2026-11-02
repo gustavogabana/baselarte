@@ -1,0 +1,541 @@
+/* Reading column (prose, code, tables, callouts, figures) */
+
+.content-section {
+  margin-top: 48px;
+  padding-top: 0;
+}
+
+.content-section:first-child {
+  margin-top: 0;
+}
+
+.content-section h2 {
+  margin: 0 0 16px;
+  padding-top: 16px;
+  color: var(--fg-strong);
+  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.ds-guide h3 {
+  margin: 32px 0 10px;
+  color: var(--fg-strong);
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.content-section p {
+  text-wrap: pretty;
+}
+
+.content-section p + p,
+.ds-guide p + p,
+.ds-guide pre + p,
+.ds-guide .ds-list + p,
+.ds-guide .content-section > :is(ul, ol):not([class]) + p,
+.ds-guide .ds-steps + p {
+  margin-top: 16px;
+}
+
+.content-section p a,
+.content-section li a,
+.callout a,
+.sources a {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+  text-underline-offset: 3px;
+}
+
+/* Inline code: a bordered chip. */
+code {
+  font-size: 0.875em;
+}
+
+:not(pre) > code {
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--page-faint);
+  color: var(--fg-strong);
+  white-space: break-spaces;
+  overflow-wrap: anywhere;
+}
+
+a > code {
+  color: inherit;
+}
+
+/* Code blocks: dark in both themes, with a copy button. */
+.ds-guide pre,
+pre {
+  position: relative;
+  margin: 20px 0;
+  padding: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius-lg);
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+pre code {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font-size: inherit;
+  white-space: pre;
+}
+
+.copy-button {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--code-border);
+  border-radius: var(--radius);
+  background: var(--code-bg);
+  color: var(--code-faint);
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+
+pre:hover .copy-button,
+.copy-button:focus-visible {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  color: var(--code-fg);
+}
+
+/* CodeBlock renders all three labels; the one matching the button's state shows. */
+.copy-state {
+  display: none;
+}
+
+.copy-button[data-state="idle"] [data-when="idle"],
+.copy-button[data-state="copied"] [data-when="copied"],
+.copy-button[data-state="failed"] [data-when="failed"] {
+  display: inline;
+}
+
+.copy-button .icon {
+  width: 14px;
+  height: 14px;
+  vertical-align: baseline;
+}
+
+@media (hover: none) {
+  .copy-button {
+    opacity: 1;
+  }
+
+  pre:has(.copy-button) {
+    padding-top: 40px;
+  }
+}
+
+/* Syntax colours (used where a note highlights its code). */
+.tok-c { color: var(--code-faint); font-style: italic; }
+.tok-k { color: var(--code-keyword); }
+.tok-s { color: var(--code-string); }
+.tok-n { color: var(--code-number); }
+.tok-a { color: var(--code-attr); }
+
+/* Lists (a bare <ul>/<ol> in a note section gets the same look as .ds-list) */
+.ds-list,
+.content-section > ul:not([class]),
+.content-section > ol:not([class]) {
+  margin-top: 16px;
+  padding-left: 1.4em;
+  display: grid;
+  gap: 8px;
+  list-style: disc;
+}
+
+.content-section > ol:not([class]) {
+  list-style: decimal;
+}
+
+.ds-list li::marker,
+.content-section > :is(ul, ol):not([class]) li::marker {
+  color: var(--fg-faint);
+}
+
+.ds-list li em {
+  color: var(--fg-strong);
+}
+
+.ds-steps {
+  margin-top: 16px;
+  padding-left: 1.5em;
+  display: grid;
+  gap: 8px;
+}
+
+.ds-steps li::marker {
+  color: var(--fg-strong);
+  font-weight: 600;
+}
+
+/* Tables */
+.scroll-x {
+  overflow-x: auto;
+}
+
+.ds-table {
+  width: 100%;
+  margin: 24px 0;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.ds-table th,
+.ds-table td {
+  padding: 10px 16px 10px 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--border);
+}
+
+.ds-table th {
+  background: var(--page-faint);
+  border-bottom: 1px solid var(--border-strong);
+  color: var(--fg-strong);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.ds-table tbody tr:hover td {
+  background: var(--page-faint);
+}
+
+.ds-table td:first-child {
+  white-space: nowrap;
+}
+
+/* Alerts (Helios inline alert): info, warning, personal note */
+.callout {
+  --callout-fg: var(--action);
+  margin: 24px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--action-border);
+  border-radius: var(--radius-lg);
+  background: var(--action-surface);
+  color: var(--fg);
+}
+
+.callout .icon {
+  margin-right: 4px;
+  color: var(--callout-fg);
+}
+
+.callout.warn {
+  --callout-fg: var(--warning-fg);
+  border-color: var(--warning-border);
+  background: var(--warning-surface);
+}
+
+.callout.personal {
+  --callout-fg: var(--highlight-fg);
+  border-color: var(--highlight-border);
+  background: var(--highlight-surface);
+}
+
+.callout strong {
+  color: var(--fg-strong);
+}
+
+.callout code {
+  background: color-mix(in srgb, var(--page) 70%, transparent);
+}
+
+/* Sources */
+.sources {
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--fg-faint);
+}
+
+.sources ul {
+  margin-top: 8px;
+  padding-left: 1.1em;
+  list-style: disc;
+}
+
+.sources a {
+  word-break: break-word;
+}
+
+/* Figures (inline SVG diagrams): the colours come from the tokens, so they
+   follow light and dark. */
+.fig {
+  margin: 28px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--glass-faint);
+}
+
+.fig-scroll {
+  overflow-x: auto;
+}
+
+.fig-scroll > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* Diagram's minWidth: below it the drawing scrolls sideways instead of shrinking illegibly. */
+.fig-scroll > svg {
+  min-width: var(--diagram-min-width, 0);
+}
+
+.fig figcaption {
+  margin-top: 12px;
+  font-size: 0.875rem;
+  color: var(--fg-faint);
+}
+
+.fig text {
+  fill: var(--fg-strong);
+  font-family: var(--sans);
+  font-size: 13px;
+}
+
+.fig .mut {
+  fill: var(--fg-faint);
+}
+
+.fig .mono {
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.fig .inv {
+  fill: var(--page);
+}
+
+.fig .ln {
+  fill: none;
+  stroke: var(--fg-strong);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.fig .dash {
+  stroke-dasharray: 4 4;
+}
+
+.fig .fill {
+  fill: var(--fg-strong);
+  stroke: none;
+}
+
+.fig .fillsoft {
+  fill: var(--surface-strong);
+}
+
+.fig .ln.fillsoft {
+  fill: var(--surface-strong);
+}
+
+.fig .brandfill {
+  fill: var(--brand-surface);
+  stroke: var(--brand);
+}
+
+.fig .brandtext {
+  fill: var(--brand-fg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+@media print {
+  .site-header,
+  .side-nav,
+  #scroll-progress,
+  .back-to-top,
+  .copy-button {
+    display: none !important;
+  }
+}
+
+/* Content wider than the column (tables, diagrams) scrolls sideways; a soft shadow on the edge
+   with more content says so. The shadows are backgrounds attached to the scroll position. */
+.scroll-x,
+.fig-scroll {
+  background:
+    linear-gradient(to right, var(--scroll-cover, var(--page)) 30%, transparent) left / 24px 100% no-repeat local,
+    linear-gradient(to left, var(--scroll-cover, var(--page)) 30%, transparent) right / 24px 100% no-repeat local,
+    radial-gradient(farthest-side at 0 50%, var(--border-strong), transparent) left / 10px 100% no-repeat scroll,
+    radial-gradient(farthest-side at 100% 50%, var(--border-strong), transparent) right / 10px 100% no-repeat scroll;
+}
+
+.fig-scroll {
+  --scroll-cover: var(--glass-faint);
+}
+
+/* Table cells repeat their column heading only when the table is stacked (below). */
+.cell-label {
+  display: none;
+}
+
+/* "Expand" a diagram: hidden on wide screens, where every diagram already fits. */
+.fig-expand {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  color: var(--action);
+  font-size: 0.875rem;
+}
+
+@media (max-width: 760px) {
+  html.js-enabled .fig-expand {
+    display: inline-flex;
+  }
+}
+
+/* Small screens: each table row becomes a card, titled by its first cell. */
+@media (max-width: 640px) {
+  .ds-table--stack,
+  .ds-table--stack tbody,
+  .ds-table--stack tr,
+  .ds-table--stack td {
+    display: block;
+    width: 100%;
+  }
+
+  .ds-table--stack thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .ds-table--stack tr {
+    margin-bottom: 12px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+  }
+
+  .ds-table--stack td,
+  .ds-table--stack td:first-child {
+    padding: 4px 0;
+    border: 0;
+    white-space: normal;
+  }
+
+  .ds-table--stack tbody tr:hover td {
+    background: none;
+  }
+
+  .ds-table--stack td:first-child {
+    margin-bottom: 6px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    color: var(--fg-strong);
+    font-weight: 600;
+  }
+
+  .ds-table--stack td:first-child:empty {
+    display: none;
+  }
+
+  .ds-table--stack .cell-label {
+    display: block;
+    color: var(--fg-faint);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
+
+/* Full-screen diagram viewer (DiagramViewer). */
+.diagram-viewer {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--page);
+  color: var(--fg);
+}
+
+.diagram-viewer::backdrop {
+  background: var(--page);
+}
+
+.diagram-viewer[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.diagram-viewer__bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: max(12px, env(safe-area-inset-top)) var(--gutter) 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.diagram-viewer__bar button {
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 1.125rem;
+}
+
+.diagram-viewer__zoom {
+  min-width: 4ch;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.diagram-viewer .diagram-viewer__close {
+  margin-left: auto;
+  font-size: 0.9375rem;
+}
+
+.diagram-viewer__canvas.fig {
+  flex: 1;
+  margin: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: 0;
+  touch-action: pan-x pan-y pinch-zoom;
+}
+
+.diagram-viewer__canvas svg {
+  max-width: none;
+  height: auto;
+}

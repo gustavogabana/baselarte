@@ -1,0 +1,120 @@
+/* The hidden "hurricane" theme, unlocked by the easter egg (src/easter-egg/chorus.ts):
+   a neon sunset over a Florida-style coast — purple night, hot-pink and orange light, teal water. */
+
+[data-theme="hurricane"] {
+  --sunset-pink: #ff4fa3;
+  --sunset-orange: #ffa552;
+  --sunset-gold: #ffd36e;
+  --ocean-teal: #3ee6d4;
+  --night: #170a2b;
+
+  --page: var(--night);
+  --page-faint: #22103c;
+  --surface-strong: #2e1550;
+  --surface-hover: #2e1550;
+
+  --fg-strong: #fff3f8;
+  --fg: #f1d8ea;
+  --fg-faint: #b994cf;
+  --fg-on-action: var(--night);
+
+  --border: #ff4fa338;
+  --border-faint: #ff4fa317;
+  --border-strong: #ff4fa38a;
+
+  --action: var(--sunset-pink);
+  --action-hover: var(--sunset-orange);
+  --action-active: var(--sunset-orange);
+  --action-surface: #2a1046;
+  --action-border: #ff4fa355;
+  --visited: #ff8fc6;
+  --focus-inner: var(--ocean-teal);
+  --focus-outer: #3ee6d466;
+
+  --brand: var(--sunset-pink);
+  --brand-fg: var(--fg-strong);
+  --brand-surface: #33124f;
+  --brand-border: #ff4fa366;
+
+  --success-fg: var(--ocean-teal);
+  --success-surface: #0b2b33;
+  --success-border: #13505a;
+  --warning-fg: var(--sunset-orange);
+  --warning-surface: #33170f;
+  --warning-border: #6b3313;
+  --critical-fg: #ff5e7a;
+  --critical-surface: #3a0b1c;
+  --critical-border: #6f1630;
+  --highlight-fg: var(--fg);
+  --highlight-surface: #22103c;
+  --highlight-border: #ff4fa338;
+
+  --code-bg: #0f0520;
+  --code-border: #3b1a63;
+  --code-keyword: #ff8fc6;
+  --code-string: var(--ocean-teal);
+  --code-number: var(--sunset-gold);
+  --code-attr: var(--sunset-orange);
+
+  color-scheme: dark;
+}
+
+/* The sky: a sun low on the horizon, and a palm on the right edge. */
+[data-theme="hurricane"] body {
+  background:
+    radial-gradient(60rem 26rem at 85% -6rem, #ff4fa340, transparent 70%),
+    radial-gradient(40rem 18rem at 10% -4rem, #ffa55226, transparent 70%),
+    linear-gradient(180deg, #2a0f4a 0, var(--night) 32rem) no-repeat,
+    var(--night);
+}
+
+[data-theme="hurricane"] body::after {
+  content: "";
+  position: fixed;
+  right: -2rem;
+  bottom: 0;
+  z-index: -1;
+  width: min(38vw, 22rem);
+  aspect-ratio: 3 / 4;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 400'%3E%3Cg fill='%23ff4fa3' fill-opacity='.14'%3E%3Cpath d='M182 400c-6-90-4-170 14-240l10 2c-16 70-18 150-12 238z'/%3E%3Cpath d='M200 160c-40-40-110-50-170-20 60-6 110 6 160 34z'/%3E%3Cpath d='M202 158c10-50 50-100 98-110-34 22-62 62-80 116z'/%3E%3Cpath d='M204 162c50-26 96-20 96-20s-40 20-86 34z'/%3E%3Cpath d='M198 162c-30-6-80 20-110 70 40-34 80-50 116-58z'/%3E%3Cpath d='M200 158c-6-50-40-90-90-110 40 34 64 70 80 116z'/%3E%3C/g%3E%3C/svg%3E")
+    bottom right / contain no-repeat;
+  pointer-events: none;
+}
+
+[data-theme="hurricane"] ::selection {
+  background: var(--sunset-pink);
+  color: var(--night);
+}
+
+/* Titles catch the sunset. */
+[data-theme="hurricane"] .hero-title,
+[data-theme="hurricane"] .pull-quote blockquote p {
+  background: linear-gradient(95deg, var(--sunset-pink), var(--sunset-orange) 55%, var(--sunset-gold));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+[data-theme="hurricane"] .content-section h2 {
+  text-shadow: 0 0 18px #ff4fa366;
+}
+
+[data-theme="hurricane"] #scroll-progress {
+  background: linear-gradient(90deg, var(--sunset-pink), var(--sunset-orange), var(--ocean-teal));
+}
+
+[data-theme="hurricane"] .logo-mark {
+  --petal: #33124f;
+  --ink-line: var(--sunset-pink);
+  filter: drop-shadow(0 0 6px #ff4fa399);
+}
+
+[data-theme="hurricane"] .logo-mark .heart {
+  fill: var(--sunset-orange);
+}
+
+[data-theme="hurricane"] .fig,
+[data-theme="hurricane"] .callout,
+[data-theme="hurricane"] .ds-table--stack tr {
+  box-shadow: 0 0 0 1px #ff4fa31f, 0 8px 30px -18px #ff4fa3aa;
+}

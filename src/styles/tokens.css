@@ -1,0 +1,128 @@
+/* Design tokens. Every colour is a token here; the dark theme only redefines them. */
+
+:root {
+  --page: #ffffff;
+  --page-faint: #f7f7f7;
+  --surface-strong: #eeeeee;
+  --surface-hover: #eeeeee;
+
+  --fg-strong: #000000;
+  --fg: #222222;
+  --fg-faint: #666666;
+  --fg-on-action: #ffffff;
+
+  --border: #00000026;
+  --border-faint: #0000000f;
+  --border-strong: #00000066;
+
+  /* Links: classic hyperlink blue, underlined. */
+  --action: #0645ad;
+  --action-hover: #0b0080;
+  --action-active: #0b0080;
+  --action-surface: #f7f7f7;
+  --action-border: #00000033;
+  --visited: #0645ad;
+  --focus-inner: #000000;
+  --focus-outer: #00000066;
+
+  /* Names kept for the note stylesheets: all neutral now */
+  --brand: #000000;
+  --brand-fg: #000000;
+  --brand-surface: #f4f4f4;
+  --brand-border: #00000033;
+
+  --success-fg: #00781e;
+  --success-surface: #f2fbf6;
+  --success-border: #cceeda;
+  --warning-fg: #9e4b00;
+  --warning-surface: #fff9e8;
+  --warning-border: #fbeabf;
+  --critical-fg: #c00005;
+  --critical-surface: #fff5f5;
+  --critical-border: #fbd4d4;
+  --highlight-fg: #222222;
+  --highlight-surface: #f4f4f4;
+  --highlight-border: #00000026;
+
+  /* Code blocks stay dark in both themes */
+  --code-bg: #15181e;
+  --code-fg: #efeff1;
+  --code-border: #2b303c;
+  --code-faint: #8c909c;
+  --code-keyword: #9fbaf0;
+  --code-string: #7fdca4;
+  --code-number: #ffcc6a;
+  --code-attr: #6bc1ff;
+
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: ui-monospace, Menlo, Consolas, monospace;
+
+  --content-max: 44rem;
+  --page-left: max(var(--gutter), 6vw);
+  --gutter: clamp(16px, 4vw, 32px);
+  --radius: 4px;
+  --radius-lg: 4px;
+
+  /* Names kept so the older note stylesheets keep working */
+  --paper: var(--page);
+  --ink: var(--fg-strong);
+  --muted: var(--fg-faint);
+  --line: var(--border);
+  --serif: var(--sans);
+  --label: var(--sans);
+  --heading: var(--sans);
+  --wide: 90rem;
+  --column: var(--content-max);
+  --glass: var(--page);
+  --glass-faint: var(--page-faint);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --page: #0d0e12;
+  --page-faint: #15181e;
+  --surface-strong: #1e222a;
+  --surface-hover: #1e222a;
+
+  --fg-strong: #ffffff;
+  --fg: #d5d7db;
+  --fg-faint: #9a9ea8;
+  --fg-on-action: #0d0e12;
+
+  --border: #ffffff26;
+  --border-faint: #ffffff0f;
+  --border-strong: #ffffff66;
+
+  --action: #7aa7ff;
+  --action-hover: #a9c4ff;
+  --action-active: #a9c4ff;
+  --action-surface: #15181e;
+  --action-border: #ffffff33;
+  --visited: #7aa7ff;
+  --focus-inner: #ffffff;
+  --focus-outer: #ffffff66;
+
+  --brand: #ffffff;
+  --brand-fg: #ffffff;
+  --brand-surface: #15181e;
+  --brand-border: #ffffff33;
+
+  --success-fg: #00ae4e;
+  --success-surface: #042a15;
+  --success-border: #054220;
+  --warning-fg: #fda219;
+  --warning-surface: #2e1b06;
+  --warning-border: #542800;
+  --critical-fg: #f9381e;
+  --critical-surface: #370b06;
+  --critical-border: #62170d;
+  --highlight-fg: #d5d7db;
+  --highlight-surface: #15181e;
+  --highlight-border: #ffffff26;
+
+  --code-bg: #15181e;
+  --code-border: #2b303c;
+
+  color-scheme: dark;
+}
