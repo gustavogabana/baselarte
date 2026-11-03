@@ -29,6 +29,7 @@ export const catalog: NoteGroup[] = [
       "small-project-contracts",
       "seo-geo",
       "language-runtimes",
+      "nodejs-typescript",
     ],
   },
   {
