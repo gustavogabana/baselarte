@@ -45,6 +45,8 @@ scripts/build.ts  production build
 
 Create `src/notes/<slug>/index.tsx` exporting `note: Note` (see `src/notes/types.ts`) and add the slug to a group in `src/notes/catalog.ts`. The build fails if one exists without the other. The sitemap, llms.txt, lists and structured data are generated from that metadata.
 
+Then run `pnpm notes:index` to refresh [NOTAS.md](NOTAS.md), the quick index of every note.
+
 Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the active one, so both stay in the HTML for crawlers.
 
 ## Behaviour

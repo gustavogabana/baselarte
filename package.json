@@ -9,7 +9,8 @@
     "dev": "vite",
     "build": "pnpm typecheck && node scripts/build.ts",
     "preview": "vite preview --outDir dist",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "notes:index": "node scripts/notes-index.ts"
   },
   "dependencies": {
     "motion": "14.9.0",
