@@ -44,6 +44,7 @@ export const catalog: NoteGroup[] = [
       "observability",
       "github-aws-oidc",
       "ecs-todo-app",
+      "front-back-ecs-cloudflare",
     ],
   },
   {
