@@ -2,3 +2,7 @@
 # these exact versions were reviewed and allowed early.
 minimumReleaseAgeExclude:
   - '@vitejs/plugin-react@6.2.1'
+
+allowBuilds:
+  esbuild: true
+  workerd: true
