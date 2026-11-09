@@ -19,7 +19,6 @@ export const ui = {
   themeAuto: { en: "auto", pt: "auto" },
   themeLight: { en: "light", pt: "claro" },
   themeDark: { en: "dark", pt: "escuro" },
-  themeHurricane: { en: "hurricane", pt: "furacão" },
   language: { en: "Language", pt: "Idioma" },
   filesForMachines: { en: "Files for machines", pt: "Arquivos para máquinas" },
   quote: {

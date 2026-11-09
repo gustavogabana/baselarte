@@ -17,8 +17,7 @@
   --aws-radius: 6px;
 }
 
-[data-theme="dark"],
-[data-theme="hurricane"] {
+[data-theme="dark"] {
   --aws-green: #66bb6a;
   --aws-red: #ef5350;
 }

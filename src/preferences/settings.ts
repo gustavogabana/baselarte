@@ -2,7 +2,7 @@
 // interactive islands. Keep the functions below self-contained: the boot script inlines their
 // source text, so they cannot reach anything outside their own body.
 
-export const THEME_MODES = ["auto", "light", "dark", "hurricane"] as const;
+export const THEME_MODES = ["auto", "light", "dark"] as const;
 export type ThemeMode = (typeof THEME_MODES)[number];
 export type Theme = Exclude<ThemeMode, "auto">;
 

@@ -1,7 +1,7 @@
 // Like a flower in a hurricane.
 //
 // Shown only to whoever finds it: tap the © in the footer five times (one per petal of the logo),
-// or type "hurricane" anywhere on the page. Finding it unlocks the hurricane theme and the player.
+// or type "hurricane" anywhere on the page. Finding it unlocks the player.
 
 export const CHORUS = [
   "Only love never hesitates",

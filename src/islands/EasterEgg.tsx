@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Text, T } from "../components/ui/T.tsx";
 import { CHORUS, SECRET_TAPS, SECRET_TAP_WINDOW_MS, SECRET_WORD } from "../easter-egg/chorus.ts";
 import { ui } from "../i18n/ui.ts";
-import { hurricaneUnlocked, themeMode } from "../preferences/store.ts";
+import { hurricaneUnlocked } from "../preferences/store.ts";
 
 export interface EasterEggProps {
   /** The year at build time; replaced by the visitor's current year once the page runs. */
@@ -11,7 +11,7 @@ export interface EasterEggProps {
 
 /**
  * The footer's "© year". It hides the site's easter egg: five quick taps on it (or typing the
- * secret word) open the chorus and unlock the hurricane theme.
+ * secret word) open the chorus and unlock the music player.
  */
 export function EasterEgg({ year }: EasterEggProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -45,11 +45,6 @@ export function EasterEgg({ year }: EasterEggProps) {
     }
   };
 
-  const wearTheHurricane = () => {
-    themeMode.set("hurricane");
-    dialogRef.current?.close();
-  };
-
   return (
     <>
       <span className="copyright" onClick={onCopyrightTap}>
@@ -67,19 +62,10 @@ export function EasterEgg({ year }: EasterEggProps) {
           ))}
         </blockquote>
         <div className="chorus__actions">
-          <button type="button" className="chorus__primary" onClick={wearTheHurricane}>
-            <T en="Wear the hurricane theme" pt="Usar o tema furacão" />
-          </button>
-          <button type="button" onClick={() => dialogRef.current?.close()}>
+          <button type="button" className="chorus__primary" onClick={() => dialogRef.current?.close()}>
             <Text value={ui.closeDiagram} />
           </button>
         </div>
-        <p className="chorus__hint">
-          <T
-            en="It now lives in the theme switch, next to auto, light and dark."
-            pt="Agora ele fica no seletor de tema, ao lado de auto, claro e escuro."
-          />
-        </p>
       </dialog>
     </>
   );
