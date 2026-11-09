@@ -2,14 +2,13 @@ import { useLocalize } from "../i18n/useLocalize.ts";
 import type { Localized } from "../i18n/localized.ts";
 import { ui } from "../i18n/ui.ts";
 import { Text } from "../components/ui/T.tsx";
-import { hurricaneUnlocked, themeMode, usePreference } from "../preferences/store.ts";
+import { themeMode, usePreference } from "../preferences/store.ts";
 import type { ThemeMode } from "../preferences/settings.ts";
 
 const LABELS: Record<ThemeMode, Localized> = {
   auto: ui.themeAuto,
   light: ui.themeLight,
   dark: ui.themeDark,
-  hurricane: ui.themeHurricane,
 };
 
 export interface ThemeSwitchProps {
@@ -17,12 +16,11 @@ export interface ThemeSwitchProps {
   placement: "header" | "footer";
 }
 
-/** auto / light / dark, plus the hidden theme once it has been unlocked. */
+/** auto / light / dark. */
 export function ThemeSwitch({ placement }: ThemeSwitchProps) {
   const localize = useLocalize();
   const currentMode = usePreference(themeMode);
-  const isHurricaneUnlocked = usePreference(hurricaneUnlocked) === "yes";
-  const modes: ThemeMode[] = isHurricaneUnlocked ? ["auto", "light", "dark", "hurricane"] : ["auto", "light", "dark"];
+  const modes: ThemeMode[] = ["auto", "light", "dark"];
 
   return (
     <div role="group" className={`theme-switch theme-switch--${placement}`} aria-label={localize(ui.theme)}>

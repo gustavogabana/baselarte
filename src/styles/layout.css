@@ -13,7 +13,7 @@ main,
 
 main {
   flex: 1;
-  padding-top: 24px;
+  padding-top: 40px;
   padding-bottom: 64px;
 }
 
@@ -22,7 +22,9 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-top: 28px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
 }
 
 .header-tools {
@@ -42,7 +44,7 @@ main {
 .logo-mark .petal {
   fill: var(--petal);
   stroke: var(--ink-line);
-  stroke-width: 0.8;
+  stroke-width: 0.7;
   stroke-linejoin: round;
 }
 
@@ -132,19 +134,18 @@ main {
   width: min(32rem, calc(100vw - 2 * var(--gutter)));
   padding: 32px 28px 24px;
   border: 1px solid var(--border-strong);
-  border-radius: 8px;
-  background: linear-gradient(170deg, #2a0f4a, #170a2b 60%);
-  color: #f1d8ea;
-  box-shadow: 0 0 60px -10px #ff4fa3aa;
+  border-radius: var(--radius-lg);
+  background: var(--page);
+  color: var(--fg);
+  box-shadow: 0 24px 60px -24px #00000066;
 }
 
 .chorus::backdrop {
-  background: #0b0414cc;
-  backdrop-filter: blur(4px);
+  background: #00000066;
 }
 
 .chorus__found {
-  color: #b994cf;
+  color: var(--fg-faint);
   font-size: 0.8125rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -158,10 +159,7 @@ main {
   font-size: clamp(1.2rem, 4.5vw, 1.5rem);
   font-weight: 600;
   line-height: 1.45;
-  background: linear-gradient(95deg, #ff4fa3, #ffa552 60%, #ffd36e);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: var(--fg-strong);
   opacity: 0;
   animation: chorus-line 0.9s ease-out forwards;
 }
@@ -194,22 +192,16 @@ main {
 
 .chorus__actions button {
   padding: 10px 16px;
-  border: 1px solid #ff4fa366;
-  border-radius: 999px;
-  color: #f1d8ea;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  color: var(--fg);
 }
 
 .chorus__actions .chorus__primary {
-  border-color: transparent;
-  background: linear-gradient(95deg, #ff4fa3, #ffa552);
-  color: #170a2b;
+  border-color: var(--fg-strong);
+  background: var(--fg-strong);
+  color: var(--page);
   font-weight: 600;
-}
-
-.chorus__hint {
-  margin-top: 16px;
-  color: #b994cf;
-  font-size: 0.8125rem;
 }
 
 /* The easter egg's music player: a small card at the bottom left, a bar on phones. */
@@ -224,10 +216,9 @@ main {
   width: min(26rem, calc(100vw - 2 * var(--gutter)));
   padding: 10px 14px;
   border: 1px solid var(--border-strong);
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--page) 88%, transparent);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 40px -16px color-mix(in srgb, var(--action) 70%, transparent);
+  border-radius: var(--radius-lg);
+  background: var(--page);
+  box-shadow: 0 8px 24px -16px #00000066;
   color: var(--fg);
   font-size: 0.8125rem;
 }
@@ -251,7 +242,7 @@ main {
   flex: none;
   width: 44px;
   height: 44px;
-  border-radius: 50%;
+  border-radius: var(--radius);
   background: var(--action);
   color: var(--fg-on-action);
 }

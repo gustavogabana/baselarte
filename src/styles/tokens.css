@@ -2,33 +2,33 @@
 
 :root {
   --page: #ffffff;
-  --page-faint: #f7f7f7;
-  --surface-strong: #eeeeee;
-  --surface-hover: #eeeeee;
+  --page-faint: #f9f9f9;
+  --surface-strong: #f0f0f0;
+  --surface-hover: #f3f3f3;
 
   --fg-strong: #000000;
-  --fg: #222222;
-  --fg-faint: #666666;
+  --fg: #2e2e2e;
+  --fg-faint: #767676;
   --fg-on-action: #ffffff;
 
-  --border: #00000026;
-  --border-faint: #0000000f;
-  --border-strong: #00000066;
+  --border: #00000020;
+  --border-faint: #0000000d;
+  --border-strong: #0000003d;
 
-  /* Links: classic hyperlink blue, underlined. */
-  --action: #0645ad;
-  --action-hover: #0b0080;
-  --action-active: #0b0080;
-  --action-surface: #f7f7f7;
-  --action-border: #00000033;
-  --visited: #0645ad;
+  /* Links: ink-coloured, told apart by the underline (as on base-ui.com). */
+  --action: #000000;
+  --action-hover: #2e2e2e;
+  --action-active: #2e2e2e;
+  --action-surface: #f9f9f9;
+  --action-border: #0000003d;
+  --visited: #000000;
   --focus-inner: #000000;
   --focus-outer: #00000066;
 
   /* Names kept for the note stylesheets: all neutral now */
   --brand: #000000;
   --brand-fg: #000000;
-  --brand-surface: #f4f4f4;
+  --brand-surface: #f9f9f9;
   --brand-border: #00000033;
 
   --success-fg: #00781e;
@@ -41,14 +41,14 @@
   --critical-surface: #fff5f5;
   --critical-border: #fbd4d4;
   --highlight-fg: #222222;
-  --highlight-surface: #f4f4f4;
+  --highlight-surface: #f9f9f9;
   --highlight-border: #00000026;
 
   /* Code blocks stay dark in both themes */
-  --code-bg: #15181e;
-  --code-fg: #efeff1;
-  --code-border: #2b303c;
-  --code-faint: #8c909c;
+  --code-bg: #131313;
+  --code-fg: #ededed;
+  --code-border: #2e2e2e;
+  --code-faint: #8f8f8f;
   --code-keyword: #9fbaf0;
   --code-string: #7fdca4;
   --code-number: #ffcc6a;
@@ -61,7 +61,7 @@
   --page-left: max(var(--gutter), 6vw);
   --gutter: clamp(16px, 4vw, 32px);
   --radius: 4px;
-  --radius-lg: 4px;
+  --radius-lg: 6px;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
@@ -80,32 +80,32 @@
 }
 
 [data-theme="dark"] {
-  --page: #0d0e12;
-  --page-faint: #15181e;
-  --surface-strong: #1e222a;
-  --surface-hover: #1e222a;
+  --page: #0c0c0c;
+  --page-faint: #131313;
+  --surface-strong: #1f1f1f;
+  --surface-hover: #1a1a1a;
 
   --fg-strong: #ffffff;
-  --fg: #d5d7db;
-  --fg-faint: #9a9ea8;
-  --fg-on-action: #0d0e12;
+  --fg: #e0e0e0;
+  --fg-faint: #a3a3a3;
+  --fg-on-action: #0c0c0c;
 
-  --border: #ffffff26;
+  --border: #ffffff24;
   --border-faint: #ffffff0f;
-  --border-strong: #ffffff66;
+  --border-strong: #ffffff52;
 
-  --action: #7aa7ff;
-  --action-hover: #a9c4ff;
-  --action-active: #a9c4ff;
-  --action-surface: #15181e;
-  --action-border: #ffffff33;
-  --visited: #7aa7ff;
+  --action: #ffffff;
+  --action-hover: #d4d4d4;
+  --action-active: #d4d4d4;
+  --action-surface: #131313;
+  --action-border: #ffffff3d;
+  --visited: #ffffff;
   --focus-inner: #ffffff;
   --focus-outer: #ffffff66;
 
   --brand: #ffffff;
   --brand-fg: #ffffff;
-  --brand-surface: #15181e;
+  --brand-surface: #131313;
   --brand-border: #ffffff33;
 
   --success-fg: #00ae4e;
@@ -117,12 +117,12 @@
   --critical-fg: #f9381e;
   --critical-surface: #370b06;
   --critical-border: #62170d;
-  --highlight-fg: #d5d7db;
-  --highlight-surface: #15181e;
+  --highlight-fg: #e0e0e0;
+  --highlight-surface: #131313;
   --highlight-border: #ffffff26;
 
-  --code-bg: #15181e;
-  --code-border: #2b303c;
+  --code-bg: #131313;
+  --code-border: #2e2e2e;
 
   color-scheme: dark;
 }
