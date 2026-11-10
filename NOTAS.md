@@ -1,6 +1,6 @@
 # Notas
 
-Índice rápido das 48 notas de [baselarte.com](https://baselarte.com/notas/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
+Índice rápido das 51 notas de [baselarte.com](https://baselarte.com/notas/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
 
 ## Sistemas
 
@@ -18,6 +18,8 @@
 - [SEO e busca por IA: meta tags, JSON-LD, robots.txt, llms.txt e como ser indexado](https://baselarte.com/notas/seo-geo/) · [fonte](src/notes/seo-geo/index.tsx)
 - [Java, Python e TypeScript na prática: Spring Boot, FastAPI e Node (ambientes, variáveis e Docker)](https://baselarte.com/notas/language-runtimes/) · [fonte](src/notes/language-runtimes/index.tsx)
 - [Node.js e TypeScript de ponta a ponta: a linguagem, o runtime, o front, testes e produção](https://baselarte.com/notas/nodejs-typescript/) · [fonte](src/notes/nodejs-typescript/index.tsx)
+- [Multi-tenant (SaaS): um app, vários clientes](https://baselarte.com/notas/multi-tenant-saas/) · [fonte](src/notes/multi-tenant-saas/index.tsx)
+- [Gateways de pagamento: Stripe, Mercado Pago e Asaas](https://baselarte.com/notas/payment-gateways/) · [fonte](src/notes/payment-gateways/index.tsx)
 
 ## Nuvem e infraestrutura
 
@@ -41,6 +43,7 @@
 - [OWASP Top 10 (2025): como os apps quebram e o que fazer](https://baselarte.com/notas/owasp-top-10/) · [fonte](src/notes/owasp-top-10/index.tsx)
 - [Hacking ético: onde praticar, TryHackMe e a CEH](https://baselarte.com/notas/ethical-hacking-ceh-practice/) · [fonte](src/notes/ethical-hacking-ceh-practice/index.tsx)
 - [Login e autenticação: SSO, OAuth, OIDC e companhia](https://baselarte.com/notas/auth-sso-oauth-oidc/) · [fonte](src/notes/auth-sso-oauth-oidc/index.tsx)
+- [Autorização: RBAC, ABAC e como combinar os dois](https://baselarte.com/notas/rbac-abac/) · [fonte](src/notes/rbac-abac/index.tsx)
 - [Criptografia, chaves e SSH: como funcionam chaves públicas e privadas](https://baselarte.com/notas/crypto-keys-ssh/) · [fonte](src/notes/crypto-keys-ssh/index.tsx)
 - [SMTP: como o e-mail viaja e como operá-lo com segurança](https://baselarte.com/notas/smtp/) · [fonte](src/notes/smtp/index.tsx)
 

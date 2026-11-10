@@ -30,6 +30,8 @@ export const catalog: NoteGroup[] = [
       "seo-geo",
       "language-runtimes",
       "nodejs-typescript",
+      "multi-tenant-saas",
+      "payment-gateways",
     ],
   },
   {
@@ -59,6 +61,7 @@ export const catalog: NoteGroup[] = [
       "owasp-top-10",
       "ethical-hacking-ceh-practice",
       "auth-sso-oauth-oidc",
+      "rbac-abac",
       "crypto-keys-ssh",
       "smtp",
     ],
