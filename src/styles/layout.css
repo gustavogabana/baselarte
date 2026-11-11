@@ -25,7 +25,23 @@ main {
   max-width: none;
   padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   height: 64px;
-  border-bottom: 1px solid var(--fg-strong);
+}
+
+/* Header and footer are black in both themes: they re-point the colour tokens for everything inside. */
+.site-header,
+.site-footer {
+  --page: #000000;
+  --fg-strong: #ffffff;
+  --fg: #e0e0e0;
+  --fg-faint: #a3a3a3;
+  --border: #ffffff3d;
+  --focus-inner: #ffffff;
+  background: #000000;
+  color: var(--fg-faint);
+}
+
+.site-header {
+  border-bottom: 1px solid #2a2a2a;
 }
 
 .header-nav {
@@ -101,7 +117,7 @@ main {
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
   padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-top: 1px solid var(--fg-strong);
+  border-top: 1px solid #2a2a2a;
   color: var(--fg-faint);
   font-size: 0.875rem;
 }

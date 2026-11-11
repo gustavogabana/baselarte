@@ -19,7 +19,6 @@
 
 .hero {
   grid-column: 1 / -1;
-  max-width: 62rem;
   margin: 0 0 48px;
   padding-bottom: 32px;
   border-bottom: 1px solid var(--fg-strong);
@@ -47,7 +46,7 @@
 
 .hero-title {
   color: var(--fg-strong);
-  font-size: clamp(2.25rem, 6vw, 4.5rem);
+  font-size: clamp(2.25rem, 5.5vw, 3.5rem);
   font-weight: 700;
   line-height: 1.04;
   letter-spacing: -0.035em;
@@ -59,10 +58,9 @@
 }
 
 .hero-lede {
-  max-width: 44rem;
   margin: 28px 0 0;
   color: var(--fg);
-  font-size: 1.3125rem;
+  font-size: 1.25rem;
   line-height: 1.45;
   text-wrap: pretty;
 }
@@ -88,19 +86,27 @@
   font-weight: 500;
 }
 
-/* The article grid: body column + index column (the index sticks beside the text). */
+/* The article: one centred column (like the Uber engineering blog). Below 1360px everything
+   stacks in that column; above it the index sits in the free space to the right of the text. */
 .reading-column {
   display: block;
 }
 
-@media (min-width: 1100px) {
+.reading-column > :is(.back-link, .hero, .post-body, .side-nav) {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 1360px) {
   .reading-column {
     display: grid;
-    grid-template-columns: minmax(0, var(--content-max)) minmax(0, 1fr) var(--side-width);
+    grid-template-columns: minmax(0, 1fr) minmax(0, var(--content-max)) minmax(0, 1fr);
     grid-template-areas:
-      "back back back"
-      "hero hero hero"
-      "body . side"
+      ". back ."
+      ". hero ."
+      ". body side"
       "related related related";
     column-gap: var(--grid-gap);
   }
@@ -123,7 +129,10 @@
     position: sticky;
     top: 24px;
     align-self: start;
+    width: auto;
+    max-width: var(--side-width);
     max-height: calc(100vh - 48px);
+    margin: 0;
     overflow-y: auto;
   }
 
