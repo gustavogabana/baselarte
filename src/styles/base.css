@@ -27,8 +27,8 @@ body {
 }
 
 ::selection {
-  background: var(--fg-strong);
-  color: var(--page);
+  background: var(--accent);
+  color: #ffffff;
 }
 
 a {
@@ -39,7 +39,7 @@ a {
 }
 
 a:hover {
-  color: var(--action-hover);
+  color: var(--accent-fg);
   text-decoration-color: currentColor;
 }
 

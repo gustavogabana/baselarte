@@ -13,7 +13,7 @@ export function NotePage({ note }: { note: Note }) {
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
     <article className={articleClass}>
-      <BackLink href="/notas/" label={ui.notes} />
+      <BackLink href="/" label={ui.notes} />
       <header className="hero" aria-labelledby="hero-title">
         <p className="hero-meta">
           <span className="hero-category">

@@ -18,7 +18,7 @@ const total = catalog.reduce((count, group) => count + group.notes.length, 0);
 const lines = [
   "# Notas",
   "",
-  `Índice rápido das ${total} notas de [${new URL(site.url).host}](${absoluteUrl("/notas/")}), na ordem do site. Gerado por \`pnpm notes:index\` a partir de \`src/notes/catalog.ts\`; não edite à mão.`,
+  `Índice rápido das ${total} notas de [${new URL(site.url).host}](${absoluteUrl("/")}), na ordem do site. Gerado por \`pnpm notes:index\` a partir de \`src/notes/catalog.ts\`; não edite à mão.`,
   "",
 ];
 

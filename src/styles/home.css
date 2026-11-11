@@ -5,16 +5,18 @@
 }
 
 .pull-quote {
-  margin: 24px 0 96px;
-  max-width: 62rem;
+  margin: 16px 0 64px;
+  max-width: 44rem;
+  padding-left: 20px;
+  border-left: 4px solid var(--accent);
 }
 
 .pull-quote blockquote p {
   color: var(--fg-strong);
-  font-size: clamp(2rem, 6vw, 4.25rem);
-  font-weight: 700;
-  line-height: 1.05;
-  letter-spacing: -0.035em;
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -27,7 +29,7 @@
 }
 
 .pull-quote figcaption {
-  margin-top: 24px;
+  margin-top: 12px;
   color: var(--fg-faint);
 }
 
@@ -99,6 +101,11 @@
   font-size: 1.0625rem;
   line-height: 1.35;
   text-decoration: none;
+}
+
+.note-index li a:hover .index-number,
+.note-index li a:focus-visible .index-number {
+  color: var(--accent-fg);
 }
 
 .note-index li a:hover .index-title {

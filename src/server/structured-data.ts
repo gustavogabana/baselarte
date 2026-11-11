@@ -59,8 +59,7 @@ export function noteGraph(note: Note, path: string) {
         "@id": `${url}#breadcrumb`,
         itemListElement: [
           { "@type": "ListItem", position: 1, name: "Home", item: absoluteUrl("/") },
-          { "@type": "ListItem", position: 2, name: "Notes", item: absoluteUrl("/notas/") },
-          { "@type": "ListItem", position: 3, name: note.seo.title.en, item: url },
+          { "@type": "ListItem", position: 2, name: note.seo.title.en, item: url },
         ],
       },
     ],

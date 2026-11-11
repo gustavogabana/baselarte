@@ -110,6 +110,11 @@ main {
   color: var(--fg-strong);
 }
 
+.site-header,
+.site-footer {
+  --accent-fg: #ff4d42;
+}
+
 .site-footer {
   margin-top: 0;
   max-width: none;

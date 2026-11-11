@@ -6,6 +6,10 @@
   --surface-strong: #eeeeee;
   --surface-hover: #f3f3f3;
 
+  /* The one Swiss accent: poster red, used sparingly (labels, numbers, hover, rules). */
+  --accent: #e30613;
+  --accent-fg: #e30613;
+
   --fg-strong: #000000;
   --fg: #2e2e2e;
   --fg-faint: #767676;
@@ -87,6 +91,9 @@
   --page-faint: #0d0d0d;
   --surface-strong: #1a1a1a;
   --surface-hover: #141414;
+
+  --accent: #ff3b30;
+  --accent-fg: #ff4d42;
 
   --fg-strong: #ffffff;
   --fg: #e0e0e0;

@@ -264,7 +264,7 @@ pre:hover .copy-button,
 .qa-item dd {
   margin: 10px 0 0 calc(1.75rem + 16px);
   padding-left: 16px;
-  border-left: 2px solid var(--fg-strong);
+  border-left: 2px solid var(--accent);
   color: var(--fg);
 }
 
@@ -309,7 +309,7 @@ pre:hover .copy-button,
 .sources {
   margin-top: 64px;
   padding-top: 16px;
-  border-top: 4px solid var(--fg-strong);
+  border-top: 4px solid var(--accent);
   font-size: 0.875rem;
   color: var(--fg-faint);
 }
