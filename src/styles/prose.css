@@ -1,7 +1,7 @@
 /* Reading column (prose, code, tables, callouts, figures) */
 
 .content-section {
-  margin-top: 48px;
+  margin-top: 64px;
   padding-top: 0;
 }
 
@@ -10,13 +10,14 @@
 }
 
 .content-section h2 {
-  margin: 0 0 16px;
+  margin: 0 0 20px;
   padding-top: 16px;
+  border-top: 1px solid var(--fg-strong);
   color: var(--fg-strong);
-  font-size: clamp(1.4rem, 2.4vw, 1.75rem);
+  font-size: clamp(1.6rem, 3vw, 2.125rem);
   font-weight: 700;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
 }
 
 .ds-guide h3 {
@@ -266,9 +267,9 @@ pre:hover .copy-button,
 
 /* Sources */
 .sources {
-  margin-top: 48px;
+  margin-top: 64px;
   padding-top: 16px;
-  border-top: 1px solid var(--border);
+  border-top: 4px solid var(--fg-strong);
   font-size: 0.875rem;
   color: var(--fg-faint);
 }

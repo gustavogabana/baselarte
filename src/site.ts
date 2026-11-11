@@ -6,7 +6,7 @@ export const site = {
   url: "https://baselarte.com",
   description: "Software engineering and creative technology company building precise systems, interfaces and infrastructure.",
   slogan: "Non desistas. Non exieris.",
-  themeColor: "#0d0e12",
+  themeColor: "#000000",
   shareImage: {
     path: "/assets/og-image.png",
     width: 1200,

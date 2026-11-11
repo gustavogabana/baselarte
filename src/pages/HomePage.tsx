@@ -5,9 +5,7 @@ import { ui } from "../i18n/ui.ts";
 export function HomePage() {
   return (
     <div className="landing">
-      <h1 className="sr-only">
-        <Text value={ui.notes} />
-      </h1>
+      <h1 className="sr-only">Baselarte</h1>
       <figure className="pull-quote">
         <blockquote>
           <p>
