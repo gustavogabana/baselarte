@@ -1,6 +1,7 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
 import { groupOf } from "../notes/registry.ts";
+import { catalog } from "../notes/catalog.ts";
 import { site } from "../site.ts";
 import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
 import { localizedAttribute } from "../i18n/attributes.ts";
@@ -10,6 +11,7 @@ import type { Note, TocGroup } from "../notes/types.ts";
 
 export function NotePage({ note }: { note: Note }) {
   const { Body } = note;
+  const groupIndex = catalog.findIndex((group) => group.id === groupOf(note.slug).id);
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
     <article className={articleClass}>
@@ -29,6 +31,7 @@ export function NotePage({ note }: { note: Note }) {
         <p className="hero-lede">
           <Text value={note.heroLede} />
         </p>
+        <div className={`hero-art hero-art--${groupIndex % 5}`} aria-hidden="true" />
         <dl className="hero-facts">
           <div>
             <dt>

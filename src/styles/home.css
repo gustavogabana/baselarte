@@ -117,3 +117,32 @@
 .note-index li[hidden] {
   display: none;
 }
+
+/* Decoration (Unsplash photos in public/assets/decor, shown in grayscale). Easy to remove. */
+.landing-top {
+  display: grid;
+  gap: 32px var(--grid-gap);
+  margin-bottom: 64px;
+}
+
+.landing-top .pull-quote {
+  align-self: start;
+  margin-bottom: 0;
+}
+
+.home-art {
+  min-height: 14rem;
+  background: url("/assets/decor/d5.jpg") center / cover;
+  filter: grayscale(1) contrast(1.05);
+}
+
+@media (min-width: 900px) {
+  .landing-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    align-items: stretch;
+  }
+
+  .home-art {
+    min-height: 26rem;
+  }
+}

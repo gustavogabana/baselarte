@@ -236,3 +236,17 @@
   background: var(--accent);
   color: #ffffff;
 }
+
+/* Decoration: a grayscale photo band under the lede, one per category. Easy to remove. */
+.hero-art {
+  margin: 32px 0 0;
+  aspect-ratio: 21 / 9;
+  background: center / cover;
+  filter: grayscale(1) contrast(1.05);
+}
+
+.hero-art--0 { background-image: url("/assets/decor/d1.jpg"); }
+.hero-art--1 { background-image: url("/assets/decor/d4.jpg"); background-position: center 70%; }
+.hero-art--2 { background-image: url("/assets/decor/d2.jpg"); background-position: center 35%; }
+.hero-art--3 { background-image: url("/assets/decor/d3.jpg"); background-position: center 30%; }
+.hero-art--4 { background-image: url("/assets/decor/d5.jpg"); background-position: center 45%; }
