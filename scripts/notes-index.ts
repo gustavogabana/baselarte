@@ -1,7 +1,7 @@
 // Writes NOTAS.md: a quick index of every note, grouped and ordered as in src/notes/catalog.ts.
 // Run with `pnpm notes:index` after adding or renaming a note.
 import { readFile, writeFile } from "node:fs/promises";
-import { catalog } from "../src/notes/catalog.ts";
+import { allGroups } from "../src/notes/catalog.ts";
 import { absoluteUrl, site } from "../src/site.ts";
 
 // The first `title: { en: "…", pt: "…" }` in the file is the note's own (seo.title comes after it).
@@ -14,7 +14,7 @@ async function readTitle(slug: string): Promise<{ en: string; pt: string }> {
   return { en: JSON.parse(`"${match[1]}"`), pt: JSON.parse(`"${match[2]}"`) };
 }
 
-const total = catalog.reduce((count, group) => count + group.notes.length, 0);
+const total = allGroups.reduce((count, group) => count + group.notes.length, 0);
 const lines = [
   "# Notas",
   "",
@@ -22,7 +22,7 @@ const lines = [
   "",
 ];
 
-for (const group of catalog) {
+for (const group of allGroups) {
   lines.push(`## ${group.title.pt}`, "");
   for (const slug of group.notes) {
     const title = await readTitle(slug);

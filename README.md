@@ -43,7 +43,7 @@ scripts/build.ts  production build
 
 ## Writing a note
 
-Create `src/notes/<slug>/index.tsx` exporting `note: Note` (see `src/notes/types.ts`) and add the slug to a group in `src/notes/catalog.ts`. The build fails if one exists without the other. The sitemap, llms.txt, lists and structured data are generated from that metadata.
+Create `src/notes/<slug>/index.tsx` exporting `note: Note` (see `src/notes/types.ts`) and add the slug to a group (inside an area) in `src/notes/catalog.ts`. The build fails if one exists without the other. The sitemap, llms.txt, lists and structured data are generated from that metadata.
 
 Then run `pnpm notes:index` to refresh [NOTAS.md](NOTAS.md), the quick index of every note.
 
@@ -51,7 +51,7 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Behaviour
 
-- **Layout:** one narrow column, system fonts, no cards, gradients or animations. Home is the IBM quote followed by the list of notes; each note has the flower (link home), a "← Notes" link, an "On this page" list (to the right of the text on wide screens), a thin reading-progress bar and a plain footer. Style references: [openmymind.net](https://www.openmymind.net/) and [abc.xyz](https://abc.xyz/).
+- **Layout:** an engineering-blog front page (hero, latest notes, then areas → groups → note cards) and a single narrow reading column for each note; each note has the flower (link home), a "← Notes" link, an "On this page" list (to the right of the text on wide screens), a thin reading-progress bar and a plain footer. Style reference: [savee.com](https://savee.com/) (near-black `#0a0a0a` page, off-white ink, grey ramp, violet accent) with the flower on a black square as logo and favicon. Cover photos (Unsplash, credited under each) are small WebP files in `public/assets/aesthetic/`.
 - **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock), or pinned with `auto / light / dark`. All colours are tokens in `src/styles/tokens.css`; the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
 - **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.

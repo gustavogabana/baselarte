@@ -1,12 +1,17 @@
-import { NoteList } from "../components/layout/NoteList.tsx";
-import { BackLink } from "../components/layout/BackLink.tsx";
+import { AreaNav, NoteList } from "../components/layout/NoteList.tsx";
+import { Text } from "../components/ui/T.tsx";
 import { ui } from "../i18n/ui.ts";
 
 export function NotesIndexPage() {
   return (
-    <>
-      <BackLink href="/" label={ui.home} />
+    <div className="landing">
+      <div className="section-heading section-heading--bar">
+        <h1>
+          <Text value={ui.allNotes} />
+        </h1>
+        <AreaNav />
+      </div>
       <NoteList />
-    </>
+    </div>
   );
 }

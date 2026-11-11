@@ -1,67 +1,75 @@
-/* Design tokens. Every colour is a token here; the dark theme only redefines them. */
+/* Design tokens. Every colour is a token here; the dark theme only redefines them.
+   Palette after savee.com: a near-black (#0a0a0a) page, off-white (#fdfdfd) ink and a short grey
+   ramp, with one violet accent. */
 
 :root {
-  --page: #ffffff;
-  --page-faint: #f9f9f9;
-  --surface-strong: #f0f0f0;
-  --surface-hover: #f3f3f3;
+  --page: #fdfdfd;
+  --page-faint: #f6f6f6;
+  --surface-strong: #ececec;
+  --surface-hover: #f0f0f0;
+  --surface-raised: #ffffff;
 
-  --fg-strong: #000000;
-  --fg: #2e2e2e;
-  --fg-faint: #767676;
-  --fg-on-action: #ffffff;
+  --fg-strong: #0a0a0a;
+  --fg: #2a2a2a;
+  --fg-faint: #6b6b6b;
+  --fg-on-action: #fdfdfd;
 
-  --border: #00000020;
-  --border-faint: #0000000d;
-  --border-strong: #0000003d;
+  --border: #0a0a0a1f;
+  --border-faint: #0a0a0a0f;
+  --border-strong: #0a0a0a3d;
 
-  /* Links: ink-coloured, told apart by the underline (as on base-ui.com). */
-  --action: #000000;
-  --action-hover: #2e2e2e;
-  --action-active: #2e2e2e;
-  --action-surface: #f9f9f9;
-  --action-border: #0000003d;
-  --visited: #000000;
-  --focus-inner: #000000;
-  --focus-outer: #00000066;
+  --accent: #3e2dff;
+  --accent-soft: #3e2dff14;
 
-  /* Names kept for the note stylesheets: all neutral now */
-  --brand: #000000;
-  --brand-fg: #000000;
-  --brand-surface: #f9f9f9;
-  --brand-border: #00000033;
+  /* Links: ink-coloured, told apart by the underline. */
+  --action: #0a0a0a;
+  --action-hover: #3e2dff;
+  --action-active: #3e2dff;
+  --action-surface: #f6f6f6;
+  --action-border: #0a0a0a3d;
+  --visited: #0a0a0a;
+  --focus-inner: #3e2dff;
+  --focus-outer: #3e2dff66;
 
-  --success-fg: #00781e;
-  --success-surface: #f2fbf6;
-  --success-border: #cceeda;
-  --warning-fg: #9e4b00;
-  --warning-surface: #fff9e8;
-  --warning-border: #fbeabf;
-  --critical-fg: #c00005;
-  --critical-surface: #fff5f5;
-  --critical-border: #fbd4d4;
+  /* Names kept for the note stylesheets */
+  --brand: #3e2dff;
+  --brand-fg: #0a0a0a;
+  --brand-surface: #f6f6f6;
+  --brand-border: #0a0a0a33;
+
+  --success-fg: #15803d;
+  --success-surface: #f0fdf4;
+  --success-border: #bbf7d0;
+  --warning-fg: #9a4a00;
+  --warning-surface: #fff8e6;
+  --warning-border: #f6e0a8;
+  --critical-fg: #b91c1c;
+  --critical-surface: #fef2f2;
+  --critical-border: #fecaca;
   --highlight-fg: #222222;
-  --highlight-surface: #f9f9f9;
-  --highlight-border: #00000026;
+  --highlight-surface: #f6f6f6;
+  --highlight-border: #0a0a0a26;
 
   /* Code blocks stay dark in both themes */
-  --code-bg: #131313;
-  --code-fg: #ededed;
-  --code-border: #2e2e2e;
+  --code-bg: #121214;
+  --code-fg: #ececec;
+  --code-border: #2c2c31;
   --code-faint: #8f8f8f;
-  --code-keyword: #9fbaf0;
+  --code-keyword: #caafff;
   --code-string: #7fdca4;
   --code-number: #ffcc6a;
   --code-attr: #6bc1ff;
 
-  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --mono: ui-monospace, Menlo, Consolas, monospace;
+  --sans: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 
   --content-max: 44rem;
-  --page-left: max(var(--gutter), 6vw);
+  --site-max: 72rem;
+  --header-height: 60px;
   --gutter: clamp(16px, 4vw, 32px);
-  --radius: 4px;
-  --radius-lg: 6px;
+  --page-left: max(var(--gutter), 6vw);
+  --radius: 6px;
+  --radius-lg: 12px;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
@@ -80,49 +88,53 @@
 }
 
 [data-theme="dark"] {
-  --page: #0c0c0c;
-  --page-faint: #131313;
-  --surface-strong: #1f1f1f;
-  --surface-hover: #1a1a1a;
+  --page: #0a0a0a;
+  --page-faint: #121212;
+  --surface-strong: #202020;
+  --surface-hover: #181818;
+  --surface-raised: #141414;
 
-  --fg-strong: #ffffff;
-  --fg: #e0e0e0;
-  --fg-faint: #a3a3a3;
-  --fg-on-action: #0c0c0c;
+  --fg-strong: #fdfdfd;
+  --fg: #c4c4c4;
+  --fg-faint: #8c8c8c;
+  --fg-on-action: #0a0a0a;
 
-  --border: #ffffff24;
-  --border-faint: #ffffff0f;
-  --border-strong: #ffffff52;
+  --border: #fdfdfd1f;
+  --border-faint: #fdfdfd0f;
+  --border-strong: #fdfdfd40;
 
-  --action: #ffffff;
-  --action-hover: #d4d4d4;
-  --action-active: #d4d4d4;
-  --action-surface: #131313;
-  --action-border: #ffffff3d;
-  --visited: #ffffff;
-  --focus-inner: #ffffff;
-  --focus-outer: #ffffff66;
+  --accent: #caafff;
+  --accent-soft: #caafff1a;
 
-  --brand: #ffffff;
-  --brand-fg: #ffffff;
-  --brand-surface: #131313;
-  --brand-border: #ffffff33;
+  --action: #fdfdfd;
+  --action-hover: #caafff;
+  --action-active: #caafff;
+  --action-surface: #121212;
+  --action-border: #fdfdfd3d;
+  --visited: #fdfdfd;
+  --focus-inner: #caafff;
+  --focus-outer: #caafff66;
 
-  --success-fg: #00ae4e;
-  --success-surface: #042a15;
-  --success-border: #054220;
-  --warning-fg: #fda219;
-  --warning-surface: #2e1b06;
-  --warning-border: #542800;
-  --critical-fg: #f9381e;
-  --critical-surface: #370b06;
-  --critical-border: #62170d;
+  --brand: #caafff;
+  --brand-fg: #fdfdfd;
+  --brand-surface: #121212;
+  --brand-border: #fdfdfd33;
+
+  --success-fg: #4ade80;
+  --success-surface: #07210f;
+  --success-border: #0d4021;
+  --warning-fg: #fbbf24;
+  --warning-surface: #251a05;
+  --warning-border: #4a3410;
+  --critical-fg: #f87171;
+  --critical-surface: #2a0b0b;
+  --critical-border: #5a1a1a;
   --highlight-fg: #e0e0e0;
-  --highlight-surface: #131313;
-  --highlight-border: #ffffff26;
+  --highlight-surface: #121212;
+  --highlight-border: #fdfdfd26;
 
-  --code-bg: #131313;
-  --code-border: #2e2e2e;
+  --code-bg: #121214;
+  --code-border: #2c2c31;
 
   color-scheme: dark;
 }

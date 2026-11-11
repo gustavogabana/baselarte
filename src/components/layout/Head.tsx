@@ -64,8 +64,8 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=5" type="image/svg+xml" />
-      <link rel="icon" href="/favicon.ico?v=5" sizes="any" />
+      <link rel="icon" href="/favicon.svg?v=6" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.ico?v=6" sizes="any" />
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
       <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />

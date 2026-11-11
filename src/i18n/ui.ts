@@ -21,6 +21,17 @@ export const ui = {
   themeDark: { en: "dark", pt: "escuro" },
   language: { en: "Language", pt: "Idioma" },
   filesForMachines: { en: "Files for machines", pt: "Arquivos para máquinas" },
+  heroTitle: { en: "Engineering notes, written to be read.", pt: "Notas de engenharia, escritas para serem lidas." },
+  heroLede: {
+    en: "Short, practical references on the systems, cloud, security and AI we build with. Every note is bilingual and updated as we learn.",
+    pt: "Referências curtas e práticas sobre os sistemas, a nuvem, a segurança e a IA com que construímos. Cada nota é bilíngue e atualizada conforme aprendemos.",
+  },
+  latest: { en: "Latest", pt: "Recentes" },
+  latestLede: { en: "The most recently updated notes.", pt: "As notas atualizadas mais recentemente." },
+  allNotes: { en: "All notes", pt: "Todas as notas" },
+  readNote: { en: "Read", pt: "Ler" },
+  updatedOn: { en: "Updated", pt: "Atualizado em" },
+  photoBy: { en: "Photo", pt: "Foto" },
   quote: {
     en: "A computer can never be held accountable, therefore a computer must never make a management decision.",
     pt: "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão.",

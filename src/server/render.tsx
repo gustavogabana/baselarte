@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server";
 import { Document } from "../components/layout/Document.tsx";
 import type { PageAssets } from "../components/layout/Head.tsx";
-import { catalog } from "../notes/catalog.ts";
+import { allGroups } from "../notes/catalog.ts";
 import { getNote, notePath } from "../notes/registry.ts";
 import { absoluteUrl } from "../site.ts";
 import { llmsIntro } from "./llms-intro.ts";
@@ -33,7 +33,7 @@ function sitemap(pages: Page[]): string {
 
 /** llms.txt: a plain-text map of the site for language models (https://llmstxt.org). */
 function llmsTxt(): string {
-  const noteLines = catalog.flatMap((group) =>
+  const noteLines = allGroups.flatMap((group) =>
     group.notes.map((slug) => {
       const note = getNote(slug);
       return `- [${note.seo.title.en}](${absoluteUrl(notePath(slug))}): ${note.summary}`;
