@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -620,9 +620,7 @@ export function proxy(request: NextRequest) {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="O que o HTTPS protege, e o que ele NÃO protege?" en="What does HTTPS protect, and what does it NOT protect?" />, <T pt="Protege o transporte (confidencialidade, integridade, autenticidade); não protege contra SQL injection, XSS ou entrada não validada." en="It protects the transport (confidentiality, integrity, authenticity); it does not protect against SQL injection, XSS or unvalidated input." />],
             [<T pt="Qual cabeçalho é a defesa mais forte do navegador contra XSS?" en="Which header is the browser's strongest defence against XSS?" />, <T pt="Content-Security-Policy." en="Content-Security-Policy." />],
             [<T pt={<>Por que <code>SameSite=None</code> num cookie de autenticação é um sinal de alerta?</>} en={<>Why is <code>SameSite=None</code> on an authentication cookie a red flag?</>} />, <T pt="Porque o cookie passa a viajar em requisições de QUALQUER origem, abrindo a porta para CSRF." en="Because the cookie starts travelling on requests from ANY origin, opening the door to CSRF." />],
@@ -630,8 +628,7 @@ export function proxy(request: NextRequest) {
             [<T pt="Por que o access token deveria ter vida curta?" en="Why should the access token be short-lived?" />, <T pt="Porque não dá para revogá-lo antes da hora; uma vida curta limita o estrago de um vazamento." en="Because it cannot be revoked early; a short life limits the damage of a leak." />],
             [<T pt="O que diferencia prompt injection direta de indireta?" en="What tells direct and indirect prompt injection apart?" />, <T pt="Direta: o usuário escreve a instrução maliciosa. Indireta: ela está escondida em algo que o agente lê (e-mail, página, ferramenta)." en="Direct: the user types the malicious instruction. Indirect: it is hidden in something the agent reads (email, page, tool)." />],
             [<T pt="Por que um bom RAG não resolve prompt injection?" en="Why doesn't a good RAG fix prompt injection?" />, <T pt="Porque aterra o modelo em dados melhores, mas não o protege de instruções hostis escondidas nesses mesmos dados." en="Because it grounds the model in better data, but does not protect it from hostile instructions hidden in that same data." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

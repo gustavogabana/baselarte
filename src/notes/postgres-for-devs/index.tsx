@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -692,9 +692,7 @@ host    all       all     0.0.0.0/0                 reject`} />
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Qual a diferença entre um database e um schema?" en="What is the difference between a database and a schema?" />, <T pt="Database é isolado (não dá para fazer JOIN entre dois); schema é um namespace DENTRO de um database." en="A database is isolated (you cannot JOIN across two); a schema is a namespace INSIDE one database." />],
             [<T pt="Por que o Postgres pede senha às vezes e não pede outras?" en="Why does Postgres sometimes ask for a password and sometimes not?" />, <T pt="Depende do método no pg_hba.conf: peer/ident confia no usuário do SO; scram-sha-256 pede senha." en="It depends on the pg_hba.conf method: peer/ident trusts the OS user; scram-sha-256 asks for a password." />],
             [<T pt={"A role \"ana\" do Postgres precisa existir como usuário do Linux?"} en={"Does the Postgres role \"ana\" need to exist as a Linux user?"} />, <T pt="Não — são sistemas de identidade completamente separados." en="No — they are completely separate identity systems." />],
@@ -702,8 +700,7 @@ host    all       all     0.0.0.0/0                 reject`} />
             [<T pt="O que muda entre EXPLAIN e EXPLAIN ANALYZE?" en="What changes between EXPLAIN and EXPLAIN ANALYZE?" />, <T pt="EXPLAIN só mostra o plano estimado; EXPLAIN ANALYZE executa de verdade e mostra tempos reais." en="EXPLAIN only shows the estimated plan; EXPLAIN ANALYZE actually runs it and shows real timings." />],
             [<T pt="Por que UUID v4 pode ser ruim para performance de índice?" en="Why can UUID v4 be bad for index performance?" />, <T pt={"É totalmente aleatório, então as escritas se espalham pelo índice inteiro em vez de ficarem no \"final\"."} en={"It is fully random, so writes spread across the whole index instead of staying at the \"end\"."} />],
             [<T pt={"O que a regra 3-2-1 exige além de \"ter backup\"?"} en={"What does the 3-2-1 rule require beyond \"having a backup\"?"} />, <T pt="3 cópias, em 2 mídias diferentes, com 1 fora do local — e testar a restauração." en="3 copies, on 2 different media, with 1 kept off-site — and testing the restore." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

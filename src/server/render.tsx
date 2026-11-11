@@ -42,7 +42,6 @@ function llmsTxt(): string {
   return [
     llmsIntro,
     `- [Home](${absoluteUrl("/")}): landing page describing the company, its principles.`,
-    `- [Notes](${absoluteUrl("/notas/")}): index of study notes.`,
     ...noteLines,
     `- [Sitemap](${absoluteUrl("/sitemap.xml")})`,
     "",

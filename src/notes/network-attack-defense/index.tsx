@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -1066,9 +1066,7 @@ PostDown = iptables -D OUTPUT ! -o %i -m mark ! --mark $(wg show %i fwmark) -m a
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt={"Por que o TCP é \"com estado\" e o UDP não?"} en={"Why is TCP \"stateful\" and UDP is not?"} />, <T pt="TCP abre uma conexão com handshake e numera/reenvia bytes; UDP manda datagramas independentes, sem conexão." en="TCP opens a connection with a handshake and numbers/resends bytes; UDP sends independent datagrams, with no connection." />],
             [<T pt={"O que significa uma porta aparecer \"filtered\" no nmap?"} en={"What does a port showing \"filtered\" in nmap mean?"} />, <T pt="O pacote de teste não teve resposta nenhuma — geralmente um firewall descartando, em vez de recusar." en="The test packet got no reply at all — usually a firewall dropping it instead of refusing it." />],
             [<T pt={<>Qual a diferença entre <code>ssh -L</code> e <code>ssh -R</code>?</>} en={<>What is the difference between <code>ssh -L</code> and <code>ssh -R</code>?</>} />, <T pt={<><code>-L</code> leva uma porta sua até o lado de lá; <code>-R</code> leva uma porta de lá até o seu lado.</>} en={<><code>-L</code> carries a port of yours to the far side; <code>-R</code> carries a port from the far side to you.</>} />],
@@ -1077,8 +1075,7 @@ PostDown = iptables -D OUTPUT ! -o %i -m mark ! --mark $(wg show %i fwmark) -m a
             [<T pt={<>Dois contêineres no mesmo <code>docker-compose.yml</code> precisam de <code>-p</code> para se enxergar?</>} en={<>Do two containers in the same <code>docker-compose.yml</code> need <code>-p</code> to see each other?</>} />, <T pt={<>Não: na mesma rede Docker eles se enxergam direto pelo nome do serviço; <code>-p</code> é só para expor ao HOST.</>} en={<>No: on the same Docker network they see each other directly by service name; <code>-p</code> is only to expose to the HOST.</>} />],
             [<T pt="Que ferramentas requerem autorização explícita antes de usar?" en="Which tools require explicit authorization before use?" />, <T pt="Praticamente todas desta nota contra sistemas que não são seus: nmap, testadores de senha, frameworks de exploração." en="Practically all of this note's tools, against systems that are not yours: nmap, password testers, exploitation frameworks." />],
             [<T pt="Por que o ARP spoofing funciona sem explorar nenhum bug?" en="Why does ARP spoofing work without exploiting any bug?" />, <T pt="O protocolo ARP não tem autenticação: ele confia no último ARP reply recebido para cada IP." en="The ARP protocol has no authentication: it trusts the last ARP reply received for each IP." />],
-          ]}
-        />
+          ]} />
         <h3><T pt="Fontes recomendadas" en="Recommended sources" /></h3>
         <p><T pt="Os livros abaixo aprofundam cada ferramenta desta nota." en="The books below go deeper into each tool in this note." /></p>
       </Section>

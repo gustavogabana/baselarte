@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -1226,10 +1226,8 @@ reset                           # reinicializa o terminal se ele "quebrou"`} />
         <Callout icon="check"><T pt="Limpar o seu próprio histórico é privacidade e higiene. Apagar rastros em sistemas que não são seus, ou para esconder atividade de quem administra o ambiente, é outra coisa: em empresas o histórico e os logs costumam ser exigência de auditoria." en="Clearing your own history is privacy and hygiene. Erasing traces on systems that are not yours, or to hide activity from whoever administers the environment, is something else: in companies, history and logs are often an audit requirement." /></Callout>
       </Section>
       <Section id="exam" title={<T pt="Questões de prova e revisão" en="Exam questions and review" />}>
-        <p><T pt="Estas perguntas cobrem o que costuma cair em Linux Essentials, LPIC-1 e RHCSA. Tente responder sem olhar a coluna da direita." en="These questions cover what usually shows up in Linux Essentials, LPIC-1 and RHCSA. Try to answer without looking at the right-hand column." /></p>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <p><T pt="Estas perguntas cobrem o que costuma cair em Linux Essentials, LPIC-1 e RHCSA. Tente responder antes de ler a resposta abaixo de cada pergunta." en="These questions cover what usually shows up in Linux Essentials, LPIC-1 and RHCSA. Try to answer before reading the answer under each question." /></p>
+        <QA items={[
             [<T pt="O que é UID 0 e por que ele importa?" en="What is UID 0 and why does it matter?" />, <T pt="O superusuário. O kernel ignora as checagens de permissão de arquivos para ele. O que manda é o número, não o nome “root”." en="The superuser. The kernel skips file permission checks for it. The number matters, not the name “root”." />],
             [<T pt="Qual arquivo guarda os hashes das senhas e quem lê?" en="Which file stores the password hashes, and who can read it?" />, <T pt={<><code>/etc/shadow</code>; só root (o <code>/etc/passwd</code> é legível por todos e só tem um “x”).</>} en={<><code>/etc/shadow</code>; only root (<code>/etc/passwd</code> is world-readable and only has an “x”).</>} />],
             [<T pt={<>Traduza <code>chmod 640 f</code> e <code>-rwxr-x---</code>.</>} en={<>Translate <code>chmod 640 f</code> and <code>-rwxr-x---</code>.</>} />, <T pt={<>640 = dono rw-, grupo r--, outros ---. E <code>rwxr-x---</code> = 750.</>} en={<>640 = owner rw-, group r--, others ---. And <code>rwxr-x---</code> = 750.</>} />],
@@ -1249,8 +1247,7 @@ reset                           # reinicializa o terminal se ele "quebrou"`} />
             [<T pt={<><code>history -c</code> apaga o arquivo <code>~/.bash_history</code>?</>} en={<>Does <code>history -c</code> erase <code>~/.bash_history</code>?</>} />, <T pt={<>Não; só a memória. Combine com <code>history -w</code> ou esvazie o arquivo.</>} en={<>No; only memory. Combine with <code>history -w</code> or truncate the file.</>} />],
             [<T pt="Qual a diferença entre hard link e link simbólico?" en="What is the difference between a hard link and a symbolic link?" />, <T pt="O hard link é outro nome para o mesmo inode (não cruza partições, não vale para diretórios, sobrevive se o original for apagado). O symlink é um arquivo que guarda um caminho; cruza partições e quebra se o alvo some." en="A hard link is another name for the same inode (cannot cross partitions, not allowed for directories, survives deleting the original). A symlink is a file that stores a path; it can cross partitions and breaks if the target goes away." />],
             [<T pt="Como trocar um symlink que aponta para um diretório, e achar os quebrados?" en="How do you replace a symlink that points to a directory, and find broken ones?" />, <T pt={<><code>ln -sfn novo_alvo link</code> (o <code>-n</code> evita criar o link dentro do diretório). Quebrados: <code>find . -xtype l</code>.</>} en={<><code>ln -sfn new_target link</code> (the <code>-n</code> avoids creating the link inside the directory). Broken ones: <code>find . -xtype l</code>.</>} />],
-          ]}
-        />
+          ]} />
         <h3><T pt="Mapa de revisão em uma tabela" en="Review map in one table" /></h3>
         <Table
           head={[<T pt="Tema" en="Topic" />, <T pt="Comandos-chave" en="Key commands" />, <T pt="Arquivos-chave" en="Key files" />]}

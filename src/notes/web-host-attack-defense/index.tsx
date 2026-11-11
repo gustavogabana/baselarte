@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -298,9 +298,7 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Por que um pentest precisa de um contrato antes de começar?" en="Why does a pentest need a contract before it starts?" />, <T pt="Porque as mesmas técnicas, sem autorização por escrito e escopo definido, são crime em praticamente todo lugar." en="Because the same techniques, without written authorization and a defined scope, are a crime almost everywhere." />],
             [<T pt="Qual a diferença entre recon passivo e ativo?" en="What is the difference between passive and active recon?" />, <T pt="Passivo não toca o alvo (WHOIS, Shodan); ativo manda pacotes para ele (nmap)." en="Passive never touches the target (WHOIS, Shodan); active sends packets to it (nmap)." />],
             [<T pt="Por que o phishing é o vetor inicial mais comum, segundo os relatórios do setor?" en="Why is phishing the most common initial vector, per industry reports?" />, <T pt="Explora confiança humana, que é mais difícil de corrigir com uma atualização do que uma falha de software." en="It exploits human trust, which is harder to patch than a software flaw." />],
@@ -308,8 +306,7 @@ function Body() {
             [<T pt="Por que um shell reverso costuma passar por firewalls que bloqueiam entrada?" en="Why does a reverse shell usually get past firewalls that block inbound traffic?" />, <T pt="Porque é o ALVO que inicia a conexão de saída, não o atacante que tenta entrar." en="Because the TARGET initiates the outbound connection, not the attacker trying to get in." />],
             [<T pt="O que é movimento lateral?" en="What is lateral movement?" />, <T pt="Usar um host já comprometido como ponte para alcançar outras máquinas da mesma rede." en="Using an already-compromised host as a bridge to reach other machines on the same network." />],
             [<T pt="Cite dois controles que reduzem o risco de engenharia social sem depender só do usuário perceber." en="Name two controls that reduce social-engineering risk without relying solely on the user noticing." />, <T pt="MFA resistente a phishing e SPF/DKIM/DMARC no domínio (entre outros: segmentação, menor privilégio)." en="Phishing-resistant MFA and SPF/DKIM/DMARC on the domain (among others: segmentation, least privilege)." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

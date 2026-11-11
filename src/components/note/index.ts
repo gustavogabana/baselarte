@@ -3,6 +3,7 @@ export { Section } from "./Section.tsx";
 export { Callout } from "./Callout.tsx";
 export { Diagram } from "./Diagram.tsx";
 export { Table } from "./Table.tsx";
+export { QA } from "./QA.tsx";
 export { CodeBlock } from "./CodeBlock.tsx";
 export { Sources } from "./Sources.tsx";
 export { T } from "../ui/T.tsx";

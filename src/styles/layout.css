@@ -1,10 +1,10 @@
-/* Page chrome: the flower, one column, a footer */
+/* Page chrome: a full-width black/white frame on a 12-column grid, hairline rules, no ornament */
 
 .site-header,
 main,
 .site-footer {
   width: 100%;
-  max-width: calc(var(--content-max) + 2 * var(--gutter));
+  max-width: calc(var(--page-max) + 2 * var(--gutter));
   margin-left: auto;
   margin-right: auto;
   padding-left: var(--gutter);
@@ -13,8 +13,8 @@ main,
 
 main {
   flex: 1;
-  padding-top: 40px;
-  padding-bottom: 64px;
+  padding-top: 48px;
+  padding-bottom: 96px;
 }
 
 .site-header {
@@ -22,21 +22,57 @@ main {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
+  max-width: none;
+  padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  height: 64px;
+}
+
+/* Header and footer are black in both themes: they re-point the colour tokens for everything inside. */
+.site-header,
+.site-footer {
+  --page: #000000;
+  --fg-strong: #ffffff;
+  --fg: #e0e0e0;
+  --fg-faint: #a3a3a3;
+  --border: #ffffff3d;
+  --focus-inner: #ffffff;
+  background: #000000;
+  color: var(--fg-faint);
+}
+
+.site-header {
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px 28px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.header-nav > a {
+  color: var(--fg-strong);
+  text-decoration: none;
+}
+
+.header-nav > a:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
 }
 
 .header-tools {
   color: var(--fg-faint);
   font-size: 0.8125rem;
+  font-weight: 400;
 }
 
-/* The flower: white petals, outlined in the ink colour. */
+/* The flower: outline in the ink colour, filled with the page colour. */
 .logo-mark {
   display: block;
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   --petal: var(--page);
   --ink-line: var(--fg-strong);
 }
@@ -44,14 +80,14 @@ main {
 .logo-mark .petal {
   fill: var(--petal);
   stroke: var(--ink-line);
-  stroke-width: 0.7;
+  stroke-width: 0.9;
   stroke-linejoin: round;
 }
 
 .logo-mark .vein {
   fill: none;
   stroke: var(--ink-line);
-  stroke-width: 0.65;
+  stroke-width: 0.7;
   stroke-linecap: round;
 }
 
@@ -60,15 +96,33 @@ main {
 }
 
 .site-wordmark {
-  display: inline-block;
-  line-height: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--fg-strong);
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.site-wordmark:hover {
+  color: var(--fg-strong);
+}
+
+.site-header,
+.site-footer {
+  --accent-fg: #ff4d42;
 }
 
 .site-footer {
   margin-top: 0;
+  max-width: none;
   padding-top: 24px;
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
-  border-top: 1px solid var(--border);
+  padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  border-top: 1px solid #2a2a2a;
   color: var(--fg-faint);
   font-size: 0.875rem;
 }

@@ -1,14 +1,22 @@
-/* Home and notes index */
+/* Home and posts index: a typographic index on a 12-column grid */
+
+.landing {
+  display: block;
+}
 
 .pull-quote {
-  margin: 40px 0 56px;
+  margin: 16px 0 64px;
+  max-width: 44rem;
+  padding-left: 20px;
+  border-left: 4px solid var(--accent);
 }
 
 .pull-quote blockquote p {
   color: var(--fg-strong);
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -25,17 +33,116 @@
   color: var(--fg-faint);
 }
 
+.note-index {
+  border-top: 4px solid var(--fg-strong);
+}
+
+.index-group {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px var(--grid-gap);
+  padding: 20px 0 40px;
+  border-bottom: 1px solid var(--border);
+}
+
+@media (min-width: 800px) {
+  .index-group {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+
+  .index-group h2 {
+    grid-column: 1 / span 4;
+  }
+
+  .index-group ol {
+    grid-column: 5 / -1;
+  }
+}
+
 .note-index h2 {
-  margin: 32px 0 8px;
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  margin: 0;
   color: var(--fg-strong);
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.index-number {
+  flex: none;
+  min-width: 3.25rem;
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+.index-group ol {
+  list-style: none;
 }
 
 .note-index li {
-  padding: 3px 0;
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.note-index li:last-child {
+  border-bottom: 0;
+}
+
+.note-index li a {
+  display: flex;
+  gap: 16px;
+  align-items: baseline;
+  padding: 10px 0;
+  color: var(--fg-strong);
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.note-index li a:hover .index-number,
+.note-index li a:focus-visible .index-number {
+  color: var(--accent-fg);
+}
+
+.note-index li a:hover .index-title {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
 }
 
 .note-index li[hidden] {
   display: none;
+}
+
+/* Decoration (Unsplash photos in public/assets/decor, shown in grayscale). Easy to remove. */
+.landing-top {
+  display: grid;
+  gap: 32px var(--grid-gap);
+  margin-bottom: 64px;
+}
+
+.landing-top .pull-quote {
+  align-self: start;
+  margin-bottom: 0;
+}
+
+.home-art {
+  min-height: 14rem;
+  background: url("/assets/decor/d5.jpg") center / cover;
+  filter: grayscale(1) contrast(1.05);
+}
+
+@media (min-width: 900px) {
+  .landing-top {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
+    align-items: stretch;
+  }
+
+  .home-art {
+    min-height: 26rem;
+  }
 }

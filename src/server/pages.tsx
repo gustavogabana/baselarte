@@ -1,11 +1,10 @@
 import type { ReactElement } from "react";
 import type { PageHead } from "../components/layout/Head.tsx";
 import type { IconName } from "../components/ui/icons.tsx";
-import { ui } from "../i18n/ui.ts";
+import { site } from "../site.ts";
 import { HomePage } from "../pages/HomePage.tsx";
 import { NotFoundPage } from "../pages/NotFoundPage.tsx";
 import { NotePage } from "../pages/NotePage.tsx";
-import { NotesIndexPage } from "../pages/NotesIndexPage.tsx";
 import { notePath, notes } from "../notes/registry.ts";
 import type { Note } from "../notes/types.ts";
 import { websiteGraph, noteGraph } from "./structured-data.ts";
@@ -46,23 +45,9 @@ export function allPages(): Page[] {
     {
       path: "/",
       file: "index.html",
-      head: { path: "/", title: ui.notes, description: siteDescription, structuredData: websiteGraph() },
+      head: { path: "/", title: { en: site.name, pt: site.name }, description: siteDescription, structuredData: websiteGraph() },
       lastModified: newestNote,
       element: <HomePage />,
-    },
-    {
-      path: "/notas/",
-      file: "notas/index.html",
-      head: {
-        path: "/notas/",
-        title: ui.notes,
-        description: {
-          en: "Study notes: short, practical references on the tools and platforms we build with.",
-          pt: "Notas de estudo: referências curtas e práticas sobre as ferramentas e plataformas com que construímos.",
-        },
-      },
-      lastModified: newestNote,
-      element: <NotesIndexPage />,
     },
     ...[...notes.values()].map(notePage),
     {

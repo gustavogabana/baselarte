@@ -21,5 +21,14 @@ export function enhanceReading(): void {
       const scrolledPastHero = entry !== undefined && !entry.isIntersecting && entry.boundingClientRect.bottom < 0;
       backToTop.classList.toggle("is-visible", scrolledPastHero);
     }).observe(hero);
+
+    // The button floats over the page, so it steps aside while the footer is on screen
+    // (otherwise it covers the footer's links and switches).
+    const footer = document.querySelector(".site-footer");
+    if (footer) {
+      new IntersectionObserver(([entry]) => {
+        backToTop.classList.toggle("is-over-footer", entry !== undefined && entry.isIntersecting);
+      }).observe(footer);
+    }
   }
 }

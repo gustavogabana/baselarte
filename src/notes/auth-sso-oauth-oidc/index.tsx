@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -334,14 +334,11 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Qual é a diferença entre autenticação e autorização, e por que o OAuth 2.0 sozinho não serve para “fazer login”?" en="What is the difference between authentication and authorization, and why is plain OAuth 2.0 not meant for “logging in”?" />, <T pt="Autenticar prova quem você é; autorizar define o que você pode fazer. O OAuth entrega um access token (autorização), que não é uma prova padronizada de identidade; para isso existe o OIDC, com o ID token." en="Authenticating proves who you are; authorizing defines what you may do. OAuth delivers an access token (authorization), which is not a standardized proof of identity; that is what OIDC and the ID token are for." />],
             [<T pt="No fluxo “Entrar com Google”, onde ocorre a autenticação, onde ocorre a autorização e o que o app faz com o ID token?" en="In the “Sign in with Google” flow, where does authentication happen, where does authorization happen, and what does the app do with the ID token?" />, <T pt="A autenticação ocorre no Google (senha, MFA ou passkey); a autorização, na tela de consentimento dos escopos. O app valida o ID token e cria a própria sessão." en="Authentication happens at Google (password, MFA or passkey); authorization, at the scope consent screen. The app validates the ID token and creates its own session." />],
             [<T pt={<>Na trust policy da role que o GitHub Actions assume, o que <code>aud</code> e <code>sub</code> protegem, e o que acontece se o <code>sub</code> estiver aberto demais?</>} en={<>In the trust policy of the role GitHub Actions assumes, what do <code>aud</code> and <code>sub</code> protect, and what happens if <code>sub</code> is too open?</>} />, <T pt={<><code>aud</code> garante que o token foi feito para a AWS; <code>sub</code> garante repositório e branch/environment. Aberto demais, outros repositórios ou branches conseguem assumir a role.</>} en={<><code>aud</code> makes sure the token was meant for AWS; <code>sub</code> pins the repository and branch/environment. Too open, other repositories or branches can assume the role.</>} />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

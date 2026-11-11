@@ -25,3 +25,10 @@ export function getNote(slug: string): Note {
 export function notePath(slug: string): string {
   return `/notas/${slug}/`;
 }
+
+/** The catalog group a note is listed under (its category). */
+export function groupOf(slug: string) {
+  const group = catalog.find((candidate) => candidate.notes.includes(slug));
+  if (!group) throw new Error(`Note "${slug}" is not in any catalog group.`);
+  return group;
+}

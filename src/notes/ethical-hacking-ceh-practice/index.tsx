@@ -1,4 +1,4 @@
-import { Callout, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -105,15 +105,12 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="A CEH exige experiência prévia?" en="Does the CEH require prior experience?" />, <T pt="Não formalmente; o EC-Council recomenda dois anos de experiência e direciona quem não os tem a um curso introdutório." en="Not formally; the EC-Council recommends two years of experience and points those without it to an introductory course." />],
             [<T pt="Qual a diferença entre CEH e CEH Master?" en="What is the difference between CEH and CEH Master?" />, <T pt="CEH exige só o exame de conhecimento; CEH Master exige também passar no exame prático de 20 desafios." en="CEH requires only the knowledge exam; CEH Master also requires passing the 20-challenge practical exam." />],
             [<T pt="Por que praticar em TryHackMe/HTB antes de pagar por uma certificação?" en="Why practise on TryHackMe/HTB before paying for a certification?" />, <T pt="São gratuitos ou baratos, dão prática real e ajudam a identificar lacunas antes de investir num exame." en="They are free or cheap, give real practice and help identify gaps before investing in an exam." />],
             [<T pt="Qual certificação é mais prática: CEH ou OSCP?" en="Which certification is more hands-on: CEH or OSCP?" />, <T pt="OSCP: um exame prático de 24 horas contra máquinas reais, sem componente de múltipla escolha." en="OSCP: a 24-hour practical exam against real machines, with no multiple-choice component." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

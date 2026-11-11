@@ -20,14 +20,15 @@ body {
   flex-direction: column;
   background: var(--page);
   color: var(--fg);
-  font: 400 1rem/1.65 var(--sans);
+  font: 400 1.0625rem/1.6 var(--sans);
+  font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: var(--fg-strong);
-  color: var(--page);
+  background: var(--accent);
+  color: #ffffff;
 }
 
 a {
@@ -38,7 +39,7 @@ a {
 }
 
 a:hover {
-  color: var(--action-hover);
+  color: var(--accent-fg);
   text-decoration-color: currentColor;
 }
 
@@ -107,8 +108,10 @@ html:not(.js-enabled) .requires-js {
 /* A small label (kept under its old name). */
 .monospace-label {
   font-family: var(--sans);
-  font-size: 0.8125rem;
+  font-size: 0.75rem;
   line-height: 1.4;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .sr-only {
