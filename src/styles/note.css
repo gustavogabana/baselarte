@@ -127,7 +127,6 @@
   .reading-column > .side-nav {
     grid-area: side;
     position: sticky;
-    z-index: 0;
     top: 24px;
     align-self: start;
     width: auto;
@@ -214,9 +213,6 @@
 
 /* Related posts: a three-card grid under the post */
 .related {
-  position: relative;
-  z-index: 1;
-  background: var(--page);
   margin-top: 96px;
   padding-top: 16px;
   border-top: 4px solid var(--fg-strong);
