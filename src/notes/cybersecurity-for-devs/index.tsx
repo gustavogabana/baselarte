@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -355,9 +355,7 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Qual a diferença entre ameaça, vulnerabilidade e risco?" en="What is the difference between threat, vulnerability and risk?" />, <T pt="Ameaça é quem ou o que pode causar dano; vulnerabilidade é a fraqueza que permite; risco é a probabilidade vezes o impacto." en="Threat is who or what can cause harm; vulnerability is the weakness that allows it; risk is probability times impact." />],
             [<T pt="Para que serve a modelagem de ameaças e quando fazê-la?" en="What is threat modelling for and when should you do it?" />, <T pt="Achar falhas de projeto antes do código, percorrendo cada fluxo de dados com perguntas como as do STRIDE; quanto mais cedo, mais barato." en="Finding design flaws before the code, walking each data flow with questions like STRIDE's; the earlier, the cheaper." />],
             [<T pt="Qual a relação entre CVE, CWE e CVSS?" en="How do CVE, CWE and CVSS relate?" />, <T pt="CVE identifica uma vulnerabilidade específica, CWE a classe de fraqueza por trás dela e CVSS a gravidade de 0 a 10." en="CVE identifies one specific vulnerability, CWE the class of weakness behind it and CVSS the 0-to-10 severity." />],
@@ -365,8 +363,7 @@ function Body() {
             [<T pt="Por que um dev deve começar por AppSec?" en="Why should a developer start with AppSec?" />, <T pt="Porque reaproveita o que já sabe (código, testes, CI) e porque cada falha corrigida no projeto evita trabalho de red e de blue depois." en="Because it reuses what you already know (code, tests, CI) and because each flaw fixed in the design saves red and blue work later." />],
             [<T pt={"Por que \"supor a invasão\" é uma boa premissa de projeto?"} en={"Why is \"assume breach\" a good design premise?"} />, <T pt="Porque nenhuma prevenção é perfeita; segmentação, menor privilégio, logs e plano de resposta limitam o dano quando algo passa." en="Because no prevention is perfect; segmentation, least privilege, logs and a response plan limit the damage when something gets through." />],
             [<T pt="Quais três perguntas responder antes de testar algo?" en="Which three questions must you answer before testing anything?" />, <T pt="É meu? Tenho autorização por escrito? Qual é o escopo?" en="Is it mine? Do I have written authorisation? What is the scope?" />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

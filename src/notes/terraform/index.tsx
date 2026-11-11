@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -1129,9 +1129,7 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão (estilo Terraform Associate)" en="Review questions (Terraform Associate style)" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt={<>Qual a diferença entre <code>resource</code> e <code>data</code>?</>} en={<>Difference between <code>resource</code> and <code>data</code>?</>} />, <T pt={<><code>resource</code> cria e gerencia; <code>data</code> só lê algo existente.</>} en={<><code>resource</code> creates and manages; <code>data</code> only reads something existing.</>} />],
             [<T pt={<>O que o <code>terraform init</code> faz?</>} en={<>What does <code>terraform init</code> do?</>} />, <T pt="Baixa providers e módulos, prepara o backend e cria o lock file." en="Downloads providers and modules, sets up the backend and creates the lock file." />],
             [<T pt={<>Por que o <code>plan</code> mostra <code>-/+</code>?</>} en={<>Why does the <code>plan</code> show <code>-/+</code>?</>} />, <T pt="O recurso será destruído e recriado porque o argumento alterado não pode ser mudado no lugar." en="The resource will be destroyed and recreated because the changed argument cannot be updated in place." />],
@@ -1145,8 +1143,7 @@ function Body() {
             [<T pt={<>Para que serve o <code>.terraform.lock.hcl</code>?</>} en={<>What is <code>.terraform.lock.hcl</code> for?</>} />, <T pt="Fixa as versões exatas dos providers (com hashes) para todos usarem as mesmas; vai para o Git." en="Pins exact provider versions (with hashes) so everyone uses the same; commit it." />],
             [<T pt="Como usar duas regiões AWS no mesmo código?" en="How to use two AWS regions in the same code?" />, <T pt={<>Dois blocos <code>provider "aws"</code>, um com <code>alias</code>, e <code>provider = aws.alias</code> no recurso.</>} en={<>Two <code>provider "aws"</code> blocks, one with <code>alias</code>, and <code>provider = aws.alias</code> on the resource.</>} />],
             [<T pt="Workspaces ou pastas para dev/prod?" en="Workspaces or folders for dev/prod?" />, <T pt="Pastas/estados (e contas) separados: isolamento forte. Workspaces são para cópias efêmeras." en="Separate folders/states (and accounts): strong isolation. Workspaces are for ephemeral copies." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

@@ -226,8 +226,48 @@ pre:hover .copy-button,
 }
 
 .ds-table td:first-child {
-  white-space: nowrap;
+  min-width: 7rem;
 }
+
+/* Questions and answers: question on top, answer under it */
+.qa {
+  margin: 24px 0;
+  counter-reset: qa;
+  border-top: 1px solid var(--fg-strong);
+}
+
+.qa-item {
+  padding: 16px 0 20px;
+  border-bottom: 1px solid var(--border);
+  counter-increment: qa;
+}
+
+.qa-item dt {
+  display: flex;
+  gap: 16px;
+  color: var(--fg-strong);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.qa-item dt::before {
+  content: counter(qa, decimal-leading-zero);
+  flex: none;
+  min-width: 1.75rem;
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.8;
+}
+
+.qa-item dd {
+  margin: 10px 0 0 calc(1.75rem + 16px);
+  padding-left: 16px;
+  border-left: 2px solid var(--fg-strong);
+  color: var(--fg);
+}
+
 
 /* Alerts (Helios inline alert): info, warning, personal note */
 .callout {

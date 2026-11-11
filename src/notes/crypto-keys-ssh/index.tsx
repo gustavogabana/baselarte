@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Diagram, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Diagram, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -1135,15 +1135,12 @@ git config --global commit.gpgsign true`} />
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Por que o TLS e o SSH combinam criptografia assimétrica e simétrica?" en="Why do TLS and SSH combine asymmetric and symmetric cryptography?" />, <T pt="A assimétrica resolve combinar uma chave em público (e prova identidade), mas é lenta; a simétrica é rápida para o volume de dados. Usa-se a primeira para acordar a chave e a segunda para os dados." en="Asymmetric solves agreeing on a key in public (and proves identity) but is slow; symmetric is fast for the volume of data. The first agrees on the key, the second carries the data." />],
             [<T pt="Num login por chave no aparelho, o que trafega e o que nunca sai do aparelho?" en="In a device-key sign-in, what travels and what never leaves the device?" />, <T pt="Trafegam o desafio e a assinatura (e, no cadastro, a chave pública). A chave privada e a biometria nunca saem do aparelho; o servidor só verifica com a pública." en="The challenge and the signature travel (and, at enrollment, the public key). The private key and the biometric never leave the device; the server only verifies with the public key." />],
             [<T pt="Por que existe a sessão depois da assinatura, e qual o risco dela?" en="Why does the session exist after the signature, and what is its risk?" />, <T pt="Para não assinar a cada requisição. O risco: é um portador, e um cookie ou token roubado vale até expirar; por isso prazos curtos, revogação e step-up." en="To avoid signing on every request. The risk: it is a bearer, and a stolen cookie or token works until it expires; hence short lifetimes, revocation and step-up." />],
             [<T pt={<>O que <code>known_hosts</code> e <code>authorized_keys</code> provam, cada um?</>} en={<>What do <code>known_hosts</code> and <code>authorized_keys</code> each prove?</>} />, <T pt={<><code>known_hosts</code>: você confere que o servidor é o mesmo de antes. <code>authorized_keys</code>: o servidor confere que a sua chave está autorizada a entrar.</>} en={<><code>known_hosts</code>: you check that the server is the same as before. <code>authorized_keys</code>: the server checks that your key is allowed in.</>} />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[

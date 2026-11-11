@@ -1,4 +1,4 @@
-import { Callout, CodeBlock, Section, Sources, T, Table } from "../../components/note/index.ts";
+import { Callout, CodeBlock, Section, Sources, T, Table, QA } from "../../components/note/index.ts";
 import type { Note } from "../types.ts";
 
 export const note: Note = {
@@ -125,15 +125,12 @@ function Body() {
           ]}
         />
         <h3><T pt="Perguntas de revisão" en="Review questions" /></h3>
-        <Table
-          head={[<T pt="Pergunta" en="Question" />, <T pt="Resposta" en="Answer" />]}
-          rows={[
+        <QA items={[
             [<T pt="Por que o phishing é o vetor inicial mais comum, segundo os relatórios do setor?" en="Why is phishing the most common initial vector, per industry reports?" />, <T pt="Explora confiança humana, que é mais difícil de corrigir com uma atualização do que uma falha de software." en="It exploits human trust, which is harder to patch than a software flaw." />],
             [<T pt={"Qual princípio de Cialdini um e-mail de \"sua conta será bloqueada em 1 hora\" usa?"} en={"Which Cialdini principle does a \"your account will be locked in 1 hour\" email use?"} />, <T pt="Urgência/escassez: não dá tempo de verificar antes de agir." en="Urgency/scarcity: it gives no time to verify before acting." />],
             [<T pt="O que o DMARC adiciona que SPF e DKIM sozinhos não dão?" en="What does DMARC add that SPF and DKIM alone do not?" />, <T pt="Diz ao servidor de quem recebe o que fazer quando um dos dois falha, e manda relatórios de abuso." en="It tells the receiving server what to do when one of them fails, and sends abuse reports." />],
             [<T pt="Cite dois controles que reduzem o risco de engenharia social sem depender só do usuário perceber." en="Name two controls that reduce social-engineering risk without relying solely on the user noticing." />, <T pt="MFA resistente a phishing e SPF/DKIM/DMARC no domínio (entre outros: rate limit de MFA, políticas físicas)." en="Phishing-resistant MFA and SPF/DKIM/DMARC on the domain (among others: MFA rate limiting, physical policies)." />],
-          ]}
-        />
+          ]} />
       </Section>
       <Sources
         links={[
