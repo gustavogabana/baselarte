@@ -1,5 +1,5 @@
 /* Post pages: Uber-engineering-blog structure on a Swiss grid.
-   category + title + lede + facts, then body with the index beside it, sources, related posts. */
+   category + title + lede + facts, then body with the index beside it, sources. */
 
 .back-link {
   margin: 0 0 40px;
@@ -106,8 +106,7 @@
     grid-template-areas:
       ". back ."
       ". hero ."
-      ". body side"
-      "related related related";
+      ". body side";
     column-gap: var(--grid-gap);
   }
 
@@ -134,10 +133,6 @@
     max-height: calc(100vh - 48px);
     margin: 0;
     overflow-y: auto;
-  }
-
-  .reading-column > .related {
-    grid-area: related;
   }
 }
 
@@ -209,63 +204,6 @@
 .side-nav a:hover {
   color: var(--fg-strong);
   text-decoration: underline;
-}
-
-/* Related posts: a three-card grid under the post */
-.related {
-  margin-top: 96px;
-  padding-top: 16px;
-  border-top: 4px solid var(--fg-strong);
-}
-
-.related h2 {
-  margin: 0 0 24px;
-  color: var(--fg-strong);
-  font-size: 1.5rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
-}
-
-.related ul {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  gap: var(--grid-gap);
-}
-
-.related a {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  height: 100%;
-  padding-top: 12px;
-  border-top: 1px solid var(--fg-strong);
-  color: var(--fg-strong);
-  text-decoration: none;
-}
-
-.related a:hover .related-title {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-
-.related-category,
-.related-date {
-  color: var(--fg-faint);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
-
-.related-title {
-  font-size: 1.1875rem;
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
-
-.related-date {
-  margin-top: auto;
 }
 
 .not-found {

@@ -5,7 +5,6 @@ export const ui = {
   skipLink: { en: "Skip to content", pt: "Pular para o conteúdo" },
   home: { en: "Home", pt: "Início" },
   notes: { en: "Posts", pt: "Posts" },
-  relatedPosts: { en: "Related posts", pt: "Posts relacionados" },
   category: { en: "Category", pt: "Categoria" },
   published: { en: "Published", pt: "Publicado" },
   updated: { en: "Updated", pt: "Atualizado" },

@@ -1,5 +1,4 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
-import { RelatedPosts } from "../components/layout/RelatedPosts.tsx";
 import { formatDate } from "../components/layout/dates.ts";
 import { groupOf } from "../notes/registry.ts";
 import { site } from "../site.ts";
@@ -63,7 +62,6 @@ export function NotePage({ note }: { note: Note }) {
       <div className="post-body">
         <Body />
       </div>
-      <RelatedPosts slug={note.slug} />
       <DiagramViewer />
       <div id="scroll-progress" className="requires-js" aria-hidden="true" />
       <button type="button" className="back-to-top requires-js" data-back-to-top="">
