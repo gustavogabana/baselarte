@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "agent-skills",
-  title: { en: "Writing skills for AI agents: SKILL.md for Claude Code, Codex and open-source agents", pt: "Criar skills para agentes de IA: SKILL.md no Claude Code, Codex e agentes open-source" },
+  title: { en: "Agent skills: writing a SKILL.md", pt: "Skills para agentes: escrever um SKILL.md" },
   seo: {
     title: { en: "Writing skills for AI agents: SKILL.md for Claude Code, Codex and open-source agents", pt: "Criar skills para agentes de IA: SKILL.md no Claude Code, Codex e agentes open-source" },
     description: { en: "A simple guide to writing agent skills (SKILL.md): what a skill is and does, how to create one, where each agent looks for it, when to split a skill in two, skills by theme (review, security, code, requirements), safety, and a lab with a linter.", pt: "Um guia simples para escrever skills de agentes (SKILL.md): o que uma skill é e faz, como criar, onde cada agente a procura, quando dividir uma skill em duas, skills por tema (review, segurança, código, requisitos), segurança e um laboratório com linter." },

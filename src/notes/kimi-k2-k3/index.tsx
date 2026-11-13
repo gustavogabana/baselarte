@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "kimi-k2-k3",
-  title: { en: "Kimi K2 and K3: Moonshot AI’s open-weight models", pt: "Kimi K2 e K3: os modelos de pesos abertos da Moonshot AI" },
+  title: { en: "Kimi K2 and K3: open-weight models", pt: "Kimi K2 e K3: modelos de pesos abertos" },
   seo: {
     title: { en: "Kimi K2 and K3: Moonshot AI’s open-weight models", pt: "Kimi K2 e K3: os modelos de pesos abertos da Moonshot AI" },
     description: { en: "Kimi K2 and K3 explained: Mixture-of-Experts (why 2.8T parameters cost 104B per token), hybrid linear attention, 1M context, how to use them by app, API or open weights, cost with a worked example, benchmarks and license.", pt: "Kimi K2 e K3 explicados: Mixture-of-Experts (por que 2,8T de parâmetros custam 104B por token), atenção linear híbrida, contexto de 1M, como usar por app, API ou pesos abertos, custo com um exemplo, benchmarks e licença." },

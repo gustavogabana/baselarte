@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "rbac-abac",
-  title: { en: "Authorization: RBAC, ABAC and how to combine them", pt: "Autorização: RBAC, ABAC e como combinar os dois" },
+  title: { en: "Authorization: RBAC and ABAC", pt: "Autorização: RBAC e ABAC" },
   seo: {
     title: { en: "Authorization: RBAC, ABAC and how to combine them", pt: "Autorização: RBAC, ABAC e como combinar os dois" },
     description: { en: "What RBAC and ABAC are, when each one fits, how to model roles, permissions and policies in Postgres, a single can() function for the whole app, tests and the mistakes that cause broken access control.", pt: "O que são RBAC e ABAC, quando cada um serve, como modelar papéis, permissões e políticas no Postgres, uma única função can() para o app inteiro, testes e os erros que causam controle de acesso quebrado." },

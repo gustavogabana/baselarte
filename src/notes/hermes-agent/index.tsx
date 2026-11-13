@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "hermes-agent",
-  title: { en: "Hermes Agent: memory, skills, messaging apps and running it 24/7", pt: "Hermes Agent: memória, skills, apps de mensagem e como deixá-lo rodando 24/7" },
+  title: { en: "Hermes Agent: an agent running 24/7", pt: "Hermes Agent: um agente rodando 24/7" },
   seo: {
     title: { en: "Hermes Agent: memory, skills, messaging apps, guardrails and running it 24/7", pt: "Hermes Agent: memória, skills, apps de mensagem, guardrails e como deixá-lo rodando 24/7" },
     description: { en: "What Nous Research's Hermes Agent is and how it works: memory, self-created skills, Telegram, WhatsApp and Signal integration, guardrails, installation, supported LLMs and how to keep it running 24/7 on a Hostinger or AWS server.", pt: "O que é o Hermes Agent da Nous Research e como funciona: memória, skills criadas por ele mesmo, integração com Telegram, WhatsApp e Signal, guardrails, instalação, LLMs suportados e como mantê-lo rodando 24/7 num servidor da Hostinger ou da AWS." },

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "github-aws-oidc",
-  title: { en: "GitHub to AWS: OIDC, Docker, ECR and ECS", pt: "GitHub para AWS: OIDC, Docker, ECR e ECS" },
+  title: { en: "Deploying from GitHub to AWS with OIDC", pt: "Deploy do GitHub para a AWS com OIDC" },
   seo: {
     title: { en: "GitHub to AWS: OIDC, Docker, ECR and ECS", pt: "GitHub para AWS: OIDC, Docker, ECR e ECS" },
     description: { en: "Push to develop or main deploys to AWS without stored keys: OIDC provider, IAM roles, environments, a Docker image per environment, ECR and an ECS rolling update, step by step from the official docs.", pt: "Um push em develop ou main faz deploy na AWS sem chaves guardadas: provedor OIDC, roles IAM, environments, imagem Docker por ambiente, ECR e troca no ECS, passo a passo com base na documentação oficial." },

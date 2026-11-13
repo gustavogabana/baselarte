@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "multi-tenant-saas",
-  title: { en: "Multi-tenant SaaS: one app, many customers", pt: "Multi-tenant (SaaS): um app, vários clientes" },
+  title: { en: "Multi-tenant SaaS: one app, many customers", pt: "SaaS multi-tenant: um app, vários clientes" },
   seo: {
     title: { en: "Multi-tenant SaaS: one app, many customers", pt: "Multi-tenant (SaaS): um app, vários clientes" },
     description: { en: "What multi-tenancy is, the three data models (shared, schema, database per tenant), how to isolate tenants with tenant_id and Postgres row-level security, how to resolve the tenant per request, memberships, onboarding and the pitfalls.", pt: "O que é multi-tenancy, os três modelos de dados (compartilhado, schema e banco por tenant), como isolar tenants com tenant_id e row-level security do Postgres, como resolver o tenant por requisição, associações, onboarding e as armadilhas." },

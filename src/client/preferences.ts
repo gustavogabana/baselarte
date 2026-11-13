@@ -3,11 +3,11 @@ import { pick, type Language, type Localized } from "../i18n/localized.ts";
 import { resolveTheme } from "../preferences/settings.ts";
 import { language, themeMode } from "../preferences/store.ts";
 
-const CLOCK_CHECK_MS = 60_000;
+const systemDarkQuery = matchMedia("(prefers-color-scheme: dark)");
 const root = document.documentElement;
 
 function applyTheme(): void {
-  root.dataset.theme = resolveTheme(themeMode.get(), new Date().getHours());
+  root.dataset.theme = resolveTheme(themeMode.get(), systemDarkQuery.matches);
   // The mobile address bar follows the page colour.
   const pageColor = getComputedStyle(root).getPropertyValue("--page").trim();
   const themeColorMeta = document.querySelector<HTMLMetaElement>('meta[name="theme-color"]');
@@ -51,12 +51,12 @@ function applyLanguage(pageText: PageText | null): void {
   }
 }
 
-/** Applies theme and language now, whenever they change, and when the clock crosses 06:00 / 18:00. */
+/** Applies theme and language now, whenever they change, and when the system switches between light and dark. */
 export function keepPreferencesApplied(): void {
   const pageText = readPageText();
   applyTheme();
   applyLanguage(pageText);
   themeMode.subscribe(applyTheme);
   language.subscribe(() => applyLanguage(pageText));
-  setInterval(applyTheme, CLOCK_CHECK_MS);
+  systemDarkQuery.addEventListener("change", applyTheme);
 }

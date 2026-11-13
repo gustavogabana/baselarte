@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "auth-sso-oauth-oidc",
-  title: { en: "Sign-in and authentication: SSO, OAuth, OIDC and friends", pt: "Login e autenticação: SSO, OAuth, OIDC e companhia" },
+  title: { en: "Authentication: SSO, OAuth and OIDC", pt: "Autenticação: SSO, OAuth e OIDC" },
   seo: {
     title: { en: "Sign-in and authentication: SSO, OAuth, OIDC and friends", pt: "Login e autenticação: SSO, OAuth, OIDC e companhia" },
     description: { en: "Authentication vs. authorization, passkeys and MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP and Kerberos, a full \"Sign in with Google\" flow, and OIDC from GitHub Actions to AWS without stored keys.", pt: "Autenticação vs. autorização, passkeys e MFA, SSO, OAuth 2.0, OpenID Connect, SAML, LDAP e Kerberos, o fluxo completo de \"Entrar com Google\" e OIDC do GitHub Actions para a AWS sem chaves guardadas." },

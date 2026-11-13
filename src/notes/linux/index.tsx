@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "linux",
-  title: { en: "How Linux works", pt: "Como o Linux funciona" },
+  title: { en: "Linux: how the system works", pt: "Linux: como o sistema funciona" },
   seo: {
     title: { en: "How Linux works, visual guide", pt: "Como o Linux funciona, guia visual" },
     description: { en: "A visual, exam-style guide to how Linux works: users and root, files and permissions, the directory tree, commands, processes, networking, SSH, firewalls, terminal tools and clearing history.", pt: "Um guia visual, no estilo de prova, de como o Linux funciona: usuários e root, arquivos e permissões, árvore de diretórios, comandos, processos, redes, SSH, firewall, ferramentas de terminal e limpeza do histórico." },

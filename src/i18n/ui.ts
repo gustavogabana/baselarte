@@ -4,11 +4,15 @@ import type { Localized } from "./localized.ts";
 export const ui = {
   skipLink: { en: "Skip to content", pt: "Pular para o conteúdo" },
   home: { en: "Home", pt: "Início" },
-  notes: { en: "Posts", pt: "Posts" },
+  notes: { en: "Notes", pt: "Notas" },
+  studyNotes: { en: "Study notes", pt: "Notas de estudo" },
+  series: { en: "Series", pt: "Séries" },
+  number: { en: "No.", pt: "Nº" },
   category: { en: "Category", pt: "Categoria" },
   published: { en: "Published", pt: "Publicado" },
   updated: { en: "Updated", pt: "Atualizado" },
   author: { en: "Author", pt: "Autoria" },
+  format: { en: "Format", pt: "Formato" },
   index: { en: "Index", pt: "Índice" },
   backToTop: { en: "Top", pt: "Topo" },
   onThisPage: { en: "On this page", pt: "Nesta página" },
@@ -31,5 +35,6 @@ export const ui = {
     pt: "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão.",
   },
   quoteCitation: { en: "IBM internal training presentation, 1979", pt: "Apresentação interna de treinamento da IBM, 1979" },
+  photoBy: { en: "Photo:", pt: "Foto:" },
   notFoundBackHome: { en: "Back home", pt: "Voltar ao início" },
 } satisfies Record<string, Localized>;

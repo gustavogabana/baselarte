@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "harvard-cs50",
-  title: { en: "Harvard CS50: who it is for, what it teaches and how to take it", pt: "Harvard CS50: para quem serve, o que ensina e como cursar" },
+  title: { en: "Harvard CS50: the course, who it is for and how to take it", pt: "Harvard CS50: o curso, para quem serve e como fazer" },
   seo: {
     title: { en: "Harvard CS50: who it is for, what it teaches and how to take it", pt: "Harvard CS50: para quem serve, o que ensina e como cursar" },
     description: { en: "Harvard's CS50x explained: who it is for, the week-by-week syllabus (C, Python, SQL, web), the weekly rhythm with check50 and submit50, free and paid certificates, the CS50 duck and AI rules, and whether it still makes sense in the AI era.", pt: "O CS50x de Harvard explicado: para quem serve, o conteúdo semana a semana (C, Python, SQL, web), o ritmo semanal com check50 e submit50, certificados gratuito e pago, o pato do CS50 e as regras de IA, e se ainda faz sentido na era da IA." },

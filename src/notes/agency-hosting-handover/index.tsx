@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "agency-hosting-handover",
-  title: { en: "Agency hosting and client handover: Cloudflare, Netlify, Vercel and what to deliver", pt: "Hospedagem e entrega para agências: Cloudflare, Netlify, Vercel e o que entregar ao cliente" },
+  title: { en: "Client handover: hosting and what to deliver", pt: "Entrega ao cliente: hospedagem e o que entregar" },
   seo: {
     title: { en: "Agency hosting and client handover: Cloudflare, Netlify, Vercel and what to deliver", pt: "Hospedagem e entrega para agências: Cloudflare, Netlify, Vercel e o que entregar ao cliente" },
     description: { en: "How an agency building landing pages, company websites and small web projects picks a default stack and host per project type (Cloudflare Pages, Netlify, Vercel, GitHub Pages), runs previews and deploys, decides who owns the accounts, and what to hand over to the client after delivery: domain, code, access, DNS, README, analytics, privacy and a go-live checklist.", pt: "Como uma agência que faz landing pages, sites institucionais e pequenos projetos web escolhe stack e hospedagem padrão por tipo de projeto (Cloudflare Pages, Netlify, Vercel, GitHub Pages), trabalha com previews e deploys, decide de quem são as contas e o que entregar ao cliente depois do projeto: domínio, código, acessos, DNS, README, analytics, privacidade e um checklist de go-live." },

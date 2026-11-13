@@ -1,7 +1,10 @@
-import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
-import { groupOf } from "../notes/registry.ts";
-import { catalog } from "../notes/catalog.ts";
+import { groupOf, noteNumber, seriesNumber } from "../notes/registry.ts";
+import { TonedPhoto } from "../components/ui/PhotoImage.tsx";
+import { PhotoCredit } from "../components/ui/PhotoCredit.tsx";
+import { groupInk, inkStyle } from "../components/ui/inks.ts";
+import { groupPhoto } from "../components/ui/photos.ts";
+import { Arrow } from "../components/ui/Arrow.tsx";
 import { site } from "../site.ts";
 import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
 import { localizedAttribute } from "../i18n/attributes.ts";
@@ -11,28 +14,44 @@ import type { Note, TocGroup } from "../notes/types.ts";
 
 export function NotePage({ note }: { note: Note }) {
   const { Body } = note;
-  const groupIndex = catalog.findIndex((group) => group.id === groupOf(note.slug).id);
+  const group = groupOf(note.slug);
+  const photo = groupPhoto(group.id);
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
-    <article className={articleClass}>
-      <BackLink href="/" label={ui.notes} />
+    <article className={articleClass} style={inkStyle(groupInk(group.id))}>
+      <p className="back-link">
+        <a href={`/#series-${group.id}`}>
+          <Arrow direction="left" />
+          <span className="series-num">{seriesNumber(group.id)}</span>
+          <Text value={group.title} />
+        </a>
+      </p>
       <header className="hero" aria-labelledby="hero-title">
-        <p className="hero-meta">
-          <span className="hero-category">
-            <Text value={groupOf(note.slug).title} />
-          </span>
-          <span className="hero-kicker">
-            <Text value={note.kicker} />
-          </span>
-        </p>
         <h1 id="hero-title" className="hero-title">
           <Text value={note.heroTitle} />
         </h1>
         <p className="hero-lede">
           <Text value={note.heroLede} />
         </p>
-        <div className={`hero-art hero-art--${groupIndex % 5}`} aria-hidden="true" />
+        <figure className="hero-photo">
+          <TonedPhoto photo={photo} sizes="(min-width: 760px) 44rem, 100vw" />
+          <PhotoCredit photo={photo} />
+        </figure>
         <dl className="hero-facts">
+          <div>
+            <dt>
+              <Text value={ui.number} />
+            </dt>
+            <dd className="hero-facts__number">{noteNumber(note.slug)}</dd>
+          </div>
+          <div>
+            <dt>
+              <Text value={ui.format} />
+            </dt>
+            <dd>
+              <Text value={note.kicker} />
+            </dd>
+          </div>
           <div>
             <dt>
               <Text value={ui.author} />
@@ -68,7 +87,7 @@ export function NotePage({ note }: { note: Note }) {
       <DiagramViewer />
       <div id="scroll-progress" className="requires-js" aria-hidden="true" />
       <button type="button" className="back-to-top requires-js" data-back-to-top="">
-        <span aria-hidden="true">↑ </span>
+        <Arrow direction="up" />
         <Text value={ui.backToTop} />
       </button>
     </article>

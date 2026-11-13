@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "front-back-ecs-cloudflare",
-  title: { en: "Front and back on AWS: two Docker images behind one ALB and Cloudflare", pt: "Front e back na AWS: duas imagens Docker atrás de um ALB e da Cloudflare" },
+  title: { en: "Front and back end on ECS behind one ALB", pt: "Front e back no ECS atrás de um ALB" },
   seo: {
     title: { en: "Front end and back end on AWS ECS with a Cloudflare domain and origin certificate", pt: "Front-end e back-end no AWS ECS com domínio e certificado de origem da Cloudflare" },
     description: { en: "Step by step: a React front end (nginx) and a Node API as two Docker images on ECS Fargate, one ALB routing /api/* to the back end, the domain bought at Cloudflare and the Cloudflare origin certificate imported into ACM.", pt: "Passo a passo: um front-end React (nginx) e uma API Node como duas imagens Docker no ECS Fargate, um ALB que manda /api/* para o back-end, o domínio comprado na Cloudflare e o certificado de origem da Cloudflare importado no ACM." },

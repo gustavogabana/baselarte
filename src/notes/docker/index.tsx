@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "docker",
-  title: { en: "Docker: images, containers, Compose, networks and a smaller attack surface", pt: "Docker: imagens, contêineres, Compose, redes e menos superfície de ataque" },
+  title: { en: "Docker: images, containers and Compose", pt: "Docker: imagens, contêineres e Compose" },
   seo: {
     title: { en: "Docker: images, containers, Compose, networks and a smaller attack surface", pt: "Docker: imagens, contêineres, Compose, redes e menos superfície de ataque" },
     description: { en: "Docker from zero: images and containers, essential commands, Dockerfile, Ubuntu versus Alpine, multi-stage builds, reducing the attack surface, port mapping, networks, Compose, health checks, logs and a hands-on lab.", pt: "Docker do zero: imagens e contêineres, comandos essenciais, Dockerfile, Ubuntu versus Alpine, multi-stage build, redução da superfície de ataque, mapeamento de portas, redes, Compose, healthchecks, logs e um laboratório prático." },

@@ -51,8 +51,8 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Behaviour
 
-- **Layout:** one narrow column, system fonts, no cards, gradients or animations. Home is the IBM quote followed by the list of notes; each note has the flower (link home), a "← Notes" link, an "On this page" list (to the right of the text on wide screens), a thin reading-progress bar and a plain footer. Style references: [openmymind.net](https://www.openmymind.net/) and [abc.xyz](https://abc.xyz/).
-- **Theme:** automatic by default (dark from 18:00 to 06:00 by the visitor's clock), or pinned with `auto / light / dark`. All colours are tokens in `src/styles/tokens.css`; the dark theme only redefines them.
+- **Layout:** a numbered series of monographs. The notes are grouped into eight series, numbered 01 to 08 from foundations to practice, and each note has its number in the series (04.2). Three sober cover colours (petrol, clay, sand) mark the series in turn; black draws the details (text, rules, numbers, the flower's heart). Google Sans Flex for text and titles, Google Sans Code for code (Google Fonts). Home is the IBM quote beside the series cover (the magnolia, the name, a toned photograph), a strip of the eight series, then the index; each note opens with its series link and a strip of the series photo toned in its colour. Photos are from Unsplash (free licence), loaded from Unsplash's CDN, shown in greyscale over the series colour and credited under each one; the list is in `src/components/ui/photos.ts`. Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
+- **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens in `src/styles/tokens.css`; the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
 - **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.
 - **Preferences** are saved in `localStorage`.

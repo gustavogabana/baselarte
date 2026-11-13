@@ -1,4 +1,4 @@
-/* Page chrome: a full-width black/white frame on a 12-column grid, hairline rules, no ornament */
+/* Page chrome: a white bar over a hairline, a quiet footer under a black rule, square controls. */
 
 .site-header,
 main,
@@ -13,8 +13,8 @@ main,
 
 main {
   flex: 1;
-  padding-top: 48px;
-  padding-bottom: 96px;
+  padding-top: 40px;
+  padding-bottom: 128px;
 }
 
 .site-header {
@@ -23,86 +23,54 @@ main {
   justify-content: space-between;
   gap: 16px;
   max-width: none;
-  padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   height: 64px;
-}
-
-/* Header and footer are black in both themes: they re-point the colour tokens for everything inside. */
-.site-header,
-.site-footer {
-  --page: #000000;
-  --fg-strong: #ffffff;
-  --fg: #e0e0e0;
-  --fg-faint: #a3a3a3;
-  --border: #ffffff3d;
-  --focus-inner: #ffffff;
-  background: #000000;
-  color: var(--fg-faint);
-}
-
-.site-header {
-  border-bottom: 1px solid #2a2a2a;
+  padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  border-bottom: 1px solid var(--border);
+  background: var(--page);
 }
 
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 8px 28px;
+  gap: 8px 24px;
   font-size: 0.875rem;
-  font-weight: 500;
 }
 
-.header-nav > a {
-  color: var(--fg-strong);
-  text-decoration: none;
-}
-
-.header-nav > a:hover {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
-
-.header-tools {
-  color: var(--fg-faint);
-  font-size: 0.8125rem;
-  font-weight: 400;
-}
-
-/* The flower: outline in the ink colour, filled with the page colour. */
+/* The magnolia: clay petals with pale veins and a black heart. */
 .logo-mark {
   display: block;
   width: 28px;
   height: 28px;
-  --petal: var(--page);
-  --ink-line: var(--fg-strong);
 }
 
-.logo-mark .petal {
-  fill: var(--petal);
-  stroke: var(--ink-line);
-  stroke-width: 0.9;
-  stroke-linejoin: round;
+.logo-mark .petal,
+.cover__mark .petal {
+  fill: var(--clay);
 }
 
-.logo-mark .vein {
+.logo-mark .vein,
+.cover__mark .vein {
   fill: none;
-  stroke: var(--ink-line);
-  stroke-width: 0.7;
+  stroke: var(--page);
+  stroke-width: 0.8;
   stroke-linecap: round;
+  opacity: 0.7;
 }
 
-.logo-mark .heart {
-  fill: var(--ink-line);
+.logo-mark .heart,
+.cover__mark .heart {
+  fill: var(--black);
 }
 
 .site-wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   color: var(--fg-strong);
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: 1.1875rem;
+  font-weight: 650;
   letter-spacing: -0.02em;
+  line-height: 1;
   text-decoration: none;
 }
 
@@ -110,71 +78,128 @@ main {
   color: var(--fg-strong);
 }
 
-.site-header,
-.site-footer {
-  --accent-fg: #ff4d42;
-}
-
-.site-footer {
-  margin-top: 0;
-  max-width: none;
-  padding-top: 24px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
-  padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-top: 1px solid #2a2a2a;
-  color: var(--fg-faint);
-  font-size: 0.875rem;
-}
-
+/* Footer: the page ground under a black rule, quiet and small. */
 .site-footer {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 24px;
+  gap: 16px 24px;
+  max-width: none;
+  margin-top: 0;
+  padding-top: 28px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+  padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  border-top: 2px solid var(--black);
+  background: var(--page);
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+}
+
+.footer-mark .logo-mark {
+  width: 22px;
+  height: 22px;
 }
 
 .site-footer .footer-tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-}
-
-.theme-switch,
-.language-switch {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 4px 10px;
+  gap: 8px 12px;
 }
 
 .site-footer .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 4px 20px;
   margin-left: auto;
 }
 
-.site-footer a,
-.site-footer button,
-.header-tools button {
-  color: var(--fg-faint);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-underline-offset: 3px;
+.site-footer a {
+  color: var(--fg);
 }
 
-.site-footer a:hover,
-.site-footer button:hover,
-.site-footer button[aria-pressed="true"],
-.header-tools button:hover,
-.header-tools button[aria-pressed="true"] {
+/* Segmented controls: square, one hairline around the group; the chosen one is filled black. */
+.theme-switch,
+.language-switch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+}
+
+.theme-switch button,
+.language-switch button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
   color: var(--fg-strong);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: background-color 120ms ease, color 120ms ease, transform 120ms var(--ease-out);
 }
 
-.site-footer button[aria-pressed="true"],
-.header-tools button[aria-pressed="true"] {
-  text-decoration-color: currentColor;
+.theme-switch button + button,
+.language-switch button + button {
+  border-left: 1px solid var(--border);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-switch button:hover,
+  .language-switch button:hover {
+    background: var(--surface);
+    color: var(--fg-strong);
+  }
+}
+
+.theme-switch button:active,
+.language-switch button:active {
+  transform: scale(0.96);
+}
+
+.theme-switch button[aria-pressed="true"],
+.language-switch button[aria-pressed="true"] {
+  background: var(--black);
+  color: var(--page);
+}
+
+.theme-glyph {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+
+.theme-glyph .theme-glyph__fill {
+  fill: currentColor;
+}
+
+/* In the header the switch shows the glyphs only (the label stays for screen readers). */
+.header-tools .theme-switch button {
+  min-width: 36px;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.header-tools .theme-switch__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.site-footer .theme-glyph {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch button,
+  .language-switch button {
+    transition: none;
+  }
 }
 
 /* The © in the footer (EasterEgg). */
@@ -187,11 +212,10 @@ main {
 .chorus {
   width: min(32rem, calc(100vw - 2 * var(--gutter)));
   padding: 32px 28px 24px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--black);
   border-radius: var(--radius-lg);
   background: var(--page);
   color: var(--fg);
-  box-shadow: 0 24px 60px -24px #00000066;
 }
 
 .chorus::backdrop {
@@ -245,17 +269,17 @@ main {
 }
 
 .chorus__actions button {
-  padding: 10px 16px;
-  border: 1px solid var(--border-strong);
+  padding: 10px 20px;
+  border: 1px solid var(--black);
   border-radius: var(--radius);
-  color: var(--fg);
+  color: var(--fg-strong);
+  font-weight: 500;
 }
 
 .chorus__actions .chorus__primary {
-  border-color: var(--fg-strong);
-  background: var(--fg-strong);
+  border-color: var(--black);
+  background: var(--black);
   color: var(--page);
-  font-weight: 600;
 }
 
 /* The easter egg's music player: a small card at the bottom left, a bar on phones. */
@@ -269,10 +293,9 @@ main {
   gap: 12px;
   width: min(26rem, calc(100vw - 2 * var(--gutter)));
   padding: 10px 14px;
-  border: 1px solid var(--border-strong);
+  border: 1px solid var(--black);
   border-radius: var(--radius-lg);
   background: var(--page);
-  box-shadow: 0 8px 24px -16px #00000066;
   color: var(--fg);
   font-size: 0.8125rem;
 }

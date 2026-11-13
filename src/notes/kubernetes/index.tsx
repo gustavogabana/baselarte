@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "kubernetes",
-  title: { en: "Kubernetes from zero: concepts, security and AWS", pt: "Kubernetes do zero: conceitos, segurança e AWS" },
+  title: { en: "Kubernetes: concepts, security and AWS", pt: "Kubernetes: conceitos, segurança e AWS" },
   seo: {
     title: { en: "Kubernetes from zero: concepts, security and AWS", pt: "Kubernetes do zero: conceitos, segurança e AWS" },
     description: { en: "Kubernetes explained from zero: what it is and the problem it solves, the core objects (Pod, Deployment, Service), the YAML files and their security options (securityContext, Pod Security, RBAC, NetworkPolicy, Secrets), nine small hands-on labs with Docker and kind, and a secure production setup on AWS EKS.", pt: "Kubernetes explicado do zero: o que é e o problema que resolve, os objetos principais (Pod, Deployment, Service), os arquivos YAML e suas opções de segurança (securityContext, Pod Security, RBAC, NetworkPolicy, Secrets), nove laboratórios curtos com Docker e kind e uma produção segura na AWS com EKS." },

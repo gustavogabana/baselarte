@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "owasp-top-10",
-  title: { en: "OWASP Top 10 (2025): how apps break and what to do about it", pt: "OWASP Top 10 (2025): como os apps quebram e o que fazer" },
+  title: { en: "OWASP Top 10 (2025): flaws and fixes", pt: "OWASP Top 10 (2025): falhas e defesas" },
   seo: {
     title: { en: "OWASP Top 10 (2025): how apps break and how to protect yours", pt: "OWASP Top 10 (2025): como os apps quebram e como proteger o seu" },
     description: { en: "A practical guide to the OWASP Top 10:2025: each risk with an example of the flaw, the fix that matters and an action plan with checklists to protect a web application.", pt: "Um guia prático do OWASP Top 10:2025: cada risco com um exemplo da falha, a correção que importa e um plano de ação com listas de verificação para proteger uma aplicação web." },

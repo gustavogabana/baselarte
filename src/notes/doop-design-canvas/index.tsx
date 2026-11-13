@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "doop-design-canvas",
-  title: { en: "Doop: an open-source design canvas where humans and AI agents design together, and how to run it", pt: "Doop: uma tela de design de código aberto onde pessoas e agentes de IA desenham juntos, e como rodá-la" },
+  title: { en: "Doop: a design canvas for people and agents", pt: "Doop: tela de design para pessoas e agentes" },
   seo: {
     title: { en: "Doop: an open-source design canvas where humans and AI agents design together, and how to run it", pt: "Doop: uma tela de design de código aberto onde pessoas e agentes de IA desenham juntos, e como rodá-la" },
     description: { en: "What Doop is (an open-source, AGPL-3.0 alternative to Paper.design), how it is built, how to run it on your computer (Bun, Docker) or in a cloud (Railway, Fly, a VPS with Postgres), the environment variables that matter and how to connect Claude Code, Codex and other agents through its MCP server.", pt: "O que é o Doop (uma alternativa de código aberto, AGPL-3.0, ao Paper.design), como ele é construído, como rodá-lo no seu computador (Bun, Docker) ou numa nuvem (Railway, Fly, uma VPS com Postgres), as variáveis de ambiente que importam e como conectar Claude Code, Codex e outros agentes pelo servidor MCP." },

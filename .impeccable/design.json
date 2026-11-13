@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T22:45:00-03:00",
+  "title": "Design System: Baselarte",
+  "extensions": {
+    "colorMeta": {
+      "process-cyan": { "role": "primary", "displayName": "Process Cyan", "tonalRamp": ["#00283a", "#003f5b", "#005a82", "#0078ad", "#00a0dc", "#4dbde8", "#99d9f1", "#e5f6fc"] },
+      "process-magenta": { "role": "secondary", "displayName": "Process Magenta", "tonalRamp": ["#3a0020", "#5c0032", "#850048", "#b80064", "#e5007d", "#ee4da4", "#f599ca", "#fde6f2"] },
+      "process-yellow": { "role": "tertiary", "displayName": "Process Yellow", "tonalRamp": ["#3d3200", "#5c4b00", "#8a6a00", "#b89500", "#ffd200", "#ffdf4d", "#ffec99", "#fff8d6"] },
+      "key-black": { "role": "neutral", "displayName": "Key Black", "tonalRamp": ["#111111", "#262626", "#3d3d3d", "#5c5c5c", "#8a8a8a", "#bdbdbd", "#e6e6e3", "#f4f4f2"] },
+      "paper-white": { "role": "neutral", "displayName": "Paper White" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "The home page quote only." },
+      "headline": { "displayName": "Headline", "purpose": "Note titles." },
+      "title": { "displayName": "Title", "purpose": "Section and topic headings, under a 2px black rule." },
+      "body": { "displayName": "Body", "purpose": "The reading column." },
+      "label": { "displayName": "Label", "purpose": "Credits, facts, controls." },
+      "code": { "displayName": "Code", "purpose": "Code blocks and inline code." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.23, 1, 0.32, 1)", "purpose": "Ink bar slide on index rows, arrow nudge, press feedback." },
+      { "name": "row-slide", "value": "220ms", "purpose": "Duration of the index row ink bar." },
+      { "name": "press", "value": "120ms", "purpose": "Button and control press feedback (scale 0.97)." }
+    ],
+    "breakpoints": [
+      { "name": "stack", "value": "800px" },
+      { "name": "hero", "value": "900px" },
+      { "name": "overrun", "value": "1100px" },
+      { "name": "side-index", "value": "1360px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Outline Button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Back link and back-to-top: square, black outline, fills black on hover.",
+      "html": "<a class=\"ds-btn-outline\" href=\"#\"><svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" style=\"transform:rotate(180deg)\"><circle cx=\"3.5\" cy=\"12\" r=\"1.6\" fill=\"currentColor\"/><path d=\"M7 12h12M13 5.5c1.2 3.4 3.4 5.6 7 6.5-3.6.9-5.8 3.1-7 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg>Posts</a>",
+      "css": ".ds-btn-outline { display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 0 14px 0 10px; border: 1.5px solid #111; color: #111; font: 500 0.875rem 'Google Sans Flex', Arial, sans-serif; text-decoration: none; transition: background-color 120ms ease, color 120ms ease, transform 120ms cubic-bezier(0.23,1,0.32,1); } .ds-btn-outline:hover { background: #111; color: #fff; } .ds-btn-outline:active { transform: scale(0.97); } .ds-btn-outline:focus-visible { outline: 2px solid #111; outline-offset: 2px; }"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented-option-on",
+      "description": "Theme and language switches: one black outline, the chosen option filled black.",
+      "html": "<div class=\"ds-seg\"><button aria-pressed=\"true\">auto</button><button aria-pressed=\"false\">light</button><button aria-pressed=\"false\">dark</button></div>",
+      "css": ".ds-seg { display: inline-flex; border: 1.5px solid #111; } .ds-seg button { min-height: 32px; padding: 0 12px; border: 0; background: none; color: #111; font: 500 0.8125rem 'Google Sans Flex', Arial, sans-serif; cursor: pointer; } .ds-seg button + button { border-left: 1.5px solid #111; } .ds-seg button:hover { background: #ffd200; } .ds-seg button[aria-pressed=true] { background: #111; color: #fff; } .ds-seg button:active { transform: scale(0.96); }"
+    },
+    {
+      "name": "Topic Chip",
+      "kind": "chip",
+      "refersTo": "topic-chip",
+      "description": "The note's topic on its ink, above the title.",
+      "html": "<span class=\"ds-chip\">Cloud and infrastructure</span>",
+      "css": ".ds-chip { display: inline-block; padding: 3px 10px; background: #ffd200; color: #111; font: 700 0.875rem 'Google Sans Flex', Arial, sans-serif; }"
+    },
+    {
+      "name": "Index Row",
+      "kind": "custom",
+      "description": "A note in the index: the topic's ink slides in behind it on hover.",
+      "html": "<a class=\"ds-row\" href=\"#\"><span>How Linux works</span><svg viewBox=\"0 0 24 24\" width=\"22\" height=\"22\"><circle cx=\"3.5\" cy=\"12\" r=\"1.6\" fill=\"currentColor\"/><path d=\"M7 12h12M13 5.5c1.2 3.4 3.4 5.6 7 6.5-3.6.9-5.8 3.1-7 6.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"/></svg></a>",
+      "css": ".ds-row { position: relative; isolation: isolate; display: flex; justify-content: space-between; align-items: center; padding: 15px 4px; border-bottom: 1px solid #11111124; color: #111; font: 500 1.0625rem 'Google Sans Flex', Arial, sans-serif; text-decoration: none; } .ds-row::before { content: ''; position: absolute; inset: 0 -8px; z-index: -1; background: #00a0dc; transform: scaleX(0); transform-origin: left; transition: transform 220ms cubic-bezier(0.23,1,0.32,1); } .ds-row:hover::before, .ds-row:focus-visible::before { transform: scaleX(1); } .ds-row svg { transition: translate 220ms cubic-bezier(0.23,1,0.32,1); } .ds-row:hover svg { translate: 4px 0; }"
+    },
+    {
+      "name": "Ink Mark",
+      "kind": "custom",
+      "description": "A phrase set on a solid ink bar (the home quote).",
+      "html": "<p class=\"ds-quote\">never be held <mark class=\"ds-mark\">accountable</mark></p>",
+      "css": ".ds-quote { font: 700 2.5rem/1.02 'Google Sans Flex', Arial, sans-serif; letter-spacing: -0.018em; color: #111; margin: 0; } .ds-mark { padding: 0 0.12em; background: #e5007d; color: #fff; -webkit-box-decoration-break: clone; box-decoration-break: clone; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Process Ink Sheet",
+    "overview": "The site prints like a four-colour sheet: real photographs of engineering, architecture and the sea, with flat bars of cyan, magenta and yellow laid over and beside them, and black (the key plate) drawing every rule, outline and mark. The frame is loud and modular; the reading column inside it is calm, white and black.\n\nGoogle Sans Flex carries everything from the huge display quote to the running text; weight and optical size do the hierarchy, not a second family. Corners are square throughout. Colour never tints text runs; it sits in solid fields.",
+    "keyCharacteristics": [
+      "Three solid inks mark topics; black does details only.",
+      "Photographs are real, recent and credited; ink bars overrun them, opaque.",
+      "Square corners, black hairlines and 2px rules, no shadows.",
+      "Heavy, tight display type; regular, roomy reading type."
+    ],
+    "rules": [
+      { "name": "The Process Ink Rule", "body": "Cyan (#00a0dc), magenta (#e5007d) and yellow (#ffd200) are fields and bars, never text colours. Each note group takes the next ink in catalog order, so neighbouring topics never share one.", "section": "Colors" },
+      { "name": "The Key Plate Rule", "body": "Black (#111111) is the detail ink: text, 1px row rules, 2px section rules, the 6px rule that opens the index, button outlines, square marks. In the dark theme the key flips to near-white (#f2f2f0) on near-black (#121212); the three inks stay the same.", "section": "Colors" },
+      { "name": "The One Family Rule", "body": "Google Sans Flex for display, headings, body and labels; Google Sans Code only for code. Both from Google Fonts.", "section": "Typography" },
+      { "name": "The Overrun Rule", "body": "Ink bars may cross a photo's edge into the gutter or the neighbouring column on wide screens; below 1100px they stay inside the photo so nothing scrolls sideways.", "section": "Layout" }
+    ],
+    "dos": [
+      "Do give each new topic the next ink in order and a real engineering, architecture or sea photograph.",
+      "Do keep ink in fields and bars; keep the reading column black on white.",
+      "Do credit every photograph and load it from Unsplash's CDN."
+    ],
+    "donts": [
+      "Don't blend ink bars into photographs (multiply muddies the inks); keep them opaque.",
+      "Don't add rounded corners, shadows or gradients.",
+      "Don't use pastel tints of the inks or a fourth colour.",
+      "Don't put a label above a heading."
+    ]
+  }
+}

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "aws",
-  title: { en: "AWS", pt: "AWS" },
+  title: { en: "AWS: IAM, network, containers and data", pt: "AWS: IAM, rede, contêineres e dados" },
   seo: {
     title: { en: "AWS Notes — IAM, Organizations, VPC, ECS, RDS, S3 and more", pt: "Notas de AWS — IAM, Organizations, VPC, ECS, RDS, S3 e mais" },
     description: { en: "Interactive AWS guide based on the official documentation: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 and Route 53, with diagrams and simulators.", pt: "Guia interativo de AWS baseado na documentação oficial: IAM, Organizations, Identity Center, OIDC, VPC, ALB, ECR, ECS, RDS, S3 e Route 53, com diagramas e simuladores." },

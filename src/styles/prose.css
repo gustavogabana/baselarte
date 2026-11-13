@@ -11,22 +11,22 @@
 
 .content-section h2 {
   margin: 0 0 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--fg-strong);
+  padding-top: 18px;
+  border-top: 2px solid var(--black);
   color: var(--fg-strong);
-  font-size: clamp(1.6rem, 3vw, 2.125rem);
-  font-weight: 700;
+  font-size: clamp(1.625rem, 3vw, 2.125rem);
+  font-weight: 620;
   line-height: 1.15;
-  letter-spacing: -0.025em;
+  letter-spacing: -0.015em;
 }
 
 .ds-guide h3 {
   margin: 32px 0 10px;
   color: var(--fg-strong);
   font-size: 1.25rem;
-  font-weight: 600;
+  font-weight: 620;
   line-height: 1.3;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
 
 .content-section p {
@@ -51,6 +51,13 @@
   text-underline-offset: 3px;
 }
 
+.content-section p a:hover,
+.content-section li a:hover,
+.callout a:hover,
+.sources a:hover {
+  text-decoration-color: currentColor;
+}
+
 /* Inline code: a bordered chip. */
 code {
   font-size: 0.875em;
@@ -58,9 +65,8 @@ code {
 
 :not(pre) > code {
   padding: 0.1em 0.4em;
-  border: 1px solid var(--border);
   border-radius: 4px;
-  background: var(--page-faint);
+  background: var(--surface);
   color: var(--fg-strong);
   white-space: break-spaces;
   overflow-wrap: anywhere;
@@ -103,8 +109,8 @@ pre code {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 3px 8px;
-  border: 1px solid var(--code-border);
+  padding: 4px 10px;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--code-bg);
   color: var(--code-faint);
@@ -189,8 +195,8 @@ pre:hover .copy-button,
 }
 
 .ds-steps li::marker {
-  color: var(--fg-strong);
-  font-weight: 600;
+  color: var(--accent-fg);
+  font-weight: 500;
 }
 
 /* Tables */
@@ -215,10 +221,10 @@ pre:hover .copy-button,
 
 .ds-table th {
   background: var(--page-faint);
-  border-bottom: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--border);
   color: var(--fg-strong);
-  font-size: 0.8125rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .ds-table tbody tr:hover td {
@@ -233,7 +239,7 @@ pre:hover .copy-button,
 .qa {
   margin: 24px 0;
   counter-reset: qa;
-  border-top: 1px solid var(--fg-strong);
+  border-top: 1px solid var(--black);
 }
 
 .qa-item {
@@ -246,7 +252,7 @@ pre:hover .copy-button,
   display: flex;
   gap: 16px;
   color: var(--fg-strong);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.4;
 }
 
@@ -264,7 +270,7 @@ pre:hover .copy-button,
 .qa-item dd {
   margin: 10px 0 0 calc(1.75rem + 16px);
   padding-left: 16px;
-  border-left: 2px solid var(--accent);
+  border-left: 1px solid var(--black);
   color: var(--fg);
 }
 
@@ -273,8 +279,8 @@ pre:hover .copy-button,
 .callout {
   --callout-fg: var(--action);
   margin: 24px 0;
-  padding: 12px 16px;
-  border: 1px solid var(--action-border);
+  padding: 16px 20px;
+  border: 0;
   border-radius: var(--radius-lg);
   background: var(--action-surface);
   color: var(--fg);
@@ -309,7 +315,7 @@ pre:hover .copy-button,
 .sources {
   margin-top: 64px;
   padding-top: 16px;
-  border-top: 4px solid var(--accent);
+  border-top: 1px solid var(--black);
   font-size: 0.875rem;
   color: var(--fg-faint);
 }
@@ -328,8 +334,8 @@ pre:hover .copy-button,
    follow light and dark. */
 .fig {
   margin: 28px 0;
-  padding: 16px;
-  border: 1px solid var(--border);
+  padding: 20px;
+  border: 1px solid var(--border-faint);
   border-radius: var(--radius-lg);
   background: var(--glass-faint);
 }
@@ -549,8 +555,8 @@ pre:hover .copy-button,
 .diagram-viewer__bar button {
   min-width: 44px;
   min-height: 44px;
-  padding: 0 12px;
-  border: 1px solid var(--border);
+  padding: 0 16px;
+  border: 1px solid var(--black);
   border-radius: var(--radius);
   font-size: 1.125rem;
 }

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "sales-marketing",
-  title: { en: "Sales and marketing for services and SaaS: SPIN Selling, leads and closing", pt: "Vendas e marketing para serviços e SaaS: SPIN Selling, leads e fechamento" },
+  title: { en: "Sales and marketing: SPIN Selling and leads", pt: "Vendas e marketing: SPIN Selling e leads" },
   seo: {
     title: { en: "Marketing and sales for services and SaaS: SPIN Selling, finding leads and closing", pt: "Marketing e vendas de serviços e SaaS: SPIN Selling, achar leads e fechar negócio" },
     description: { en: "A research-based guide to selling services and software by understanding the customer: an analysis of SPIN Selling for sales calls, ways to find leads with their sources, a fit check, closing, and a funnel log, with expected results.", pt: "Um guia baseado em pesquisa para vender serviços e software entendendo o cliente: análise do SPIN Selling para calls de vendas, formas de achar leads com suas fontes, checagem de encaixe, fechamento e um registro do funil, com resultados esperados." },

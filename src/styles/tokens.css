@@ -1,78 +1,103 @@
-/* Design tokens. Every colour is a token here; the dark theme only redefines them. */
+/* Design tokens. A numbered series of monographs: three sober cover colours (petrol, clay, sand)
+   mark the series; black draws the details: text, rules, numbers, the flower's heart.
+   White ground. Every colour is a token here; the dark theme only redefines them. */
 
 :root {
+  --petrol: #2f5d66;
+  --clay: #a65e46;
+  --sand: #a89068;
+  --black: #161616;
+
+  /* Text set on each cover colour (contrast: 7.3, 4.9 and 5.9 to 1) */
+  --on-petrol: #ffffff;
+  --on-clay: #ffffff;
+  --on-sand: #161616;
+
+  /* The home cover: petrol in both themes (a deeper one on the dark ground) */
+  --cover: var(--petrol);
+  --on-cover: var(--on-petrol);
+
+  /* Light tints, for selection and quiet surfaces */
+  --petrol-tint: #e7eef0;
+  --clay-tint: #f5e9e4;
+  --sand-tint: #f1ece2;
+
   --page: #ffffff;
-  --page-faint: #f6f6f6;
-  --surface-strong: #eeeeee;
-  --surface-hover: #f3f3f3;
+  --page-faint: #f5f6f5;
+  --surface: #f5f6f5;
+  --surface-strong: #e7e9e8;
+  --surface-hover: #f5f6f5;
 
-  /* The one Swiss accent: poster red, used sparingly (labels, numbers, hover, rules). */
-  --accent: #e30613;
-  --accent-fg: #e30613;
+  --accent: var(--clay);
+  --accent-fg: #8f4c36;
 
-  --fg-strong: #000000;
-  --fg: #2e2e2e;
-  --fg-faint: #767676;
+  --fg-strong: var(--black);
+  --fg: #2a2e2f;
+  --fg-faint: #5d6567;
   --fg-on-action: #ffffff;
 
-  --border: #00000020;
-  --border-faint: #0000000d;
-  --border-strong: #0000003d;
+  --border: #16161624;
+  --border-faint: #16161612;
+  --border-strong: var(--black);
 
-  /* Links: ink-coloured, told apart by the underline (as on base-ui.com). */
-  --action: #000000;
-  --action-hover: #2e2e2e;
-  --action-active: #2e2e2e;
-  --action-surface: #f9f9f9;
-  --action-border: #0000003d;
-  --visited: #000000;
-  --focus-inner: #000000;
-  --focus-outer: #00000066;
+  /* Links are black; the series colour is in the underline. */
+  --action: var(--black);
+  --action-hover: var(--black);
+  --action-active: var(--black);
+  --action-surface: var(--surface);
+  --action-border: var(--black);
+  --visited: var(--black);
+  --focus-inner: var(--black);
+  --focus-outer: #16161666;
 
-  /* Names kept for the note stylesheets: all neutral now */
-  --brand: #000000;
-  --brand-fg: #000000;
-  --brand-surface: #f9f9f9;
-  --brand-border: #00000033;
+  /* Names kept for the note stylesheets */
+  --brand: var(--petrol);
+  --brand-fg: #24494f;
+  --brand-surface: var(--petrol-tint);
+  --brand-border: #2f5d6640;
 
-  --success-fg: #00781e;
-  --success-surface: #f2fbf6;
-  --success-border: #cceeda;
-  --warning-fg: #9e4b00;
-  --warning-surface: #fff9e8;
-  --warning-border: #fbeabf;
-  --critical-fg: #c00005;
-  --critical-surface: #fff5f5;
-  --critical-border: #fbd4d4;
-  --highlight-fg: #222222;
-  --highlight-surface: #f9f9f9;
-  --highlight-border: #00000026;
+  --success-fg: #24494f;
+  --success-surface: var(--petrol-tint);
+  --success-border: #b9ccd0;
+  --warning-fg: #6b5735;
+  --warning-surface: var(--sand-tint);
+  --warning-border: #ddd0b6;
+  --critical-fg: #8f4c36;
+  --critical-surface: var(--clay-tint);
+  --critical-border: #e3c4b8;
+  --highlight-fg: var(--black);
+  --highlight-surface: var(--surface);
+  --highlight-border: var(--border);
 
-  /* Code blocks stay dark in both themes */
-  --code-bg: #131313;
-  --code-fg: #ededed;
-  --code-border: #2e2e2e;
-  --code-faint: #8f8f8f;
-  --code-keyword: #9fbaf0;
-  --code-string: #7fdca4;
-  --code-number: #ffcc6a;
-  --code-attr: #6bc1ff;
+  /* Code: a light grey sheet, the three cover colours (darkened for contrast) for syntax */
+  --code-bg: #f5f6f5;
+  --code-fg: var(--black);
+  --code-border: var(--border);
+  --code-faint: #5d6567;
+  --code-keyword: #8f4c36;
+  --code-string: #24494f;
+  --code-number: #6b5735;
+  --code-attr: #24494f;
 
-  --sans: "Helvetica Neue", Helvetica, "Nimbus Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --mono: ui-monospace, Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --sans: "Google Sans Flex", "Google Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: "Google Sans Code", ui-monospace, Menlo, Consolas, monospace;
 
   --content-max: 44rem;
-  --page-max: 80rem;
+  --page-max: 76rem;
   --side-width: 15rem;
-  --grid-gap: clamp(16px, 3vw, 40px);
-  --page-left: max(var(--gutter), 6vw);
-  --gutter: clamp(16px, 4vw, 32px);
+  --grid-gap: clamp(16px, 3vw, 48px);
+  --gutter: clamp(16px, 4vw, 40px);
   --radius: 0;
   --radius-lg: 0;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
   --ink: var(--fg-strong);
+  /* The current series' colour (set per group by components/ui/inks.ts) */
+  --group-ink: var(--petrol);
+  --on-group-ink: var(--on-petrol);
   --muted: var(--fg-faint);
   --line: var(--border);
   --serif: var(--sans);
@@ -87,52 +112,55 @@
 }
 
 [data-theme="dark"] {
-  --page: #000000;
-  --page-faint: #0d0d0d;
-  --surface-strong: #1a1a1a;
-  --surface-hover: #141414;
+  /* The cover colours lift a step so they hold on a dark ground; text on them turns black. */
+  --petrol: #6b9fa8;
+  --clay: #cf8a71;
+  --sand: #c7b38c;
+  --black: #eef0ef;
 
-  --accent: #ff3b30;
-  --accent-fg: #ff4d42;
+  --on-petrol: #121516;
+  --on-clay: #121516;
+  --on-sand: #121516;
 
-  --fg-strong: #ffffff;
-  --fg: #e0e0e0;
-  --fg-faint: #a3a3a3;
-  --fg-on-action: #000000;
+  --cover: #24464d;
+  --on-cover: #eef0ef;
 
-  --border: #ffffff24;
-  --border-faint: #ffffff0f;
-  --border-strong: #ffffff52;
+  --petrol-tint: #1a2729;
+  --clay-tint: #2a1d18;
+  --sand-tint: #26221a;
 
-  --action: #ffffff;
-  --action-hover: #d4d4d4;
-  --action-active: #d4d4d4;
-  --action-surface: #0d0d0d;
-  --action-border: #ffffff3d;
-  --visited: #ffffff;
-  --focus-inner: #ffffff;
-  --focus-outer: #ffffff66;
+  --page: #121516;
+  --page-faint: #1a1e1f;
+  --surface: #1a1e1f;
+  --surface-strong: #262b2c;
+  --surface-hover: #1a1e1f;
 
-  --brand: #ffffff;
-  --brand-fg: #ffffff;
-  --brand-surface: #0d0d0d;
-  --brand-border: #ffffff33;
+  --accent-fg: #e3a58e;
 
-  --success-fg: #00ae4e;
-  --success-surface: #042a15;
-  --success-border: #054220;
-  --warning-fg: #fda219;
-  --warning-surface: #2e1b06;
-  --warning-border: #542800;
-  --critical-fg: #f9381e;
-  --critical-surface: #370b06;
-  --critical-border: #62170d;
-  --highlight-fg: #e0e0e0;
-  --highlight-surface: #0d0d0d;
-  --highlight-border: #ffffff26;
+  --fg: #d5dada;
+  --fg-faint: #9aa3a4;
+  --fg-on-action: #121516;
 
-  --code-bg: #0d0d0d;
-  --code-border: #2a2a2a;
+  --border: #eef0ef2b;
+  --border-faint: #eef0ef14;
+  --focus-outer: #eef0ef66;
+
+  --brand-fg: #8fbcc4;
+  --brand-border: #6b9fa840;
+
+  --success-fg: #8fbcc4;
+  --success-border: #2c4448;
+  --warning-fg: #d8c7a3;
+  --warning-border: #4a412f;
+  --critical-fg: #e3a58e;
+  --critical-border: #4e3329;
+
+  --code-bg: #1a1e1f;
+  --code-faint: #9aa3a4;
+  --code-keyword: #e3a58e;
+  --code-string: #8fbcc4;
+  --code-number: #d8c7a3;
+  --code-attr: #8fbcc4;
 
   color-scheme: dark;
 }

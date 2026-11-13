@@ -2,6 +2,10 @@ import type { Localized } from "../../i18n/localized.ts";
 import { bootScript } from "../../preferences/boot.ts";
 import { absoluteUrl, site } from "../../site.ts";
 
+/** Google Sans Flex (text and display, variable optical size and weight) and Google Sans Code, from Google Fonts. */
+const FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Google+Sans+Code:wght@400;500&display=swap";
+
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
   path: string;
@@ -38,7 +42,7 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
       <meta name="color-scheme" content="light dark" />
       <meta name="theme-color" content={site.themeColor} />
 
-      {/* Sets theme (by local time) and language before the first paint. */}
+      {/* Sets theme (from the system setting) and language before the first paint. */}
       <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       <script type="application/json" id="page-text" dangerouslySetInnerHTML={{ __html: JSON.stringify(pageText) }} />
 
@@ -64,10 +68,15 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=6" type="image/svg+xml" />
-      <link rel="icon" href="/favicon.ico?v=6" sizes="any" />
+      <link rel="icon" href="/favicon.svg?v=10" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.ico?v=7" sizes="any" />
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+      <link rel="stylesheet" href={FONTS_URL} />
+      {/* The photos come from Unsplash's CDN (src/components/ui/photos.ts). */}
+      <link rel="preconnect" href="https://images.unsplash.com" />
       <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />
       {assets.styles.map((href) => (
         <link key={href} rel="stylesheet" href={href} />

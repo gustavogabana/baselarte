@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "db-replicas-sharding",
-  title: { en: "Databases: reads, writes, replicas and sharding", pt: "Bancos de dados: leitura, escrita, réplicas e sharding" },
+  title: { en: "Scaling databases: replicas and sharding", pt: "Escala de banco: réplicas e sharding" },
   seo: {
     title: { en: "Databases: reads, writes, replicas and sharding (Postgres and AWS)", pt: "Bancos de dados: leitura, escrita, réplicas e sharding (Postgres e AWS)" },
     description: { en: "How to scale a database beyond one server: the WAL, read replicas, replication lag and read-your-writes, Multi-AZ, Aurora, RDS Proxy and sharding (Citus, Aurora Limitless), with a Postgres replication lab in Docker and a request traced end to end.", pt: "Como escalar um banco além de um servidor: o WAL, réplicas de leitura, lag de replicação e read-your-writes, Multi-AZ, Aurora, RDS Proxy e sharding (Citus, Aurora Limitless), com um laboratório de replicação do Postgres no Docker e uma requisição ponta a ponta." },

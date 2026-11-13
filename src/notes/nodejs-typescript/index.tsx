@@ -3,10 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "nodejs-typescript",
-  title: {
-    en: "Node.js and TypeScript end to end: the language, the runtime, the front end, tests and production",
-    pt: "Node.js e TypeScript de ponta a ponta: a linguagem, o runtime, o front, testes e produção",
-  },
+  title: { en: "Node.js and TypeScript: from the language to production", pt: "Node.js e TypeScript: da linguagem à produção" },
   seo: {
     title: {
       en: "Node.js and TypeScript end to end: event loop, streams, env, tests, CI/CD, observability and load testing",
@@ -340,7 +337,7 @@ await pipeline(createReadStream("big.txt"), upperCase, createWriteStream("out.tx
       </Section>
 
       <Section id="typescript" title={<T pt="TypeScript no back e no front" en="TypeScript on the back and the front" />}>
-        <p><T pt={<>TypeScript é JavaScript com tipos que <strong>somem na execução</strong>. Serve para o editor e o compilador acharem erros antes de rodar. Há três formas de executá-lo, e confundir as três é a origem de metade das dúvidas. A nota <a href="/notas/language-runtimes/">Java, Python e TypeScript na prática</a> detalha <code>tsconfig</code> e <code>npm</code>; aqui fica o que muda para quem vive nisso.</>} en={<>TypeScript is JavaScript with types that <strong>vanish at runtime</strong>. It lets the editor and the compiler find errors before running. There are three ways to execute it, and mixing them up causes half of the confusion. The note <a href="/notas/language-runtimes/">Java, Python and TypeScript in practice</a> covers <code>tsconfig</code> and <code>npm</code> in detail; here is what changes for someone who lives in it.</>} /></p>
+        <p><T pt={<>TypeScript é JavaScript com tipos que <strong>somem na execução</strong>. Serve para o editor e o compilador acharem erros antes de rodar. Há três formas de executá-lo, e confundir as três é a origem de metade das dúvidas. Aqui fica o que muda para quem vive nisso.</>} en={<>TypeScript is JavaScript with types that <strong>vanish at runtime</strong>. It lets the editor and the compiler find errors before running. There are three ways to execute it, and mixing them up causes half of the confusion. Here is what changes for someone who lives in it.</>} /></p>
         <Table
           head={[<T pt="Onde" en="Where" />, <T pt="Quem transforma TS em JS" en="Who turns TS into JS" />, <T pt="Quem confere os tipos" en="Who checks types" />]}
           rows={[

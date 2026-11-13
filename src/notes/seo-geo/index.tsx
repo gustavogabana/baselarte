@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "seo-geo",
-  title: { en: "SEO and AI search: meta tags, JSON-LD, robots.txt, llms.txt and getting indexed", pt: "SEO e busca por IA: meta tags, JSON-LD, robots.txt, llms.txt e como ser indexado" },
+  title: { en: "SEO and AI search: how to be found", pt: "SEO e busca por IA: como ser encontrado" },
   seo: {
     title: { en: "SEO and AI search: meta tags, JSON-LD, robots.txt, llms.txt and getting indexed", pt: "SEO e busca por IA: meta tags, JSON-LD, robots.txt, llms.txt e como ser indexado" },
     description: { en: "A walkthrough of a real SEO setup for a small site: head meta tags, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt for search and AI crawlers, llms.txt, noindex, IndexNow and a checklist to get a site indexed.", pt: "Um passo a passo de um setup real de SEO para um site pequeno: meta tags do head, Open Graph, hreflang, JSON-LD, sitemap.xml, robots.txt para buscadores e rastreadores de IA, llms.txt, noindex, IndexNow e uma lista para o site ser indexado." },

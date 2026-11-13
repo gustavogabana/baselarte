@@ -1,148 +1,316 @@
-/* Home and posts index: a typographic index on a 12-column grid */
+/* Home: the IBM quote beside the series cover, a strip of the eight series, then the index:
+   one block per series, numbered, with its colour and a small toned photograph. */
 
-.landing {
-  display: block;
-}
-
-.pull-quote {
-  margin: 16px 0 64px;
-  max-width: 44rem;
-  padding-left: 20px;
-  border-left: 4px solid var(--accent);
-}
-
-.pull-quote blockquote p {
-  color: var(--fg-strong);
-  font-size: clamp(1.25rem, 2.6vw, 1.75rem);
-  font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.02em;
-  text-wrap: balance;
-}
-
-.pull-quote blockquote p::before {
-  content: "“";
-}
-
-.pull-quote blockquote p::after {
-  content: "”";
-}
-
-.pull-quote figcaption {
-  margin-top: 12px;
-  color: var(--fg-faint);
-}
-
-.note-index {
-  border-top: 4px solid var(--fg-strong);
-}
-
-.index-group {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 8px var(--grid-gap);
-  padding: 20px 0 40px;
-  border-bottom: 1px solid var(--border);
-}
-
-@media (min-width: 800px) {
-  .index-group {
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
-
-  .index-group h2 {
-    grid-column: 1 / span 4;
-  }
-
-  .index-group ol {
-    grid-column: 5 / -1;
-  }
-}
-
-.note-index h2 {
-  display: flex;
-  gap: 16px;
-  align-items: baseline;
-  margin: 0;
-  color: var(--fg-strong);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.015em;
-}
-
-.index-number {
-  flex: none;
-  min-width: 3.25rem;
-  color: var(--fg-faint);
-  font-size: 0.8125rem;
-  font-weight: 400;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0;
-}
-
-.index-group ol {
-  list-style: none;
-}
-
-.note-index li {
-  border-bottom: 1px solid var(--border-faint);
-}
-
-.note-index li:last-child {
-  border-bottom: 0;
-}
-
-.note-index li a {
-  display: flex;
-  gap: 16px;
-  align-items: baseline;
-  padding: 10px 0;
-  color: var(--fg-strong);
-  font-size: 1.0625rem;
-  line-height: 1.35;
-  text-decoration: none;
-}
-
-.note-index li a:hover .index-number,
-.note-index li a:focus-visible .index-number {
-  color: var(--accent-fg);
-}
-
-.note-index li a:hover .index-title {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 4px;
-}
-
-.note-index li[hidden] {
-  display: none;
-}
-
-/* Decoration (Unsplash photos in public/assets/decor, shown in grayscale). Easy to remove. */
 .landing-top {
   display: grid;
-  gap: 32px var(--grid-gap);
-  margin-bottom: 64px;
-}
-
-.landing-top .pull-quote {
-  align-self: start;
-  margin-bottom: 0;
-}
-
-.home-art {
-  min-height: 14rem;
-  background: url("/assets/decor/d5.jpg") center / cover;
-  filter: grayscale(1) contrast(1.05);
+  gap: 48px var(--grid-gap);
+  margin: 16px 0 88px;
 }
 
 @media (min-width: 900px) {
   .landing-top {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 24rem);
-    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 25rem);
+    align-items: center;
+    margin-top: 40px;
+  }
+}
+
+.pull-quote blockquote p {
+  max-width: 19ch;
+  color: var(--fg-strong);
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  font-weight: 520;
+  font-variation-settings: "opsz" 144;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+}
+
+.pull-quote figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  color: var(--fg-faint);
+  font-size: 0.9375rem;
+}
+
+.pull-quote figcaption::before {
+  content: "";
+  flex: none;
+  width: 28px;
+  height: 2px;
+  background: var(--black);
+}
+
+/* The cover: a petrol sheet with the flower, the name, one sand-toned photograph and the counts. */
+.cover__sheet {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--cover);
+  color: var(--on-cover);
+}
+
+.cover__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.cover__mark {
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.cover__mark .petal {
+  fill: var(--on-cover);
+}
+
+.cover__mark .vein {
+  stroke: var(--cover);
+}
+
+.cover__mark .heart {
+  fill: var(--cover);
+}
+
+.cover h1 {
+  font-size: 1.625rem;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cover__subtitle {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.9375rem;
+  font-weight: 450;
+  letter-spacing: 0;
+}
+
+.cover__photo {
+  --tone: var(--sand);
+  aspect-ratio: 4 / 3;
+}
+
+@media (max-width: 899px) {
+  .cover__photo {
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.cover__facts {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The eight series at a glance */
+.series-nav {
+  margin: 0 0 72px;
+}
+
+.series-nav ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  column-gap: var(--grid-gap);
+  list-style: none;
+  border-top: 2px solid var(--black);
+}
+
+.series-nav li {
+  border-bottom: 1px solid var(--border);
+}
+
+.series-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: var(--fg-strong);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration-color: transparent;
+}
+
+.series-nav .series-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 1.625rem;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  font-size: 0.8125rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .series-nav a:hover {
+    text-decoration-color: var(--group-ink);
+  }
+}
+
+/* The index */
+.series {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px var(--grid-gap);
+  padding: 32px 0 64px;
+  border-top: 2px solid var(--black);
+  scroll-margin-top: 16px;
+}
+
+@media (min-width: 800px) {
+  .series {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   }
 
-  .home-art {
-    min-height: 26rem;
+  .series__head {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+}
+
+.series h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  color: var(--fg-strong);
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: 620;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+/* The series number on its colour block, like the number on a monograph's spine. */
+.series-num--large {
+  display: flex;
+  align-items: flex-end;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 6px 8px;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.series__count {
+  margin-top: 6px;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+}
+
+.series__photo {
+  aspect-ratio: 3 / 2;
+  margin-top: 20px;
+}
+
+@media (max-width: 799px) {
+  .series__photo {
+    aspect-ratio: 3 / 1;
+  }
+}
+
+.series__notes {
+  list-style: none;
+}
+
+.series__notes li {
+  border-bottom: 1px solid var(--border);
+}
+
+.series__notes li:first-child {
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 800px) {
+  .series__notes li:first-child {
+    border-top: 0;
+  }
+}
+
+/* Signature: hovering a note sets its number on the series colour and underlines the title. */
+.series__notes a {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+  padding: 15px 0;
+  color: var(--fg-strong);
+  font-size: 1.0625rem;
+  font-weight: 500;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+.note-num {
+  justify-self: start;
+  margin-left: -6px;
+  padding: 1px 6px;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+
+.note-title {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 160ms var(--ease-out);
+}
+
+.note-arrow {
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  color: var(--fg-faint);
+  transition: translate 200ms var(--ease-out), color 160ms ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .series__notes a:hover .note-num {
+    background: var(--group-ink);
+    color: var(--on-group-ink);
+  }
+
+  .series__notes a:hover .note-title {
+    text-decoration-color: var(--group-ink);
+  }
+
+  .series__notes a:hover .note-arrow {
+    translate: 4px 0;
+    color: var(--fg-strong);
+  }
+}
+
+.series__notes a:focus-visible .note-num {
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+}
+
+.series__notes a:active .note-arrow {
+  translate: 6px 0;
+}
+
+.series__notes li[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .note-num,
+  .note-title,
+  .note-arrow {
+    transition: none;
   }
 }

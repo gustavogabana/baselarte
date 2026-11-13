@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "ecs-todo-app",
-  title: { en: "ECS from zero: a to-do app behind ALB, Cloudflare and RDS", pt: "ECS do zero: um app de to-do atrás de ALB, Cloudflare e RDS" },
+  title: { en: "ECS in practice: an app with ALB, Cloudflare and RDS", pt: "ECS na prática: um app com ALB, Cloudflare e RDS" },
   seo: {
     title: { en: "ECS from zero: a to-do app behind ALB, Cloudflare and RDS", pt: "ECS do zero: um app de to-do atrás de ALB, Cloudflare e RDS" },
     description: { en: "Step by step, for someone who has only used EC2 by hand: a Node to-do API in Docker on ECS Fargate, behind an ALB with a Cloudflare origin certificate, TLS all the way to RDS, and automatic deploy from GitHub.", pt: "Passo a passo para quem só usou EC2 à mão: uma API de to-do em Node no Docker, no ECS Fargate, atrás de um ALB com certificado de origem da Cloudflare, TLS até o RDS e deploy automático pelo GitHub." },

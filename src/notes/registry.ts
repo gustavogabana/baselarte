@@ -32,3 +32,16 @@ export function groupOf(slug: string) {
   if (!group) throw new Error(`Note "${slug}" is not in any catalog group.`);
   return group;
 }
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+/** A series' number: its place in the catalog, "01" to "08". */
+export function seriesNumber(groupId: string): string {
+  return pad(catalog.findIndex((group) => group.id === groupId) + 1);
+}
+
+/** A note's number inside its series, e.g. "04.2" (the catalog order is the numbering). */
+export function noteNumber(slug: string): string {
+  const group = groupOf(slug);
+  return `${seriesNumber(group.id)}.${group.notes.indexOf(slug) + 1}`;
+}

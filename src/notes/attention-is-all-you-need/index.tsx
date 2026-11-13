@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "attention-is-all-you-need",
-  title: { en: "Attention Is All You Need, explained", pt: "Attention Is All You Need, explicado" },
+  title: { en: "Transformers: Attention Is All You Need explained", pt: "Transformers: Attention Is All You Need explicado" },
   seo: {
     title: { en: "Attention Is All You Need, explained", pt: "Attention Is All You Need, explicado" },
     description: { en: "A plain-language guide to the paper Attention Is All You Need: queries, keys and values, scaled dot-product and multi-head attention, positional encoding, the encoder-decoder architecture, masking, training, results and a runnable code example.", pt: "Um guia em linguagem simples do paper Attention Is All You Need: queries, keys e values, atenção por produto escalar e multi-cabeça, codificação posicional, arquitetura encoder-decoder, máscara, treino, resultados e um exemplo de código executável." },
