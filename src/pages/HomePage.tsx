@@ -1,8 +1,29 @@
 import { NoteList } from "../components/layout/NoteList.tsx";
-import { PhotoImage } from "../components/ui/PhotoImage.tsx";
-import { homePhotos } from "../components/ui/photos.ts";
-import { Text } from "../components/ui/T.tsx";
+import { PhotoCredit } from "../components/ui/PhotoCredit.tsx";
+import { InkedPhoto } from "../components/ui/PhotoImage.tsx";
+import { homePhoto } from "../components/ui/photos.ts";
+import { T, Text } from "../components/ui/T.tsx";
 import { ui } from "../i18n/ui.ts";
+
+/** The IBM quote, with two phrases set on ink bars (same words as ui.quote). */
+function Quote() {
+  return (
+    <T
+      en={
+        <>
+          A computer can never be held <mark className="ink-mark ink-mark--magenta">accountable</mark>, therefore a computer must never make a{" "}
+          <mark className="ink-mark ink-mark--cyan">management decision</mark>.
+        </>
+      }
+      pt={
+        <>
+          Um computador nunca pode ser <mark className="ink-mark ink-mark--magenta">responsabilizado</mark>; portanto, um computador nunca deve tomar uma{" "}
+          <mark className="ink-mark ink-mark--cyan">decisão de gestão</mark>.
+        </>
+      }
+    />
+  );
+}
 
 export function HomePage() {
   return (
@@ -12,18 +33,17 @@ export function HomePage() {
         <figure className="pull-quote">
           <blockquote>
             <p>
-              <Text value={ui.quote} />
+              <Quote />
             </p>
           </blockquote>
           <figcaption>
             <Text value={ui.quoteCitation} />
           </figcaption>
         </figure>
-        <div className="home-photos" aria-hidden="true">
-          {homePhotos.map((photo, index) => (
-            <PhotoImage key={photo.id} photo={photo} eager sizes={index === 0 ? "(min-width: 900px) 30vw, 60vw" : "(min-width: 900px) 18vw, 40vw"} />
-          ))}
-        </div>
+        <figure className="landing-photo">
+          <InkedPhoto photo={homePhoto} eager sizes="(min-width: 900px) 34vw, 100vw" />
+          <PhotoCredit photo={homePhoto} />
+        </figure>
       </div>
       <NoteList />
     </div>

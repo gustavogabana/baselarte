@@ -1,5 +1,6 @@
 // Photos from Unsplash (free Unsplash License), served from Unsplash's own image CDN.
-// One photo per note group; the home page shows a few of them together.
+// Engineering, architecture and the sea; recent, little-used shots, originals 2,200 to 8,000 px wide.
+// One photo per note group; the home page opens with its own.
 
 export interface Photo {
   /** The image id on images.unsplash.com. */
@@ -9,48 +10,51 @@ export interface Photo {
   photographer: string;
   /** The photo's page on unsplash.com (credit link). */
   page: string;
+  /** Where the subject sits, for object-position when the photo is cropped. */
+  focus?: string;
 }
 
 const photos = {
-  magnoliaTree: { id: "photo-1743199113602-5f2bf93ab450", ratio: 1.5, photographer: "Yoksel Zok", page: "https://unsplash.com/photos/BB-DnUHushA" },
-  magnoliaSky: { id: "photo-1744133538613-90030cb69780", ratio: 1.5, photographer: "Yoksel Zok", page: "https://unsplash.com/photos/aFFQ5zSbgRQ" },
-  magnoliaRain: { id: "photo-1742756565091-faae7d6d55b0", ratio: 1.5, photographer: "The Now Time", page: "https://unsplash.com/photos/kGBYrNhFa6M" },
-  leaves: { id: "photo-1750183000298-82115e4618dd", ratio: 1.5, photographer: "Ervin Erviansyah", page: "https://unsplash.com/photos/R1Agp_VZtnA" },
-  monstera: { id: "photo-1764136710793-b46bee18e744", ratio: 1.78, photographer: "Wallace Henry", page: "https://unsplash.com/photos/epx0jN-9YrQ" },
-  terracotta: { id: "photo-1785931638714-6d608e15b01f", ratio: 1.33, photographer: "Jon Tyson", page: "https://unsplash.com/photos/UAUH2PB0F00" },
-  pinkLines: { id: "photo-1532995603279-9cdbf5621671", ratio: 1.5, photographer: "Pawel Czerwinski", page: "https://unsplash.com/photos/NBsooaCHBMA" },
-  pinkDoorway: { id: "photo-1552001643-8739184439bd", ratio: 1.03, photographer: "Analuisa Gamboa", page: "https://unsplash.com/photos/iFfuC2ERMnM" },
-  pinkBuilding: { id: "photo-1523754639921-addf446ddae4", ratio: 1.4, photographer: "S O C I A L . C U T", page: "https://unsplash.com/photos/9b2KOWOP0OY" },
-  branchShadow: { id: "photo-1719836257725-cc6659c4100e", ratio: 0.8, photographer: "Pavel Moiseev", page: "https://unsplash.com/photos/0e0t-99EKKI" },
-  colorBuilding: { id: "photo-1731525545250-256103aa1bfc", ratio: 0.74, photographer: "Cheng Lin", page: "https://unsplash.com/photos/A1Y1KRh9qoU" },
+  oilRig: { id: "photo-1690508313456-bf8c851e8319", ratio: 0.56, photographer: "Gabriel Xavier", page: "https://unsplash.com/photos/XquCLVbTYLE", focus: "50% 40%" },
+  brutalistGrid: { id: "photo-1757921103458-de3a9bb5458c", ratio: 1.5, photographer: "Mike Hindle", page: "https://unsplash.com/photos/TfmDLT1KubY" },
+  trussTower: { id: "photo-1786361284806-220c3a3bdd37", ratio: 1.5, photographer: "Peter Beke", page: "https://unsplash.com/photos/n9aF2b7OOeo" },
+  cableStayed: { id: "photo-1741193866993-2ab1151a71f1", ratio: 1.78, photographer: "Joseph Corl", page: "https://unsplash.com/photos/pij4Q9-_kTg" },
+  tetrapodsMumbai: { id: "photo-1753804269190-0e9dc0ed132f", ratio: 1.5, photographer: "Zoshua Colah", page: "https://unsplash.com/photos/Jbj8__J3c-s" },
+  shipHelipad: { id: "photo-1765048639586-8f3c3ed36a04", ratio: 1.78, photographer: "J.f Manzanero", page: "https://unsplash.com/photos/W61mAfn1qIY", focus: "30% 50%" },
+  icebreaker: { id: "photo-1561623497-bd8a21f8b387", ratio: 1.33, photographer: "NOAA", page: "https://unsplash.com/photos/8yRhJJbdE0I" },
+  bridgeClouds: { id: "photo-1783539480077-2e74c0c0cde5", ratio: 0.75, photographer: "Jason Leung", page: "https://unsplash.com/photos/Ki8-O34lMCQ" },
+  brutalistSymmetry: { id: "photo-1760340769739-653d00200baf", ratio: 1.5, photographer: "Mike Hindle", page: "https://unsplash.com/photos/rEtsek-3HFk" },
+  wavesConcrete: { id: "photo-1757661328561-510bc1f8728b", ratio: 1.5, photographer: "Andrey Tikhonovskiy", page: "https://unsplash.com/photos/0esPZzJD0tQ" },
+  tetrapodsShore: { id: "photo-1778261594286-59b0b4b00d69", ratio: 1.5, photographer: "Nguyen Phuc Gia Thoai", page: "https://unsplash.com/photos/FWRQZBitoLM", focus: "70% 70%" },
+  bridgeTower: { id: "photo-1761682988648-9e45fbcc2f4e", ratio: 0.75, photographer: "Jason Leung", page: "https://unsplash.com/photos/AimqK7BHlj4" },
 } satisfies Record<string, Photo>;
 
-/** The photos beside the quote on the home page. */
-export const homePhotos: Photo[] = [photos.magnoliaTree, photos.branchShadow, photos.monstera];
+/** The photograph that opens the home page. */
+export const homePhoto: Photo = photos.oilRig;
 
 const byGroup: Record<string, Photo> = {
-  systems: photos.colorBuilding,
-  web: photos.pinkBuilding,
-  cloud: photos.magnoliaSky,
-  security: photos.pinkDoorway,
-  ai: photos.monstera,
-  biz: photos.terracotta,
-  agency: photos.pinkLines,
-  learning: photos.leaves,
-  mind: photos.branchShadow,
-  books: photos.magnoliaRain,
+  systems: photos.brutalistGrid,
+  web: photos.trussTower,
+  cloud: photos.cableStayed,
+  security: photos.tetrapodsMumbai,
+  ai: photos.shipHelipad,
+  biz: photos.icebreaker,
+  agency: photos.bridgeClouds,
+  learning: photos.brutalistSymmetry,
+  mind: photos.wavesConcrete,
+  books: photos.tetrapodsShore,
 };
 
 /** The photo for a note group (a fallback keeps a new group from breaking the build). */
 export function groupPhoto(groupId: string): Photo {
-  return byGroup[groupId] ?? photos.magnoliaTree;
+  return byGroup[groupId] ?? photos.bridgeTower;
 }
 
-const WIDTHS = [480, 800, 1200, 1600];
+const WIDTHS = [480, 800, 1200, 1800];
 
 /** A URL on Unsplash's CDN, resized there (and served as AVIF/WebP where the browser takes it). */
 export function photoUrl(photo: Photo, width: number): string {
-  return `https://images.unsplash.com/${photo.id}?auto=format&fit=max&q=75&w=${width}`;
+  return `https://images.unsplash.com/${photo.id}?auto=format&fit=max&q=72&w=${width}`;
 }
 
 export function photoSrcSet(photo: Photo): string {

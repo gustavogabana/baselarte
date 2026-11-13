@@ -9,6 +9,7 @@ export const ui = {
   published: { en: "Published", pt: "Publicado" },
   updated: { en: "Updated", pt: "Atualizado" },
   author: { en: "Author", pt: "Autoria" },
+  format: { en: "Format", pt: "Formato" },
   index: { en: "Index", pt: "Índice" },
   backToTop: { en: "Top", pt: "Topo" },
   onThisPage: { en: "On this page", pt: "Nesta página" },

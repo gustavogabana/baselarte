@@ -21,7 +21,21 @@ export function PhotoImage({ photo, sizes, className, eager = false }: PhotoImag
       height={Math.round(1200 / photo.ratio)}
       alt=""
       loading={eager ? "eager" : "lazy"}
+      fetchPriority={eager ? "high" : undefined}
       decoding="async"
+      style={photo.focus ? { objectPosition: photo.focus } : undefined}
     />
+  );
+}
+
+/** A photo with flat, opaque ink bars overrunning it. Decorative. */
+export function InkedPhoto({ photo, sizes, eager, className = "" }: PhotoImageProps) {
+  return (
+    <div className={`inked-photo ${className}`.trim()} aria-hidden="true">
+      <PhotoImage photo={photo} sizes={sizes} eager={eager} />
+      <span className="inked-photo__bar inked-photo__bar--a" />
+      <span className="inked-photo__bar inked-photo__bar--b" />
+      <span className="inked-photo__mark" />
+    </div>
   );
 }

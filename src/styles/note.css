@@ -1,5 +1,5 @@
-/* Post pages: category, a serif title, lede, the group's photo, facts,
-   then the body with the index beside it, sources. */
+/* Post pages: the topic on its ink bar, a heavy title, lede, the topic's photo overrun by
+   ink bars, facts, then the body with the index beside it, sources. */
 
 .back-link {
   margin: 0 0 32px;
@@ -13,15 +13,21 @@
   gap: 8px;
   min-height: 36px;
   padding: 0 14px 0 10px;
-  border: 1px solid var(--black);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--black);
   color: var(--fg-strong);
   text-decoration: none;
+  transition: background-color 120ms ease, color 120ms ease, transform 120ms var(--ease-out);
 }
 
-.back-link a:hover {
-  background: var(--black);
-  color: var(--page);
+@media (hover: hover) and (pointer: fine) {
+  .back-link a:hover {
+    background: var(--black);
+    color: var(--page);
+  }
+}
+
+.back-link a:active {
+  transform: scale(0.97);
 }
 
 .hero {
@@ -40,34 +46,20 @@
 }
 
 .hero-category {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 12px 4px 10px;
-  border-radius: var(--radius);
-  background: var(--surface);
-  color: var(--fg-strong);
+  padding: 3px 10px;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  font-weight: 700;
 }
 
-.hero-category::before {
-  content: "";
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: var(--terracotta);
-}
-
-.hero-kicker {
-  color: var(--fg-faint);
-}
 
 .hero-title {
   color: var(--fg-strong);
-  font-family: var(--display);
-  font-size: clamp(2.5rem, 6vw, 4rem);
-  font-weight: 400;
-  line-height: 1.02;
-  letter-spacing: -0.01em;
+  font-size: clamp(2.375rem, 5.6vw, 3.75rem);
+  font-weight: 700;
+  font-variation-settings: "opsz" 144;
+  line-height: 1.05;
+  letter-spacing: -0.018em;
   text-wrap: balance;
 }
 
@@ -158,8 +150,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 3px;
-  background: var(--terracotta);
+  height: 4px;
+  background: var(--group-ink);
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 100;
@@ -169,7 +161,7 @@
 .side-nav {
   margin: 0 0 48px;
   padding: 16px 0 0;
-  border-top: 1px solid var(--border);
+  border-top: 2px solid var(--black);
   counter-reset: toc;
   font-size: 0.8125rem;
   line-height: 1.35;
@@ -181,7 +173,7 @@
   padding: 0;
   color: var(--fg-strong);
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .side-nav div + div h2 {
@@ -201,13 +193,14 @@
 .side-nav a {
   display: block;
   padding: 6px 12px;
-  border-left: 1px solid var(--border);
+  border-left: 2px solid var(--border);
   color: var(--fg-faint);
   text-decoration: none;
 }
 
 .side-nav a:hover {
-  border-left-color: var(--black);
+  border-left-color: var(--group-ink);
+  background: none;
   color: var(--fg-strong);
   text-decoration: none;
 }
@@ -224,8 +217,7 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px 8px 10px;
-  border: 1px solid var(--black);
-  border-radius: var(--radius);
+  border: 1.5px solid var(--black);
   background: var(--page);
   color: var(--fg-strong);
   font-size: 0.875rem;
@@ -236,34 +228,20 @@
   display: inline-flex;
 }
 
-.back-to-top:hover {
-  background: var(--black);
-  color: var(--page);
+@media (hover: hover) and (pointer: fine) {
+  .back-to-top:hover {
+    background: var(--black);
+    color: var(--page);
+  }
 }
 
-/* The group's photo (Unsplash), under the lede, with its credit. */
+/* The topic's photo (Unsplash), overrun by ink bars, with its credit. */
 .hero-photo {
-  margin: 36px 0 0;
+  margin: 40px 0 0;
 }
 
-.hero-photo img {
-  display: block;
-  width: 100%;
-  height: auto;
+.hero-photo .inked-photo {
   aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: var(--radius-xl);
-  background: var(--surface);
-}
-
-.hero-photo figcaption {
-  margin-top: 10px;
-  color: var(--fg-faint);
-  font-size: 0.8125rem;
-}
-
-.hero-photo figcaption a {
-  color: inherit;
 }
 
 .not-found .back-link {

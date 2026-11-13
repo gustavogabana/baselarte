@@ -20,7 +20,7 @@ body {
   flex-direction: column;
   background: var(--page);
   color: var(--fg);
-  font: 400 1.0625rem/1.65 var(--sans);
+  font: 400 1.0625rem/1.6 var(--sans);
   font-optical-sizing: auto;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
@@ -28,21 +28,24 @@ body {
 }
 
 ::selection {
-  background: var(--magnolia);
+  background: var(--yellow);
   color: #111111;
 }
 
 a {
   color: var(--action);
   text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-decoration-thickness: 1px;
+  text-decoration-color: var(--group-ink);
+  text-decoration-thickness: 2px;
   text-underline-offset: 3px;
+  transition: background-color 120ms ease;
 }
 
-a:hover {
-  color: var(--action-hover);
-  text-decoration-color: currentColor;
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    background: var(--yellow);
+    color: #111111;
+  }
 }
 
 button {
@@ -132,7 +135,6 @@ html:not(.js-enabled) .requires-js {
   left: 12px;
   z-index: 200;
   padding: 8px 16px;
-  border-radius: var(--radius);
   background: var(--black);
   color: var(--page);
   transform: translateY(-200%);
@@ -168,8 +170,8 @@ samp {
   vertical-align: -0.2em;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
+  stroke-width: 1.75;
+  stroke-linecap: square;
   stroke-linejoin: round;
 }
 
@@ -181,12 +183,36 @@ samp {
   vertical-align: -0.2em;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+  stroke-width: 2;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
 }
 
 .arrow .arrow__tail {
   fill: currentColor;
   stroke: none;
+}
+
+/* A phrase set on an ink bar (the home quote). */
+.ink-mark {
+  padding: 0 0.12em;
+  background: var(--mark-ink, var(--magenta));
+  color: var(--mark-on, #ffffff);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.ink-mark--magenta { --mark-ink: var(--magenta); --mark-on: var(--on-magenta); }
+.ink-mark--cyan { --mark-ink: var(--cyan); --mark-on: var(--on-cyan); }
+.ink-mark--yellow { --mark-ink: var(--yellow); --mark-on: var(--on-yellow); }
+
+/* Square photo credit, black detail */
+.photo-credit {
+  margin-top: 10px;
+  color: var(--fg-faint);
+  font-size: 0.8125rem;
+}
+
+.photo-credit a {
+  color: inherit;
 }

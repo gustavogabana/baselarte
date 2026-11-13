@@ -1,5 +1,4 @@
-/* Page chrome: a white bar with a black hairline, a magnolia footer, and the site's own
-   buttons: square-cornered, outlined in black, filled black when on. */
+/* Page chrome: a white bar ruled in black, a black footer, square black-outlined controls. */
 
 .site-header,
 main,
@@ -15,7 +14,7 @@ main,
 main {
   flex: 1;
   padding-top: 40px;
-  padding-bottom: 112px;
+  padding-bottom: 128px;
 }
 
 .site-header {
@@ -24,9 +23,9 @@ main {
   justify-content: space-between;
   gap: 16px;
   max-width: none;
-  height: 72px;
+  height: 68px;
   padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-bottom: 1px solid var(--border);
+  border-bottom: 2px solid var(--black);
   background: var(--page);
 }
 
@@ -37,7 +36,7 @@ main {
   font-size: 0.875rem;
 }
 
-/* The flower: petals in the palette, black outline. */
+/* The flower: one petal per process ink, outlined in black. */
 .logo-mark {
   display: block;
   width: 30px;
@@ -46,22 +45,20 @@ main {
 
 .logo-mark .petal {
   stroke: var(--black);
-  stroke-width: 0.8;
+  stroke-width: 0.9;
   stroke-linejoin: round;
 }
 
-.logo-mark .petal:nth-child(1) { fill: var(--magnolia); }
-.logo-mark .petal:nth-child(2) { fill: var(--terracotta); }
-.logo-mark .petal:nth-child(3) { fill: var(--magnolia); }
-.logo-mark .petal:nth-child(4) { fill: var(--leaf); }
-.logo-mark .petal:nth-child(5) { fill: var(--magnolia); }
+.logo-mark .petal:nth-child(1) { fill: var(--cyan); }
+.logo-mark .petal:nth-child(2) { fill: var(--magenta); }
+.logo-mark .petal:nth-child(3) { fill: var(--yellow); }
+.logo-mark .petal:nth-child(4) { fill: var(--black); }
+.logo-mark .petal:nth-child(5) { fill: var(--page); }
 
 .logo-mark .vein {
   fill: none;
   stroke: var(--black);
-  stroke-opacity: 0.55;
-  stroke-width: 0.6;
-  stroke-linecap: round;
+  stroke-opacity: 0;
 }
 
 .logo-mark .heart {
@@ -73,34 +70,64 @@ main {
   align-items: center;
   gap: 10px;
   color: var(--fg-strong);
-  font-family: var(--display);
-  font-size: 1.625rem;
-  font-weight: 400;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   line-height: 1;
   text-decoration: none;
 }
 
 .site-wordmark:hover {
+  background: none;
   color: var(--fg-strong);
 }
 
+/* Footer: a black band, the detail ink at full size once. */
 .site-footer {
+  --black: #f2f2f0;
+  --fg-strong: #ffffff;
+  --fg: #dadada;
+  --fg-faint: #a3a3a3;
+  --page: #111111;
+  --border: #f2f2f02e;
+  --focus-inner: #ffffff;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 24px;
+  gap: 16px 24px;
   max-width: none;
   margin-top: 0;
-  padding-top: 28px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
+  padding-top: 32px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
   padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-top: 1px solid var(--black);
-  background: var(--surface);
+  background: #111111;
   color: var(--fg-faint);
   font-size: 0.875rem;
 }
+
+[data-theme="dark"] .site-footer {
+  background: #000000;
+  --page: #000000;
+}
+
+/* Three ink squares open the footer (SiteFooter). */
+.footer-inks {
+  display: flex;
+  flex-basis: 100%;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.footer-inks span {
+  width: 10px;
+  height: 10px;
+}
+
+.footer-inks span:nth-child(1) { background: var(--cyan); }
+.footer-inks span:nth-child(2) { background: var(--magenta); }
+.footer-inks span:nth-child(3) { background: var(--yellow); }
 
 .site-footer .footer-tools {
   display: flex;
@@ -119,18 +146,11 @@ main {
   color: var(--fg);
 }
 
-.site-footer a:hover {
-  color: var(--fg-strong);
-}
-
-/* Segmented buttons: one black hairline around the group, the chosen one filled black. */
+/* Segmented controls: square, outlined in black; the chosen one is filled black. */
 .theme-switch,
 .language-switch {
   display: inline-flex;
-  padding: 3px;
-  gap: 2px;
-  border: 1px solid var(--black);
-  border-radius: calc(var(--radius) + 3px);
+  border: 1.5px solid var(--black);
 }
 
 .theme-switch button,
@@ -138,19 +158,30 @@ main {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 30px;
+  min-height: 32px;
   padding: 0 12px;
-  border-radius: var(--radius);
-  color: var(--fg);
+  color: var(--fg-strong);
   font-size: 0.8125rem;
   font-weight: 500;
-  transition: background-color 0.15s, color 0.15s;
+  transition: background-color 120ms ease, color 120ms ease, transform 120ms var(--ease-out);
 }
 
-.theme-switch button:hover,
-.language-switch button:hover {
-  background: var(--surface-strong);
-  color: var(--fg-strong);
+.theme-switch button + button,
+.language-switch button + button {
+  border-left: 1.5px solid var(--black);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .theme-switch button:hover,
+  .language-switch button:hover {
+    background: var(--yellow);
+    color: #111111;
+  }
+}
+
+.theme-switch button:active,
+.language-switch button:active {
+  transform: scale(0.96);
 }
 
 .theme-switch button[aria-pressed="true"],
@@ -164,7 +195,7 @@ main {
   height: 14px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.5;
 }
 
 .theme-glyph .theme-glyph__fill {
@@ -173,7 +204,7 @@ main {
 
 /* In the header the switch shows the glyphs only (the label stays for screen readers). */
 .header-tools .theme-switch button {
-  min-width: 34px;
+  min-width: 36px;
   justify-content: center;
   padding: 0 8px;
 }

@@ -11,21 +11,22 @@
 
 .content-section h2 {
   margin: 0 0 20px;
-  padding-top: 20px;
-  border-top: 1px solid var(--black);
+  padding-top: 18px;
+  border-top: 2px solid var(--black);
   color: var(--fg-strong);
-  font-family: var(--display);
-  font-size: clamp(2rem, 3.6vw, 2.5rem);
-  font-weight: 400;
-  line-height: 1.08;
+  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
 }
 
 .ds-guide h3 {
   margin: 32px 0 10px;
   color: var(--fg-strong);
   font-size: 1.25rem;
-  font-weight: 500;
+  font-weight: 700;
   line-height: 1.3;
+  letter-spacing: -0.015em;
 }
 
 .content-section p {
@@ -269,7 +270,7 @@ pre:hover .copy-button,
 .qa-item dd {
   margin: 10px 0 0 calc(1.75rem + 16px);
   padding-left: 16px;
-  border-left: 2px solid var(--magnolia);
+  border-left: 1px solid var(--black);
   color: var(--fg);
 }
 

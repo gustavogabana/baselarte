@@ -1,4 +1,5 @@
-/* Home: a large statement beside three photos, then the posts grouped by topic */
+/* Home: the quote set huge with two phrases on ink bars, a tall photograph overrun by bars,
+   then the index, one band per topic. */
 
 .landing {
   display: block;
@@ -7,86 +8,126 @@
 .landing-top {
   display: grid;
   gap: 40px var(--grid-gap);
-  align-items: center;
-  margin: 8px 0 96px;
+  margin: 8px 0 112px;
 }
 
 @media (min-width: 900px) {
   .landing-top {
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    margin-top: 40px;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    align-items: end;
+    margin-top: 32px;
   }
 }
 
 .pull-quote blockquote p {
   color: var(--fg-strong);
-  font-family: var(--display);
-  font-size: clamp(2.25rem, 4.6vw, 4rem);
-  font-weight: 400;
-  line-height: 1.04;
-  letter-spacing: -0.01em;
+  font-size: clamp(2.5rem, 5.6vw, 5.25rem);
+  font-weight: 700;
+  font-variation-settings: "opsz" 144;
+  line-height: 1.02;
+  letter-spacing: -0.018em;
   text-wrap: balance;
-}
-
-.pull-quote blockquote p::before {
-  content: "“";
-  color: var(--terracotta);
-}
-
-.pull-quote blockquote p::after {
-  content: "”";
-  color: var(--terracotta);
 }
 
 .pull-quote figcaption {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 28px;
-  color: var(--fg-faint);
+  margin-top: 32px;
+  color: var(--fg);
   font-size: 0.9375rem;
+  font-weight: 500;
 }
 
 .pull-quote figcaption::before {
   content: "";
-  width: 32px;
-  height: 1px;
+  flex: none;
+  width: 14px;
+  height: 14px;
   background: var(--black);
 }
 
-/* Three photos: one tall, two stacked beside it. */
-.home-photos {
-  display: grid;
-  grid-template-columns: 1.25fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 12px;
-  aspect-ratio: 6 / 5;
+.landing-photo .inked-photo {
+  aspect-ratio: 4 / 5;
 }
 
-.home-photos img {
+/* A photograph with flat ink bars overrunning it. */
+.inked-photo {
+  position: relative;
+  isolation: isolate;
+}
+
+.inked-photo img {
+  display: block;
   width: 100%;
   height: 100%;
-  min-height: 0;
   object-fit: cover;
-  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
-.home-photos img:first-child {
-  grid-row: 1 / span 2;
+.inked-photo__bar,
+.inked-photo__mark {
+  position: absolute;
+  pointer-events: none;
+}
+
+.inked-photo__bar {
+  height: clamp(18px, 3.2vw, 36px);
+}
+
+.inked-photo__bar--a {
+  top: 9%;
+  left: -6%;
+  width: 46%;
+  background: var(--yellow);
+}
+
+.inked-photo__bar--b {
+  right: -4%;
+  bottom: 14%;
+  width: 58%;
+  background: var(--cyan);
+  transform: rotate(-7deg);
+  transform-origin: right center;
+}
+
+.inked-photo__mark {
+  right: 7%;
+  top: 7%;
+  width: clamp(28px, 4vw, 52px);
+  aspect-ratio: 1;
+  background: #111111;
+}
+
+@media (max-width: 899px) {
+  .landing-photo .inked-photo {
+    aspect-ratio: 4 / 3;
+  }
+}
+
+/* On narrow screens the bars stay inside the photo (no sideways scroll). */
+@media (max-width: 1100px) {
+  .inked-photo__bar--a {
+    left: 0;
+  }
+
+  .inked-photo__bar--b {
+    right: 0;
+    transform: rotate(-5deg);
+  }
 }
 
 /* The index */
 .note-index {
-  border-top: 1px solid var(--black);
+  border-top: 6px solid var(--black);
 }
 
 .index-group {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 20px var(--grid-gap);
-  padding: 40px 0 48px;
-  border-bottom: 1px solid var(--border);
+  gap: 24px var(--grid-gap);
+  padding: 32px 0 56px;
+  border-bottom: 2px solid var(--black);
 }
 
 .index-group:last-child {
@@ -95,7 +136,7 @@
 
 @media (min-width: 800px) {
   .index-group {
-    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
   }
 
   .index-group__head {
@@ -105,99 +146,127 @@
   }
 }
 
+.index-group h2 {
+  margin-bottom: 20px;
+  font-size: clamp(1.75rem, 3vw, 2.375rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+/* The topic title sits on its ink bar. */
+.index-group__title {
+  padding: 0 0.14em;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
 .index-group__photo {
+  position: relative;
+}
+
+.index-group__photo img {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 4 / 3;
-  margin-bottom: 20px;
+  aspect-ratio: 3 / 2;
   object-fit: cover;
-  border-radius: var(--radius-lg);
   background: var(--surface);
 }
 
-.index-group__number {
-  color: var(--accent-fg);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-
-.index-group h2 {
-  margin-top: 4px;
-  color: var(--fg-strong);
-  font-family: var(--display);
-  font-size: 2rem;
-  font-weight: 400;
-  line-height: 1.05;
+/* A short ink bar overruns the photo's lower edge. */
+.index-group__photo::after {
+  content: "";
+  position: absolute;
+  left: 16px;
+  bottom: 14px;
+  width: 46%;
+  height: 22px;
+  background: var(--group-ink);
+  transform: rotate(-4deg);
+  transform-origin: left center;
 }
 
 @media (max-width: 799px) {
-  .index-group__head {
-    display: grid;
-    grid-template-columns: 88px minmax(0, 1fr);
-    column-gap: 16px;
-    align-items: center;
-  }
-
   .index-group__photo {
-    grid-row: 1 / span 2;
-    margin: 0;
-    aspect-ratio: 1;
-    border-radius: var(--radius);
-  }
-
-  .index-group__number {
-    align-self: end;
-  }
-
-  .index-group h2 {
-    align-self: start;
-    font-size: 1.75rem;
+    max-width: 22rem;
   }
 }
 
 .index-group ol {
   list-style: none;
+  border-top: 2px solid var(--black);
 }
 
 .note-index li {
-  border-bottom: 1px solid var(--border-faint);
+  border-bottom: 1px solid var(--border);
 }
 
-.note-index li:last-child {
-  border-bottom: 0;
-}
-
+/* Signature: hovering a row slides the topic's ink bar in behind it. */
 .note-index li a {
+  position: relative;
   display: flex;
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  margin: 0 -12px;
-  padding: 14px 12px;
-  border-radius: var(--radius);
+  padding: 15px 4px;
   color: var(--fg-strong);
   font-size: 1.0625rem;
-  line-height: 1.4;
+  font-weight: 500;
+  line-height: 1.35;
   text-decoration: none;
-  transition: background-color 0.15s, color 0.15s;
+  isolation: isolate;
 }
 
-.note-index li a:hover {
-  background: var(--surface);
-  color: var(--action);
+.note-index li a::before {
+  content: "";
+  position: absolute;
+  inset: 0 -8px;
+  z-index: -1;
+  background: var(--group-ink);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 220ms var(--ease-out);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .note-index li a:hover {
+    background: none;
+    color: var(--on-group-ink);
+  }
+
+  .note-index li a:hover::before {
+    transform: scaleX(1);
+  }
+
+  .note-index li a:hover .index-arrow {
+    translate: 4px 0;
+  }
+}
+
+.note-index li a:focus-visible::before {
+  transform: scaleX(1);
+}
+
+.note-index li a:focus-visible {
+  color: var(--on-group-ink);
+}
+
+.note-index li a:active .index-title {
+  transform: scale(0.99);
+}
+
+.index-title {
+  transition: transform 120ms var(--ease-out);
+  transform-origin: left center;
 }
 
 .index-arrow {
   width: 22px;
   height: 22px;
-  transition: translate 0.2s;
-}
-
-.note-index li a:hover .index-arrow {
-  translate: 4px 0;
+  transition: translate 220ms var(--ease-out);
 }
 
 .note-index li[hidden] {
@@ -205,8 +274,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .note-index li a,
-  .index-arrow {
+  .note-index li a::before,
+  .index-arrow,
+  .index-title {
     transition: none;
+  }
+}
+
+/* Wide screens: the home photo's yellow bar reaches out into the quote's column. */
+@media (min-width: 1101px) {
+  .landing-photo .inked-photo__bar--a {
+    left: -34%;
+    width: 72%;
   }
 }

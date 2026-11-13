@@ -1,89 +1,97 @@
-/* Design tokens. Four colours, taken from the photos: leaf green (actions), magnolia (surfaces
-   and highlights), terracotta (small accents) and black (details: rules, icons, outlines).
-   Every other shade is mixed from them. The dark theme only redefines the tokens. */
+/* Design tokens. Four process inks, solid: cyan, magenta and yellow mark topics and fill bars;
+   black (K, the key) draws every detail: text, rules, outlines, marks. White ground.
+   Every colour is a token here; the dark theme only redefines them. */
 
 :root {
-  --leaf: #1f4d3a;
-  --magnolia: #e9a8b8;
-  --terracotta: #d9734e;
+  --cyan: #00a0dc;
+  --magenta: #e5007d;
+  --yellow: #ffd200;
   --black: #111111;
 
-  --page: #ffffff;
-  --page-faint: color-mix(in srgb, var(--magnolia) 8%, #ffffff);
-  --surface: color-mix(in srgb, var(--magnolia) 14%, #ffffff);
-  --surface-strong: color-mix(in srgb, var(--magnolia) 28%, #ffffff);
-  --surface-hover: color-mix(in srgb, var(--magnolia) 18%, #ffffff);
-  --surface-tint: color-mix(in srgb, var(--leaf) 8%, #ffffff);
+  /* Text set on each ink */
+  --on-cyan: #111111;
+  --on-magenta: #ffffff;
+  --on-yellow: #111111;
 
-  --accent: var(--terracotta);
-  --accent-fg: #b4532f;
+  --page: #ffffff;
+  --page-faint: #f4f4f2;
+  --surface: #f4f4f2;
+  --surface-strong: #e6e6e3;
+  --surface-hover: #f4f4f2;
+
+  --accent: var(--magenta);
+  --accent-fg: #c4006b;
 
   --fg-strong: var(--black);
-  --fg: #2b2b2b;
-  --fg-faint: #6b6662;
+  --fg: #262626;
+  --fg-faint: #5c5c5c;
   --fg-on-action: #ffffff;
 
-  --border: color-mix(in srgb, var(--black) 14%, transparent);
-  --border-faint: color-mix(in srgb, var(--black) 7%, transparent);
+  --border: #11111124;
+  --border-faint: #11111114;
   --border-strong: var(--black);
 
-  --action: var(--leaf);
-  --action-hover: #143527;
-  --action-active: #143527;
-  --action-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
-  --action-border: color-mix(in srgb, var(--leaf) 25%, #ffffff);
-  --visited: var(--leaf);
+  /* Links are black; the ink is in the underline. */
+  --action: var(--black);
+  --action-hover: var(--black);
+  --action-active: var(--black);
+  --action-surface: #f4f4f2;
+  --action-border: var(--black);
+  --visited: var(--black);
   --focus-inner: var(--black);
-  --focus-outer: color-mix(in srgb, var(--black) 40%, transparent);
+  --focus-outer: #11111166;
 
   /* Names kept for the note stylesheets */
-  --brand: var(--leaf);
-  --brand-fg: var(--leaf);
-  --brand-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
-  --brand-border: color-mix(in srgb, var(--leaf) 30%, #ffffff);
+  --brand: var(--black);
+  --brand-fg: var(--black);
+  --brand-surface: #f4f4f2;
+  --brand-border: #11111140;
 
-  --success-fg: var(--leaf);
-  --success-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
-  --success-border: color-mix(in srgb, var(--leaf) 20%, #ffffff);
-  --warning-fg: #9a4423;
-  --warning-surface: color-mix(in srgb, var(--terracotta) 10%, #ffffff);
-  --warning-border: color-mix(in srgb, var(--terracotta) 25%, #ffffff);
-  --critical-fg: #9a4423;
-  --critical-surface: color-mix(in srgb, var(--terracotta) 10%, #ffffff);
-  --critical-border: color-mix(in srgb, var(--terracotta) 25%, #ffffff);
+  --success-fg: #00739e;
+  --success-surface: #e5f6fc;
+  --success-border: #b3e3f5;
+  --warning-fg: #8a6a00;
+  --warning-surface: #fff8d6;
+  --warning-border: #ffe98a;
+  --critical-fg: #b80064;
+  --critical-surface: #fde6f2;
+  --critical-border: #f7b3d6;
   --highlight-fg: var(--black);
-  --highlight-surface: color-mix(in srgb, var(--magnolia) 16%, #ffffff);
-  --highlight-border: color-mix(in srgb, var(--magnolia) 40%, #ffffff);
+  --highlight-surface: #f4f4f2;
+  --highlight-border: #11111124;
 
-  /* Code: a light, warm sheet */
-  --code-bg: color-mix(in srgb, var(--magnolia) 7%, #fbfbfa);
+  /* Code: a light sheet, black ink, the three colour inks for syntax */
+  --code-bg: #f4f4f2;
   --code-fg: var(--black);
-  --code-border: var(--border);
-  --code-faint: #6b6662;
-  --code-keyword: var(--leaf);
-  --code-string: #9a4423;
-  --code-number: #8a3a5a;
-  --code-attr: #2f6b54;
+  --code-border: #11111124;
+  --code-faint: #5c5c5c;
+  --code-keyword: #b80064;
+  --code-string: #00739e;
+  --code-number: #8a6a00;
+  --code-attr: #00739e;
 
-  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
-  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --sans: "Google Sans Flex", "Google Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: "Google Sans Code", ui-monospace, Menlo, Consolas, monospace;
 
   --content-max: 44rem;
-  --page-max: 76rem;
+  --page-max: 80rem;
   --side-width: 15rem;
   --grid-gap: clamp(16px, 3vw, 40px);
   --gutter: clamp(16px, 4vw, 40px);
-  --radius: 10px;
-  --radius-lg: 18px;
-  --radius-xl: 28px;
+  --radius: 0;
+  --radius-lg: 0;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
   --ink: var(--fg-strong);
+  /* The current topic's ink (set per group by components/ui/inks.ts) */
+  --group-ink: var(--magenta);
+  --on-group-ink: var(--on-magenta);
   --muted: var(--fg-faint);
   --line: var(--border);
-  --serif: var(--display);
+  --serif: var(--sans);
   --label: var(--sans);
   --heading: var(--sans);
   --wide: 90rem;
@@ -95,48 +103,47 @@
 }
 
 [data-theme="dark"] {
-  --leaf: #8cc7a6;
-  --magnolia: #e9a8b8;
-  --terracotta: #e8916e;
-  --black: #f2efec;
+  --black: #f2f2f0;
 
-  --page: #141312;
-  --page-faint: #1b1a19;
-  --surface: #221f1f;
-  --surface-strong: #2d2a29;
-  --surface-hover: #262222;
-  --surface-tint: #1a2620;
+  --page: #121212;
+  --page-faint: #1c1c1c;
+  --surface: #1c1c1c;
+  --surface-strong: #2a2a2a;
+  --surface-hover: #1c1c1c;
 
-  --accent-fg: #e8916e;
+  --accent-fg: #ff4fa8;
 
-  --fg: #d9d5d1;
-  --fg-faint: #a39d97;
-  --fg-on-action: #141312;
+  --fg: #dadada;
+  --fg-faint: #a3a3a3;
+  --fg-on-action: #121212;
 
-  --action-hover: #b0dcc3;
-  --action-active: #b0dcc3;
-  --action-surface: #1a2620;
-  --action-border: #2b4538;
+  --border: #f2f2f02e;
+  --border-faint: #f2f2f017;
+  --focus-outer: #f2f2f066;
 
-  --brand-surface: #1a2620;
-  --brand-border: #2b4538;
+  --action-surface: #1c1c1c;
+  --brand-surface: #1c1c1c;
+  --brand-border: #f2f2f040;
 
-  --success-surface: #1a2620;
-  --success-border: #2b4538;
-  --warning-fg: #e8916e;
-  --warning-surface: #2a1d17;
-  --warning-border: #4a2e22;
-  --critical-fg: #e8916e;
-  --critical-surface: #2a1d17;
-  --critical-border: #4a2e22;
-  --highlight-surface: #261d20;
-  --highlight-border: #47323a;
+  --success-fg: #4cc3ef;
+  --success-surface: #0c2430;
+  --success-border: #134a60;
+  --warning-fg: #ffd200;
+  --warning-surface: #2a2410;
+  --warning-border: #4d4214;
+  --critical-fg: #ff4fa8;
+  --critical-surface: #2e0f20;
+  --critical-border: #5c1d40;
+  --highlight-surface: #1c1c1c;
+  --highlight-border: #f2f2f02e;
 
-  --code-bg: #1b1a19;
-  --code-faint: #a39d97;
-  --code-string: #e8916e;
-  --code-number: #e9a8b8;
-  --code-attr: #b0dcc3;
+  --code-bg: #1c1c1c;
+  --code-border: #f2f2f02e;
+  --code-faint: #a3a3a3;
+  --code-keyword: #ff4fa8;
+  --code-string: #4cc3ef;
+  --code-number: #ffd200;
+  --code-attr: #4cc3ef;
 
   color-scheme: dark;
 }

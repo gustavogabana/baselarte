@@ -1,7 +1,9 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
 import { groupOf } from "../notes/registry.ts";
-import { PhotoImage } from "../components/ui/PhotoImage.tsx";
+import { InkedPhoto } from "../components/ui/PhotoImage.tsx";
+import { PhotoCredit } from "../components/ui/PhotoCredit.tsx";
+import { groupInk, inkStyle } from "../components/ui/inks.ts";
 import { groupPhoto } from "../components/ui/photos.ts";
 import { Arrow } from "../components/ui/Arrow.tsx";
 import { site } from "../site.ts";
@@ -17,15 +19,12 @@ export function NotePage({ note }: { note: Note }) {
   const photo = groupPhoto(group.id);
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
-    <article className={articleClass}>
+    <article className={articleClass} style={inkStyle(groupInk(group.id))}>
       <BackLink href="/" label={ui.notes} />
       <header className="hero" aria-labelledby="hero-title">
         <p className="hero-meta">
           <span className="hero-category">
             <Text value={group.title} />
-          </span>
-          <span className="hero-kicker">
-            <Text value={note.kicker} />
           </span>
         </p>
         <h1 id="hero-title" className="hero-title">
@@ -35,16 +34,18 @@ export function NotePage({ note }: { note: Note }) {
           <Text value={note.heroLede} />
         </p>
         <figure className="hero-photo">
-          <PhotoImage photo={photo} eager sizes="(min-width: 760px) 44rem, 100vw" />
-          <figcaption>
-            <Text value={ui.photoBy} />{" "}
-            <a href={photo.page} rel="noopener">
-              {photo.photographer}
-            </a>{" "}
-            / Unsplash
-          </figcaption>
+          <InkedPhoto photo={photo} eager sizes="(min-width: 760px) 44rem, 100vw" />
+          <PhotoCredit photo={photo} />
         </figure>
         <dl className="hero-facts">
+          <div>
+            <dt>
+              <Text value={ui.format} />
+            </dt>
+            <dd>
+              <Text value={note.kicker} />
+            </dd>
+          </div>
           <div>
             <dt>
               <Text value={ui.author} />

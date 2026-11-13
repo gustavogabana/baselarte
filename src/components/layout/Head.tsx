@@ -2,9 +2,9 @@ import type { Localized } from "../../i18n/localized.ts";
 import { bootScript } from "../../preferences/boot.ts";
 import { absoluteUrl, site } from "../../site.ts";
 
-/** Instrument Serif (titles), Instrument Sans (text) and JetBrains Mono (code), from Google Fonts. */
+/** Google Sans Flex (text and display, variable optical size and weight) and Google Sans Code, from Google Fonts. */
 const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..800&family=Google+Sans+Code:wght@400;500&display=swap";
 
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
@@ -68,7 +68,7 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=8" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml" />
       <link rel="icon" href="/favicon.ico?v=6" sizes="any" />
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
