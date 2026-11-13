@@ -1,4 +1,5 @@
-/* Page chrome: a white app bar and a light grey footer, as on Google's own sites */
+/* Page chrome: a white bar with a black hairline, a magnolia footer, and the site's own
+   buttons: square-cornered, outlined in black, filled black when on. */
 
 .site-header,
 main,
@@ -14,19 +15,16 @@ main,
 main {
   flex: 1;
   padding-top: 40px;
-  padding-bottom: 96px;
+  padding-bottom: 112px;
 }
 
 .site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   max-width: none;
-  height: 64px;
+  height: 72px;
   padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   border-bottom: 1px solid var(--border);
   background: var(--page);
@@ -37,53 +35,53 @@ main {
   align-items: center;
   gap: 8px 24px;
   font-size: 0.875rem;
-  font-weight: 500;
 }
 
-/* The flower: outline in the ink colour, petals in the four Google colours. */
+/* The flower: petals in the palette, black outline. */
 .logo-mark {
   display: block;
   width: 30px;
   height: 30px;
-  --ink-line: var(--fg-strong);
 }
 
 .logo-mark .petal {
-  stroke: none;
+  stroke: var(--black);
+  stroke-width: 0.8;
+  stroke-linejoin: round;
 }
 
-.logo-mark .petal:nth-child(1) { fill: var(--g-blue); }
-.logo-mark .petal:nth-child(2) { fill: var(--g-red); }
-.logo-mark .petal:nth-child(3) { fill: var(--g-yellow); }
-.logo-mark .petal:nth-child(4) { fill: var(--g-green); }
-.logo-mark .petal:nth-child(5) { fill: var(--g-blue); }
+.logo-mark .petal:nth-child(1) { fill: var(--magnolia); }
+.logo-mark .petal:nth-child(2) { fill: var(--terracotta); }
+.logo-mark .petal:nth-child(3) { fill: var(--magnolia); }
+.logo-mark .petal:nth-child(4) { fill: var(--leaf); }
+.logo-mark .petal:nth-child(5) { fill: var(--magnolia); }
 
 .logo-mark .vein {
   fill: none;
-  stroke: #ffffff;
-  stroke-opacity: 0.7;
-  stroke-width: 0.7;
+  stroke: var(--black);
+  stroke-opacity: 0.55;
+  stroke-width: 0.6;
   stroke-linecap: round;
 }
 
 .logo-mark .heart {
-  fill: #ffffff;
+  fill: var(--black);
 }
 
 .site-wordmark {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  color: var(--fg-faint);
-  font-size: 1.375rem;
+  color: var(--fg-strong);
+  font-family: var(--display);
+  font-size: 1.625rem;
   font-weight: 400;
-  letter-spacing: -0.01em;
+  line-height: 1;
   text-decoration: none;
 }
 
 .site-wordmark:hover {
   color: var(--fg-strong);
-  text-decoration: none;
 }
 
 .site-footer {
@@ -94,12 +92,12 @@ main {
   gap: 12px 24px;
   max-width: none;
   margin-top: 0;
-  padding-top: 24px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+  padding-top: 28px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
   padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-top: 1px solid var(--border);
-  background: var(--page-faint);
+  border-top: 1px solid var(--black);
+  background: var(--surface);
   color: var(--fg-faint);
   font-size: 0.875rem;
 }
@@ -107,7 +105,7 @@ main {
 .site-footer .footer-tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px 16px;
+  gap: 8px 12px;
 }
 
 .site-footer .footer-links {
@@ -118,49 +116,86 @@ main {
 }
 
 .site-footer a {
-  color: var(--fg-faint);
+  color: var(--fg);
 }
 
 .site-footer a:hover {
   color: var(--fg-strong);
 }
 
-/* Theme and language switches: Material segmented buttons. */
+/* Segmented buttons: one black hairline around the group, the chosen one filled black. */
 .theme-switch,
 .language-switch {
   display: inline-flex;
-  overflow: hidden;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-pill);
+  padding: 3px;
+  gap: 2px;
+  border: 1px solid var(--black);
+  border-radius: calc(var(--radius) + 3px);
 }
 
 .theme-switch button,
 .language-switch button {
-  min-height: 32px;
-  padding: 0 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 12px;
+  border-radius: var(--radius);
   color: var(--fg);
   font-size: 0.8125rem;
   font-weight: 500;
-}
-
-.theme-switch button + button,
-.language-switch button + button {
-  border-left: 1px solid var(--border-strong);
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .theme-switch button:hover,
 .language-switch button:hover {
-  background: var(--surface-hover);
+  background: var(--surface-strong);
+  color: var(--fg-strong);
 }
 
 .theme-switch button[aria-pressed="true"],
 .language-switch button[aria-pressed="true"] {
-  background: var(--action-surface);
-  color: var(--accent-fg);
+  background: var(--black);
+  color: var(--page);
 }
 
+.theme-glyph {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+}
+
+.theme-glyph .theme-glyph__fill {
+  fill: currentColor;
+}
+
+/* In the header the switch shows the glyphs only (the label stays for screen readers). */
 .header-tools .theme-switch button {
-  min-height: 36px;
+  min-width: 34px;
+  justify-content: center;
+  padding: 0 8px;
+}
+
+.header-tools .theme-switch__label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.site-footer .theme-glyph {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .theme-switch button,
+  .language-switch button {
+    transition: none;
+  }
 }
 
 /* The © in the footer (EasterEgg). */
@@ -173,11 +208,10 @@ main {
 .chorus {
   width: min(32rem, calc(100vw - 2 * var(--gutter)));
   padding: 32px 28px 24px;
-  border: 0;
-  border-radius: var(--radius-xl);
+  border: 1px solid var(--black);
+  border-radius: var(--radius-lg);
   background: var(--page);
   color: var(--fg);
-  box-shadow: var(--shadow-2);
 }
 
 .chorus::backdrop {
@@ -231,17 +265,17 @@ main {
 }
 
 .chorus__actions button {
-  padding: 10px 24px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-pill);
-  color: var(--action);
+  padding: 10px 20px;
+  border: 1px solid var(--black);
+  border-radius: var(--radius);
+  color: var(--fg-strong);
   font-weight: 500;
 }
 
 .chorus__actions .chorus__primary {
-  border-color: var(--action);
-  background: var(--action);
-  color: var(--fg-on-action);
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--page);
 }
 
 /* The easter egg's music player: a small card at the bottom left, a bar on phones. */
@@ -255,10 +289,9 @@ main {
   gap: 12px;
   width: min(26rem, calc(100vw - 2 * var(--gutter)));
   padding: 10px 14px;
-  border: 0;
+  border: 1px solid var(--black);
   border-radius: var(--radius-lg);
   background: var(--page);
-  box-shadow: var(--shadow-2);
   color: var(--fg);
   font-size: 0.8125rem;
 }
@@ -282,7 +315,7 @@ main {
   flex: none;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius);
   background: var(--action);
   color: var(--fg-on-action);
 }

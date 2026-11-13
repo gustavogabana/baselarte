@@ -2,9 +2,9 @@ import type { Localized } from "../../i18n/localized.ts";
 import { bootScript } from "../../preferences/boot.ts";
 import { absoluteUrl, site } from "../../site.ts";
 
-/** Google Sans Flex (text, variable optical size and weight) and Roboto Mono (code), from Google Fonts. */
+/** Instrument Serif (titles), Instrument Sans (text) and JetBrains Mono (code), from Google Fonts. */
 const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Roboto+Mono:wght@400;500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap";
 
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
@@ -68,13 +68,15 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=7" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.svg?v=8" type="image/svg+xml" />
       <link rel="icon" href="/favicon.ico?v=6" sizes="any" />
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link rel="stylesheet" href={FONTS_URL} />
+      {/* The photos come from Unsplash's CDN (src/components/ui/photos.ts). */}
+      <link rel="preconnect" href="https://images.unsplash.com" />
       <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />
       {assets.styles.map((href) => (
         <link key={href} rel="stylesheet" href={href} />

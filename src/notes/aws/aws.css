@@ -76,7 +76,8 @@
 }
 
 .aws-guide h2 {
-  font-size: clamp(1.5rem, 2.6vw, 1.875rem);
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.4vw, 2.5rem);
   font-weight: 400;
   line-height: 1.25;
   letter-spacing: -0.015em;
@@ -349,7 +350,7 @@
   margin-top: 8px;
   padding: 14px 18px;
   background: var(--aws-surface);
-  border-left: 2px solid var(--g-blue);
+  border-left: 2px solid var(--magnolia);
   border-radius: 0 var(--aws-radius) var(--aws-radius) 0;
 }
 
@@ -533,7 +534,7 @@
 .aws-guide .steps li.on {
   background: var(--aws-surface);
   color: var(--ink);
-  border-left: 2px solid var(--g-blue);
+  border-left: 2px solid var(--magnolia);
   border-radius: 0 var(--aws-radius) var(--aws-radius) 0;
 }
 

@@ -1,93 +1,89 @@
-/* Design tokens, after Google's own sites (blog.google, design.google): Google Sans Flex,
-   the GM grey ramp, Google Blue for actions and the four brand colours for decoration.
-   Every colour is a token here; the dark theme only redefines them. */
+/* Design tokens. Four colours, taken from the photos: leaf green (actions), magnolia (surfaces
+   and highlights), terracotta (small accents) and black (details: rules, icons, outlines).
+   Every other shade is mixed from them. The dark theme only redefines the tokens. */
 
 :root {
-  /* Google brand colours (decoration, chips, illustrations) */
-  --g-blue: #4285f4;
-  --g-red: #ea4335;
-  --g-yellow: #fbbc04;
-  --g-green: #34a853;
+  --leaf: #1f4d3a;
+  --magnolia: #e9a8b8;
+  --terracotta: #d9734e;
+  --black: #111111;
 
   --page: #ffffff;
-  --page-faint: #f8f9fa;
-  --surface: #f1f3f4;
-  --surface-strong: #e8eaed;
-  --surface-hover: #f1f3f4;
-  --surface-tint: #e8f0fe;
+  --page-faint: color-mix(in srgb, var(--magnolia) 8%, #ffffff);
+  --surface: color-mix(in srgb, var(--magnolia) 14%, #ffffff);
+  --surface-strong: color-mix(in srgb, var(--magnolia) 28%, #ffffff);
+  --surface-hover: color-mix(in srgb, var(--magnolia) 18%, #ffffff);
+  --surface-tint: color-mix(in srgb, var(--leaf) 8%, #ffffff);
 
-  --accent: #1a73e8;
-  --accent-fg: #1967d2;
+  --accent: var(--terracotta);
+  --accent-fg: #b4532f;
 
-  --fg-strong: #202124;
-  --fg: #3c4043;
-  --fg-faint: #5f6368;
+  --fg-strong: var(--black);
+  --fg: #2b2b2b;
+  --fg-faint: #6b6662;
   --fg-on-action: #ffffff;
 
-  --border: #dadce0;
-  --border-faint: #e8eaed;
-  --border-strong: #bdc1c6;
+  --border: color-mix(in srgb, var(--black) 14%, transparent);
+  --border-faint: color-mix(in srgb, var(--black) 7%, transparent);
+  --border-strong: var(--black);
 
-  --action: #1a73e8;
-  --action-hover: #174ea6;
-  --action-active: #174ea6;
-  --action-surface: #e8f0fe;
-  --action-border: #d2e3fc;
-  --visited: #1a73e8;
-  --focus-inner: #1a73e8;
-  --focus-outer: #1a73e866;
+  --action: var(--leaf);
+  --action-hover: #143527;
+  --action-active: #143527;
+  --action-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
+  --action-border: color-mix(in srgb, var(--leaf) 25%, #ffffff);
+  --visited: var(--leaf);
+  --focus-inner: var(--black);
+  --focus-outer: color-mix(in srgb, var(--black) 40%, transparent);
 
   /* Names kept for the note stylesheets */
-  --brand: #1a73e8;
-  --brand-fg: #1967d2;
-  --brand-surface: #e8f0fe;
-  --brand-border: #aecbfa;
+  --brand: var(--leaf);
+  --brand-fg: var(--leaf);
+  --brand-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
+  --brand-border: color-mix(in srgb, var(--leaf) 30%, #ffffff);
 
-  --success-fg: #137333;
-  --success-surface: #e6f4ea;
-  --success-border: #ceead6;
-  --warning-fg: #b06000;
-  --warning-surface: #fef7e0;
-  --warning-border: #feefc3;
-  --critical-fg: #c5221f;
-  --critical-surface: #fce8e6;
-  --critical-border: #fad2cf;
-  --highlight-fg: #3c4043;
-  --highlight-surface: #f1f3f4;
-  --highlight-border: #e8eaed;
+  --success-fg: var(--leaf);
+  --success-surface: color-mix(in srgb, var(--leaf) 8%, #ffffff);
+  --success-border: color-mix(in srgb, var(--leaf) 20%, #ffffff);
+  --warning-fg: #9a4423;
+  --warning-surface: color-mix(in srgb, var(--terracotta) 10%, #ffffff);
+  --warning-border: color-mix(in srgb, var(--terracotta) 25%, #ffffff);
+  --critical-fg: #9a4423;
+  --critical-surface: color-mix(in srgb, var(--terracotta) 10%, #ffffff);
+  --critical-border: color-mix(in srgb, var(--terracotta) 25%, #ffffff);
+  --highlight-fg: var(--black);
+  --highlight-surface: color-mix(in srgb, var(--magnolia) 16%, #ffffff);
+  --highlight-border: color-mix(in srgb, var(--magnolia) 40%, #ffffff);
 
-  /* Code: light, like Google's developer docs */
-  --code-bg: #f8f9fa;
-  --code-fg: #202124;
-  --code-border: #e8eaed;
-  --code-faint: #5f6368;
-  --code-keyword: #1967d2;
-  --code-string: #188038;
-  --code-number: #c5221f;
-  --code-attr: #9334e6;
+  /* Code: a light, warm sheet */
+  --code-bg: color-mix(in srgb, var(--magnolia) 7%, #fbfbfa);
+  --code-fg: var(--black);
+  --code-border: var(--border);
+  --code-faint: #6b6662;
+  --code-keyword: var(--leaf);
+  --code-string: #9a4423;
+  --code-number: #8a3a5a;
+  --code-attr: #2f6b54;
 
-  --shadow-1: 0 1px 2px 0 #3c40434d, 0 1px 3px 1px #3c404326;
-  --shadow-2: 0 1px 3px 0 #3c40434d, 0 4px 8px 3px #3c404326;
-
-  --sans: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --mono: "Roboto Mono", ui-monospace, Menlo, Consolas, monospace;
+  --display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
+  --sans: "Instrument Sans", "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
 
   --content-max: 44rem;
   --page-max: 76rem;
   --side-width: 15rem;
   --grid-gap: clamp(16px, 3vw, 40px);
   --gutter: clamp(16px, 4vw, 40px);
-  --radius: 8px;
-  --radius-lg: 16px;
+  --radius: 10px;
+  --radius-lg: 18px;
   --radius-xl: 28px;
-  --radius-pill: 999px;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
   --ink: var(--fg-strong);
   --muted: var(--fg-faint);
   --line: var(--border);
-  --serif: var(--sans);
+  --serif: var(--display);
   --label: var(--sans);
   --heading: var(--sans);
   --wide: 90rem;
@@ -99,63 +95,48 @@
 }
 
 [data-theme="dark"] {
-  --page: #202124;
-  --page-faint: #292a2d;
-  --surface: #303134;
-  --surface-strong: #3c4043;
-  --surface-hover: #303134;
-  --surface-tint: #1e2a3d;
+  --leaf: #8cc7a6;
+  --magnolia: #e9a8b8;
+  --terracotta: #e8916e;
+  --black: #f2efec;
 
-  --accent: #8ab4f8;
-  --accent-fg: #8ab4f8;
+  --page: #141312;
+  --page-faint: #1b1a19;
+  --surface: #221f1f;
+  --surface-strong: #2d2a29;
+  --surface-hover: #262222;
+  --surface-tint: #1a2620;
 
-  --fg-strong: #e8eaed;
-  --fg: #bdc1c6;
-  --fg-faint: #9aa0a6;
-  --fg-on-action: #202124;
+  --accent-fg: #e8916e;
 
-  --border: #3c4043;
-  --border-faint: #303134;
-  --border-strong: #5f6368;
+  --fg: #d9d5d1;
+  --fg-faint: #a39d97;
+  --fg-on-action: #141312;
 
-  --action: #8ab4f8;
-  --action-hover: #aecbfa;
-  --action-active: #aecbfa;
-  --action-surface: #1e2a3d;
-  --action-border: #2b4a7a;
-  --visited: #8ab4f8;
-  --focus-inner: #8ab4f8;
-  --focus-outer: #8ab4f866;
+  --action-hover: #b0dcc3;
+  --action-active: #b0dcc3;
+  --action-surface: #1a2620;
+  --action-border: #2b4538;
 
-  --brand: #8ab4f8;
-  --brand-fg: #8ab4f8;
-  --brand-surface: #1e2a3d;
-  --brand-border: #2b4a7a;
+  --brand-surface: #1a2620;
+  --brand-border: #2b4538;
 
-  --success-fg: #81c995;
-  --success-surface: #1c2f22;
-  --success-border: #284d33;
-  --warning-fg: #fdd663;
-  --warning-surface: #332b12;
-  --warning-border: #4d3f12;
-  --critical-fg: #f28b82;
-  --critical-surface: #3a1f1d;
-  --critical-border: #5c2b28;
-  --highlight-fg: #e8eaed;
-  --highlight-surface: #303134;
-  --highlight-border: #3c4043;
+  --success-surface: #1a2620;
+  --success-border: #2b4538;
+  --warning-fg: #e8916e;
+  --warning-surface: #2a1d17;
+  --warning-border: #4a2e22;
+  --critical-fg: #e8916e;
+  --critical-surface: #2a1d17;
+  --critical-border: #4a2e22;
+  --highlight-surface: #261d20;
+  --highlight-border: #47323a;
 
-  --code-bg: #292a2d;
-  --code-fg: #e8eaed;
-  --code-border: #3c4043;
-  --code-faint: #9aa0a6;
-  --code-keyword: #8ab4f8;
-  --code-string: #81c995;
-  --code-number: #f28b82;
-  --code-attr: #c58af9;
-
-  --shadow-1: 0 1px 2px 0 #0000004d, 0 1px 3px 1px #00000026;
-  --shadow-2: 0 1px 3px 0 #0000004d, 0 4px 8px 3px #00000026;
+  --code-bg: #1b1a19;
+  --code-faint: #a39d97;
+  --code-string: #e8916e;
+  --code-number: #e9a8b8;
+  --code-attr: #b0dcc3;
 
   color-scheme: dark;
 }

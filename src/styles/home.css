@@ -1,4 +1,4 @@
-/* Home: a large quote beside a mosaic of illustrations, then the posts grouped by topic */
+/* Home: a large statement beside three photos, then the posts grouped by topic */
 
 .landing {
   display: block;
@@ -6,151 +6,168 @@
 
 .landing-top {
   display: grid;
-  gap: 32px var(--grid-gap);
+  gap: 40px var(--grid-gap);
   align-items: center;
-  margin: 16px 0 72px;
+  margin: 8px 0 96px;
 }
 
 @media (min-width: 900px) {
   .landing-top {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
-    margin-top: 32px;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    margin-top: 40px;
   }
 }
 
 .pull-quote blockquote p {
   color: var(--fg-strong);
-  font-size: clamp(1.75rem, 3.6vw, 2.75rem);
+  font-family: var(--display);
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
   font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  line-height: 1.04;
+  letter-spacing: -0.01em;
   text-wrap: balance;
 }
 
 .pull-quote blockquote p::before {
   content: "“";
+  color: var(--terracotta);
 }
 
 .pull-quote blockquote p::after {
   content: "”";
+  color: var(--terracotta);
 }
 
 .pull-quote figcaption {
-  display: inline-flex;
-  margin-top: 24px;
-  padding: 6px 14px;
-  border-radius: var(--radius-lg);
-  background: var(--surface);
-  color: var(--fg-faint);
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-/* Bento mosaic: one tall tile and three smaller ones. */
-.home-mosaic {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  grid-template-rows: repeat(3, minmax(0, 1fr));
+  display: flex;
+  align-items: center;
   gap: 12px;
-  aspect-ratio: 5 / 4;
+  margin-top: 28px;
+  color: var(--fg-faint);
+  font-size: 0.9375rem;
 }
 
-.home-mosaic img {
+.pull-quote figcaption::before {
+  content: "";
+  width: 32px;
+  height: 1px;
+  background: var(--black);
+}
+
+/* Three photos: one tall, two stacked beside it. */
+.home-photos {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  aspect-ratio: 6 / 5;
+}
+
+.home-photos img {
   width: 100%;
   height: 100%;
   min-height: 0;
   object-fit: cover;
   border-radius: var(--radius-lg);
+  background: var(--surface);
 }
 
-.home-mosaic img:first-child {
+.home-photos img:first-child {
   grid-row: 1 / span 2;
-  border-radius: var(--radius-xl);
-}
-
-.home-mosaic img:nth-child(4) {
-  grid-column: 1 / -1;
-}
-
-.home-mosaic img:nth-child(2) {
-  grid-column: 2;
-  grid-row: 1;
-}
-
-.home-mosaic img:nth-child(3) {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-.home-mosaic img:nth-child(4) {
-  grid-row: 3;
 }
 
 /* The index */
+.note-index {
+  border-top: 1px solid var(--black);
+}
+
 .index-group {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  gap: 16px var(--grid-gap);
-  padding: 40px 0;
-  border-top: 1px solid var(--border);
+  gap: 20px var(--grid-gap);
+  padding: 40px 0 48px;
+  border-bottom: 1px solid var(--border);
+}
+
+.index-group:last-child {
+  border-bottom: 0;
 }
 
 @media (min-width: 800px) {
   .index-group {
-    grid-template-columns: minmax(0, 18rem) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   }
 
   .index-group__head {
     position: sticky;
-    top: 88px;
+    top: 24px;
     align-self: start;
   }
 }
 
-.index-group__art {
+.index-group__photo {
   display: block;
   width: 100%;
   height: auto;
-  aspect-ratio: 16 / 9;
-  margin-bottom: 16px;
+  aspect-ratio: 4 / 3;
+  margin-bottom: 20px;
   object-fit: cover;
   border-radius: var(--radius-lg);
+  background: var(--surface);
+}
+
+.index-group__number {
+  color: var(--accent-fg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.index-group h2 {
+  margin-top: 4px;
+  color: var(--fg-strong);
+  font-family: var(--display);
+  font-size: 2rem;
+  font-weight: 400;
+  line-height: 1.05;
 }
 
 @media (max-width: 799px) {
   .index-group__head {
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
+    grid-template-columns: 88px minmax(0, 1fr);
     column-gap: 16px;
     align-items: center;
   }
 
-  .index-group__art {
+  .index-group__photo {
     grid-row: 1 / span 2;
     margin: 0;
     aspect-ratio: 1;
     border-radius: var(--radius);
   }
-}
 
-.index-group h2 {
-  color: var(--fg-strong);
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
-}
+  .index-group__number {
+    align-self: end;
+  }
 
-.index-group__count {
-  margin-top: 4px;
-  color: var(--fg-faint);
-  font-size: 0.875rem;
+  .index-group h2 {
+    align-self: start;
+    font-size: 1.75rem;
+  }
 }
 
 .index-group ol {
-  display: grid;
-  gap: 4px;
   list-style: none;
+}
+
+.note-index li {
+  border-bottom: 1px solid var(--border-faint);
+}
+
+.note-index li:last-child {
+  border-bottom: 0;
 }
 
 .note-index li a {
@@ -158,40 +175,29 @@
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 16px;
-  border-radius: var(--radius-lg);
+  margin: 0 -12px;
+  padding: 14px 12px;
+  border-radius: var(--radius);
   color: var(--fg-strong);
   font-size: 1.0625rem;
   line-height: 1.4;
   text-decoration: none;
-  transition: background-color 0.15s;
+  transition: background-color 0.15s, color 0.15s;
 }
 
 .note-index li a:hover {
-  background: var(--surface-hover);
-  color: var(--fg-strong);
-  text-decoration: none;
-}
-
-.note-index li a:hover .index-title {
-  color: var(--accent-fg);
+  background: var(--surface);
+  color: var(--action);
 }
 
 .index-arrow {
-  flex: none;
-  width: 20px;
-  height: 20px;
-  fill: none;
-  stroke: var(--fg-faint);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 0.15s, stroke 0.15s;
+  width: 22px;
+  height: 22px;
+  transition: translate 0.2s;
 }
 
 .note-index li a:hover .index-arrow {
-  stroke: var(--accent-fg);
-  transform: translateX(3px);
+  translate: 4px 0;
 }
 
 .note-index li[hidden] {

@@ -1,10 +1,8 @@
 import { NoteList } from "../components/layout/NoteList.tsx";
+import { PhotoImage } from "../components/ui/PhotoImage.tsx";
+import { homePhotos } from "../components/ui/photos.ts";
 import { Text } from "../components/ui/T.tsx";
 import { ui } from "../i18n/ui.ts";
-import { groupArt } from "../notes/catalog.ts";
-
-/** Four group illustrations in a bento mosaic beside the quote. */
-const MOSAIC = ["ai", "cloud", "security", "web"];
 
 export function HomePage() {
   return (
@@ -21,9 +19,9 @@ export function HomePage() {
             <Text value={ui.quoteCitation} />
           </figcaption>
         </figure>
-        <div className="home-mosaic" aria-hidden="true">
-          {MOSAIC.map((id) => (
-            <img key={id} src={groupArt(id)} alt="" width="1200" height="675" decoding="async" />
+        <div className="home-photos" aria-hidden="true">
+          {homePhotos.map((photo, index) => (
+            <PhotoImage key={photo.id} photo={photo} eager sizes={index === 0 ? "(min-width: 900px) 30vw, 60vw" : "(min-width: 900px) 18vw, 40vw"} />
           ))}
         </div>
       </div>

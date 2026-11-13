@@ -36,7 +36,7 @@ src/
   i18n/         Localized type and the chrome's copy
   server/       renders every page, sitemap.xml and llms.txt
   styles/       tokens, base, layout and prose CSS
-public/         copied as is: CNAME, robots.txt, favicons, manifest, share image, group illustrations (assets/art)
+public/         copied as is: CNAME, robots.txt, favicons, manifest, share image
                 (and audio/, optional: see src/easter-egg/)
 scripts/build.ts  production build
 ```
@@ -51,7 +51,7 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Behaviour
 
-- **Layout:** after Google's own sites (blog.google, design.google): Google Sans Flex and Roboto Mono from Google Fonts, the GM grey ramp, Google Blue for links and actions, rounded corners and pill buttons. Home is the IBM quote beside a mosaic of illustrations, then the posts grouped by topic, each group with its illustration; each note has a category chip, the title, its group's illustration, an "On this page" list (to the right of the text on wide screens), a thin reading-progress bar and a light footer. The illustrations are flat SVGs in the four Google colours, one per group, in `public/assets/art/<group id>.svg`.
+- **Layout:** simple and expressive, with abc.xyz as a reference for restraint. Four colours taken from the photos (leaf green for actions, magnolia for surfaces, terracotta for small accents, black for details: rules, outlines, icons), Instrument Serif for titles, Instrument Sans for text and JetBrains Mono for code (Google Fonts). Buttons, the arrow and the theme glyphs are the site's own. Home is the IBM quote beside three photos, then the posts grouped by topic, each group with its photo; each note has its group's photo with the credit, an "On this page" list (to the right of the text on wide screens), a thin reading-progress bar and a magnolia footer. Photos are from Unsplash (free licence), loaded from Unsplash's CDN; the list and the group mapping are in `src/components/ui/photos.ts`.
 - **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens in `src/styles/tokens.css`; the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
 - **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.

@@ -31,5 +31,6 @@ export const ui = {
     pt: "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão.",
   },
   quoteCitation: { en: "IBM internal training presentation, 1979", pt: "Apresentação interna de treinamento da IBM, 1979" },
+  photoBy: { en: "Photo:", pt: "Foto:" },
   notFoundBackHome: { en: "Back home", pt: "Voltar ao início" },
 } satisfies Record<string, Localized>;

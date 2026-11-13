@@ -1,7 +1,9 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
 import { groupOf } from "../notes/registry.ts";
-import { groupArt } from "../notes/catalog.ts";
+import { PhotoImage } from "../components/ui/PhotoImage.tsx";
+import { groupPhoto } from "../components/ui/photos.ts";
+import { Arrow } from "../components/ui/Arrow.tsx";
 import { site } from "../site.ts";
 import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
 import { localizedAttribute } from "../i18n/attributes.ts";
@@ -12,6 +14,7 @@ import type { Note, TocGroup } from "../notes/types.ts";
 export function NotePage({ note }: { note: Note }) {
   const { Body } = note;
   const group = groupOf(note.slug);
+  const photo = groupPhoto(group.id);
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
     <article className={articleClass}>
@@ -31,7 +34,16 @@ export function NotePage({ note }: { note: Note }) {
         <p className="hero-lede">
           <Text value={note.heroLede} />
         </p>
-        <img className="hero-art" src={groupArt(group.id)} alt="" width="1200" height="675" decoding="async" />
+        <figure className="hero-photo">
+          <PhotoImage photo={photo} eager sizes="(min-width: 760px) 44rem, 100vw" />
+          <figcaption>
+            <Text value={ui.photoBy} />{" "}
+            <a href={photo.page} rel="noopener">
+              {photo.photographer}
+            </a>{" "}
+            / Unsplash
+          </figcaption>
+        </figure>
         <dl className="hero-facts">
           <div>
             <dt>
@@ -68,7 +80,7 @@ export function NotePage({ note }: { note: Note }) {
       <DiagramViewer />
       <div id="scroll-progress" className="requires-js" aria-hidden="true" />
       <button type="button" className="back-to-top requires-js" data-back-to-top="">
-        <span aria-hidden="true">↑ </span>
+        <Arrow direction="up" />
         <Text value={ui.backToTop} />
       </button>
     </article>

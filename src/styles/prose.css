@@ -11,11 +11,13 @@
 
 .content-section h2 {
   margin: 0 0 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--black);
   color: var(--fg-strong);
-  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-family: var(--display);
+  font-size: clamp(2rem, 3.6vw, 2.5rem);
   font-weight: 400;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  line-height: 1.08;
 }
 
 .ds-guide h3 {
@@ -107,8 +109,8 @@ pre code {
   align-items: center;
   gap: 6px;
   padding: 4px 10px;
-  border: 1px solid var(--code-border);
-  border-radius: var(--radius-pill);
+  border: 1px solid var(--black);
+  border-radius: var(--radius);
   background: var(--code-bg);
   color: var(--code-faint);
   font-family: var(--sans);
@@ -236,7 +238,7 @@ pre:hover .copy-button,
 .qa {
   margin: 24px 0;
   counter-reset: qa;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--black);
 }
 
 .qa-item {
@@ -267,7 +269,7 @@ pre:hover .copy-button,
 .qa-item dd {
   margin: 10px 0 0 calc(1.75rem + 16px);
   padding-left: 16px;
-  border-left: 2px solid var(--g-blue);
+  border-left: 2px solid var(--magnolia);
   color: var(--fg);
 }
 
@@ -312,7 +314,7 @@ pre:hover .copy-button,
 .sources {
   margin-top: 64px;
   padding-top: 16px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--black);
   font-size: 0.875rem;
   color: var(--fg-faint);
 }
@@ -553,8 +555,8 @@ pre:hover .copy-button,
   min-width: 44px;
   min-height: 44px;
   padding: 0 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-pill);
+  border: 1px solid var(--black);
+  border-radius: var(--radius);
   font-size: 1.125rem;
 }
 
