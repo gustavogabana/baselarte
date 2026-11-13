@@ -1,5 +1,5 @@
-/* Post pages: the topic on its ink bar, a heavy title, lede, the topic's photo overrun by
-   ink bars, facts, then the body with the index beside it, sources. */
+/* Note pages: the series link (number on its colour), the title, lede, a strip of the series
+   photo toned in its colour, facts, then the body with the contents beside it, sources. */
 
 .back-link {
   margin: 0 0 32px;
@@ -13,16 +13,35 @@
   gap: 8px;
   min-height: 36px;
   padding: 0 14px 0 10px;
-  border: 1.5px solid var(--black);
   color: var(--fg-strong);
   text-decoration: none;
-  transition: background-color 120ms ease, color 120ms ease, transform 120ms var(--ease-out);
+  transition: background-color 160ms var(--ease-out), transform 120ms var(--ease-out);
+}
+
+.back-link a,
+.aws-guide .back-link a {
+  gap: 10px;
+  text-decoration: none;
+  padding: 0 10px 0 0;
+}
+
+.back-link .series-num {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 1.625rem;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  font-size: 0.8125rem;
+}
+
+.back-link .arrow {
+  transition: translate 200ms var(--ease-out);
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .back-link a:hover {
-    background: var(--black);
-    color: var(--page);
+  .back-link a:hover .arrow {
+    translate: -3px 0;
   }
 }
 
@@ -35,31 +54,14 @@
   margin: 0 0 56px;
 }
 
-.hero-meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 12px;
-  margin-bottom: 20px;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
-.hero-category {
-  padding: 3px 10px;
-  background: var(--group-ink);
-  color: var(--on-group-ink);
-  font-weight: 700;
-}
-
 
 .hero-title {
   color: var(--fg-strong);
-  font-size: clamp(2.375rem, 5.6vw, 3.75rem);
-  font-weight: 700;
+  font-size: clamp(2.125rem, 4.6vw, 3.25rem);
+  font-weight: 580;
   font-variation-settings: "opsz" 144;
-  line-height: 1.05;
-  letter-spacing: -0.018em;
+  line-height: 1.1;
+  letter-spacing: -0.012em;
   text-wrap: balance;
 }
 
@@ -68,9 +70,9 @@
 }
 
 .hero-lede {
-  margin: 24px 0 0;
+  margin: 20px 0 0;
   color: var(--fg-faint);
-  font-size: 1.25rem;
+  font-size: 1.1875rem;
   line-height: 1.45;
   text-wrap: pretty;
 }
@@ -79,8 +81,14 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px 40px;
-  margin: 32px 0 0;
+  margin: 28px 0 0;
+  padding-top: 16px;
+  border-top: 2px solid var(--black);
   font-size: 0.875rem;
+}
+
+.hero-facts__number {
+  font-variant-numeric: tabular-nums;
 }
 
 .hero-facts dt {
@@ -150,7 +158,7 @@
   top: 0;
   left: 0;
   width: 100%;
-  height: 4px;
+  height: 3px;
   background: var(--group-ink);
   transform-origin: 0 50%;
   transform: scaleX(0);
@@ -161,7 +169,7 @@
 .side-nav {
   margin: 0 0 48px;
   padding: 16px 0 0;
-  border-top: 2px solid var(--black);
+  border-top: 1px solid var(--border);
   counter-reset: toc;
   font-size: 0.8125rem;
   line-height: 1.35;
@@ -173,7 +181,7 @@
   padding: 0;
   color: var(--fg-strong);
   font-size: 0.875rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .side-nav div + div h2 {
@@ -193,7 +201,7 @@
 .side-nav a {
   display: block;
   padding: 6px 12px;
-  border-left: 2px solid var(--border);
+  border-left: 1px solid var(--border);
   color: var(--fg-faint);
   text-decoration: none;
 }
@@ -217,11 +225,12 @@
   align-items: center;
   gap: 6px;
   padding: 8px 14px 8px 10px;
-  border: 1.5px solid var(--black);
+  border: 1px solid var(--border);
   background: var(--page);
   color: var(--fg-strong);
   font-size: 0.875rem;
   font-weight: 500;
+  transition: background-color 160ms ease, transform 120ms var(--ease-out);
 }
 
 .back-to-top.is-visible:not(.is-over-footer) {
@@ -230,18 +239,27 @@
 
 @media (hover: hover) and (pointer: fine) {
   .back-to-top:hover {
-    background: var(--black);
-    color: var(--page);
+    background: var(--surface);
   }
 }
 
-/* The topic's photo (Unsplash), overrun by ink bars, with its credit. */
-.hero-photo {
-  margin: 40px 0 0;
+.back-to-top:active {
+  transform: scale(0.97);
 }
 
-.hero-photo .inked-photo {
-  aspect-ratio: 16 / 9;
+/* The series photo as a short strip toned in the series colour, with its credit. */
+.hero-photo {
+  margin: 32px 0 0;
+}
+
+.hero-photo .toned-photo {
+  aspect-ratio: 4 / 1;
+}
+
+@media (max-width: 599px) {
+  .hero-photo .toned-photo {
+    aspect-ratio: 5 / 2;
+  }
 }
 
 .not-found .back-link {

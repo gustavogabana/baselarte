@@ -1,37 +1,40 @@
 ---
 name: Baselarte
-description: A modular identity of real engineering photographs and flat bars of process ink around a calm reading column.
+description: A numbered series of monographs; three sober cover colours, black details, small toned photographs around a calm reading column.
 colors:
-  process-cyan: "#00a0dc"
-  process-magenta: "#e5007d"
-  process-yellow: "#ffd200"
-  key-black: "#111111"
-  paper-white: "#ffffff"
-  sheet-grey: "#f4f4f2"
-  text: "#262626"
-  text-faint: "#5c5c5c"
-  night: "#121212"
-  night-key: "#f2f2f0"
+  petrol: "#2f5d66"
+  clay: "#a65e46"
+  sand: "#a89068"
+  black: "#161616"
+  page: "#ffffff"
+  surface: "#f5f6f5"
+  text: "#2a2e2f"
+  text-faint: "#5d6567"
+  night: "#121516"
+  night-petrol: "#6b9fa8"
+  night-clay: "#cf8a71"
+  night-sand: "#c7b38c"
+  night-cover: "#24464d"
 typography:
   display:
     fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
-    fontSize: "clamp(2.5rem, 5.6vw, 5.25rem)"
-    fontWeight: 700
-    lineHeight: 1.02
-    letterSpacing: "-0.018em"
+    fontSize: "clamp(2rem, 4.4vw, 3.5rem)"
+    fontWeight: 520
+    lineHeight: 1.12
+    letterSpacing: "-0.012em"
     fontVariation: "'opsz' 144"
   headline:
     fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
-    fontSize: "clamp(2.375rem, 5.6vw, 3.75rem)"
-    fontWeight: 700
-    lineHeight: 1.05
-    letterSpacing: "-0.018em"
+    fontSize: "clamp(2.125rem, 4.6vw, 3.25rem)"
+    fontWeight: 580
+    lineHeight: 1.1
+    letterSpacing: "-0.012em"
   title:
     fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
-    fontSize: "clamp(1.75rem, 3.4vw, 2.375rem)"
-    fontWeight: 700
-    lineHeight: 1.1
-    letterSpacing: "-0.015em"
+    fontSize: "clamp(1.5rem, 3vw, 2.125rem)"
+    fontWeight: 620
+    lineHeight: 1.15
+    letterSpacing: "-0.012em"
   body:
     fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
     fontSize: "1.0625rem"
@@ -51,97 +54,92 @@ rounded:
   none: "0"
 spacing:
   gutter: "clamp(16px, 4vw, 40px)"
-  grid-gap: "clamp(16px, 3vw, 40px)"
+  grid-gap: "clamp(16px, 3vw, 48px)"
   row: "15px"
-  group: "56px"
+  series: "64px"
 components:
-  button-outline:
-    backgroundColor: "{colors.paper-white}"
-    textColor: "{colors.key-black}"
+  series-number:
+    backgroundColor: "{colors.petrol}"
+    textColor: "{colors.page}"
     rounded: "{rounded.none}"
-    padding: "0 14px"
-    height: "36px"
-  button-outline-hover:
-    backgroundColor: "{colors.key-black}"
-    textColor: "{colors.paper-white}"
+    size: "56px (index), 36x26px (strip and back link)"
   segmented-option-on:
-    backgroundColor: "{colors.key-black}"
-    textColor: "{colors.paper-white}"
+    backgroundColor: "{colors.black}"
+    textColor: "{colors.page}"
     rounded: "{rounded.none}"
     height: "32px"
-  topic-chip:
-    backgroundColor: "{colors.process-yellow}"
-    textColor: "{colors.key-black}"
-    rounded: "{rounded.none}"
-    padding: "3px 10px"
+  cover:
+    backgroundColor: "{colors.petrol}"
+    textColor: "{colors.page}"
+    padding: "24px"
 ---
 
 # Design System: Baselarte
 
 ## Overview
 
-**Creative North Star: "The Process Ink Sheet"**
+**Creative North Star: "The Monograph Series"**
 
-The site prints like a four-colour sheet: real photographs of engineering, architecture and the sea, with flat bars of cyan, magenta and yellow laid over and beside them, and black (the key plate) drawing every rule, outline and mark. The frame is loud and modular; the reading column inside it is calm, white and black.
+The notes read like a numbered collection from a university press. Eight series run from foundations to practice (01 Fundamentos da computação … 08 Estudo e hábitos), and every note has its place in its series (04.2). The number is the wayfinding: it appears on the home strip, in the index, in the back link and in the note's facts.
 
-Google Sans Flex carries everything from the huge display quote to the running text; weight and optical size do the hierarchy, not a second family. Corners are square throughout. Colour never tints text runs; it sits in solid fields.
+Colour is sober and scarce. Three cover colours take turns per series; black does the details. Photographs stay, but small and quiet: greyscale, multiplied over the series colour, like a tipped-in plate.
 
 **Key Characteristics:**
-- Three solid inks mark topics; black does details only.
-- Photographs are real, recent and credited; ink bars overrun them, opaque.
-- Square corners, black hairlines and 2px rules, no shadows.
-- Heavy, tight display type; regular, roomy reading type.
+- Series numbers on square colour blocks, like a spine.
+- White ground, black text, hairline rows, a 2px black rule opening each series.
+- Medium-weight Google Sans Flex with gentle tracking; nothing heavy or tight.
+- Toned photographs as decoration, always credited.
 
 ## Colors
 
-**The Process Ink Rule.** Cyan (#00a0dc), magenta (#e5007d) and yellow (#ffd200) are fields and bars, never text colours. Each note group takes the next ink in catalog order, so neighbouring topics never share one.
+**The Cover Rule.** Petrol (#2f5d66), clay (#a65e46) and sand (#a89068) are cover colours: blocks behind series numbers, the photo tone, link underlines, the reading-progress bar. Never body-text colours. Series take them in catalog order, so neighbours differ.
 
-**The Key Plate Rule.** Black (#111111) is the detail ink: text, 1px row rules, 2px section rules, the 6px rule that opens the index, button outlines, square marks. In the dark theme the key flips to near-white (#f2f2f0) on near-black (#121212); the three inks stay the same.
+**The Detail Rule.** Black (#161616) draws text, the 2px series rules, the quote's short rule and the flower's heart. In the dark theme black flips to #eef0ef on #121516, the cover colours lift a step (#6b9fa8, #cf8a71, #c7b38c) and text on them turns dark; the home cover deepens to #24464d.
 
-- **Text on ink:** black on cyan and yellow; white on magenta.
-- **Neutral:** paper white (#ffffff) ground; sheet grey (#f4f4f2) for code and figures; text (#262626) and faint text (#5c5c5c, 6.7:1 on white).
-- **Links:** black text with a 2px underline in the current topic's ink; hover fills yellow.
-- **Selection:** yellow.
+- **Text on colour:** white on petrol (7.3:1) and clay (4.9:1); black on sand (5.9:1).
+- **Neutral:** white ground; surface #f5f6f5 for code and figures; text #2a2e2f; faint #5d6567.
+- **Links:** black text, 1.5px underline in the series colour; hover darkens the underline to black.
+- **Selection:** sand with black text. Caret in the series colour.
+- **Status (callouts):** derived from the three colours: petrol for info/success, sand for warnings, clay for critical.
 
 ## Typography
 
-**The One Family Rule.** Google Sans Flex for display, headings, body and labels; Google Sans Code only for code. Both from Google Fonts.
+**The One Family Rule.** Google Sans Flex for everything; Google Sans Code only for code. Weights stay between 400 and 650 (the font request is trimmed to 400–700).
 
-- **Display** (700, opsz 144, up to 5.25rem, -0.018em): the home quote.
-- **Headline** (700, up to 3.75rem): note titles.
-- **Title** (700, up to 2.375rem): section and topic headings, each under a 2px black rule.
-- **Body** (400, 1.0625rem / 1.6): the reading column, about 44rem wide.
-- **Label** (500, 0.8125rem): credits, facts, controls.
+- **Display** (520, opsz 144, up to 3.5rem): the home quote, max 19ch.
+- **Headline** (580, up to 3.25rem): note titles.
+- **Title** (620, up to 2.125rem): series and section headings.
+- **Body** (400, 1.0625rem / 1.6): the reading column, 44rem.
+- **Label** (500, 0.8125rem): numbers, credits, facts, controls. Numbers use tabular figures.
+- **Secondary steps** between them: 0.875rem (counts, facts, footer), 0.9375rem (strip, citation, subtitle), 1.1875–1.25rem (lede, h3, wordmark), 1.625rem (cover name), 1.875rem (series title cap).
 
 ## Layout
 
-A 80rem page with a fluid gutter. Home: the quote and one tall photograph side by side above 900px, stacked below; then the index, each topic a two-column band (heading and photo in a sticky 22rem column, notes on the right) above 800px, stacked below. Notes: one centred 44rem column; above 1360px the contents list sits to its right.
-
-**The Overrun Rule.** Ink bars may cross a photo's edge into the gutter or the neighbouring column on wide screens; below 1100px they stay inside the photo so nothing scrolls sideways.
+A 76rem page with a fluid gutter. Home: the quote and the cover side by side above 900px, stacked below; the series strip (auto-fill columns of 15rem); then each series as a band: a sticky 17rem head (number block, title, count, 3:2 toned photo) and the note rows on the right, stacked below 800px (photo 3:1). Notes: one centred 44rem column; above 1360px the contents sit to its right.
 
 ## Elevation & Depth
 
-Flat. No shadows anywhere; depth comes from layering opaque ink bars over photographs and from black rules.
+Flat. No shadows. Depth comes from colour blocks and rules only.
 
 ## Shapes
 
-Square corners (0) on everything: buttons, chips, photos, code blocks, figures. Bars tilt only a few degrees (-4 to -7), never more.
+Square corners everywhere.
 
 ## Components
 
-- **Outline button** (back link, back to top): 1.5px black outline, square; hover fills black; press scales to 0.97.
-- **Segmented control** (theme, language): one black outline around the group, black dividers; the chosen option is filled black; hover fills yellow. The header shows glyphs only (ring, disc, half disc).
-- **Topic chip:** the topic's ink as a solid field with bold label text, square.
-- **Index row:** black hairline below; on hover the topic's ink bar slides in from the left behind the title (transform scaleX, 220ms, cubic-bezier(0.23, 1, 0.32, 1)); the arrow nudges 4px. Instant under reduced motion.
-- **Inked photo:** a photograph with a yellow bar, a tilted cyan bar and a black square mark; credit line below ("Photo: name / Unsplash").
-- **Arrow:** the site's own: a dot tail, a straight stem, a curved head.
+- **Series number:** tabular figures on the series colour; 56px block in the index, small 36x26 block in the strip and the back link.
+- **Note row:** number, title, the site's arrow; hairline below. Hover: the number fills with the series colour, the title gets the series underline, the arrow moves 4px (160–200ms, cubic-bezier(0.23, 1, 0.32, 1)); instant under reduced motion.
+- **Back link (note page):** arrow + series number block + series name, linking to that series on the home.
+- **Cover (home):** petrol sheet, white magnolia, name and subtitle (the page's h1), sand-toned photo, counts under a hairline.
+- **Toned photo:** greyscale photo with mix-blend multiply over `--tone` (default: the series colour).
+- **Segmented control:** hairline outline; chosen option filled black.
+- **Magnolia mark:** five petals in clay with pale veins and a black heart (white petals on the cover).
 
 ## Do's and Don'ts
 
-- **Do** give each new topic the next ink in order and a real engineering, architecture or sea photograph.
-- **Do** keep ink in fields and bars; keep the reading column black on white.
-- **Do** credit every photograph and load it from Unsplash's CDN.
-- **Don't** blend ink bars into photographs (multiply muddies the inks); keep them opaque.
-- **Don't** add rounded corners, shadows or gradients.
-- **Don't** use pastel tints of the inks or a fourth colour.
+- **Do** give a new note its place in a series in `src/notes/catalog.ts`; the order there is the numbering.
+- **Do** keep colour in blocks, underlines and photo tones; keep the column black on white.
+- **Do** credit every photograph and load it from Unsplash's CDN at the size shown.
+- **Don't** add a fourth colour, bright tints, gradients, shadows or rounded corners.
+- **Don't** set display type heavier than 650 or tracked tighter than -0.02em.
 - **Don't** put a label above a heading.

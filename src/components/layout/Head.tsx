@@ -4,7 +4,7 @@ import { absoluteUrl, site } from "../../site.ts";
 
 /** Google Sans Flex (text and display, variable optical size and weight) and Google Sans Code, from Google Fonts. */
 const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..800&family=Google+Sans+Code:wght@400;500&display=swap";
+  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Google+Sans+Code:wght@400;500&display=swap";
 
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
@@ -68,8 +68,8 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=9" type="image/svg+xml" />
-      <link rel="icon" href="/favicon.ico?v=6" sizes="any" />
+      <link rel="icon" href="/favicon.svg?v=10" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.ico?v=7" sizes="any" />
       <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />

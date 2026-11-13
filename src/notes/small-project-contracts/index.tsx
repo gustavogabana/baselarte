@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "small-project-contracts",
-  title: { en: "Contracts and pricing for small web projects", pt: "Contratos e precificação para projetos web pequenos" },
+  title: { en: "Contracts and pricing for small projects", pt: "Contratos e preço de projetos pequenos" },
   seo: {
     title: { en: "Contracts and pricing for small web projects", pt: "Contratos e precificação para projetos web pequenos" },
     description: { en: "Contracts for landing pages, institutional sites and small projects: contract types, scope, one-time vs monthly, handover of domain, DNS and accounts, copyright assignment under Brazilian law, and how much to charge.", pt: "Contratos para landing pages, sites institucionais e projetos pequenos: tipos de contrato, escopo, pagamento único ou mensal, entrega de domínio, DNS e contas, cessão de direitos pela lei brasileira e quanto cobrar." },

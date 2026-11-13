@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "small-project-hosting",
-  title: { en: "Hosting and databases for small projects and small SaaS", pt: "Hospedagem e banco para projetos pequenos e SaaS pequenos" },
+  title: { en: "Hosting for small projects", pt: "Hospedagem para projetos pequenos" },
   seo: {
     title: { en: "Hosting and databases for small projects and small SaaS", pt: "Hospedagem e banco para projetos pequenos e SaaS pequenos" },
     description: { en: "Practical hosting and database options for landing pages, institutional sites and small SaaS: Vercel, Netlify, Cloudflare, Hostinger, Railway, Render, Fly.io, Hetzner with Coolify, Supabase, Neon and D1, with prices, limits and account ownership.", pt: "Opções práticas de hospedagem e banco para landing pages, sites institucionais e SaaS pequenos: Vercel, Netlify, Cloudflare, Hostinger, Railway, Render, Fly.io, Hetzner com Coolify, Supabase, Neon e D1, com preços, limites e de quem é a conta." },

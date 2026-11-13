@@ -1,74 +1,83 @@
-/* Design tokens. Four process inks, solid: cyan, magenta and yellow mark topics and fill bars;
-   black (K, the key) draws every detail: text, rules, outlines, marks. White ground.
-   Every colour is a token here; the dark theme only redefines them. */
+/* Design tokens. A numbered series of monographs: three sober cover colours (petrol, clay, sand)
+   mark the series; black draws the details: text, rules, numbers, the flower's heart.
+   White ground. Every colour is a token here; the dark theme only redefines them. */
 
 :root {
-  --cyan: #00a0dc;
-  --magenta: #e5007d;
-  --yellow: #ffd200;
-  --black: #111111;
+  --petrol: #2f5d66;
+  --clay: #a65e46;
+  --sand: #a89068;
+  --black: #161616;
 
-  /* Text set on each ink */
-  --on-cyan: #111111;
-  --on-magenta: #ffffff;
-  --on-yellow: #111111;
+  /* Text set on each cover colour (contrast: 7.3, 4.9 and 5.9 to 1) */
+  --on-petrol: #ffffff;
+  --on-clay: #ffffff;
+  --on-sand: #161616;
+
+  /* The home cover: petrol in both themes (a deeper one on the dark ground) */
+  --cover: var(--petrol);
+  --on-cover: var(--on-petrol);
+
+  /* Light tints, for selection and quiet surfaces */
+  --petrol-tint: #e7eef0;
+  --clay-tint: #f5e9e4;
+  --sand-tint: #f1ece2;
 
   --page: #ffffff;
-  --page-faint: #f4f4f2;
-  --surface: #f4f4f2;
-  --surface-strong: #e6e6e3;
-  --surface-hover: #f4f4f2;
+  --page-faint: #f5f6f5;
+  --surface: #f5f6f5;
+  --surface-strong: #e7e9e8;
+  --surface-hover: #f5f6f5;
 
-  --accent: var(--magenta);
-  --accent-fg: #c4006b;
+  --accent: var(--clay);
+  --accent-fg: #8f4c36;
 
   --fg-strong: var(--black);
-  --fg: #262626;
-  --fg-faint: #5c5c5c;
+  --fg: #2a2e2f;
+  --fg-faint: #5d6567;
   --fg-on-action: #ffffff;
 
-  --border: #11111124;
-  --border-faint: #11111114;
+  --border: #16161624;
+  --border-faint: #16161612;
   --border-strong: var(--black);
 
-  /* Links are black; the ink is in the underline. */
+  /* Links are black; the series colour is in the underline. */
   --action: var(--black);
   --action-hover: var(--black);
   --action-active: var(--black);
-  --action-surface: #f4f4f2;
+  --action-surface: var(--surface);
   --action-border: var(--black);
   --visited: var(--black);
   --focus-inner: var(--black);
-  --focus-outer: #11111166;
+  --focus-outer: #16161666;
 
   /* Names kept for the note stylesheets */
-  --brand: var(--black);
-  --brand-fg: var(--black);
-  --brand-surface: #f4f4f2;
-  --brand-border: #11111140;
+  --brand: var(--petrol);
+  --brand-fg: #24494f;
+  --brand-surface: var(--petrol-tint);
+  --brand-border: #2f5d6640;
 
-  --success-fg: #00739e;
-  --success-surface: #e5f6fc;
-  --success-border: #b3e3f5;
-  --warning-fg: #8a6a00;
-  --warning-surface: #fff8d6;
-  --warning-border: #ffe98a;
-  --critical-fg: #b80064;
-  --critical-surface: #fde6f2;
-  --critical-border: #f7b3d6;
+  --success-fg: #24494f;
+  --success-surface: var(--petrol-tint);
+  --success-border: #b9ccd0;
+  --warning-fg: #6b5735;
+  --warning-surface: var(--sand-tint);
+  --warning-border: #ddd0b6;
+  --critical-fg: #8f4c36;
+  --critical-surface: var(--clay-tint);
+  --critical-border: #e3c4b8;
   --highlight-fg: var(--black);
-  --highlight-surface: #f4f4f2;
-  --highlight-border: #11111124;
+  --highlight-surface: var(--surface);
+  --highlight-border: var(--border);
 
-  /* Code: a light sheet, black ink, the three colour inks for syntax */
-  --code-bg: #f4f4f2;
+  /* Code: a light grey sheet, the three cover colours (darkened for contrast) for syntax */
+  --code-bg: #f5f6f5;
   --code-fg: var(--black);
-  --code-border: #11111124;
-  --code-faint: #5c5c5c;
-  --code-keyword: #b80064;
-  --code-string: #00739e;
-  --code-number: #8a6a00;
-  --code-attr: #00739e;
+  --code-border: var(--border);
+  --code-faint: #5d6567;
+  --code-keyword: #8f4c36;
+  --code-string: #24494f;
+  --code-number: #6b5735;
+  --code-attr: #24494f;
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
 
@@ -76,9 +85,9 @@
   --mono: "Google Sans Code", ui-monospace, Menlo, Consolas, monospace;
 
   --content-max: 44rem;
-  --page-max: 80rem;
+  --page-max: 76rem;
   --side-width: 15rem;
-  --grid-gap: clamp(16px, 3vw, 40px);
+  --grid-gap: clamp(16px, 3vw, 48px);
   --gutter: clamp(16px, 4vw, 40px);
   --radius: 0;
   --radius-lg: 0;
@@ -86,9 +95,9 @@
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
   --ink: var(--fg-strong);
-  /* The current topic's ink (set per group by components/ui/inks.ts) */
-  --group-ink: var(--magenta);
-  --on-group-ink: var(--on-magenta);
+  /* The current series' colour (set per group by components/ui/inks.ts) */
+  --group-ink: var(--petrol);
+  --on-group-ink: var(--on-petrol);
   --muted: var(--fg-faint);
   --line: var(--border);
   --serif: var(--sans);
@@ -103,47 +112,55 @@
 }
 
 [data-theme="dark"] {
-  --black: #f2f2f0;
+  /* The cover colours lift a step so they hold on a dark ground; text on them turns black. */
+  --petrol: #6b9fa8;
+  --clay: #cf8a71;
+  --sand: #c7b38c;
+  --black: #eef0ef;
 
-  --page: #121212;
-  --page-faint: #1c1c1c;
-  --surface: #1c1c1c;
-  --surface-strong: #2a2a2a;
-  --surface-hover: #1c1c1c;
+  --on-petrol: #121516;
+  --on-clay: #121516;
+  --on-sand: #121516;
 
-  --accent-fg: #ff4fa8;
+  --cover: #24464d;
+  --on-cover: #eef0ef;
 
-  --fg: #dadada;
-  --fg-faint: #a3a3a3;
-  --fg-on-action: #121212;
+  --petrol-tint: #1a2729;
+  --clay-tint: #2a1d18;
+  --sand-tint: #26221a;
 
-  --border: #f2f2f02e;
-  --border-faint: #f2f2f017;
-  --focus-outer: #f2f2f066;
+  --page: #121516;
+  --page-faint: #1a1e1f;
+  --surface: #1a1e1f;
+  --surface-strong: #262b2c;
+  --surface-hover: #1a1e1f;
 
-  --action-surface: #1c1c1c;
-  --brand-surface: #1c1c1c;
-  --brand-border: #f2f2f040;
+  --accent-fg: #e3a58e;
 
-  --success-fg: #4cc3ef;
-  --success-surface: #0c2430;
-  --success-border: #134a60;
-  --warning-fg: #ffd200;
-  --warning-surface: #2a2410;
-  --warning-border: #4d4214;
-  --critical-fg: #ff4fa8;
-  --critical-surface: #2e0f20;
-  --critical-border: #5c1d40;
-  --highlight-surface: #1c1c1c;
-  --highlight-border: #f2f2f02e;
+  --fg: #d5dada;
+  --fg-faint: #9aa3a4;
+  --fg-on-action: #121516;
 
-  --code-bg: #1c1c1c;
-  --code-border: #f2f2f02e;
-  --code-faint: #a3a3a3;
-  --code-keyword: #ff4fa8;
-  --code-string: #4cc3ef;
-  --code-number: #ffd200;
-  --code-attr: #4cc3ef;
+  --border: #eef0ef2b;
+  --border-faint: #eef0ef14;
+  --focus-outer: #eef0ef66;
+
+  --brand-fg: #8fbcc4;
+  --brand-border: #6b9fa840;
+
+  --success-fg: #8fbcc4;
+  --success-border: #2c4448;
+  --warning-fg: #d8c7a3;
+  --warning-border: #4a412f;
+  --critical-fg: #e3a58e;
+  --critical-border: #4e3329;
+
+  --code-bg: #1a1e1f;
+  --code-faint: #9aa3a4;
+  --code-keyword: #e3a58e;
+  --code-string: #8fbcc4;
+  --code-number: #d8c7a3;
+  --code-attr: #8fbcc4;
 
   color-scheme: dark;
 }

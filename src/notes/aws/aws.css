@@ -76,11 +76,10 @@
 }
 
 .aws-guide h2 {
-  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
-  font-weight: 700;
-  letter-spacing: -0.015em;
-  line-height: 1.25;
-  letter-spacing: -0.015em;
+  font-size: clamp(1.625rem, 3vw, 2.125rem);
+  font-weight: 620;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
   margin: 8px 0 12px;
   color: var(--fg-strong);
 }

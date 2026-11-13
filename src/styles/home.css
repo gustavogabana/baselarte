@@ -1,31 +1,28 @@
-/* Home: the quote set huge with two phrases on ink bars, a tall photograph overrun by bars,
-   then the index, one band per topic. */
-
-.landing {
-  display: block;
-}
+/* Home: the IBM quote beside the series cover, a strip of the eight series, then the index:
+   one block per series, numbered, with its colour and a small toned photograph. */
 
 .landing-top {
   display: grid;
-  gap: 40px var(--grid-gap);
-  margin: 8px 0 112px;
+  gap: 48px var(--grid-gap);
+  margin: 16px 0 88px;
 }
 
 @media (min-width: 900px) {
   .landing-top {
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-    align-items: end;
-    margin-top: 32px;
+    grid-template-columns: minmax(0, 1fr) minmax(20rem, 25rem);
+    align-items: center;
+    margin-top: 40px;
   }
 }
 
 .pull-quote blockquote p {
+  max-width: 19ch;
   color: var(--fg-strong);
-  font-size: clamp(2.5rem, 5.6vw, 5.25rem);
-  font-weight: 700;
+  font-size: clamp(2rem, 4.4vw, 3.5rem);
+  font-weight: 520;
   font-variation-settings: "opsz" 144;
-  line-height: 1.02;
-  letter-spacing: -0.018em;
+  line-height: 1.12;
+  letter-spacing: -0.012em;
   text-wrap: balance;
 }
 
@@ -33,258 +30,287 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 32px;
-  color: var(--fg);
+  margin-top: 28px;
+  color: var(--fg-faint);
   font-size: 0.9375rem;
-  font-weight: 500;
 }
 
 .pull-quote figcaption::before {
   content: "";
   flex: none;
-  width: 14px;
-  height: 14px;
+  width: 28px;
+  height: 2px;
   background: var(--black);
 }
 
-.landing-photo .inked-photo {
-  aspect-ratio: 4 / 5;
+/* The cover: a petrol sheet with the flower, the name, one sand-toned photograph and the counts. */
+.cover__sheet {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  background: var(--cover);
+  color: var(--on-cover);
 }
 
-/* A photograph with flat ink bars overrunning it. */
-.inked-photo {
-  position: relative;
-  isolation: isolate;
+.cover__title {
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-.inked-photo img {
+.cover__mark {
+  flex: none;
+  width: 48px;
+  height: 48px;
+}
+
+.cover__mark .petal {
+  fill: var(--on-cover);
+}
+
+.cover__mark .vein {
+  stroke: var(--cover);
+}
+
+.cover__mark .heart {
+  fill: var(--cover);
+}
+
+.cover h1 {
+  font-size: 1.625rem;
+  font-weight: 650;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.cover__subtitle {
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: var(--surface);
+  margin-top: 4px;
+  font-size: 0.9375rem;
+  font-weight: 450;
+  letter-spacing: 0;
 }
 
-.inked-photo__bar,
-.inked-photo__mark {
-  position: absolute;
-  pointer-events: none;
-}
-
-.inked-photo__bar {
-  height: clamp(18px, 3.2vw, 36px);
-}
-
-.inked-photo__bar--a {
-  top: 9%;
-  left: -6%;
-  width: 46%;
-  background: var(--yellow);
-}
-
-.inked-photo__bar--b {
-  right: -4%;
-  bottom: 14%;
-  width: 58%;
-  background: var(--cyan);
-  transform: rotate(-7deg);
-  transform-origin: right center;
-}
-
-.inked-photo__mark {
-  right: 7%;
-  top: 7%;
-  width: clamp(28px, 4vw, 52px);
-  aspect-ratio: 1;
-  background: #111111;
+.cover__photo {
+  --tone: var(--sand);
+  aspect-ratio: 4 / 3;
 }
 
 @media (max-width: 899px) {
-  .landing-photo .inked-photo {
-    aspect-ratio: 4 / 3;
+  .cover__photo {
+    aspect-ratio: 16 / 9;
   }
 }
 
-/* On narrow screens the bars stay inside the photo (no sideways scroll). */
-@media (max-width: 1100px) {
-  .inked-photo__bar--a {
-    left: 0;
-  }
+.cover__facts {
+  padding-top: 12px;
+  border-top: 1px solid color-mix(in srgb, currentColor 40%, transparent);
+  font-size: 0.8125rem;
+  font-variant-numeric: tabular-nums;
+}
 
-  .inked-photo__bar--b {
-    right: 0;
-    transform: rotate(-5deg);
+/* The eight series at a glance */
+.series-nav {
+  margin: 0 0 72px;
+}
+
+.series-nav ol {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  column-gap: var(--grid-gap);
+  list-style: none;
+  border-top: 2px solid var(--black);
+}
+
+.series-nav li {
+  border-bottom: 1px solid var(--border);
+}
+
+.series-nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  color: var(--fg-strong);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration-color: transparent;
+}
+
+.series-nav .series-num {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 2.25rem;
+  height: 1.625rem;
+  background: var(--group-ink);
+  color: var(--on-group-ink);
+  font-size: 0.8125rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .series-nav a:hover {
+    text-decoration-color: var(--group-ink);
   }
 }
 
 /* The index */
-.note-index {
-  border-top: 6px solid var(--black);
-}
-
-.index-group {
+.series {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 24px var(--grid-gap);
-  padding: 32px 0 56px;
-  border-bottom: 2px solid var(--black);
-}
-
-.index-group:last-child {
-  border-bottom: 0;
+  padding: 32px 0 64px;
+  border-top: 2px solid var(--black);
+  scroll-margin-top: 16px;
 }
 
 @media (min-width: 800px) {
-  .index-group {
-    grid-template-columns: minmax(0, 22rem) minmax(0, 1fr);
+  .series {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr);
   }
 
-  .index-group__head {
+  .series__head {
     position: sticky;
     top: 24px;
     align-self: start;
   }
 }
 
-.index-group h2 {
-  margin-bottom: 20px;
-  font-size: clamp(1.75rem, 3vw, 2.375rem);
-  font-weight: 700;
+.series h2 {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 16px;
+  color: var(--fg-strong);
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: 620;
   line-height: 1.15;
   letter-spacing: -0.015em;
+  text-wrap: balance;
 }
 
-/* The topic title sits on its ink bar. */
-.index-group__title {
-  padding: 0 0.14em;
+/* The series number on its colour block, like the number on a monograph's spine. */
+.series-num--large {
+  display: flex;
+  align-items: flex-end;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 6px 8px;
   background: var(--group-ink);
   color: var(--on-group-ink);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+  font-size: 1.25rem;
+  line-height: 1;
 }
 
-.index-group__photo {
-  position: relative;
+.series__count {
+  margin-top: 6px;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
 }
 
-.index-group__photo img {
-  display: block;
-  width: 100%;
-  height: auto;
+.series__photo {
   aspect-ratio: 3 / 2;
-  object-fit: cover;
-  background: var(--surface);
-}
-
-/* A short ink bar overruns the photo's lower edge. */
-.index-group__photo::after {
-  content: "";
-  position: absolute;
-  left: 16px;
-  bottom: 14px;
-  width: 46%;
-  height: 22px;
-  background: var(--group-ink);
-  transform: rotate(-4deg);
-  transform-origin: left center;
+  margin-top: 20px;
 }
 
 @media (max-width: 799px) {
-  .index-group__photo {
-    max-width: 22rem;
+  .series__photo {
+    aspect-ratio: 3 / 1;
   }
 }
 
-.index-group ol {
+.series__notes {
   list-style: none;
-  border-top: 2px solid var(--black);
 }
 
-.note-index li {
+.series__notes li {
   border-bottom: 1px solid var(--border);
 }
 
-/* Signature: hovering a row slides the topic's ink bar in behind it. */
-.note-index li a {
-  position: relative;
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 15px 4px;
+.series__notes li:first-child {
+  border-top: 1px solid var(--border);
+}
+
+@media (min-width: 800px) {
+  .series__notes li:first-child {
+    border-top: 0;
+  }
+}
+
+/* Signature: hovering a note sets its number on the series colour and underlines the title. */
+.series__notes a {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 12px;
+  padding: 15px 0;
   color: var(--fg-strong);
   font-size: 1.0625rem;
   font-weight: 500;
   line-height: 1.35;
   text-decoration: none;
-  isolation: isolate;
 }
 
-.note-index li a::before {
-  content: "";
-  position: absolute;
-  inset: 0 -8px;
-  z-index: -1;
-  background: var(--group-ink);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 220ms var(--ease-out);
+.note-num {
+  justify-self: start;
+  margin-left: -6px;
+  padding: 1px 6px;
+  color: var(--fg-faint);
+  font-size: 0.875rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  transition: background-color 160ms var(--ease-out), color 160ms var(--ease-out);
+}
+
+.note-title {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 160ms var(--ease-out);
+}
+
+.note-arrow {
+  align-self: center;
+  width: 20px;
+  height: 20px;
+  color: var(--fg-faint);
+  transition: translate 200ms var(--ease-out), color 160ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .note-index li a:hover {
-    background: none;
+  .series__notes a:hover .note-num {
+    background: var(--group-ink);
     color: var(--on-group-ink);
   }
 
-  .note-index li a:hover::before {
-    transform: scaleX(1);
+  .series__notes a:hover .note-title {
+    text-decoration-color: var(--group-ink);
   }
 
-  .note-index li a:hover .index-arrow {
+  .series__notes a:hover .note-arrow {
     translate: 4px 0;
+    color: var(--fg-strong);
   }
 }
 
-.note-index li a:focus-visible::before {
-  transform: scaleX(1);
-}
-
-.note-index li a:focus-visible {
+.series__notes a:focus-visible .note-num {
+  background: var(--group-ink);
   color: var(--on-group-ink);
 }
 
-.note-index li a:active .index-title {
-  transform: scale(0.99);
+.series__notes a:active .note-arrow {
+  translate: 6px 0;
 }
 
-.index-title {
-  transition: transform 120ms var(--ease-out);
-  transform-origin: left center;
-}
-
-.index-arrow {
-  width: 22px;
-  height: 22px;
-  transition: translate 220ms var(--ease-out);
-}
-
-.note-index li[hidden] {
+.series__notes li[hidden] {
   display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .note-index li a::before,
-  .index-arrow,
-  .index-title {
+  .note-num,
+  .note-title,
+  .note-arrow {
     transition: none;
-  }
-}
-
-/* Wide screens: the home photo's yellow bar reaches out into the quote's column. */
-@media (min-width: 1101px) {
-  .landing-photo .inked-photo__bar--a {
-    left: -34%;
-    width: 72%;
   }
 }

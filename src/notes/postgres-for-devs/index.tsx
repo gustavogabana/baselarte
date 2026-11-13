@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "postgres-for-devs",
-  title: { en: "Postgres for developers", pt: "Postgres para quem programa" },
+  title: { en: "Postgres: the essentials for developers", pt: "Postgres: o essencial para quem programa" },
   seo: {
     title: { en: "Postgres for developers, the 80/20", pt: "Postgres para quem programa, o 80/20" },
     description: { en: "Relational databases 80/20, Postgres-focused: schemas, database managers, connecting, roles and passwords (the classic mix-up), access security, CTEs and window functions, indexes, UUIDs, full-text search instead of LIKE, grants, backups (3-2-1) and caching, with a Docker lab.", pt: "Bancos relacionais 80/20, com foco em Postgres: schemas, gerenciadores de banco, como conectar, usuários e senhas (a confusão clássica), segurança de acesso, CTEs e window functions, índices, UUIDs, busca textual no lugar de LIKE, permissões, backups (3-2-1) e cache, com um laboratório em Docker." },

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "focus-and-attention",
-  title: { en: "Good habits: building focus, reading, exercise and study", pt: "Bons hábitos: construir foco, leitura, exercício e estudo" },
+  title: { en: "Habits: focus, reading, exercise and study", pt: "Hábitos: foco, leitura, exercício e estudo" },
   seo: {
     title: { en: "Good habits: building focus, reading, exercise and study", pt: "Bons hábitos: construir foco, leitura, exercício e estudo" },
     description: { en: "A science-based guide to building good habits: how a habit forms, and an eight-week plan to widen your attention span and add daily reading, exercise and effective study, with expected results and a source for each step.", pt: "Um guia baseado em ciência para construir bons hábitos: como um hábito se forma, e um plano de oito semanas para ampliar a atenção e incluir leitura diária, exercício e estudo eficaz, com resultados esperados e uma fonte para cada passo." },

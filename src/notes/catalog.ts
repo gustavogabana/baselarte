@@ -3,50 +3,61 @@ import type { Localized } from "../i18n/localized.ts";
 export interface NoteGroup {
   id: string;
   title: Localized;
-  /** Note slugs, in the order they are listed. */
+  /** Note slugs, in reading order: the basics of the subject first, applied cases after. */
   notes: string[];
 }
 
-/** How the notes are grouped and ordered on the home and notes pages. */
+/**
+ * How the notes are grouped and ordered on the home and notes pages. Each group is a numbered
+ * series (01, 02…) and each note gets its place in it (03.2), so the order here is the numbering.
+ * Series run from foundations to practice: computing, code, data, infrastructure, security, AI,
+ * then the business around the work and the habits behind it.
+ */
 export const catalog: NoteGroup[] = [
   {
-    id: "systems",
-    title: { en: "Systems", pt: "Sistemas" },
+    id: "foundations",
+    title: { en: "Computing foundations", pt: "Fundamentos da computação" },
     notes: [
+      "harvard-cs50",
+      "entendendo-algoritmos",
       "linux",
-      "postgres-for-devs",
-      "db-replicas-sharding",
-      "db-migrations",
+      "software-engineering-at-google",
     ],
   },
   {
-    id: "web",
-    title: { en: "Web development", pt: "Desenvolvimento web" },
+    id: "apps",
+    title: { en: "Building applications", pt: "Desenvolvimento de aplicações" },
     notes: [
+      "nodejs-typescript",
       "react-state",
       "idempotency",
-      "small-project-hosting",
-      "small-project-contracts",
-      "seo-geo",
-      "language-runtimes",
-      "nodejs-typescript",
       "multi-tenant-saas",
       "payment-gateways",
+      "seo-geo",
     ],
   },
   {
-    id: "cloud",
-    title: { en: "Cloud and infrastructure", pt: "Nuvem e infraestrutura" },
+    id: "data",
+    title: { en: "Data and databases", pt: "Dados e bancos de dados" },
     notes: [
-      "aws",
-      "cloudflare",
-      "terraform",
+      "postgres-for-devs",
+      "db-migrations",
+      "db-replicas-sharding",
+    ],
+  },
+  {
+    id: "infra",
+    title: { en: "Cloud and delivery", pt: "Nuvem e entrega" },
+    notes: [
       "docker",
-      "kubernetes",
-      "observability",
+      "aws",
+      "terraform",
+      "cloudflare",
       "github-aws-oidc",
       "ecs-todo-app",
       "front-back-ecs-cloudflare",
+      "kubernetes",
+      "observability",
     ],
   },
   {
@@ -54,16 +65,11 @@ export const catalog: NoteGroup[] = [
     title: { en: "Security", pt: "Segurança" },
     notes: [
       "cybersecurity-for-devs",
-      "network-attack-defense",
-      "web-app-security",
-      "web-host-attack-defense",
-      "social-engineering",
-      "owasp-top-10",
-      "ethical-hacking-ceh-practice",
+      "crypto-keys-ssh",
       "auth-sso-oauth-oidc",
       "rbac-abac",
-      "crypto-keys-ssh",
-      "smtp",
+      "owasp-top-10",
+      "web-app-security",
     ],
   },
   {
@@ -71,53 +77,34 @@ export const catalog: NoteGroup[] = [
     title: { en: "Artificial intelligence", pt: "Inteligência artificial" },
     notes: [
       "attention-is-all-you-need",
+      "ai-engineering",
+      "kimi-k2-k3",
       "llm-agents-open-source",
-      "mcp-server-client",
       "agent-harness",
       "agent-skills",
+      "mcp-server-client",
+      "hermes-agent",
       "private-ai-workspace",
       "doop-design-canvas",
-      "hermes-agent",
-      "kimi-k2-k3",
     ],
   },
   {
-    id: "biz",
-    title: { en: "Business and sales", pt: "Negócios e vendas" },
+    id: "business",
+    title: { en: "Running the business", pt: "Empresa e clientes" },
     notes: [
-      "sales-marketing",
       "company-accounts",
-    ],
-  },
-  {
-    id: "agency",
-    title: { en: "Agency and clients", pt: "Agência e clientes" },
-    notes: [
+      "small-project-hosting",
+      "small-project-contracts",
       "agency-hosting-handover",
+      "sales-marketing",
     ],
   },
   {
-    id: "learning",
-    title: { en: "Learning and courses", pt: "Estudo e cursos" },
-    notes: [
-      "harvard-cs50",
-      "language-learning",
-    ],
-  },
-  {
-    id: "mind",
-    title: { en: "Mind and habits", pt: "Mente e hábitos" },
+    id: "habits",
+    title: { en: "Learning and habits", pt: "Estudo e hábitos" },
     notes: [
       "focus-and-attention",
-    ],
-  },
-  {
-    id: "books",
-    title: { en: "Book notes", pt: "Notas de livros" },
-    notes: [
-      "entendendo-algoritmos",
-      "software-engineering-at-google",
-      "ai-engineering",
+      "language-learning",
     ],
   },
 ];

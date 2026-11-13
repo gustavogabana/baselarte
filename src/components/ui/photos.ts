@@ -1,6 +1,6 @@
 // Photos from Unsplash (free Unsplash License), served from Unsplash's own image CDN.
 // Engineering, architecture and the sea; recent, little-used shots, originals 2,200 to 8,000 px wide.
-// One photo per note group; the home page opens with its own.
+// One photo per series, shown small and toned in the series colour; the home page has its own.
 
 export interface Photo {
   /** The image id on images.unsplash.com. */
@@ -33,16 +33,14 @@ const photos = {
 export const homePhoto: Photo = photos.oilRig;
 
 const byGroup: Record<string, Photo> = {
-  systems: photos.brutalistGrid,
-  web: photos.trussTower,
-  cloud: photos.cableStayed,
+  foundations: photos.brutalistGrid,
+  apps: photos.trussTower,
+  data: photos.brutalistSymmetry,
+  infra: photos.cableStayed,
   security: photos.tetrapodsMumbai,
   ai: photos.shipHelipad,
-  biz: photos.icebreaker,
-  agency: photos.bridgeClouds,
-  learning: photos.brutalistSymmetry,
-  mind: photos.wavesConcrete,
-  books: photos.tetrapodsShore,
+  business: photos.bridgeClouds,
+  habits: photos.wavesConcrete,
 };
 
 /** The photo for a note group (a fallback keeps a new group from breaking the build). */
@@ -50,11 +48,11 @@ export function groupPhoto(groupId: string): Photo {
   return byGroup[groupId] ?? photos.bridgeTower;
 }
 
-const WIDTHS = [480, 800, 1200, 1800];
+const WIDTHS = [400, 640, 960, 1400];
 
 /** A URL on Unsplash's CDN, resized there (and served as AVIF/WebP where the browser takes it). */
 export function photoUrl(photo: Photo, width: number): string {
-  return `https://images.unsplash.com/${photo.id}?auto=format&fit=max&q=72&w=${width}`;
+  return `https://images.unsplash.com/${photo.id}?auto=format&fit=max&q=70&w=${width}`;
 }
 
 export function photoSrcSet(photo: Photo): string {

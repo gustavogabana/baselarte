@@ -16,7 +16,7 @@ Three audiences, all confirmed as primary:
 
 ## Product Purpose
 
-baselarte.com is the site of Baselarte Ltda., a software engineering and creative technology company. Its content is a library of long-form study notes (51 at the time of writing, grouped into ten topics), each written in English and Brazilian Portuguese. Success: a reader finds the note they need fast and stays to read it; a client leaves convinced the company understands its craft.
+baselarte.com is the site of Baselarte Ltda., a software engineering and creative technology company. Its content is a library of long-form study notes (45 at the time of writing, in eight numbered series), each written in English and Brazilian Portuguese. Success: a reader finds the note they need fast and stays to read it; a client leaves convinced the company understands its craft.
 
 ## Positioning
 
@@ -36,11 +36,11 @@ Readers arrive mostly deep-linked into a note, on desktop and phone. Notes are l
 
 ## Brand Commitments
 
-- Name: Baselarte. Mark: the five-petal flower (colour may change).
+- Name: Baselarte. Mark: the five-petal magnolia (shape fixed; colour may change).
 - The IBM 1979 quote ("A computer can never be held accountable…") stays on the home page.
 - Typeface: Google's own (Google Sans Flex), a user requirement.
-- Colour: an own four-colour system, solid and varied (not pastel), with black used for details; never Google's brand colours.
-- Imagery: real photographs (engineering, architecture, ocean), less-common Unsplash picks in high resolution, loaded from Unsplash's CDN; no flowers.
+- Colour: three sober, less-common colours (petrol, clay, sand) plus black for details; never loud or Google's brand colours.
+- Imagery: real photographs (engineering, architecture, ocean) from Unsplash's CDN, used simply and decoratively (small, toned in the series colour); no flowers.
 - References for restraint, not to copy: abc.xyz.
 
 ## Evidence on Hand

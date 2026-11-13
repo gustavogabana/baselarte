@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "ai-engineering",
-  title: { en: "AI Engineering", pt: "AI Engineering" },
+  title: { en: "AI Engineering (book)", pt: "AI Engineering (livro)" },
   seo: {
     title: { en: "AI Engineering, book notes", pt: "AI Engineering, notas do livro" },
     description: { en: "A friendly walkthrough of the book AI Engineering by Chip Huyen: tokens, sampling, prompting, RAG, agents, evaluation, finetuning with LoRA, inference and application architecture, with simple examples and diagrams.", pt: "Um passeio didático pelo livro AI Engineering, de Chip Huyen: tokens, amostragem, prompts, RAG, agentes, avaliação, finetuning com LoRA, inferência e arquitetura, com exemplos simples e diagramas." },

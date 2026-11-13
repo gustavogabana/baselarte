@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "company-accounts",
-  title: { en: "Company identity and accounts: domain, email, cloud providers and access", pt: "Identidade e contas da empresa: domínio, e-mail, provedores de nuvem e acesso" },
+  title: { en: "Company accounts: domain, email and cloud", pt: "Contas da empresa: domínio, e-mail e nuvem" },
   seo: {
     title: { en: "Company identity and accounts: domain, email, cloud providers and access", pt: "Identidade e contas da empresa: domínio, e-mail, provedores de nuvem e acesso" },
     description: { en: "How a company gets its own domain and professional email (Google Workspace or alternatives), creates and runs accounts on Cloudflare, AWS, Google Cloud, Netlify, Vercel and Supabase, keeps every resource owned by the company instead of a founder's personal login, and secures it all with MFA, separate admin accounts, least privilege, credential management and access recovery.", pt: "Como uma empresa adquire domínio próprio e e-mail profissional (Google Workspace ou alternativas), cria e administra contas na Cloudflare, AWS, Google Cloud, Netlify, Vercel e Supabase, garante que todo recurso pertença à empresa e não ao login pessoal de um fundador, e protege tudo com MFA, contas administrativas separadas, menor privilégio, gerenciamento de credenciais e recuperação de acesso." },
@@ -127,7 +127,6 @@ _dmarc                TXT  "v=DMARC1; p=quarantine; rua=mailto:dmarc@example.com
 # Start DMARC at p=none to watch the reports, then move to quarantine, then reject.
 # A domain that never sends email should say so, so nobody can spoof it:
 #   TXT "v=spf1 -all"   and   _dmarc TXT "v=DMARC1; p=reject"`} />
-        <p><T pt={<>O que cada registro faz e como o e-mail viaja está em <a href="/notas/smtp/">SMTP: como o e-mail viaja</a>.</>} en={<>What each record does and how email travels is covered in <a href="/notas/smtp/">SMTP: how email travels</a>.</>} /></p>
         <h3><T pt="Os endereços de função" en="Role addresses" /></h3>
         <p><T pt={<>A regra prática: <strong>contas em provedores são abertas com endereços de função, nunca com o de uma pessoa</strong>. Pessoas saem; a função fica.</>} en={<>The rule of thumb: <strong>provider accounts are opened with role addresses, never a person's address</strong>. People leave; the role stays.</>} /></p>
         <Table

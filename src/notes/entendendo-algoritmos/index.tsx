@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "entendendo-algoritmos",
-  title: { en: "Grokking Algorithms", pt: "Entendendo Algoritmos" },
+  title: { en: "Grokking Algorithms (book)", pt: "Entendendo Algoritmos (livro)" },
   seo: {
     title: { en: "Grokking Algorithms, book notes", pt: "Entendendo Algoritmos, notas do livro" },
     description: { en: "A friendly walkthrough of the book Grokking Algorithms (Entendendo Algoritmos): Big O notation, binary search, sorting, recursion, hash tables, graphs, Dijkstra, greedy algorithms, dynamic programming and k-nearest neighbours, with simple examples and code.", pt: "Um passeio didático pelo livro Entendendo Algoritmos (Grokking Algorithms): notação Big O, busca binária, ordenação, recursão, tabelas hash, grafos, Dijkstra, algoritmos gulosos, programação dinâmica e k-vizinhos mais próximos, com exemplos simples e código." },

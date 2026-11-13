@@ -1,4 +1,4 @@
-/* Page chrome: a white bar ruled in black, a black footer, square black-outlined controls. */
+/* Page chrome: a white bar over a hairline, a quiet footer under a black rule, square controls. */
 
 .site-header,
 main,
@@ -23,9 +23,9 @@ main {
   justify-content: space-between;
   gap: 16px;
   max-width: none;
-  height: 68px;
+  height: 64px;
   padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-bottom: 2px solid var(--black);
+  border-bottom: 1px solid var(--border);
   background: var(--page);
 }
 
@@ -36,32 +36,29 @@ main {
   font-size: 0.875rem;
 }
 
-/* The flower: one petal per process ink, outlined in black. */
+/* The magnolia: clay petals with pale veins and a black heart. */
 .logo-mark {
   display: block;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
 }
 
-.logo-mark .petal {
-  stroke: var(--black);
-  stroke-width: 0.9;
-  stroke-linejoin: round;
+.logo-mark .petal,
+.cover__mark .petal {
+  fill: var(--clay);
 }
 
-.logo-mark .petal:nth-child(1) { fill: var(--cyan); }
-.logo-mark .petal:nth-child(2) { fill: var(--magenta); }
-.logo-mark .petal:nth-child(3) { fill: var(--yellow); }
-.logo-mark .petal:nth-child(4) { fill: var(--black); }
-.logo-mark .petal:nth-child(5) { fill: var(--page); }
-
-.logo-mark .vein {
+.logo-mark .vein,
+.cover__mark .vein {
   fill: none;
-  stroke: var(--black);
-  stroke-opacity: 0;
+  stroke: var(--page);
+  stroke-width: 0.8;
+  stroke-linecap: round;
+  opacity: 0.7;
 }
 
-.logo-mark .heart {
+.logo-mark .heart,
+.cover__mark .heart {
   fill: var(--black);
 }
 
@@ -70,27 +67,19 @@ main {
   align-items: center;
   gap: 10px;
   color: var(--fg-strong);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
+  font-size: 1.1875rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
   line-height: 1;
   text-decoration: none;
 }
 
 .site-wordmark:hover {
-  background: none;
   color: var(--fg-strong);
 }
 
-/* Footer: a black band, the detail ink at full size once. */
+/* Footer: the page ground under a black rule, quiet and small. */
 .site-footer {
-  --black: #f2f2f0;
-  --fg-strong: #ffffff;
-  --fg: #dadada;
-  --fg-faint: #a3a3a3;
-  --page: #111111;
-  --border: #f2f2f02e;
-  --focus-inner: #ffffff;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -98,36 +87,20 @@ main {
   gap: 16px 24px;
   max-width: none;
   margin-top: 0;
-  padding-top: 32px;
+  padding-top: 28px;
   padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
   padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  background: #111111;
+  border-top: 2px solid var(--black);
+  background: var(--page);
   color: var(--fg-faint);
   font-size: 0.875rem;
 }
 
-[data-theme="dark"] .site-footer {
-  background: #000000;
-  --page: #000000;
+.footer-mark .logo-mark {
+  width: 22px;
+  height: 22px;
 }
-
-/* Three ink squares open the footer (SiteFooter). */
-.footer-inks {
-  display: flex;
-  flex-basis: 100%;
-  gap: 6px;
-  margin-bottom: 8px;
-}
-
-.footer-inks span {
-  width: 10px;
-  height: 10px;
-}
-
-.footer-inks span:nth-child(1) { background: var(--cyan); }
-.footer-inks span:nth-child(2) { background: var(--magenta); }
-.footer-inks span:nth-child(3) { background: var(--yellow); }
 
 .site-footer .footer-tools {
   display: flex;
@@ -146,11 +119,11 @@ main {
   color: var(--fg);
 }
 
-/* Segmented controls: square, outlined in black; the chosen one is filled black. */
+/* Segmented controls: square, one hairline around the group; the chosen one is filled black. */
 .theme-switch,
 .language-switch {
   display: inline-flex;
-  border: 1.5px solid var(--black);
+  border: 1px solid var(--border);
 }
 
 .theme-switch button,
@@ -168,14 +141,14 @@ main {
 
 .theme-switch button + button,
 .language-switch button + button {
-  border-left: 1.5px solid var(--black);
+  border-left: 1px solid var(--border);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .theme-switch button:hover,
   .language-switch button:hover {
-    background: var(--yellow);
-    color: #111111;
+    background: var(--surface);
+    color: var(--fg-strong);
   }
 }
 

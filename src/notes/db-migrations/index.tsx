@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "db-migrations",
-  title: { en: "Database migrations: Flyway, Prisma and Alembic", pt: "Migrations de banco: Flyway, Prisma e Alembic" },
+  title: { en: "Migrations: Flyway, Prisma and Alembic", pt: "Migrations: Flyway, Prisma e Alembic" },
   seo: {
     title: { en: "Database migrations: Flyway, Prisma and Alembic", pt: "Migrations de banco: Flyway, Prisma e Alembic" },
     description: { en: "What database migrations are and the problem they solve, how to start them in a new project, what the database must look like, the first migration versus the next ones, baselining an existing database, avoiding conflicts in a team and running them in production, with Flyway (Java/Spring), Prisma (TypeScript) and Alembic (Python/FastAPI).", pt: "O que são migrations de banco e qual problema resolvem, como começar num projeto novo, como o banco precisa estar, a primeira migration e as seguintes, baseline de um banco existente, como evitar conflitos em equipe e como rodar em produção, com Flyway (Java/Spring), Prisma (TypeScript) e Alembic (Python/FastAPI)." },

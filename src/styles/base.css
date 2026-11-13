@@ -25,26 +25,31 @@ body {
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  caret-color: var(--group-ink);
+}
+
+html {
+  scrollbar-color: var(--surface-strong) var(--page);
+  accent-color: var(--petrol);
 }
 
 ::selection {
-  background: var(--yellow);
-  color: #111111;
+  background: var(--sand);
+  color: var(--on-sand);
 }
 
 a {
   color: var(--action);
   text-decoration: underline;
   text-decoration-color: var(--group-ink);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
-  transition: background-color 120ms ease;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 0.22em;
+  transition: text-decoration-color 160ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   a:hover {
-    background: var(--yellow);
-    color: #111111;
+    text-decoration-color: var(--black);
   }
 }
 
@@ -60,7 +65,7 @@ button {
 strong,
 b {
   color: var(--fg-strong);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 em {
@@ -147,7 +152,7 @@ html:not(.js-enabled) .requires-js {
 :focus-visible {
   outline: 2px solid var(--focus-inner);
   outline-offset: 2px;
-  border-radius: 2px;
+  border-radius: 0;
 }
 
 code,
@@ -193,20 +198,30 @@ samp {
   stroke: none;
 }
 
-/* A phrase set on an ink bar (the home quote). */
-.ink-mark {
-  padding: 0 0.12em;
-  background: var(--mark-ink, var(--magenta));
-  color: var(--mark-on, #ffffff);
-  -webkit-box-decoration-break: clone;
-  box-decoration-break: clone;
+/* A series number: tabular figures, set in the series colour block where it labels a series. */
+.series-num {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: 0;
 }
 
-.ink-mark--magenta { --mark-ink: var(--magenta); --mark-on: var(--on-magenta); }
-.ink-mark--cyan { --mark-ink: var(--cyan); --mark-on: var(--on-cyan); }
-.ink-mark--yellow { --mark-ink: var(--yellow); --mark-on: var(--on-yellow); }
+/* A photograph toned in a colour: the grey photo multiplies over a flat field. */
+.toned-photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--tone, var(--group-ink));
+}
 
-/* Square photo credit, black detail */
+.toned-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.08) brightness(1.08);
+  mix-blend-mode: multiply;
+}
+
+/* Photo credit */
 .photo-credit {
   margin-top: 10px;
   color: var(--fg-faint);

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "crypto-keys-ssh",
-  title: { en: "Cryptography, keys and SSH: how public and private keys work", pt: "Criptografia, chaves e SSH: como funcionam chaves públicas e privadas" },
+  title: { en: "Cryptography: public keys, private keys and SSH", pt: "Criptografia: chaves públicas, privadas e SSH" },
   seo: {
     title: { en: "Cryptography, keys and SSH: how public and private keys work", pt: "Criptografia, chaves e SSH: como funcionam chaves públicas e privadas" },
     description: { en: "Hashes, symmetric and asymmetric encryption, digital signatures, Diffie-Hellman, TLS and certificates, private keys kept on the device (passkeys), how the session follows sign-in, and SSH step by step, with 16 diagrams.", pt: "Hashes, criptografia simétrica e assimétrica, assinaturas digitais, Diffie-Hellman, TLS e certificados, chaves privadas guardadas no aparelho (passkeys), como a sessão segue o login e o SSH passo a passo, com 16 diagramas." },

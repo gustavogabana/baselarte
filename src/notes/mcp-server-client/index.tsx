@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "mcp-server-client",
-  title: { en: "MCP: build a server on top of your API and use it from a client or an agent", pt: "MCP: criar um servidor sobre a sua API e usá-lo com um cliente ou um agente" },
+  title: { en: "MCP: a server on top of your API", pt: "MCP: um servidor sobre a sua API" },
   seo: {
     title: { en: "MCP: build a server on top of your API and use it from a client or an agent", pt: "MCP: criar um servidor sobre a sua API e usá-lo com um cliente ou um agente" },
     description: { en: "The Model Context Protocol from zero: what it is, how an MCP server is a layer over an existing API (shared core), tools, stdio and Streamable HTTP, testing with curl and the Inspector, a client, an agent loop with Claude, Claude Code, security and a lab you can run.", pt: "O Model Context Protocol do zero: o que é, como um servidor MCP é uma camada sobre uma API existente (núcleo compartilhado), tools, stdio e Streamable HTTP, testes com curl e o Inspector, um cliente, um laço de agente com Claude, Claude Code, segurança e um laboratório que você pode rodar." },

@@ -28,14 +28,11 @@ export function PhotoImage({ photo, sizes, className, eager = false }: PhotoImag
   );
 }
 
-/** A photo with flat, opaque ink bars overrunning it. Decorative. */
-export function InkedPhoto({ photo, sizes, eager, className = "" }: PhotoImageProps) {
+/** A photo toned in the series colour (grey photo multiplied over a flat colour field). Decorative. */
+export function TonedPhoto({ photo, sizes, eager, className = "" }: PhotoImageProps) {
   return (
-    <div className={`inked-photo ${className}`.trim()} aria-hidden="true">
+    <div className={`toned-photo ${className}`.trim()} aria-hidden="true">
       <PhotoImage photo={photo} sizes={sizes} eager={eager} />
-      <span className="inked-photo__bar inked-photo__bar--a" />
-      <span className="inked-photo__bar inked-photo__bar--b" />
-      <span className="inked-photo__mark" />
     </div>
   );
 }

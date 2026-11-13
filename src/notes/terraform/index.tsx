@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "terraform",
-  title: { en: "Terraform 80/20", pt: "Terraform 80/20" },
+  title: { en: "Terraform: infrastructure as code (80/20)", pt: "Terraform: infraestrutura como código (80/20)" },
   seo: {
     title: { en: "Terraform 80/20, general and AWS", pt: "Terraform 80/20, geral e AWS" },
     description: { en: "The 20% of Terraform that covers 80% of the work: workflow, HCL, state, modules, CI, and a complete AWS walkthrough with remote state on S3, VPC, EC2, IAM and S3.", pt: "Os 20% do Terraform que cobrem 80% do trabalho: fluxo, HCL, estado, módulos, CI e um passo a passo completo na AWS com estado remoto no S3, VPC, EC2, IAM e S3." },

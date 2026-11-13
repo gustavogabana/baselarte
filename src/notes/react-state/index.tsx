@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "react-state",
-  title: { en: "React state: Context API and Zustand", pt: "Estado no React: Context API e Zustand" },
+  title: { en: "React: state with Context API and Zustand", pt: "React: estado com Context API e Zustand" },
   seo: {
     title: { en: "React state: Context API and Zustand", pt: "Estado no React: Context API e Zustand" },
     description: { en: "How React's Context API and Zustand work, from the official docs: createContext and useContext, the reducer + context pattern, selectors, per-request stores in Next.js, and when to use each.", pt: "Como funcionam a Context API do React e o Zustand, pela documentação oficial: createContext e useContext, o padrão reducer + contexto, seletores, stores por requisição no Next.js e quando usar cada um." },

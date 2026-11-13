@@ -1,7 +1,6 @@
-import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
-import { groupOf } from "../notes/registry.ts";
-import { InkedPhoto } from "../components/ui/PhotoImage.tsx";
+import { groupOf, noteNumber, seriesNumber } from "../notes/registry.ts";
+import { TonedPhoto } from "../components/ui/PhotoImage.tsx";
 import { PhotoCredit } from "../components/ui/PhotoCredit.tsx";
 import { groupInk, inkStyle } from "../components/ui/inks.ts";
 import { groupPhoto } from "../components/ui/photos.ts";
@@ -20,13 +19,14 @@ export function NotePage({ note }: { note: Note }) {
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
     <article className={articleClass} style={inkStyle(groupInk(group.id))}>
-      <BackLink href="/" label={ui.notes} />
+      <p className="back-link">
+        <a href={`/#series-${group.id}`}>
+          <Arrow direction="left" />
+          <span className="series-num">{seriesNumber(group.id)}</span>
+          <Text value={group.title} />
+        </a>
+      </p>
       <header className="hero" aria-labelledby="hero-title">
-        <p className="hero-meta">
-          <span className="hero-category">
-            <Text value={group.title} />
-          </span>
-        </p>
         <h1 id="hero-title" className="hero-title">
           <Text value={note.heroTitle} />
         </h1>
@@ -34,10 +34,16 @@ export function NotePage({ note }: { note: Note }) {
           <Text value={note.heroLede} />
         </p>
         <figure className="hero-photo">
-          <InkedPhoto photo={photo} eager sizes="(min-width: 760px) 44rem, 100vw" />
+          <TonedPhoto photo={photo} sizes="(min-width: 760px) 44rem, 100vw" />
           <PhotoCredit photo={photo} />
         </figure>
         <dl className="hero-facts">
+          <div>
+            <dt>
+              <Text value={ui.number} />
+            </dt>
+            <dd className="hero-facts__number">{noteNumber(note.slug)}</dd>
+          </div>
           <div>
             <dt>
               <Text value={ui.format} />

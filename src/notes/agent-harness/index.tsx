@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "agent-harness",
-  title: { en: "Agent harness, RAG, guardrails, skills and AGENTS.md", pt: "Harness de agentes, RAG, guardrails, skills e AGENTS.md" },
+  title: { en: "AI agents: harness, RAG and guardrails", pt: "Agentes de IA: harness, RAG e guardrails" },
   seo: {
     title: { en: "Agent harness, RAG, guardrails, skills and AGENTS.md: the system around the model", pt: "Harness de agentes, RAG, guardrails, skills e AGENTS.md: o sistema em volta do modelo" },
     description: { en: "What an agent harness, RAG, guardrails, Agent Skills and AGENTS.md are and how they fit together, with the 2026 state of the art (Anthropic, OpenAI, Matt Pocock, Mitchell Hashimoto) and an end-to-end agent in Docker.", pt: "O que são harness de agentes, RAG, guardrails, Agent Skills e AGENTS.md e como se encaixam, com o estado da arte de 2026 (Anthropic, OpenAI, Matt Pocock, Mitchell Hashimoto) e um agente ponta a ponta no Docker." },

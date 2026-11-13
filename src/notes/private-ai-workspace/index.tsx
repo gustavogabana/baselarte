@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "private-ai-workspace",
-  title: { en: "A private AI workspace: self-hosting Odysseus, keeping data in and giving agents access", pt: "Uma IA privada: hospedar o Odysseus, manter os dados em casa e dar acesso aos agentes" },
+  title: { en: "Private AI: self-hosting Odysseus", pt: "IA privada: hospedar o Odysseus" },
   seo: {
     title: { en: "A private AI workspace: self-hosting Odysseus, keeping data in and giving agents access", pt: "Uma IA privada: hospedar o Odysseus, manter os dados em casa e dar acesso aos agentes" },
     description: { en: "How to run your own AI workspace on your computer or in a cloud of yours without sending data to third parties, using the open-source Odysseus as a worked example: a map of what leaves, network isolation, how to talk to it, scoped tokens for agents and a lab.", pt: "Como ter o seu próprio workspace de IA no computador ou numa nuvem sua sem enviar dados a terceiros, usando o Odysseus (código aberto) como exemplo: um mapa do que sai, isolamento de rede, como se comunicar com ele, tokens com escopo para agentes e um laboratório." },

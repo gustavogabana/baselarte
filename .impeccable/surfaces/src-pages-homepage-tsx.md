@@ -11,16 +11,16 @@ Home (index of notes) and the note page frame. Visitor mode: Read. Audiences: de
 
 ## Direction contract
 
-THESIS: A modular identity where real engineering photographs and flat bars of process ink lock to one grid; the frame is loud, the reading column is calm. Refuses the category default of a white blog list with thumbnails and one blue link.
+THESIS: The notes are a numbered series of monographs: eight series from foundations to practice, each note with its place (04.2). Refuses both the category's white blog list with thumbnails and the previous loud process-ink frame.
 
-OWN-WORLD: Four process inks, solid: cyan, magenta, yellow and black (K = key, the detail ink: rules, outlines, marks, text). White ground. Google Sans Flex only: heavy and tight for display, regular for reading. Bars are flat, opaque rectangles of solid ink (no blending: the inks stay pure), square corners, sometimes tilted a few degrees, overrunning photographs. Black squares as marks. Links are black with an ink underline.
+OWN-WORLD: White ground; three sober cover colours (petrol #2f5d66, clay #a65e46, sand #a89068) taking turns per series; black for details (text, 2px series rules, numbers, the flower's heart). Google Sans Flex, medium weights, gentle tracking. Square colour blocks carry series numbers like a spine. Photos are small and greyscale, multiplied over the series colour. The magnolia: clay petals, black heart.
 
-STORY: The visitor sees in one glance a company that builds, then finds their topic by colour band and reads in a quiet column.
+STORY: The visitor sees a calm, organised library, picks a series by number and name, and reads in a quiet column.
 
-FIRST VIEWPORT: Left, the IBM quote set huge in Google Sans Flex bold, two of its words sitting on solid ink bars (magenta, cyan). Right, a tall engineering photograph with a yellow and a cyan bar overrunning it (multiply) and a black square mark. The index begins right below: each topic a full-width band head with its ink swatch, photo and title.
+FIRST VIEWPORT: Left, the IBM quote large in medium weight with its citation under a short black rule. Right, the series cover: a petrol sheet with the white magnolia, "Baselarte / Notas de estudo", a sand-toned photograph and the counts. Below, the strip of eight numbered series.
 
-FORM: Studio Dumbar modular identity (catalog challenger, chosen by the user over the assigned direction; assigned was #3 Nautical chart). seed:4ad76204e783c45f
+FORM: University-press monograph series, position 4 on the grounded list. seed:9c00a0e7ebd6559f
 
-Signature interaction: hovering a note row slides its topic's ink bar in behind the title (transform, ease-out); reduced motion shows it instantly.
+Signature interaction: hovering a note sets its number on the series colour and underlines the title in it (160ms ease-out); instant under reduced motion.
 
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance

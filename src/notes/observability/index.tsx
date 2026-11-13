@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "observability",
-  title: { en: "Observability: metrics, p95/p99, logs and traces", pt: "Observabilidade: métricas, p95/p99, logs e traces" },
+  title: { en: "Observability: metrics, logs and traces", pt: "Observabilidade: métricas, logs e traces" },
   seo: {
     title: { en: "Observability: metrics, p95/p99, logs and traces", pt: "Observabilidade: métricas, p95/p99, logs e traces" },
     description: { en: "Observability for developers: metrics, KPIs, SLIs and SLOs, why p95 and p99 matter more than the average, Prometheus and Grafana with PromQL, traces (Jaeger, OpenTelemetry) and logs (Loki, Elasticsearch), a nine-activity Docker lab with expected results, and a secure production setup on Kubernetes and AWS.", pt: "Observabilidade para quem programa: métricas, KPIs, SLIs e SLOs, por que p95 e p99 importam mais que a média, Prometheus e Grafana com PromQL, traces (Jaeger, OpenTelemetry) e logs (Loki, Elasticsearch), um laboratório Docker de nove atividades com resultados esperados e uma produção segura no Kubernetes e na AWS." },

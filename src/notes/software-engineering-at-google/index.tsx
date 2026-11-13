@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "software-engineering-at-google",
-  title: { en: "Software Engineering at Google", pt: "Software Engineering at Google" },
+  title: { en: "Software Engineering at Google (book)", pt: "Software Engineering at Google (livro)" },
   seo: {
     title: { en: "Software Engineering at Google, book notes", pt: "Software Engineering at Google, notas do livro" },
     description: { en: "A friendly walkthrough of the book Software Engineering at Google: time, scale and trade-offs, Hyrum’s Law, testing, code review and continuous delivery, with simple examples and diagrams.", pt: "Um passeio didático pelo livro Software Engineering at Google: tempo, escala e trade-offs, Lei de Hyrum, testes, code review e entrega contínua, com exemplos simples e diagramas." },

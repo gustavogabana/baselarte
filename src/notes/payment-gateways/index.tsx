@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "payment-gateways",
-  title: { en: "Payment gateways: Stripe, Mercado Pago and Asaas", pt: "Gateways de pagamento: Stripe, Mercado Pago e Asaas" },
+  title: { en: "Payments: Stripe, Mercado Pago and Asaas", pt: "Pagamentos: Stripe, Mercado Pago e Asaas" },
   seo: {
     title: { en: "Payment gateways: Stripe, Mercado Pago and Asaas", pt: "Gateways de pagamento: Stripe, Mercado Pago e Asaas" },
     description: { en: "How to integrate a payment gateway the simple way: the checkout flow, webhooks as the source of truth, idempotency, subscriptions tied to a tenant, Pix and boleto in Brazil, and what changes between Stripe, Mercado Pago and Asaas.", pt: "Como integrar um gateway de pagamento do jeito simples: o fluxo de checkout, webhooks como fonte da verdade, idempotência, assinaturas ligadas a um tenant, Pix e boleto no Brasil e o que muda entre Stripe, Mercado Pago e Asaas." },

@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "llm-agents-open-source",
-  title: { en: "Open-source LLMs and AI agents: run, connect and deploy", pt: "LLMs e agentes de IA open-source: rodar, conectar e subir na nuvem" },
+  title: { en: "Open-source LLMs: run, connect and deploy", pt: "LLMs open-source: rodar, conectar e publicar" },
   seo: {
     title: { en: "Open-source LLMs and AI agents: run, connect and deploy", pt: "LLMs e agentes de IA open-source: rodar, conectar e subir na nuvem" },
     description: { en: "A practical guide to open-source LLMs and AI agents: how much memory a model needs, running models with Ollama, llama.cpp and vLLM, writing an agent loop with tool calling, connecting agent and model through the OpenAI-compatible API and MCP, and renting a GPU in the cloud securely. Eight activities with expected results.", pt: "Um guia prático de LLMs e agentes de IA open-source: quanta memória um modelo precisa, rodar modelos com Ollama, llama.cpp e vLLM, escrever um laço de agente com chamada de ferramentas, conectar agente e modelo pela API compatível com a da OpenAI e pelo MCP, e alugar uma GPU na nuvem com segurança. Oito atividades com resultados esperados." },

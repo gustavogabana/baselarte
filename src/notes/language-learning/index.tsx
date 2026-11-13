@@ -3,7 +3,7 @@ import type { Note } from "../types.ts";
 
 export const note: Note = {
   slug: "language-learning",
-  title: { en: "Learning a language a little every day: reading, listening, writing and speaking", pt: "Aprender um idioma um pouco por dia: leitura, escuta, escrita e fala" },
+  title: { en: "Languages: learning a little every day", pt: "Idiomas: aprender um pouco por dia" },
   seo: {
     title: { en: "Learning a language a little every day: reading, listening, writing, speaking and public speaking", pt: "Aprender um idioma um pouco por dia: leitura, escuta, escrita, fala e falar em público" },
     description: { en: "A science-based guide to learning a new language with short, constant study: spaced repetition and retrieval, then reading, listening, writing and speaking, plus clearer writing and public speaking, with a weekly routine, expected results and a peer-reviewed source for each choice.", pt: "Um guia baseado em ciência para aprender um novo idioma com estudo curto e constante: repetição espaçada e recuperação, depois leitura, escuta, escrita e fala, além de escrever com clareza e falar em público, com rotina semanal, resultados esperados e uma fonte revisada por pares para cada escolha." },

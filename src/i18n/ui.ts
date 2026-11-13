@@ -4,7 +4,10 @@ import type { Localized } from "./localized.ts";
 export const ui = {
   skipLink: { en: "Skip to content", pt: "Pular para o conteúdo" },
   home: { en: "Home", pt: "Início" },
-  notes: { en: "Posts", pt: "Posts" },
+  notes: { en: "Notes", pt: "Notas" },
+  studyNotes: { en: "Study notes", pt: "Notas de estudo" },
+  series: { en: "Series", pt: "Séries" },
+  number: { en: "No.", pt: "Nº" },
   category: { en: "Category", pt: "Categoria" },
   published: { en: "Published", pt: "Publicado" },
   updated: { en: "Updated", pt: "Atualizado" },
