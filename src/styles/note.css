@@ -1,55 +1,61 @@
-/* Post pages: Uber-engineering-blog structure on a Swiss grid.
-   category + title + lede + facts, then body with the index beside it, sources. */
+/* Post pages, after blog.google: category chip, title, lede, illustration, facts,
+   then the body with the index beside it, sources. */
 
 .back-link {
-  margin: 0 0 40px;
+  margin: 0 0 32px;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
 .back-link a {
-  color: var(--fg-strong);
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 16px 0 12px;
+  border-radius: var(--radius-pill);
+  color: var(--action);
   text-decoration: none;
 }
 
 .back-link a:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
+  background: var(--action-surface);
+  text-decoration: none;
 }
 
 .hero {
   grid-column: 1 / -1;
   margin: 0 0 48px;
   padding-bottom: 32px;
-  border-bottom: 1px solid var(--fg-strong);
+  border-bottom: 1px solid var(--border);
 }
 
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-  margin-bottom: 24px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  align-items: center;
+  gap: 8px 12px;
+  margin-bottom: 20px;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .hero-category {
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--action-surface);
   color: var(--accent-fg);
 }
 
 .hero-kicker {
   color: var(--fg-faint);
-  font-weight: 400;
 }
 
 .hero-title {
   color: var(--fg-strong);
-  font-size: clamp(2.25rem, 5.5vw, 3.5rem);
-  font-weight: 700;
-  line-height: 1.04;
-  letter-spacing: -0.035em;
+  font-size: clamp(2.25rem, 5.5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
   text-wrap: balance;
 }
 
@@ -58,8 +64,8 @@
 }
 
 .hero-lede {
-  margin: 28px 0 0;
-  color: var(--fg);
+  margin: 24px 0 0;
+  color: var(--fg-faint);
   font-size: 1.25rem;
   line-height: 1.45;
   text-wrap: pretty;
@@ -75,9 +81,7 @@
 
 .hero-facts dt {
   color: var(--fg-faint);
-  font-size: 0.75rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
 }
 
 .hero-facts dd {
@@ -126,11 +130,11 @@
   .reading-column > .side-nav {
     grid-area: side;
     position: sticky;
-    top: 24px;
+    top: 88px;
     align-self: start;
     width: auto;
     max-width: var(--side-width);
-    max-height: calc(100vh - 48px);
+    max-height: calc(100vh - 112px);
     margin: 0;
     overflow-y: auto;
   }
@@ -143,7 +147,7 @@
   left: 0;
   width: 100%;
   height: 3px;
-  background: var(--accent);
+  background: var(--g-blue);
   transform-origin: 0 50%;
   transform: scaleX(0);
   z-index: 100;
@@ -153,7 +157,7 @@
 .side-nav {
   margin: 0 0 48px;
   padding: 16px 0 0;
-  border-top: 2px solid var(--fg-strong);
+  border-top: 1px solid var(--border);
   counter-reset: toc;
   font-size: 0.8125rem;
   line-height: 1.35;
@@ -164,10 +168,8 @@
   margin: 0 0 12px;
   padding: 0;
   color: var(--fg-strong);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 500;
 }
 
 .side-nav div + div h2 {
@@ -181,33 +183,21 @@
 }
 
 .side-nav li {
-  display: flex;
-  gap: 12px;
-  padding: 6px 0;
-  border-bottom: 1px solid var(--border-faint);
   counter-increment: toc;
 }
 
-.side-nav li::before {
-  content: counter(toc, decimal-leading-zero);
-  flex: none;
-  min-width: 1.5rem;
-  color: var(--fg-faint);
-  font-variant-numeric: tabular-nums;
-}
-
 .side-nav a {
-  color: var(--fg);
+  display: block;
+  padding: 6px 12px;
+  border-left: 2px solid var(--border);
+  color: var(--fg-faint);
   text-decoration: none;
 }
 
-.side-nav li:hover::before {
-  color: var(--accent-fg);
-}
-
 .side-nav a:hover {
+  border-left-color: var(--action);
   color: var(--fg-strong);
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .not-found {
@@ -219,11 +209,12 @@
   right: max(var(--gutter), env(safe-area-inset-right, 0px));
   bottom: max(16px, env(safe-area-inset-bottom, 0px));
   display: none;
-  padding: 8px 12px;
-  border: 1px solid var(--fg-strong);
+  padding: 10px 18px;
+  border-radius: var(--radius-pill);
   background: var(--page);
-  color: var(--fg-strong);
-  font-size: 0.8125rem;
+  box-shadow: var(--shadow-2);
+  color: var(--action);
+  font-size: 0.875rem;
   font-weight: 500;
 }
 
@@ -232,21 +223,16 @@
 }
 
 .back-to-top:hover {
-  border-color: var(--accent);
-  background: var(--accent);
-  color: #ffffff;
+  background: var(--action-surface);
 }
 
-/* Decoration: a grayscale photo band under the lede, one per category. Easy to remove. */
+/* The category's illustration (public/assets/art), under the lede. */
 .hero-art {
+  display: block;
+  width: 100%;
+  height: auto;
   margin: 32px 0 0;
-  aspect-ratio: 21 / 9;
-  background: center / cover;
-  filter: grayscale(1) contrast(1.05);
+  aspect-ratio: 2 / 1;
+  object-fit: cover;
+  border-radius: var(--radius-xl);
 }
-
-.hero-art--0 { background-image: url("/assets/decor/d1.jpg"); }
-.hero-art--1 { background-image: url("/assets/decor/d4.jpg"); background-position: center 70%; }
-.hero-art--2 { background-image: url("/assets/decor/d2.jpg"); background-position: center 35%; }
-.hero-art--3 { background-image: url("/assets/decor/d3.jpg"); background-position: center 30%; }
-.hero-art--4 { background-image: url("/assets/decor/d5.jpg"); background-position: center 45%; }

@@ -12,11 +12,10 @@ export const STORAGE_KEYS = {
   hurricaneUnlocked: "baselarte:hurricane",
 } as const;
 
-/** "auto" follows the visitor's clock: dark from 18:00 to 06:00. */
-export function resolveTheme(mode: ThemeMode, hour: number): Theme {
+/** "auto" follows the visitor's system setting (prefers-color-scheme). */
+export function resolveTheme(mode: ThemeMode, systemPrefersDark: boolean): Theme {
   if (mode !== "auto") return mode;
-  const isNight = hour >= 18 || hour < 6;
-  return isNight ? "dark" : "light";
+  return systemPrefersDark ? "dark" : "light";
 }
 
 /** Reads localStorage without ever throwing (private windows and blocked storage throw). */

@@ -1,4 +1,4 @@
-/* Page chrome: a full-width black/white frame on a 12-column grid, hairline rules, no ornament */
+/* Page chrome: a white app bar and a light grey footer, as on Google's own sites */
 
 .site-header,
 main,
@@ -13,118 +13,77 @@ main,
 
 main {
   flex: 1;
-  padding-top: 48px;
+  padding-top: 40px;
   padding-bottom: 96px;
 }
 
 .site-header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   max-width: none;
-  padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
   height: 64px;
-}
-
-/* Header and footer are black in both themes: they re-point the colour tokens for everything inside. */
-.site-header,
-.site-footer {
-  --page: #000000;
-  --fg-strong: #ffffff;
-  --fg: #e0e0e0;
-  --fg-faint: #a3a3a3;
-  --border: #ffffff3d;
-  --focus-inner: #ffffff;
-  background: #000000;
-  color: var(--fg-faint);
-}
-
-.site-header {
-  border-bottom: 1px solid #2a2a2a;
+  padding: 0 max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  border-bottom: 1px solid var(--border);
+  background: var(--page);
 }
 
 .header-nav {
   display: flex;
   align-items: center;
-  gap: 8px 28px;
+  gap: 8px 24px;
   font-size: 0.875rem;
   font-weight: 500;
 }
 
-.header-nav > a {
-  color: var(--fg-strong);
-  text-decoration: none;
-}
-
-.header-nav > a:hover {
-  text-decoration: underline;
-  text-underline-offset: 6px;
-}
-
-.header-tools {
-  color: var(--fg-faint);
-  font-size: 0.8125rem;
-  font-weight: 400;
-}
-
-/* The flower: outline in the ink colour, filled with the page colour. */
+/* The flower: outline in the ink colour, petals in the four Google colours. */
 .logo-mark {
   display: block;
-  width: 28px;
-  height: 28px;
-  --petal: var(--page);
+  width: 30px;
+  height: 30px;
   --ink-line: var(--fg-strong);
 }
 
 .logo-mark .petal {
-  fill: var(--petal);
-  stroke: var(--ink-line);
-  stroke-width: 0.9;
-  stroke-linejoin: round;
+  stroke: none;
 }
+
+.logo-mark .petal:nth-child(1) { fill: var(--g-blue); }
+.logo-mark .petal:nth-child(2) { fill: var(--g-red); }
+.logo-mark .petal:nth-child(3) { fill: var(--g-yellow); }
+.logo-mark .petal:nth-child(4) { fill: var(--g-green); }
+.logo-mark .petal:nth-child(5) { fill: var(--g-blue); }
 
 .logo-mark .vein {
   fill: none;
-  stroke: var(--ink-line);
+  stroke: #ffffff;
+  stroke-opacity: 0.7;
   stroke-width: 0.7;
   stroke-linecap: round;
 }
 
 .logo-mark .heart {
-  fill: var(--ink-line);
+  fill: #ffffff;
 }
 
 .site-wordmark {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
-  color: var(--fg-strong);
-  font-size: 1.125rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  gap: 10px;
+  color: var(--fg-faint);
+  font-size: 1.375rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
   text-decoration: none;
 }
 
 .site-wordmark:hover {
   color: var(--fg-strong);
-}
-
-.site-header,
-.site-footer {
-  --accent-fg: #ff4d42;
-}
-
-.site-footer {
-  margin-top: 0;
-  max-width: none;
-  padding-top: 24px;
-  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 32px);
-  padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
-  border-top: 1px solid #2a2a2a;
-  color: var(--fg-faint);
-  font-size: 0.875rem;
+  text-decoration: none;
 }
 
 .site-footer {
@@ -132,49 +91,76 @@ main {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 24px;
+  gap: 12px 24px;
+  max-width: none;
+  margin-top: 0;
+  padding-top: 24px;
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 28px);
+  padding-left: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  padding-right: max(var(--gutter), calc((100vw - var(--page-max)) / 2));
+  border-top: 1px solid var(--border);
+  background: var(--page-faint);
+  color: var(--fg-faint);
+  font-size: 0.875rem;
 }
 
 .site-footer .footer-tools {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
-}
-
-.theme-switch,
-.language-switch {
-  display: inline-flex;
-  flex-wrap: wrap;
-  gap: 4px 10px;
+  gap: 8px 16px;
 }
 
 .site-footer .footer-links {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px 16px;
+  gap: 4px 20px;
   margin-left: auto;
 }
 
-.site-footer a,
-.site-footer button,
-.header-tools button {
+.site-footer a {
   color: var(--fg-faint);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-underline-offset: 3px;
 }
 
-.site-footer a:hover,
-.site-footer button:hover,
-.site-footer button[aria-pressed="true"],
-.header-tools button:hover,
-.header-tools button[aria-pressed="true"] {
+.site-footer a:hover {
   color: var(--fg-strong);
 }
 
-.site-footer button[aria-pressed="true"],
-.header-tools button[aria-pressed="true"] {
-  text-decoration-color: currentColor;
+/* Theme and language switches: Material segmented buttons. */
+.theme-switch,
+.language-switch {
+  display: inline-flex;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+}
+
+.theme-switch button,
+.language-switch button {
+  min-height: 32px;
+  padding: 0 14px;
+  color: var(--fg);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.theme-switch button + button,
+.language-switch button + button {
+  border-left: 1px solid var(--border-strong);
+}
+
+.theme-switch button:hover,
+.language-switch button:hover {
+  background: var(--surface-hover);
+}
+
+.theme-switch button[aria-pressed="true"],
+.language-switch button[aria-pressed="true"] {
+  background: var(--action-surface);
+  color: var(--accent-fg);
+}
+
+.header-tools .theme-switch button {
+  min-height: 36px;
 }
 
 /* The © in the footer (EasterEgg). */
@@ -187,11 +173,11 @@ main {
 .chorus {
   width: min(32rem, calc(100vw - 2 * var(--gutter)));
   padding: 32px 28px 24px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--radius-lg);
+  border: 0;
+  border-radius: var(--radius-xl);
   background: var(--page);
   color: var(--fg);
-  box-shadow: 0 24px 60px -24px #00000066;
+  box-shadow: var(--shadow-2);
 }
 
 .chorus::backdrop {
@@ -245,17 +231,17 @@ main {
 }
 
 .chorus__actions button {
-  padding: 10px 16px;
+  padding: 10px 24px;
   border: 1px solid var(--border-strong);
-  border-radius: var(--radius);
-  color: var(--fg);
+  border-radius: var(--radius-pill);
+  color: var(--action);
+  font-weight: 500;
 }
 
 .chorus__actions .chorus__primary {
-  border-color: var(--fg-strong);
-  background: var(--fg-strong);
-  color: var(--page);
-  font-weight: 600;
+  border-color: var(--action);
+  background: var(--action);
+  color: var(--fg-on-action);
 }
 
 /* The easter egg's music player: a small card at the bottom left, a bar on phones. */
@@ -269,10 +255,10 @@ main {
   gap: 12px;
   width: min(26rem, calc(100vw - 2 * var(--gutter)));
   padding: 10px 14px;
-  border: 1px solid var(--border-strong);
+  border: 0;
   border-radius: var(--radius-lg);
   background: var(--page);
-  box-shadow: 0 8px 24px -16px #00000066;
+  box-shadow: var(--shadow-2);
   color: var(--fg);
   font-size: 0.8125rem;
 }
@@ -296,7 +282,7 @@ main {
   flex: none;
   width: 44px;
   height: 44px;
-  border-radius: var(--radius);
+  border-radius: var(--radius-pill);
   background: var(--action);
   color: var(--fg-on-action);
 }

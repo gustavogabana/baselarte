@@ -1,74 +1,86 @@
-/* Design tokens. Every colour is a token here; the dark theme only redefines them. */
+/* Design tokens, after Google's own sites (blog.google, design.google): Google Sans Flex,
+   the GM grey ramp, Google Blue for actions and the four brand colours for decoration.
+   Every colour is a token here; the dark theme only redefines them. */
 
 :root {
+  /* Google brand colours (decoration, chips, illustrations) */
+  --g-blue: #4285f4;
+  --g-red: #ea4335;
+  --g-yellow: #fbbc04;
+  --g-green: #34a853;
+
   --page: #ffffff;
-  --page-faint: #f6f6f6;
-  --surface-strong: #eeeeee;
-  --surface-hover: #f3f3f3;
+  --page-faint: #f8f9fa;
+  --surface: #f1f3f4;
+  --surface-strong: #e8eaed;
+  --surface-hover: #f1f3f4;
+  --surface-tint: #e8f0fe;
 
-  /* The one Swiss accent: poster red, used sparingly (labels, numbers, hover, rules). */
-  --accent: #e30613;
-  --accent-fg: #e30613;
+  --accent: #1a73e8;
+  --accent-fg: #1967d2;
 
-  --fg-strong: #000000;
-  --fg: #2e2e2e;
-  --fg-faint: #767676;
+  --fg-strong: #202124;
+  --fg: #3c4043;
+  --fg-faint: #5f6368;
   --fg-on-action: #ffffff;
 
-  --border: #00000020;
-  --border-faint: #0000000d;
-  --border-strong: #0000003d;
+  --border: #dadce0;
+  --border-faint: #e8eaed;
+  --border-strong: #bdc1c6;
 
-  /* Links: ink-coloured, told apart by the underline (as on base-ui.com). */
-  --action: #000000;
-  --action-hover: #2e2e2e;
-  --action-active: #2e2e2e;
-  --action-surface: #f9f9f9;
-  --action-border: #0000003d;
-  --visited: #000000;
-  --focus-inner: #000000;
-  --focus-outer: #00000066;
+  --action: #1a73e8;
+  --action-hover: #174ea6;
+  --action-active: #174ea6;
+  --action-surface: #e8f0fe;
+  --action-border: #d2e3fc;
+  --visited: #1a73e8;
+  --focus-inner: #1a73e8;
+  --focus-outer: #1a73e866;
 
-  /* Names kept for the note stylesheets: all neutral now */
-  --brand: #000000;
-  --brand-fg: #000000;
-  --brand-surface: #f9f9f9;
-  --brand-border: #00000033;
+  /* Names kept for the note stylesheets */
+  --brand: #1a73e8;
+  --brand-fg: #1967d2;
+  --brand-surface: #e8f0fe;
+  --brand-border: #aecbfa;
 
-  --success-fg: #00781e;
-  --success-surface: #f2fbf6;
-  --success-border: #cceeda;
-  --warning-fg: #9e4b00;
-  --warning-surface: #fff9e8;
-  --warning-border: #fbeabf;
-  --critical-fg: #c00005;
-  --critical-surface: #fff5f5;
-  --critical-border: #fbd4d4;
-  --highlight-fg: #222222;
-  --highlight-surface: #f9f9f9;
-  --highlight-border: #00000026;
+  --success-fg: #137333;
+  --success-surface: #e6f4ea;
+  --success-border: #ceead6;
+  --warning-fg: #b06000;
+  --warning-surface: #fef7e0;
+  --warning-border: #feefc3;
+  --critical-fg: #c5221f;
+  --critical-surface: #fce8e6;
+  --critical-border: #fad2cf;
+  --highlight-fg: #3c4043;
+  --highlight-surface: #f1f3f4;
+  --highlight-border: #e8eaed;
 
-  /* Code blocks stay dark in both themes */
-  --code-bg: #131313;
-  --code-fg: #ededed;
-  --code-border: #2e2e2e;
-  --code-faint: #8f8f8f;
-  --code-keyword: #9fbaf0;
-  --code-string: #7fdca4;
-  --code-number: #ffcc6a;
-  --code-attr: #6bc1ff;
+  /* Code: light, like Google's developer docs */
+  --code-bg: #f8f9fa;
+  --code-fg: #202124;
+  --code-border: #e8eaed;
+  --code-faint: #5f6368;
+  --code-keyword: #1967d2;
+  --code-string: #188038;
+  --code-number: #c5221f;
+  --code-attr: #9334e6;
 
-  --sans: "Helvetica Neue", Helvetica, "Nimbus Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --mono: ui-monospace, Menlo, Consolas, monospace;
+  --shadow-1: 0 1px 2px 0 #3c40434d, 0 1px 3px 1px #3c404326;
+  --shadow-2: 0 1px 3px 0 #3c40434d, 0 4px 8px 3px #3c404326;
+
+  --sans: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: "Roboto Mono", ui-monospace, Menlo, Consolas, monospace;
 
   --content-max: 44rem;
-  --page-max: 80rem;
+  --page-max: 76rem;
   --side-width: 15rem;
   --grid-gap: clamp(16px, 3vw, 40px);
-  --page-left: max(var(--gutter), 6vw);
-  --gutter: clamp(16px, 4vw, 32px);
-  --radius: 0;
-  --radius-lg: 0;
+  --gutter: clamp(16px, 4vw, 40px);
+  --radius: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 28px;
+  --radius-pill: 999px;
 
   /* Names kept so the older note stylesheets keep working */
   --paper: var(--page);
@@ -87,52 +99,63 @@
 }
 
 [data-theme="dark"] {
-  --page: #000000;
-  --page-faint: #0d0d0d;
-  --surface-strong: #1a1a1a;
-  --surface-hover: #141414;
+  --page: #202124;
+  --page-faint: #292a2d;
+  --surface: #303134;
+  --surface-strong: #3c4043;
+  --surface-hover: #303134;
+  --surface-tint: #1e2a3d;
 
-  --accent: #ff3b30;
-  --accent-fg: #ff4d42;
+  --accent: #8ab4f8;
+  --accent-fg: #8ab4f8;
 
-  --fg-strong: #ffffff;
-  --fg: #e0e0e0;
-  --fg-faint: #a3a3a3;
-  --fg-on-action: #000000;
+  --fg-strong: #e8eaed;
+  --fg: #bdc1c6;
+  --fg-faint: #9aa0a6;
+  --fg-on-action: #202124;
 
-  --border: #ffffff24;
-  --border-faint: #ffffff0f;
-  --border-strong: #ffffff52;
+  --border: #3c4043;
+  --border-faint: #303134;
+  --border-strong: #5f6368;
 
-  --action: #ffffff;
-  --action-hover: #d4d4d4;
-  --action-active: #d4d4d4;
-  --action-surface: #0d0d0d;
-  --action-border: #ffffff3d;
-  --visited: #ffffff;
-  --focus-inner: #ffffff;
-  --focus-outer: #ffffff66;
+  --action: #8ab4f8;
+  --action-hover: #aecbfa;
+  --action-active: #aecbfa;
+  --action-surface: #1e2a3d;
+  --action-border: #2b4a7a;
+  --visited: #8ab4f8;
+  --focus-inner: #8ab4f8;
+  --focus-outer: #8ab4f866;
 
-  --brand: #ffffff;
-  --brand-fg: #ffffff;
-  --brand-surface: #0d0d0d;
-  --brand-border: #ffffff33;
+  --brand: #8ab4f8;
+  --brand-fg: #8ab4f8;
+  --brand-surface: #1e2a3d;
+  --brand-border: #2b4a7a;
 
-  --success-fg: #00ae4e;
-  --success-surface: #042a15;
-  --success-border: #054220;
-  --warning-fg: #fda219;
-  --warning-surface: #2e1b06;
-  --warning-border: #542800;
-  --critical-fg: #f9381e;
-  --critical-surface: #370b06;
-  --critical-border: #62170d;
-  --highlight-fg: #e0e0e0;
-  --highlight-surface: #0d0d0d;
-  --highlight-border: #ffffff26;
+  --success-fg: #81c995;
+  --success-surface: #1c2f22;
+  --success-border: #284d33;
+  --warning-fg: #fdd663;
+  --warning-surface: #332b12;
+  --warning-border: #4d3f12;
+  --critical-fg: #f28b82;
+  --critical-surface: #3a1f1d;
+  --critical-border: #5c2b28;
+  --highlight-fg: #e8eaed;
+  --highlight-surface: #303134;
+  --highlight-border: #3c4043;
 
-  --code-bg: #0d0d0d;
-  --code-border: #2a2a2a;
+  --code-bg: #292a2d;
+  --code-fg: #e8eaed;
+  --code-border: #3c4043;
+  --code-faint: #9aa0a6;
+  --code-keyword: #8ab4f8;
+  --code-string: #81c995;
+  --code-number: #f28b82;
+  --code-attr: #c58af9;
+
+  --shadow-1: 0 1px 2px 0 #0000004d, 0 1px 3px 1px #00000026;
+  --shadow-2: 0 1px 3px 0 #0000004d, 0 4px 8px 3px #00000026;
 
   color-scheme: dark;
 }

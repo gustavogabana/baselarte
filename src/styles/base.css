@@ -10,7 +10,7 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-behavior: smooth;
-  scroll-padding-top: 16px;
+  scroll-padding-top: 80px;
 }
 
 body {
@@ -20,27 +20,27 @@ body {
   flex-direction: column;
   background: var(--page);
   color: var(--fg);
-  font: 400 1.0625rem/1.6 var(--sans);
+  font: 400 1.0625rem/1.65 var(--sans);
+  font-optical-sizing: auto;
   font-feature-settings: "kern", "liga";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: var(--accent);
-  color: #ffffff;
+  background: #d2e3fc;
+  color: #202124;
 }
 
 a {
   color: var(--action);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, currentColor 35%, transparent);
-  text-underline-offset: 3px;
+  text-decoration: none;
 }
 
 a:hover {
-  color: var(--accent-fg);
-  text-decoration-color: currentColor;
+  color: var(--action-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 button {
@@ -55,7 +55,7 @@ button {
 strong,
 b {
   color: var(--fg-strong);
-  font-weight: 600;
+  font-weight: 500;
 }
 
 em {
@@ -110,8 +110,8 @@ html:not(.js-enabled) .requires-js {
   font-family: var(--sans);
   font-size: 0.75rem;
   line-height: 1.4;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 0.02em;
 }
 
 .sr-only {
@@ -129,9 +129,10 @@ html:not(.js-enabled) .requires-js {
   top: 12px;
   left: 12px;
   z-index: 200;
-  padding: 8px 12px;
-  background: var(--fg-strong);
-  color: var(--page);
+  padding: 8px 16px;
+  border-radius: var(--radius-pill);
+  background: var(--action);
+  color: var(--fg-on-action);
   transform: translateY(-200%);
 }
 
@@ -142,6 +143,7 @@ html:not(.js-enabled) .requires-js {
 :focus-visible {
   outline: 2px solid var(--focus-inner);
   outline-offset: 2px;
+  border-radius: 4px;
 }
 
 code,
@@ -164,7 +166,7 @@ samp {
   vertical-align: -0.2em;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.5;
-  stroke-linecap: square;
+  stroke-width: 1.75;
+  stroke-linecap: round;
   stroke-linejoin: round;
 }

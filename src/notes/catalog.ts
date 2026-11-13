@@ -121,3 +121,8 @@ export const catalog: NoteGroup[] = [
     ],
   },
 ];
+
+/** The group's illustration (flat, Google-coloured SVG in public/assets/art/<id>.svg). */
+export function groupArt(groupId: string): string {
+  return `/assets/art/${groupId}.svg`;
+}

@@ -1,7 +1,7 @@
 import { BackLink } from "../components/layout/BackLink.tsx";
 import { formatDate } from "../components/layout/dates.ts";
 import { groupOf } from "../notes/registry.ts";
-import { catalog } from "../notes/catalog.ts";
+import { groupArt } from "../notes/catalog.ts";
 import { site } from "../site.ts";
 import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
 import { localizedAttribute } from "../i18n/attributes.ts";
@@ -11,7 +11,7 @@ import type { Note, TocGroup } from "../notes/types.ts";
 
 export function NotePage({ note }: { note: Note }) {
   const { Body } = note;
-  const groupIndex = catalog.findIndex((group) => group.id === groupOf(note.slug).id);
+  const group = groupOf(note.slug);
   const articleClass = note.variant === "aws" ? "aws-guide reading-column" : "reading-column ds-guide";
   return (
     <article className={articleClass}>
@@ -19,7 +19,7 @@ export function NotePage({ note }: { note: Note }) {
       <header className="hero" aria-labelledby="hero-title">
         <p className="hero-meta">
           <span className="hero-category">
-            <Text value={groupOf(note.slug).title} />
+            <Text value={group.title} />
           </span>
           <span className="hero-kicker">
             <Text value={note.kicker} />
@@ -31,7 +31,7 @@ export function NotePage({ note }: { note: Note }) {
         <p className="hero-lede">
           <Text value={note.heroLede} />
         </p>
-        <div className={`hero-art hero-art--${groupIndex % 5}`} aria-hidden="true" />
+        <img className="hero-art" src={groupArt(group.id)} alt="" width="1200" height="675" decoding="async" />
         <dl className="hero-facts">
           <div>
             <dt>

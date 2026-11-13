@@ -17,7 +17,7 @@ function boot(config: BootConfig, resolve: typeof resolveTheme, read: typeof rea
   const root = document.documentElement;
   const storedMode = read(config.keys.themeMode);
   const mode = config.themeModes.includes(storedMode ?? "") ? (storedMode as Parameters<typeof resolve>[0]) : "auto";
-  root.dataset.theme = resolve(mode, new Date().getHours());
+  root.dataset.theme = resolve(mode, matchMedia("(prefers-color-scheme: dark)").matches);
 
   const storedLanguage = read(config.keys.language);
   const browserLanguage = /^pt\b/i.test(navigator.language) ? "pt-BR" : config.defaultLanguage;
