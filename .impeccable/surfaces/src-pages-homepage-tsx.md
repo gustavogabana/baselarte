@@ -11,16 +11,14 @@ Home (index of notes) and the note page frame. Visitor mode: Read. Audiences: de
 
 ## Direction contract
 
-THESIS: The notes are a numbered series of monographs: eight series from foundations to practice, each note with its place (04.2). Refuses both the category's white blog list with thumbnails and the previous loud process-ink frame.
+THESIS: The internal panel. A cloud console's inside (IAM dashboard, users table, region menu), not its marketing; the home goes straight to the list like a classifieds front page.
 
-OWN-WORLD: White ground; three sober cover colours (petrol #2f5d66, clay #a65e46, sand #a89068) taking turns per series; black for details (text, 2px series rules, numbers, the flower's heart). Google Sans Flex, medium weights, gentle tracking. Square colour blocks carry series numbers like a spine. Photos are small and greyscale, multiplied over the series colour. The magnolia: clay petals, black heart.
+OWN-WORLD: White ground, ink text, one signal blue (#0a62d0) for links, focus and the chosen option, grey hairlines, 8px controls, 16px containers. The only picture is the magnolia as an uncoloured outline (the mark from dee7a23), large in the hero. Google Sans Flex. Tailwind v4, one stylesheet.
 
-STORY: The visitor sees a calm, organised library, picks a series by number and name, and reads in a quiet column.
+STORY: The visitor sees the name, the IBM quote and the flower, then every note at once as headed lists of blue links, and picks one.
 
-FIRST VIEWPORT: Left, the IBM quote large in medium weight with its citation under a short black rule. Right, the series cover: a petrol sheet with the white magnolia, "Baselarte / Notas de estudo", a sand-toned photograph and the counts. Below, the strip of eight numbered series.
+FIRST VIEWPORT: Left, "Baselarte · Notas de estudo" (h1), the quote at 1.5–2.25rem, citation, counts. Right, the outline magnolia at 288px (above the text at 144px on phones). A hairline, then the index columns begin.
 
-FORM: University-press monograph series, position 4 on the grounded list. seed:9c00a0e7ebd6559f
+Signature interaction: none beyond the plain link underline; the list is the interface.
 
-Signature interaction: hovering a note sets its number on the series colour and underlines the title in it (160ms ease-out); instant under reduced motion.
-
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+FINISH: reviewed in the browser at 1440 and 390, light and dark; DESIGN.md replaced; favicon and icons restored from main; share image redrawn with the outline mark.

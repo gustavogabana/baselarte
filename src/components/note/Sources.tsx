@@ -12,7 +12,8 @@ type SourcesProps = {
   title?: ReactNode;
 } & ({ links: SourceLink[]; children?: never } | { links?: never; children: ReactNode });
 
-/** The official references a note is based on, listed at its end. */
+/** The official references a note is based on, listed at its end (styled by .sources in app.css,
+ *  which the hand-written lists in a few notes share). */
 export function Sources({ title, links, children }: SourcesProps) {
   return (
     <div className="sources">

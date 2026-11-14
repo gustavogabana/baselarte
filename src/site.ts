@@ -11,7 +11,7 @@ export const site = {
     path: "/assets/og-image.png",
     width: 1200,
     height: 630,
-    alt: "Baselarte: a white five-petal magnolia and the site name on a petrol-blue background",
+    alt: "Baselarte: the site name beside the five-petal magnolia drawn in black outline",
   },
 } as const;
 

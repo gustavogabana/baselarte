@@ -3,6 +3,7 @@ import { useLocalize } from "../i18n/useLocalize.ts";
 import type { Localized } from "../i18n/localized.ts";
 import { ui } from "../i18n/ui.ts";
 import { Text } from "../components/ui/T.tsx";
+import { segmentedGroup, segmentedOption } from "../components/ui/segmented.ts";
 import { themeMode, usePreference } from "../preferences/store.ts";
 import type { ThemeMode } from "../preferences/settings.ts";
 
@@ -22,11 +23,11 @@ const GLYPHS: Record<ThemeMode, JSX.Element> = {
   auto: (
     <>
       <circle cx="8" cy="8" r="5.5" />
-      <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" className="theme-glyph__fill" />
+      <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" className="fill-current" />
     </>
   ),
   light: <circle cx="8" cy="8" r="5.5" />,
-  dark: <circle cx="8" cy="8" r="5.5" className="theme-glyph__fill" />,
+  dark: <circle cx="8" cy="8" r="5.5" className="fill-current" />,
 };
 
 /** auto / light / dark. */
@@ -36,13 +37,19 @@ export function ThemeSwitch({ placement }: ThemeSwitchProps) {
   const modes: ThemeMode[] = ["auto", "light", "dark"];
 
   return (
-    <div role="group" className={`theme-switch theme-switch--${placement}`} aria-label={localize(ui.theme)}>
+    <div role="group" className={segmentedGroup} aria-label={localize(ui.theme)}>
       {modes.map((mode) => (
-        <button key={mode} type="button" aria-pressed={mode === currentMode} onClick={() => themeMode.set(mode)}>
-          <svg className="theme-glyph" viewBox="0 0 16 16" aria-hidden="true">
+        <button
+          key={mode}
+          type="button"
+          aria-pressed={mode === currentMode}
+          onClick={() => themeMode.set(mode)}
+          className={`${segmentedOption} ${placement === "header" ? "min-w-[34px] justify-center px-2" : ""}`}
+        >
+          <svg className="size-3.5 fill-none stroke-current stroke-[1.5]" viewBox="0 0 16 16" aria-hidden="true">
             {GLYPHS[mode]}
           </svg>
-          <span className="theme-switch__label">
+          <span className={placement === "header" ? "sr-only" : undefined}>
             <Text value={LABELS[mode]} />
           </span>
         </button>

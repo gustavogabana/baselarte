@@ -1,4 +1,5 @@
 import { existsSync } from "node:fs";
+import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig, type Plugin } from "vite";
 import { SONG_PATH } from "./src/easter-egg/chorus.ts";
@@ -7,7 +8,7 @@ import type * as Renderer from "./src/server/render.tsx";
 /** The browser bundle: one script for behaviour and one stylesheet, linked from every page. */
 export const CLIENT_ENTRIES = {
   main: "src/client/main.ts",
-  styles: "src/styles/index.css",
+  styles: "src/styles/app.css",
 };
 
 const CONTENT_TYPES: Record<string, string> = {
@@ -52,7 +53,7 @@ function renderPagesOnRequest(): Plugin {
 export default defineConfig({
   // Multi-page: every URL is its own HTML file, like on GitHub Pages (also how `vite preview` serves dist/).
   appType: "mpa",
-  plugins: [react(), renderPagesOnRequest()],
+  plugins: [react(), tailwindcss(), renderPagesOnRequest()],
   build: {
     manifest: true,
     rolldownOptions: { input: CLIENT_ENTRIES },

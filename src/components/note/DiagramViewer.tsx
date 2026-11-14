@@ -8,22 +8,22 @@ import { Text } from "../ui/T.tsx";
  */
 export function DiagramViewer() {
   return (
-    <dialog className="diagram-viewer" data-diagram-viewer="">
-      <div className="diagram-viewer__bar">
-        <button type="button" data-zoom="out" {...localizedAttribute("aria-label", ui.zoomOut)}>
+    <dialog className="m-0 h-dvh max-h-dvh w-screen max-w-[100vw] border-0 bg-page p-0 text-fg backdrop:bg-page open:flex open:flex-col" data-diagram-viewer="">
+      <div className="flex items-center gap-2 border-b border-line px-(--gutter) pt-[max(12px,env(safe-area-inset-top))] pb-3">
+        <button type="button" className="min-h-11 min-w-11 rounded-full border border-control px-4 text-lg" data-zoom="out" {...localizedAttribute("aria-label", ui.zoomOut)}>
           −
         </button>
-        <span className="diagram-viewer__zoom" data-zoom-level="" aria-live="polite">
+        <span className="min-w-[4ch] text-center text-sm text-faint" data-zoom-level="" aria-live="polite">
           100%
         </span>
-        <button type="button" data-zoom="in" {...localizedAttribute("aria-label", ui.zoomIn)}>
+        <button type="button" className="min-h-11 min-w-11 rounded-full border border-control px-4 text-lg" data-zoom="in" {...localizedAttribute("aria-label", ui.zoomIn)}>
           +
         </button>
-        <button type="button" className="diagram-viewer__close" data-close="">
+        <button type="button" className="ml-auto min-h-11 rounded-full border border-control px-4 text-[0.9375rem]" data-close="">
           <Text value={ui.closeDiagram} />
         </button>
       </div>
-      <div className="diagram-viewer__canvas fig" data-canvas="" />
+      <div className="diagram-viewer__canvas fig m-0 flex-1 touch-pan-x touch-pan-y touch-pinch-zoom overflow-auto bg-page-faint p-5 [--scroll-cover:var(--glass-faint)]" data-canvas="" />
     </dialog>
   );
 }
