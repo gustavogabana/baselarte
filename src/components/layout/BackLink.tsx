@@ -4,8 +4,8 @@ import { Text } from "../ui/T.tsx";
 
 export function BackLink({ href, label }: { href: string; label: Localized }) {
   return (
-    <p className="back-link">
-      <a href={href}>
+    <p className="mt-8 text-sm">
+      <a href={href} className="inline-flex min-h-9 items-center gap-2 font-medium">
         <Arrow direction="left" />
         <Text value={label} />
       </a>

@@ -1,5 +1,5 @@
 // The site speaks English and Brazilian Portuguese. Every page carries both languages and
-// CSS shows the active one (see `html[lang]` in base.css), so crawlers read everything and
+// CSS shows the active one (see `html[lang]` in styles/app.css), so crawlers read everything and
 // switching language needs no re-render.
 
 export const LANGUAGES = ["en", "pt-BR"] as const;

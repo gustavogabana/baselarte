@@ -35,7 +35,7 @@ src/
   preferences/  theme and language: settings, the inline boot script, the shared store
   i18n/         Localized type and the chrome's copy
   server/       renders every page, sitemap.xml and llms.txt
-  styles/       tokens, base, layout and prose CSS
+  styles/       app.css: Tailwind v4 entry (tokens, theme, base, note-content classes)
 public/         copied as is: CNAME, robots.txt, favicons, manifest, share image
                 (and audio/, optional: see src/easter-egg/)
 scripts/build.ts  production build
@@ -51,8 +51,8 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Behaviour
 
-- **Layout:** a numbered series of monographs. The notes are grouped into eight series, numbered 01 to 08 from foundations to practice, and each note has its number in the series (04.2). Three sober cover colours (petrol, clay, sand) mark the series in turn; black draws the details (text, rules, numbers, the flower's heart). Google Sans Flex for text and titles, Google Sans Code for code (Google Fonts). Home is the IBM quote beside the series cover (the magnolia, the name, a toned photograph), a strip of the eight series, then the index; each note opens with its series link and a strip of the series photo toned in its colour. Photos are from Unsplash (free licence), loaded from Unsplash's CDN, shown in greyscale over the series colour and credited under each one; the list is in `src/components/ui/photos.ts`. Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
-- **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens in `src/styles/tokens.css`; the dark theme only redefines them.
+- **Layout:** a cloud console's internal panel: white ground, ink text, one signal blue for links and focus, hairline borders and 16px containers. Home: the name, the IBM quote and the counts beside the magnolia, then the index like a classifieds front page: eight numbered series (01 to 08) as headed lists of plain blue links in up to four columns; each note has its number in the series (04.2). The magnolia is an uncoloured outline drawing, the same in the header, the hero and the favicon. Styling is Tailwind CSS v4: utilities sit in the components; `src/styles/app.css` is the only stylesheet. Google Sans Flex for text and titles, Google Sans Code for code (Google Fonts). Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
+- **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens at the top of `src/styles/app.css` (mapped to Tailwind theme values); the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
 - **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.
 - **Preferences** are saved in `localStorage`.
@@ -60,7 +60,7 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Conventions
 
-- One source per setting: theme and storage keys in `src/preferences/settings.ts`, colours in `src/styles/tokens.css`, site facts in `src/site.ts`.
+- One source per setting: theme and storage keys in `src/preferences/settings.ts`, colours in `src/styles/app.css`, site facts in `src/site.ts`.
 - Nothing time-dependent is hardcoded (year, time and day period are read in the browser).
 - No silent failures: every `catch` recovers and logs, or rethrows.
 - Descriptive names for variables, classes and data attributes.

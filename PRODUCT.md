@@ -39,9 +39,9 @@ Readers arrive mostly deep-linked into a note, on desktop and phone. Notes are l
 - Name: Baselarte. Mark: the five-petal magnolia (shape fixed; colour may change).
 - The IBM 1979 quote ("A computer can never be held accountable…") stays on the home page.
 - Typeface: Google's own (Google Sans Flex), a user requirement.
-- Colour: three sober, less-common colours (petrol, clay, sand) plus black for details; never loud or Google's brand colours.
-- Imagery: real photographs (engineering, architecture, ocean) from Unsplash's CDN, used simply and decoratively (small, toned in the series colour); no flowers.
-- References for restraint, not to copy: abc.xyz.
+- Colour: a cloud-console palette (white ground, ink text, one signal blue for links and focus, grey hairlines). The mark and the imagery are black and white.
+- Imagery: one picture only, the magnolia as an uncoloured outline drawing (the mark from dee7a23); no photographs, no decorative art.
+- References, not to copy: a cloud provider's internal console (surfaces, controls, tables) and a classifieds front page for the index (dense headed lists of plain links).
 
 ## Evidence on Hand
 

@@ -4,16 +4,22 @@ import { Island } from "../../islands/Island.tsx";
 import { site } from "../../site.ts";
 import { FlowerLogo } from "../ui/FlowerLogo.tsx";
 
-/** Flower and name on the left; the posts link and the theme switch on the right. */
+/** A white bar over a hairline: the flower and name on the left, the theme switch on the right. */
 export function SiteHeader() {
   return (
-    <header className="site-header">
-      <a className="site-wordmark" href="/" {...localizedAttribute("aria-label", ui.home)}>
-        <FlowerLogo />
+    <header
+      className="site-header flex h-14 items-center justify-between gap-4 border-b border-line bg-page px-[max(var(--gutter),calc((100vw-var(--page-max))/2))]"
+    >
+      <a
+        className="inline-flex items-center gap-2.5 text-[1.1875rem] leading-none font-bold tracking-[-0.015em] text-ink no-underline hover:text-ink"
+        href="/"
+        {...localizedAttribute("aria-label", ui.home)}
+      >
+        <FlowerLogo className="size-7" />
         <span>{site.name}</span>
       </a>
-      <nav className="header-nav">
-        <div className="header-tools requires-js">
+      <nav className="flex items-center gap-6 text-sm">
+        <div className="requires-js">
           <Island name="ThemeSwitch" props={{ placement: "header" }} />
         </div>
       </nav>

@@ -1,145 +1,127 @@
 ---
 name: Baselarte
-description: A numbered series of monographs; three sober cover colours, black details, small toned photographs around a calm reading column.
+description: A cloud console's internal panel for a library of notes. White ground, ink text, one signal blue, hairlines; the index as a classifieds front page; the magnolia as a plain outline drawing.
 colors:
-  petrol: "#2f5d66"
-  clay: "#a65e46"
-  sand: "#a89068"
-  black: "#161616"
+  ink: "#0f141a"
+  blue: "#0a62d0"
+  blue-hover: "#0a3f8c"
+  blue-tint: "#eef4ff"
   page: "#ffffff"
-  surface: "#f5f6f5"
-  text: "#2a2e2f"
-  text-faint: "#5d6567"
-  night: "#121516"
-  night-petrol: "#6b9fa8"
-  night-clay: "#cf8a71"
-  night-sand: "#c7b38c"
-  night-cover: "#24464d"
+  page-faint: "#f8f8fb"
+  surface: "#f4f4f8"
+  surface-strong: "#e8e8ee"
+  text: "#232a35"
+  text-label: "#424650"
+  text-faint: "#5f636d"
+  border: "#d4d5dc"
+  border-faint: "#e7e8ed"
+  border-control: "#8c8f99"
+  success: "#0a7a32"
+  warning: "#7f5600"
+  critical: "#c4161c"
+  night: "#0e131a"
+  night-surface: "#161d27"
+  night-blue: "#5aa7ff"
 typography:
-  display:
+  quote:
     fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
-    fontSize: "clamp(2rem, 4.4vw, 3.5rem)"
-    fontWeight: 520
-    lineHeight: 1.12
-    letterSpacing: "-0.012em"
-    fontVariation: "'opsz' 144"
+    fontSize: "clamp(1.5rem, 3vw, 2.25rem)"
+    fontWeight: 500
+    lineHeight: 1.18
+    letterSpacing: "-0.01em"
   headline:
-    fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
+    fontFamily: "Google Sans Flex"
     fontSize: "clamp(2.125rem, 4.6vw, 3.25rem)"
-    fontWeight: 580
-    lineHeight: 1.1
+    fontWeight: 700
+    lineHeight: 1.08
     letterSpacing: "-0.012em"
   title:
-    fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
-    fontSize: "clamp(1.5rem, 3vw, 2.125rem)"
-    fontWeight: 620
-    lineHeight: 1.15
-    letterSpacing: "-0.012em"
+    fontFamily: "Google Sans Flex"
+    fontSize: "clamp(1.625rem, 3vw, 2rem)"
+    fontWeight: 700
   body:
-    fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
+    fontFamily: "Google Sans Flex"
     fontSize: "1.0625rem"
-    fontWeight: 400
     lineHeight: 1.6
+  list:
+    fontFamily: "Google Sans Flex"
+    fontSize: "0.9375rem"
+    lineHeight: 1.375
   label:
-    fontFamily: "Google Sans Flex, Google Sans, Arial, sans-serif"
+    fontFamily: "Google Sans Flex"
     fontSize: "0.8125rem"
-    fontWeight: 500
-    lineHeight: 1.4
+    fontWeight: 700
   code:
     fontFamily: "Google Sans Code, ui-monospace, Menlo, monospace"
     fontSize: "0.8125rem"
-    fontWeight: 400
-    lineHeight: 1.6
 rounded:
-  none: "0"
-spacing:
-  gutter: "clamp(16px, 4vw, 40px)"
-  grid-gap: "clamp(16px, 3vw, 48px)"
-  row: "15px"
-  series: "64px"
+  control: "8px (segmented controls, rows, inputs)"
+  sheet: "12px (code, alerts)"
+  container: "16px (facts, contents, figures)"
+  button: "999px"
 components:
-  series-number:
-    backgroundColor: "{colors.petrol}"
-    textColor: "{colors.page}"
-    rounded: "{rounded.none}"
-    size: "56px (index), 36x26px (strip and back link)"
-  segmented-option-on:
-    backgroundColor: "{colors.black}"
-    textColor: "{colors.page}"
-    rounded: "{rounded.none}"
-    height: "32px"
-  cover:
-    backgroundColor: "{colors.petrol}"
-    textColor: "{colors.page}"
-    padding: "24px"
+  segmented-on: { backgroundColor: "{colors.blue-tint}", border: "1px {colors.blue}", rounded: "6px inside an 8px outline" }
+  container: { backgroundColor: "{colors.page}", border: "1px {colors.border}", rounded: "{rounded.container}" }
+  series-head: { border-bottom: "1px {colors.border}", fontWeight: 700, fontSize: "0.9375rem" }
+  note-link: { textColor: "{colors.blue}", underline: "on hover", number: "{colors.text-faint}, tabular" }
 ---
 
 # Design System: Baselarte
 
 ## Overview
 
-**Creative North Star: "The Monograph Series"**
+**North star: "The internal panel"**
 
-The notes read like a numbered collection from a university press. Eight series run from foundations to practice (01 Fundamentos da computação … 08 Estudo e hábitos), and every note has its place in its series (04.2). The number is the wayfinding: it appears on the home strip, in the index, in the back link and in the note's facts.
+Taken from the inside of a cloud console (the IAM dashboard, the users table, the region menu), not from its marketing pages. The site is a tool for finding and reading notes, so it looks like one: white ground, ink text, grey hairlines, one blue that means "link, focus, chosen", controls with 8px corners, containers with 16px corners, no pictures standing in for content.
 
-Colour is sober and scarce. Three cover colours take turns per series; black does the details. Photographs stay, but small and quiet: greyscale, multiplied over the series colour, like a tipped-in plate.
+The home goes straight to the list, the way a classifieds front page does: every series as a short headed list of plain blue links, flowing in columns, scannable in seconds.
 
-**Key Characteristics:**
-- Series numbers on square colour blocks, like a spine.
-- White ground, black text, hairline rows, a 2px black rule opening each series.
-- Medium-weight Google Sans Flex with gentle tracking; nothing heavy or tight.
-- Toned photographs as decoration, always credited.
+The only picture is the magnolia, drawn as an outline with no colour: the same mark in the header, the footer, the favicon and, large, in the hero.
 
 ## Colors
 
-**The Cover Rule.** Petrol (#2f5d66), clay (#a65e46) and sand (#a89068) are cover colours: blocks behind series numbers, the photo tone, link underlines, the reading-progress bar. Never body-text colours. Series take them in catalog order, so neighbours differ.
+- **Ink** `#0f141a`: headings, strong text, the mark's lines.
+- **Signal blue** `#0a62d0` (hover `#0a3f8c`, tint `#eef4ff`): links, focus rings (2px, offset 2px), the chosen segmented option, the reading-progress bar. Never a fill for large areas.
+- **Neutrals:** page `#fff`, page-faint `#f8f8fb` (footer, figures), surface `#f4f4f8` (hover), surface-strong `#e8e8ee`. Text `#232a35`, label `#424650`, faint `#5f636d` (numbers, captions).
+- **Borders:** containers and series rules `#d4d5dc`, dividers `#e7e8ed`, controls `#8c8f99`.
+- **Status:** success `#0a7a32`, warning `#7f5600`, critical `#c4161c`, each with a pale tint and a mid border (alerts).
+- **Dark:** ground `#0e131a`, surfaces `#161d27`, borders `#3a4352`, text `#d6d9e0`, blue `#5aa7ff`. The magnolia follows the theme (page-coloured petals, ink outline).
 
-**The Detail Rule.** Black (#161616) draws text, the 2px series rules, the quote's short rule and the flower's heart. In the dark theme black flips to #eef0ef on #121516, the cover colours lift a step (#6b9fa8, #cf8a71, #c7b38c) and text on them turns dark; the home cover deepens to #24464d.
+## The magnolia
 
-- **Text on colour:** white on petrol (7.3:1) and clay (4.9:1); black on sand (5.9:1).
-- **Neutral:** white ground; surface #f5f6f5 for code and figures; text #2a2e2f; faint #5d6567.
-- **Links:** black text, 1.5px underline in the series colour; hover darkens the underline to black.
-- **Selection:** sand with black text. Caret in the series colour.
-- **Status (callouts):** derived from the three colours: petrol for info/success, sand for warnings, clay for critical.
+The outline mark from `dee7a23` (restored): five petals in the page colour, each with an ink outline (0.9) and a curved vein (0.7), an ink heart. `FlowerLogo` draws it inline so it follows the theme; in the hero it is drawn at 288px (144px on phones) with a non-scaling 2.5px line. The favicon and app icons are the same drawing in white on a black tile; the share image shows it in ink beside the name. Shape and colour fixed: no fills, no colour.
 
 ## Typography
 
-**The One Family Rule.** Google Sans Flex for everything; Google Sans Code only for code. Weights stay between 400 and 650 (the font request is trimmed to 400–700).
-
-- **Display** (520, opsz 144, up to 3.5rem): the home quote, max 19ch.
-- **Headline** (580, up to 3.25rem): note titles.
-- **Title** (620, up to 2.125rem): series and section headings.
-- **Body** (400, 1.0625rem / 1.6): the reading column, 44rem.
-- **Label** (500, 0.8125rem): numbers, credits, facts, controls. Numbers use tabular figures.
-- **Secondary steps** between them: 0.875rem (counts, facts, footer), 0.9375rem (strip, citation, subtitle), 1.1875–1.25rem (lede, h3, wordmark), 1.625rem (cover name), 1.875rem (series title cap).
+Google Sans Flex for everything (a PRODUCT.md requirement), Google Sans Code for code. Headings bold with light tracking (-0.01 to -0.015em; tighter collapses the face's word spaces). The quote is 500. Key-value labels are 700 at 0.8125rem over regular values. Numbers are tabular everywhere.
 
 ## Layout
 
-A 76rem page with a fluid gutter. Home: the quote and the cover side by side above 900px, stacked below; the series strip (auto-fill columns of 15rem); then each series as a band: a sticky 17rem head (number block, title, count, 3:2 toned photo) and the note rows on the right, stacked below 800px (photo 3:1). Notes: one centred 44rem column; above 1360px the contents sit to its right.
+76rem page, fluid gutter. **Home:** hero = name, quote, citation, counts on the left; the magnolia on the right (above the text on phones); a hairline under it. Then the index in CSS columns (1, 2 at 640px, 3 at 800px, 4 at 1280px); each series avoids breaking across columns: a bold head with its number and count over a hairline, then rows of "04.2  Title" links. **Note:** one 44rem column (breadcrumbs, title, lede, facts container, body); above 1360px the contents sit on the right, sticky.
 
-## Elevation & Depth
+## Elevation
 
-Flat. No shadows. Depth comes from colour blocks and rules only.
-
-## Shapes
-
-Square corners everywhere.
+Flat. Borders do the work. One soft offset shadow (`pop`) for floating things: back-to-top, the music player.
 
 ## Components
 
-- **Series number:** tabular figures on the series colour; 56px block in the index, small 36x26 block in the strip and the back link.
-- **Note row:** number, title, the site's arrow; hairline below. Hover: the number fills with the series colour, the title gets the series underline, the arrow moves 4px (160–200ms, cubic-bezier(0.23, 1, 0.32, 1)); instant under reduced motion.
-- **Back link (note page):** arrow + series number block + series name, linking to that series on the home.
-- **Cover (home):** petrol sheet, white magnolia, name and subtitle (the page's h1), sand-toned photo, counts under a hairline.
-- **Toned photo:** greyscale photo with mix-blend multiply over `--tone` (default: the series colour).
-- **Segmented control:** hairline outline; chosen option filled black.
-- **Magnolia mark:** five petals in clay with pale veins and a black heart (white petals on the cover).
+- **Index row:** faint number column (2.75rem), blue title; underline on hover. No arrows, no pictures.
+- **Segmented control** (theme, language): 8px outline, 2px inset; chosen option blue-tint with a blue hairline.
+- **Breadcrumbs:** site / series / note number, slashes faint, current item bold.
+- **Container:** 16px corners, 1px border (facts as key-value pairs, contents on narrow screens, figures).
+- **Alerts:** 12px corners, tinted sheet, 1px border in the tone, icon in the tone.
+- **Tables:** bold headers over a mid hairline, short separators between header cells, faint row dividers; cards on phones.
+- **Buttons:** pills, 44px, weight 650; primary ink (light on dark), normal white with a control hairline (`components/ui/button.ts`).
+
+## Implementation
+
+Tailwind CSS v4. Utilities live in the components; `src/styles/app.css` is the only stylesheet: tokens (custom properties, redefined under `[data-theme="dark"]`), the `@theme inline` mapping (`bg-page`, `text-ink`, `border-line`, `text-blue`, `text-faint`, `shadow-pop`; breakpoints `tab` 720px, `desk` 800px, `wide` 1360px), the base layer, and the class vocabulary the notes write by name (diagram SVG classes, `tok-*`, `ds-list`, `ds-steps`, `scroll-x`, `sources`, the AWS note's widgets).
 
 ## Do's and Don'ts
 
-- **Do** give a new note its place in a series in `src/notes/catalog.ts`; the order there is the numbering.
-- **Do** keep colour in blocks, underlines and photo tones; keep the column black on white.
-- **Do** credit every photograph and load it from Unsplash's CDN at the size shown.
-- **Don't** add a fourth colour, bright tints, gradients, shadows or rounded corners.
-- **Don't** set display type heavier than 650 or tracked tighter than -0.02em.
+- **Do** keep the home a list: a new note is one more link in its series (`src/notes/catalog.ts`).
+- **Do** keep the magnolia an uncoloured outline; it is the only picture.
+- **Do** write Tailwind class names literally (no string interpolation).
+- **Don't** add cards, thumbnails, gradients, glass, illustrations or photographs.
+- **Don't** use blue for anything but links, focus and the chosen state.
 - **Don't** put a label above a heading.

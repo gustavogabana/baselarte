@@ -1,0 +1,1324 @@
+/* The only stylesheet. Tailwind v4 (utilities live in the components, next to their markup);
+   this file holds what markup cannot: the design tokens (a console's palette), the theme mapping,
+   the page base, and the vocabulary the 45 notes write by class name (diagram SVG classes, code
+   tokens, lists, the AWS note's simulators). See DESIGN.md. */
+
+@import "tailwindcss";
+
+/* The theme follows <html data-theme>, set before first paint by the boot script. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---------------------------------------------------------------------------------------------
+   Tokens: every colour is a custom property here; the dark theme only redefines them.
+   --------------------------------------------------------------------------------------------- */
+
+:root {
+  /* Ink: text, the primary button, the utility details */
+  --ink: #0f141a;
+  --ink-raised: #161d26;
+  --ink-hover: #2a3442;
+
+  /* Signal blue: links, focus, the chosen option, the active state */
+  --blue: #0a62d0;
+  --blue-hover: #0a3f8c;
+  --blue-tint: #eef4ff;
+  --blue-border: #b9cff3;
+
+  --page: #ffffff;
+  --page-faint: #f8f8fb;
+  --surface: #f4f4f8;
+  --surface-strong: #e8e8ee;
+  --surface-hover: #f4f4f8;
+
+  --fg-strong: var(--ink);
+  --fg: #232a35;
+  --fg-label: #424650;
+  --fg-faint: #5f636d;
+  --fg-on-action: #ffffff;
+
+  /* Borders: containers and dividers, then the darker line of controls */
+  --border: #d4d5dc;
+  --border-faint: #e7e8ed;
+  --border-control: #8c8f99;
+  --border-strong: var(--ink);
+
+  /* The primary action is ink, not blue (blue is for links and state) */
+  --action: var(--blue);
+  --action-hover: var(--blue-hover);
+  --action-active: var(--blue-hover);
+  --action-surface: var(--blue-tint);
+  --action-border: var(--blue-border);
+  --primary: var(--ink-raised);
+  --primary-hover: var(--ink-hover);
+  --on-primary: #ffffff;
+  --visited: var(--blue);
+  --focus-inner: var(--blue);
+  --focus-outer: #0a62d055;
+
+  /* Status: tinted sheet, coloured hairline, coloured icon */
+  --success-fg: #0a7a32;
+  --success-surface: #effbf2;
+  --success-border: #9fd6ae;
+  --warning-fg: #7f5600;
+  --warning-surface: #fffbea;
+  --warning-border: #ebd38c;
+  --critical-fg: #c4161c;
+  --critical-surface: #fff4f4;
+  --critical-border: #f1b5b5;
+  --highlight-fg: var(--ink);
+  --highlight-surface: var(--surface);
+  --highlight-border: var(--border);
+
+  /* Names kept for the note stylesheets */
+  --brand: var(--blue);
+  --brand-fg: var(--blue);
+  --brand-surface: var(--blue-tint);
+  --brand-border: var(--blue-border);
+  --accent: var(--blue);
+  --accent-fg: var(--blue);
+
+  /* Code: a pale sheet with a hairline; syntax in blue, violet, green and amber */
+  --code-bg: #f6f6f9;
+  --code-fg: var(--ink);
+  --code-border: var(--border-faint);
+  --code-faint: #5f636d;
+  --code-keyword: #7a3fd1;
+  --code-string: #0a7a32;
+  --code-number: #9a5b00;
+  --code-attr: #0a62d0;
+
+
+  --shadow-pop: 0 4px 20px -2px #0b1a3a1f, 0 1px 3px #0b1a3a14;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --sans: "Google Sans Flex", "Google Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --mono: "Google Sans Code", ui-monospace, Menlo, Consolas, monospace;
+
+  --content-max: 44rem;
+  --page-max: 76rem;
+  --side-width: 15rem;
+  --grid-gap: clamp(16px, 3vw, 40px);
+  --gutter: clamp(16px, 4vw, 40px);
+  /* Corners: controls 8px, sheets (code, figures, alerts) 12px, containers 16px, buttons pill */
+  --radius-sm: 8px;
+  --radius: 8px;
+  --radius-md: 12px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+
+  /* Names kept so the older note stylesheets keep working */
+  --paper: var(--page);
+  --black: var(--ink);
+  --muted: var(--fg-faint);
+  --line: var(--border);
+  --serif: var(--sans);
+  --label: var(--sans);
+  --heading: var(--sans);
+  --wide: 90rem;
+  --column: var(--content-max);
+  --glass: var(--page);
+  --glass-faint: var(--page-faint);
+  --group-ink: var(--blue);
+  --on-group-ink: #ffffff;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ink: #f1f2f6;
+  --ink-raised: #f1f2f6;
+  --ink-hover: #ffffff;
+
+  --blue: #5aa7ff;
+  --blue-hover: #9cc8ff;
+  --blue-tint: #10233d;
+  --blue-border: #2b4f7e;
+
+  --page: #0e131a;
+  --page-faint: #131a23;
+  --surface: #161d27;
+  --surface-strong: #222b37;
+  --surface-hover: #182029;
+
+  --fg: #d6d9e0;
+  --fg-label: #b7bbc6;
+  --fg-faint: #9a9fab;
+  --fg-on-action: #0e131a;
+
+  --border: #3a4352;
+  --border-faint: #252d39;
+  --border-control: #7d8492;
+
+  --primary: #f1f2f6;
+  --primary-hover: #ffffff;
+  --on-primary: #0e131a;
+  --focus-outer: #5aa7ff55;
+
+  --success-fg: #5fd38a;
+  --success-surface: #0f2419;
+  --success-border: #24583a;
+  --warning-fg: #f0c75e;
+  --warning-surface: #251e0b;
+  --warning-border: #5a4818;
+  --critical-fg: #ff8a8a;
+  --critical-surface: #2a1214;
+  --critical-border: #6a2a2e;
+
+  --code-bg: #131a23;
+  --code-faint: #9a9fab;
+  --code-keyword: #c3a1ff;
+  --code-string: #5fd38a;
+  --code-number: #f0c75e;
+  --code-attr: #5aa7ff;
+
+
+  --shadow-pop: 0 6px 24px -4px #00000099, 0 1px 3px #00000066;
+
+  color-scheme: dark;
+}
+
+
+/* Tokens as Tailwind theme values: bg-page, text-ink, border-line, rounded-2xl… follow the theme
+   because they point at the custom properties above. */
+@theme inline {
+  --font-sans: var(--sans);
+  --font-mono: var(--mono);
+
+  --color-page: var(--page);
+  --color-page-faint: var(--page-faint);
+  --color-surface: var(--surface);
+  --color-surface-strong: var(--surface-strong);
+  --color-ink: var(--ink);
+  --color-fg: var(--fg);
+  --color-label: var(--fg-label);
+  --color-faint: var(--fg-faint);
+  --color-line: var(--border);
+  --color-line-faint: var(--border-faint);
+  --color-control: var(--border-control);
+  --color-blue: var(--blue);
+  --color-blue-hover: var(--blue-hover);
+  --color-blue-tint: var(--blue-tint);
+  --color-blue-border: var(--blue-border);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-success: var(--success-fg);
+  --color-success-tint: var(--success-surface);
+  --color-success-border: var(--success-border);
+  --color-warning: var(--warning-fg);
+  --color-warning-tint: var(--warning-surface);
+  --color-warning-border: var(--warning-border);
+  --color-critical: var(--critical-fg);
+  --color-critical-tint: var(--critical-surface);
+  --color-critical-border: var(--critical-border);
+  --color-code: var(--code-bg);
+
+  --shadow-pop: var(--shadow-pop);
+  --ease-snap: cubic-bezier(0.23, 1, 0.32, 1);
+
+  --breakpoint-tab: 45rem;
+  --breakpoint-desk: 50rem;
+  --breakpoint-wide: 85rem;
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 24px;
+    overflow-x: clip;
+    scrollbar-color: var(--surface-strong) var(--page);
+    accent-color: var(--blue);
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: clip;
+    background: var(--page);
+    color: var(--fg);
+    font: 400 1.0625rem/1.6 var(--sans);
+    font-optical-sizing: auto;
+    font-feature-settings: "kern", "liga";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    caret-color: var(--blue);
+  }
+
+  ::selection {
+    background: color-mix(in srgb, var(--blue) 24%, var(--page));
+    color: var(--fg-strong);
+  }
+
+  /* Links: signal blue, underlined; the hover deepens the blue. */
+  a {
+    color: var(--action);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 120ms ease, text-decoration-color 120ms ease;
+  }
+
+  @media (hover: hover) {
+    a:hover {
+      color: var(--action-hover);
+    }
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  strong,
+  b {
+    color: var(--fg-strong);
+    font-weight: 650;
+  }
+
+  hr {
+    border-top: 1px solid var(--border);
+  }
+
+  code,
+  kbd,
+  samp,
+  pre {
+    font-family: var(--mono);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-inner);
+    outline-offset: 2px;
+  }
+
+  /* Both languages stay in the HTML (crawlable); the inactive one is hidden. */
+  html[lang="en"] .pt,
+  html[lang="pt-BR"] .en {
+    display: none !important;
+  }
+
+  html:not(.js-enabled) .requires-js {
+    display: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  @media print {
+    .site-header,
+    .side-nav,
+    #scroll-progress,
+    .back-to-top,
+    .copy-button {
+      display: none !important;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------------------------------------
+   Shared pieces the markup refers to by name
+   --------------------------------------------------------------------------------------------- */
+
+@layer components {
+  /* An island's wrapper must not affect layout. */
+  .island {
+    display: contents;
+  }
+
+  .icon-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* Icons and the site's arrow sit in the text line (Tailwind's base makes svg a block). */
+  .icon {
+    display: inline-block;
+    width: 1.15em;
+    height: 1.15em;
+    flex: none;
+    vertical-align: -0.2em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  svg.arrow {
+    display: inline-block;
+    width: 1.1em;
+    height: 1.1em;
+    flex: none;
+    vertical-align: -0.2em;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: square;
+  }
+
+  svg.arrow .arrow__tail {
+    fill: currentColor;
+    stroke: none;
+  }
+
+  /* The chorus lines appear one by one (EasterEgg). */
+  .chorus-line {
+    opacity: 0;
+    animation: chorus-line 0.9s ease-out forwards;
+  }
+
+  @keyframes chorus-line {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chorus-line {
+      animation: none;
+      opacity: 1;
+    }
+  }
+
+  /* -------------------------------------------------------------------------------------------
+     Note content: what the notes write by class name or as bare elements
+     ------------------------------------------------------------------------------------------- */
+
+  .content-section p {
+    text-wrap: pretty;
+  }
+
+  .content-section p + p,
+  .ds-guide p + p,
+  .ds-guide pre + p,
+  .ds-guide .ds-list + p,
+  .ds-guide .content-section > :is(ul, ol):not([class]) + p,
+  .ds-guide .ds-steps + p {
+    margin-top: 16px;
+  }
+
+  .ds-guide h3 {
+    margin: 32px 0 10px;
+    color: var(--fg-strong);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  .ds-guide h4 {
+    margin: 24px 0 8px;
+    color: var(--fg-strong);
+    font-weight: 700;
+  }
+
+  /* Inline code: a chip with a hairline. */
+  code {
+    font-size: 0.875em;
+  }
+
+  :not(pre) > code {
+    padding: 0.1em 0.4em;
+    border: 1px solid var(--border-faint);
+    border-radius: 6px;
+    background: var(--code-bg);
+    color: var(--fg-strong);
+    white-space: break-spaces;
+    overflow-wrap: anywhere;
+  }
+
+  a > code {
+    color: inherit;
+  }
+
+  /* Code blocks (CodeBlock, and the AWS note's bare <pre>). */
+  pre {
+    position: relative;
+    margin: 20px 0;
+    padding: 16px;
+    overflow-x: auto;
+    border: 1px solid var(--code-border);
+    border-radius: 12px;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    tab-size: 2;
+  }
+
+  pre code {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+    white-space: pre;
+  }
+
+  .tok-c { color: var(--code-faint); font-style: italic; }
+  .tok-k { color: var(--code-keyword); }
+  .tok-s { color: var(--code-string); }
+  .tok-n { color: var(--code-number); }
+  .tok-a { color: var(--code-attr); }
+
+  /* Lists (a bare <ul>/<ol> in a section looks like .ds-list) */
+  .ds-list,
+  .content-section > ul:not([class]),
+  .content-section > ol:not([class]) {
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+    padding-left: 1.4em;
+    list-style: disc;
+  }
+
+  .content-section > ol:not([class]) {
+    list-style: decimal;
+  }
+
+  .ds-list li::marker,
+  .content-section > :is(ul, ol):not([class]) li::marker {
+    color: var(--fg-faint);
+  }
+
+  .ds-list li em {
+    color: var(--fg-strong);
+  }
+
+  .ds-steps {
+    display: grid;
+    gap: 8px;
+    margin-top: 16px;
+    padding-left: 1.5em;
+    list-style: decimal;
+  }
+
+  .ds-steps li::marker {
+    color: var(--accent-fg);
+    font-weight: 600;
+  }
+
+  /* Wide content scrolls sideways; a soft shadow on the edge with more content says so. */
+  .scroll-x,
+  .fig-scroll {
+    overflow-x: auto;
+    background:
+      linear-gradient(to right, var(--scroll-cover, var(--page)) 30%, transparent) left / 24px 100% no-repeat local,
+      linear-gradient(to left, var(--scroll-cover, var(--page)) 30%, transparent) right / 24px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, var(--border-strong), transparent) left / 10px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, var(--border-strong), transparent) right / 10px 100% no-repeat scroll;
+  }
+
+  .fig-scroll {
+    --scroll-cover: var(--glass-faint);
+  }
+
+  .fig-scroll > svg {
+    display: block;
+    width: 100%;
+    height: auto;
+    min-width: var(--diagram-min-width, 0);
+  }
+
+  /* A raw sources block (some notes write it by hand; the Sources component styles itself). */
+  .sources {
+    margin-top: 64px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--fg-faint);
+    font-size: 0.875rem;
+  }
+
+  .sources ul {
+    margin-top: 8px;
+    padding-left: 1.1em;
+    list-style: disc;
+  }
+
+  .sources a {
+    word-break: break-word;
+  }
+
+  /* Diagram SVG vocabulary: colours come from the tokens, so drawings follow the theme. */
+  .fig text {
+    fill: var(--fg-strong);
+    font-family: var(--sans);
+    font-size: 13px;
+  }
+
+  .fig .mut { fill: var(--fg-faint); }
+  .fig .mono { font-family: var(--mono); font-size: 12px; }
+  .fig .inv { fill: var(--page); }
+
+  .fig .ln {
+    fill: none;
+    stroke: var(--fg-strong);
+    stroke-width: 1.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .fig .dash { stroke-dasharray: 4 4; }
+  .fig .fill { fill: var(--fg-strong); stroke: none; }
+  .fig .fillsoft,
+  .fig .ln.fillsoft { fill: var(--surface-strong); }
+  .fig .brandfill { fill: var(--brand-surface); stroke: var(--brand); }
+  .fig .brandtext { fill: var(--brand-fg); }
+
+  .diagram-viewer__canvas svg {
+    max-width: none;
+    height: auto;
+  }
+
+  /* -------------------------------------------------------------------------------------------
+     The AWS note (src/notes/aws): its simulators, maps and widgets. Green and red mark allowed
+     and blocked states; everything else uses the tokens.
+     ------------------------------------------------------------------------------------------- */
+
+  :root {
+    --aws-surface: color-mix(in srgb, var(--ink) 4%, var(--paper));
+    --aws-line-strong: color-mix(in srgb, var(--ink) 28%, var(--paper));
+    --aws-ink-soft: color-mix(in srgb, var(--ink) 78%, var(--paper));
+    --aws-green: #2e7d32;
+    --aws-red: #c62828;
+    --aws-green-tint: color-mix(in srgb, var(--aws-green) 10%, var(--paper));
+    --aws-red-tint: color-mix(in srgb, var(--aws-red) 10%, var(--paper));
+    --aws-code-size: 0.85rem;
+    --aws-radius: 12px;
+  }
+
+  [data-theme="dark"] {
+    --aws-green: #66bb6a;
+    --aws-red: #ef5350;
+  }
+
+
+  .aws-guide .icon {
+    margin-right: 0.3em;
+  }
+
+  .aws-guide .node .icon,
+  .aws-guide h4 .icon {
+    color: var(--muted);
+  }
+
+  .aws-guide button.node[aria-pressed="true"] .icon {
+    color: inherit;
+  }
+
+  .aws-guide .result .icon {
+    color: inherit;
+  }
+
+  /* ==========================================================================
+     Guide column (the section list and page layout live in ../../styles.css)
+     ========================================================================== */
+
+  /* Layout (grid cell, width, padding) comes from .reading-column in styles.css. */
+  .aws-guide {
+    min-width: 0;
+  }
+
+  /* ==========================================================================
+     Topics
+     ========================================================================== */
+
+  .aws-guide .topic {
+    padding-top: 8px;
+  }
+
+  .aws-guide .topic + .topic {
+    margin-top: 56px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+  }
+
+  .aws-guide .topic > header {
+    margin-bottom: 24px;
+  }
+
+  .aws-guide .tag {
+    font-family: var(--label);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .aws-guide h2 {
+    font-size: clamp(1.625rem, 3vw, 2.125rem);
+    font-weight: 620;
+    line-height: 1.2;
+    letter-spacing: -0.012em;
+    margin: 8px 0 12px;
+    color: var(--fg-strong);
+  }
+
+  .aws-guide h3 {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 36px 0 12px;
+    color: var(--fg-strong);
+  }
+
+  .aws-guide h4 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0 0 6px;
+  }
+
+  .aws-guide p,
+  .aws-guide ul,
+  .aws-guide ol {
+    margin: 0 0 16px;
+    text-wrap: pretty;
+  }
+
+  .aws-guide ul {
+    list-style: disc;
+    padding-left: 1.3em;
+  }
+
+  .aws-guide ol {
+    padding-left: 1.3em;
+  }
+
+  .aws-guide li + li {
+    margin-top: 4px;
+  }
+
+  .aws-guide .lead {
+    font-size: 19px;
+    color: var(--muted);
+  }
+
+  .aws-guide a {
+    color: var(--action);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 0.3s var(--ease);
+  }
+
+  .aws-guide a:hover {
+    color: var(--action-hover);
+    text-decoration-color: currentColor;
+  }
+
+  .aws-guide small,
+  .aws-guide .muted {
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  .aws-guide code {
+    font-family: var(--mono);
+    font-size: 0.86em;
+  }
+
+  .aws-guide :not(pre) > code {
+    background: var(--aws-surface);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    border: 1px solid var(--line);
+  }
+
+  .aws-guide em {
+    font-size: 1em;
+  }
+
+  .aws-guide button:focus-visible,
+  .aws-guide select:focus-visible,
+  .aws-guide summary:focus-visible {
+    outline: 1px solid var(--border);
+    outline-offset: 4px;
+  }
+
+  /* Cards, callouts, sources */
+
+  .aws-guide .card {
+    border: 1px solid var(--line);
+    border-radius: var(--aws-radius);
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+
+  .aws-guide .card p:last-child {
+    margin-bottom: 0;
+  }
+
+  .aws-guide .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 16px;
+    margin: 16px 0;
+  }
+
+  .aws-guide .grid .card {
+    margin: 0;
+    transition: border-color 0.3s var(--ease);
+  }
+
+  .aws-guide .grid .card:hover {
+    border-color: var(--ink);
+  }
+
+  .aws-guide .callout {
+    border-left: 1px solid var(--aws-line-strong);
+    padding: 4px 0 4px 20px;
+    margin: 24px 0;
+    color: var(--aws-ink-soft);
+  }
+
+  .aws-guide .callout p:last-child {
+    margin-bottom: 0;
+  }
+
+  .aws-guide .callout strong:first-child {
+    display: block;
+    color: var(--ink);
+  }
+
+  .aws-guide .callout.warn {
+    border-left-color: var(--aws-red);
+  }
+
+  .aws-guide .callout.good {
+    border-left-color: var(--aws-green);
+  }
+
+  .aws-guide .callout.use {
+    border-left-color: var(--ink);
+  }
+
+  .aws-guide .callout.personal {
+    border-left: 1px dashed var(--ink);
+  }
+
+  .aws-guide .sources {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .aws-guide .sources ul {
+    margin: 8px 0 0;
+    font-size: inherit;
+  }
+
+  .aws-guide .sources a {
+    word-break: break-word;
+  }
+
+  /* Tables and code */
+
+  .aws-guide .scroll-x {
+    overflow-x: auto;
+  }
+
+  .aws-guide table {
+    width: 100%;
+    margin: 16px 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--aws-radius);
+    overflow: hidden;
+    font-size: 15px;
+  }
+
+  .aws-guide th,
+  .aws-guide td {
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .aws-guide tr:last-child td {
+    border-bottom: 0;
+  }
+
+  .aws-guide th {
+    background: var(--aws-surface);
+    color: var(--muted);
+    font-family: var(--label);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .aws-guide pre {
+    position: relative;
+    margin: 16px 0;
+    padding: 16px;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    border: 1px solid var(--code-border);
+    border-radius: var(--aws-radius);
+    overflow-x: auto;
+    font-size: var(--aws-code-size);
+    line-height: 1.55;
+  }
+
+  .aws-guide pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: inherit;
+  }
+
+  /* ==========================================================================
+     Diagrams and interactive widgets
+     ========================================================================== */
+
+  .aws-guide .flow {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin: 20px 0;
+  }
+
+  .aws-guide .node {
+    font: inherit;
+    font-size: 15px;
+    color: var(--ink);
+    background: var(--paper);
+    border: 1px solid var(--aws-line-strong);
+    border-radius: var(--aws-radius);
+    padding: 6px 14px;
+    text-align: center;
+  }
+
+  .aws-guide button.node {
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+
+  .aws-guide button.node:hover {
+    border-color: var(--ink);
+  }
+
+  .aws-guide button.node[aria-pressed="true"] {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  .aws-guide .arrow {
+    color: var(--muted);
+  }
+
+  .aws-guide .panel {
+    min-height: 4.5rem;
+    margin-top: 8px;
+    padding: 14px 18px;
+    background: var(--aws-surface);
+    border-left: 1px solid var(--border);
+    border-radius: 0 var(--aws-radius) var(--aws-radius) 0;
+  }
+
+  .aws-guide .vpc {
+    margin: 20px 0;
+    padding: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--aws-radius);
+  }
+
+  .aws-guide .vpc > .label,
+  .aws-guide .az > .label {
+    font-family: var(--label);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .aws-guide .az-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .aws-guide .az {
+    padding: 12px;
+    border: 1px dashed var(--aws-line-strong);
+    border-radius: var(--aws-radius);
+  }
+
+  .aws-guide .subnet {
+    margin-top: 8px;
+    padding: 8px 12px;
+    border-radius: var(--aws-radius);
+    font-size: 15px;
+  }
+
+  .aws-guide .subnet.pub {
+    background: var(--aws-green-tint);
+    border: 1px solid var(--aws-green);
+  }
+
+  .aws-guide .subnet.priv {
+    background: var(--aws-red-tint);
+    border: 1px solid var(--aws-red);
+  }
+
+  .aws-guide .igw {
+    margin-top: 14px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .aws-guide .widget {
+    margin: 24px 0;
+    padding: 0 20px 18px;
+    border: 1px solid var(--line);
+    border-radius: var(--aws-radius);
+    overflow: hidden;
+  }
+
+  .aws-guide .widget > .wtitle {
+    margin: 0 -20px 16px;
+    padding: 8px 20px;
+    background: var(--aws-surface);
+    border-bottom: 1px solid var(--line);
+    color: var(--muted);
+    font-family: var(--label);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .aws-guide .btn {
+    font: inherit;
+    font-size: 14px;
+    padding: 5px 16px;
+    border: 1px solid var(--aws-line-strong);
+    border-radius: 999px;
+    background: var(--paper);
+    color: var(--ink);
+    transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+  }
+
+  .aws-guide .btn:hover {
+    border-color: var(--ink);
+  }
+
+  .aws-guide .btn.primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .aws-guide select,
+  .aws-guide input[type="range"] {
+    font: inherit;
+    accent-color: var(--ink);
+  }
+
+  .aws-guide select {
+    padding: 6px 8px;
+    border: 1px solid var(--aws-line-strong);
+    border-radius: 4px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .aws-guide .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+
+  .aws-guide .big {
+    font-size: 32px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .aws-guide .stage {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 8px;
+  }
+
+  .aws-guide .stage .line {
+    position: absolute;
+    left: 4rem;
+    right: 4rem;
+    top: 50%;
+    height: 2px;
+    background: var(--aws-line-strong);
+    transition: background-color 0.3s var(--ease);
+  }
+
+  .aws-guide .stage.enc .line {
+    background: var(--aws-green);
+  }
+
+  .aws-guide .stage .node {
+    z-index: 1;
+  }
+
+  .aws-guide .dot,
+  .aws-guide .pkt {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: 14px;
+    height: 14px;
+    margin: -7px 0 0 -7px;
+    border-radius: 50%;
+    background: var(--ink);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ink) 20%, transparent);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .aws-guide .steps {
+    padding-left: 1.2em;
+  }
+
+  .aws-guide .steps li {
+    padding: 6px 10px;
+    border-radius: var(--aws-radius);
+    color: var(--muted);
+    cursor: pointer;
+  }
+
+  .aws-guide .steps li.on {
+    background: var(--aws-surface);
+    color: var(--ink);
+    border-left: 1px solid var(--border);
+    border-radius: 0 var(--aws-radius) var(--aws-radius) 0;
+  }
+
+  .aws-guide .lb-demo {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: 20px;
+    align-items: center;
+    padding: 8px 0;
+  }
+
+  .aws-guide .targets {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .aws-guide .targets .node {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .aws-guide .targets .node.down {
+    opacity: 0.5;
+    border-color: var(--aws-red);
+    text-decoration: line-through;
+  }
+
+  .aws-guide .targets .node.hit {
+    border-color: var(--aws-green);
+    background: var(--aws-green-tint);
+  }
+
+  .aws-guide .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 10px 0;
+  }
+
+  .aws-guide .chip {
+    padding: 3px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--aws-surface);
+    color: var(--muted);
+    font-size: 13px;
+    transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+  }
+
+  .aws-guide .chip.on {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .aws-guide .tree {
+    list-style: none;
+    margin: 4px 0;
+    padding-left: 20px;
+    border-left: 1px solid var(--aws-line-strong);
+  }
+
+  .aws-guide .tree.root {
+    border: 0;
+    padding-left: 0;
+  }
+
+  .aws-guide .tree li + li {
+    margin-top: 0;
+  }
+
+  .aws-guide .tree .node {
+    margin: 3px 0;
+    padding: 4px 12px;
+    font-size: 14px;
+  }
+
+  .aws-guide .result {
+    margin-top: 10px;
+    padding: 12px 16px;
+    border: 1px solid;
+    border-radius: var(--aws-radius);
+    font-weight: 500;
+  }
+
+  .aws-guide .result.ok {
+    background: var(--aws-green-tint);
+    color: var(--aws-green);
+    border-color: var(--aws-green);
+  }
+
+  .aws-guide .result.no {
+    background: var(--aws-red-tint);
+    color: var(--aws-red);
+    border-color: var(--aws-red);
+  }
+
+  /* Flashcards */
+
+  .aws-guide details.fc {
+    margin: 8px 0;
+    border: 1px solid var(--line);
+    border-radius: var(--aws-radius);
+  }
+
+  .aws-guide details.fc summary {
+    padding: 12px 16px;
+    font-weight: 500;
+    list-style: none;
+    cursor: pointer;
+  }
+
+  .aws-guide details.fc summary::before {
+    content: "+ ";
+    font-family: var(--label);
+    color: var(--muted);
+  }
+
+  .aws-guide details.fc[open] summary::before {
+    content: "– ";
+  }
+
+  .aws-guide details.fc .ans {
+    padding: 0 16px 16px;
+    color: var(--muted);
+  }
+
+  .aws-guide .fc-title {
+    margin-top: 32px;
+    font-family: var(--label);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ==========================================================================
+     Footer note
+     ========================================================================== */
+
+  .aws-disclaimer {
+    max-width: var(--wide);
+    margin: 0 auto;
+    padding: 0 var(--gutter) 24px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+
+  /* ==========================================================================
+     Responsive
+     ========================================================================== */
+
+  @media (max-width: 900px) {
+    .aws-guide .az-row,
+    .aws-guide .lb-demo {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .aws-guide * {
+      transition: none !important;
+    }
+  }
+
+  .aws-guide .breadcrumbs a {
+    color: var(--fg-faint);
+    text-decoration: none;
+  }
+
+  .aws-guide .breadcrumbs a:hover {
+    color: var(--fg-strong);
+    text-decoration: underline;
+  }
+
+  /* The page index is a plain list, not one of the guide's shaded lists. */
+  .aws-guide .side-nav ul {
+    margin: 0 0 16px;
+    padding: 0;
+    list-style: none;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .aws-guide .side-nav a {
+    color: var(--fg-faint);
+    text-decoration: none;
+  }
+
+  .aws-guide .side-nav a:hover {
+    color: var(--fg-strong);
+  }
+}
