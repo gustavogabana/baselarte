@@ -1,6 +1,6 @@
 # Notas
 
-Índice rápido das 45 notas de [baselarte.com](https://baselarte.com/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
+Índice rápido das 46 notas de [baselarte.com](https://baselarte.com/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
 
 ## Fundamentos da computação
 
@@ -23,6 +23,7 @@
 - [Postgres: o essencial para quem programa](https://baselarte.com/notas/postgres-for-devs/) · [fonte](src/notes/postgres-for-devs/index.tsx)
 - [Migrations: Flyway, Prisma e Alembic](https://baselarte.com/notas/db-migrations/) · [fonte](src/notes/db-migrations/index.tsx)
 - [Escala de banco: réplicas e sharding](https://baselarte.com/notas/db-replicas-sharding/) · [fonte](src/notes/db-replicas-sharding/index.tsx)
+- [Kafka: tópicos, partições e grupos de consumo](https://baselarte.com/notas/kafka/) · [fonte](src/notes/kafka/index.tsx)
 
 ## Nuvem e entrega
 
