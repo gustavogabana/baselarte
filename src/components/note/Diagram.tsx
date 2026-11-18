@@ -18,7 +18,7 @@ interface DiagramProps {
 export function Diagram({ children, caption, minWidth }: DiagramProps) {
   const style = minWidth ? ({ "--diagram-min-width": `${minWidth}px` } as CSSProperties) : undefined;
   return (
-    <figure className="fig my-7 rounded-2xl border border-line-faint bg-page-faint p-5">
+    <figure className="fig my-8 rounded-[18px] bg-page-faint p-6">
       <div className="fig-scroll" style={style}>
         {children}
       </div>

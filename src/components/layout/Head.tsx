@@ -2,9 +2,9 @@ import type { Localized } from "../../i18n/localized.ts";
 import { bootScript } from "../../preferences/boot.ts";
 import { absoluteUrl, site } from "../../site.ts";
 
-/** Google Sans Flex (text and display, variable optical size and weight) and Google Sans Code, from Google Fonts. */
-const FONTS_URL =
-  "https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,400..700&family=Google+Sans+Code:wght@400;500&display=swap";
+/** Text is set in the system's San Francisco on Apple devices; elsewhere Inter (variable optical
+ *  size and weight, from Google Fonts) stands in for it. */
+const FONTS_URL = "https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap";
 
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
@@ -75,8 +75,6 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       <link rel="stylesheet" href={FONTS_URL} />
-      {/* The photos come from Unsplash's CDN (src/components/ui/photos.ts). */}
-      <link rel="preconnect" href="https://images.unsplash.com" />
       <link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary" />
       {assets.styles.map((href) => (
         <link key={href} rel="stylesheet" href={href} />

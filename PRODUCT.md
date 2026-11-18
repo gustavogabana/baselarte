@@ -16,7 +16,7 @@ Three audiences, all confirmed as primary:
 
 ## Product Purpose
 
-baselarte.com is the site of Baselarte Ltda., a software engineering and creative technology company. Its content is a library of long-form study notes (45 at the time of writing, in eight numbered series), each written in English and Brazilian Portuguese. Success: a reader finds the note they need fast and stays to read it; a client leaves convinced the company understands its craft.
+baselarte.com is the site of Baselarte Ltda., a software engineering and creative technology company. Its content is a library of long-form study notes (47 at the time of writing, in eight numbered series), each written in English and Brazilian Portuguese. Success: a reader finds the note they need fast and stays to read it; a client leaves convinced the company understands its craft.
 
 ## Positioning
 
@@ -38,10 +38,10 @@ Readers arrive mostly deep-linked into a note, on desktop and phone. Notes are l
 
 - Name: Baselarte. Mark: the five-petal magnolia (shape fixed; colour may change).
 - The IBM 1979 quote ("A computer can never be held accountable…") stays on the home page.
-- Typeface: Google's own (Google Sans Flex), a user requirement.
-- Colour: a cloud-console palette (white ground, ink text, one signal blue for links and focus, grey hairlines). The mark and the imagery are black and white.
+- Typeface: the system San Francisco (Inter as the stand-in off Apple devices).
+- Colour: Apple-style (white and #f5f5f7, near-black text, one blue for links and the primary button). The mark is black and white.
 - Imagery: one picture only, the magnolia as an uncoloured outline drawing (the mark from dee7a23); no photographs, no decorative art.
-- References, not to copy: a cloud provider's internal console (surfaces, controls, tables) and a classifieds front page for the index (dense headed lists of plain links).
+- Reference: apple.com's product pages (type scale, spacing, tiles, translucent bar), as the author asked; no Apple trademarks, imagery or copy.
 
 ## Evidence on Hand
 

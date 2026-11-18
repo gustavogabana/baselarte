@@ -26,7 +26,7 @@ export function Table({ head, rows }: TableProps) {
               <th
                 key={column}
                 scope="col"
-                className="border-b border-line py-2.5 pr-4 pl-3 text-left align-top text-sm font-bold text-ink [&+th]:bg-[linear-gradient(var(--border),var(--border))] [&+th]:bg-size-[1px_1.1em] [&+th]:bg-left [&+th]:bg-no-repeat"
+                className="border-b border-line py-2.5 pr-4 pl-3 text-left align-top text-sm font-semibold text-ink [&+th]:bg-[linear-gradient(var(--border),var(--border))] [&+th]:bg-size-[1px_1.1em] [&+th]:bg-left [&+th]:bg-no-repeat"
               >
                 {heading}
               </th>
@@ -35,7 +35,7 @@ export function Table({ head, rows }: TableProps) {
         </thead>
         <tbody className="max-sm:block">
           {rows.map((cells, row) => (
-            <tr key={row} className="hover:[&>td]:bg-page-faint max-sm:mb-3 max-sm:block max-sm:rounded-xl max-sm:border max-sm:border-line max-sm:px-3.5 max-sm:py-3 max-sm:hover:[&>td]:bg-transparent">
+            <tr key={row} className="hover:[&>td]:bg-page-faint max-sm:mb-3 max-sm:block max-sm:rounded-[18px] max-sm:bg-page-faint max-sm:px-4 max-sm:py-3.5 max-sm:hover:[&>td]:bg-transparent">
               {cells.map((cell, column) => (
                 <td key={column} className={cellStyle}>
                   {column > 0 && head[column] != null && (
