@@ -30,7 +30,7 @@ export function CodeBlock({ code, children }: CodeBlockProps) {
       <code>{code ?? children}</code>
       <button
         type="button"
-        className="copy-button requires-js group/copy absolute top-2 right-2 inline-flex min-h-7 items-center gap-1.5 rounded-full border border-control bg-page px-3 font-sans text-xs font-[650] text-ink opacity-0 transition-opacity duration-150 group-hover/pre:opacity-100 hover:bg-surface focus-visible:opacity-100 pointer-coarse:opacity-100 [&_.icon]:size-3.5 [&_.icon]:align-baseline"
+        className="copy-button requires-js group/copy absolute top-2 right-2 inline-flex min-h-7 items-center gap-1.5 rounded-full bg-page px-3 font-sans text-xs font-medium text-ink shadow-pop opacity-0 transition-opacity duration-150 group-hover/pre:opacity-100 hover:bg-surface focus-visible:opacity-100 pointer-coarse:opacity-100 [&_.icon]:size-3.5 [&_.icon]:align-baseline"
         data-copy-code=""
         data-state="idle"
       >

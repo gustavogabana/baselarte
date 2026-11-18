@@ -43,6 +43,7 @@ export const catalog: NoteGroup[] = [
       "postgres-for-devs",
       "db-migrations",
       "db-replicas-sharding",
+      "rds",
       "kafka",
     ],
   },

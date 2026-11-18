@@ -25,13 +25,13 @@ export function Document({ head, assets, runtimeIcons = [], children }: Document
       <body>
         <IconUsageProvider value={usedIcons}>
           <a
-            className="fixed top-3 left-3 z-200 -translate-y-[200%] rounded-full bg-primary px-4 py-2 font-[650] text-on-primary focus:translate-y-0"
+            className="fixed top-3 left-3 z-200 -translate-y-[200%] rounded-full bg-primary px-4 py-2 font-medium text-on-primary focus:translate-y-0"
             href="#main"
           >
             <Text value={ui.skipLink} />
           </a>
           <SiteHeader />
-          <main id="main" className="mx-auto w-full max-w-[calc(var(--page-max)+2*var(--gutter))] flex-1 px-(--gutter) pt-10 pb-32">
+          <main id="main" className="mx-auto w-full max-w-[calc(var(--page-max)+2*var(--gutter))] flex-1 px-(--gutter) pt-10 pb-28">
             {children}
           </main>
           <SiteFooter />
