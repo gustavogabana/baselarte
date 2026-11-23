@@ -64,7 +64,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
   };
 
   return (
-    <section className="music-player fixed bottom-[max(16px,env(safe-area-inset-bottom,0px))] left-[max(var(--gutter),env(safe-area-inset-left,0px))] z-90 flex w-[min(26rem,calc(100vw-2*var(--gutter)))] items-center gap-3 rounded-2xl border border-line bg-page px-3.5 py-2.5 text-[0.8125rem] text-fg shadow-pop max-[520px]:bottom-0 max-[520px]:left-0 max-[520px]:w-screen max-[520px]:rounded-none max-[520px]:border-x-0 max-[520px]:border-b-0 max-[520px]:pb-[max(10px,env(safe-area-inset-bottom,0px))] [&_svg]:size-[18px] [&_svg]:fill-current [&_.stroke]:fill-none [&_.stroke]:stroke-current [&_.stroke]:stroke-2 [&_.stroke]:[stroke-linecap:round]" aria-label={localize({ en: "Music player", pt: "Player de música" })}>
+    <section className="music-player fixed bottom-[max(16px,env(safe-area-inset-bottom,0px))] left-[max(var(--gutter),env(safe-area-inset-left,0px))] z-90 flex w-[min(26rem,calc(100vw-2*var(--gutter)))] items-center gap-3 rounded-md border border-line bg-page px-3.5 py-2.5 text-[0.8125rem] text-fg shadow-pop max-[520px]:bottom-0 max-[520px]:left-0 max-[520px]:w-screen max-[520px]:rounded-none max-[520px]:border-x-0 max-[520px]:border-b-0 max-[520px]:pb-[max(10px,env(safe-area-inset-bottom,0px))] [&_svg]:size-[18px] [&_svg]:fill-current [&_.stroke]:fill-none [&_.stroke]:stroke-current [&_.stroke]:stroke-2 [&_.stroke]:[stroke-linecap:round]" aria-label={localize({ en: "Music player", pt: "Player de música" })}>
       <audio
         ref={audioRef}
         src={src}
@@ -78,7 +78,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
       />
       <button
         type="button"
-        className="grid size-11 flex-none place-items-center rounded-full bg-primary text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
+        className="grid size-11 flex-none place-items-center rounded-sm bg-primary text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
         onClick={togglePlayback}
         disabled={loadFailed}
         aria-label={localize(isPlaying ? { en: "Pause", pt: "Pausar" } : { en: "Play", pt: "Tocar" })}
@@ -92,7 +92,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
         <span className="col-span-full truncate font-semibold text-ink">{loadFailed ? <T en="The song could not be loaded." pt="Não foi possível carregar a música." /> : TRACK_TITLE}</span>
         <input
           type="range"
-          className="w-full min-w-0 accent-blue"
+          className="w-full min-w-0 accent-accent"
           min={0}
           max={duration || 0}
           step={0.1}
@@ -109,7 +109,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
       <div className="flex w-26 items-center gap-1 max-[520px]:w-auto">
         <button
           type="button"
-          className="grid size-8 place-items-center text-faint aria-pressed:text-blue"
+          className="grid size-8 place-items-center text-faint aria-pressed:text-accent"
           onClick={() => setIsMuted(!isMuted)}
           aria-pressed={isMuted}
           aria-label={localize({ en: "Mute", pt: "Silenciar" })}
@@ -124,7 +124,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
           min={0}
           max={1}
           step={0.05}
-          className="w-full min-w-0 accent-blue max-[520px]:hidden"
+          className="w-full min-w-0 accent-accent max-[520px]:hidden"
           value={isMuted ? 0 : volume}
           onChange={changeVolume}
           aria-label={localize({ en: "Volume", pt: "Volume" })}

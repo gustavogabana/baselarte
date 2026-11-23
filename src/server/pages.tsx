@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { PageHead } from "../components/layout/Head.tsx";
 import type { IconName } from "../components/ui/icons.tsx";
+import { ui } from "../i18n/ui.ts";
 import { site } from "../site.ts";
 import { HomePage } from "../pages/HomePage.tsx";
 import { NotFoundPage } from "../pages/NotFoundPage.tsx";
@@ -21,10 +22,7 @@ export interface Page {
   element: ReactElement;
 }
 
-const siteDescription = {
-  en: "Study notes on software engineering, cloud, security and AI.",
-  pt: "Notas de estudo sobre engenharia de software, nuvem, segurança e IA.",
-};
+const siteDescription = ui.siteDescription;
 
 function notePage(note: Note): Page {
   const path = notePath(note.slug);

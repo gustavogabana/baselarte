@@ -51,13 +51,13 @@ export function EasterEgg({ year }: EasterEggProps) {
       <span className="select-none [-webkit-tap-highlight-color:transparent]" onClick={onCopyrightTap}>
         © {currentYear}
       </span>
-      <dialog ref={dialogRef} className="m-auto w-[min(32rem,calc(100vw-2*var(--gutter)))] rounded-2xl border border-line bg-page px-7 pt-8 pb-6 text-fg shadow-pop backdrop:bg-black/40" aria-labelledby="chorus-title" onClick={(event) => event.target === event.currentTarget && event.currentTarget.close()}>
+      <dialog ref={dialogRef} className="m-auto w-[min(32rem,calc(100vw-2*var(--gutter)))] rounded-md border border-line bg-page px-7 pt-8 pb-6 text-fg shadow-pop backdrop:bg-black/40" aria-labelledby="chorus-title" onClick={(event) => event.target === event.currentTarget && event.currentTarget.close()}>
         <p className="text-[0.8125rem] tracking-[0.08em] text-faint uppercase" id="chorus-title">
           <T en="You found it." pt="Você achou." />
         </p>
         <blockquote className="mt-5 mb-7">
           {CHORUS.map((line, index) => (
-            <p key={line} className="chorus-line text-[clamp(1.2rem,4.5vw,1.5rem)] leading-[1.45] font-semibold text-ink" style={{ animationDelay: `${0.4 + index * 0.9}s` }}>
+            <p key={line} className="chorus-line text-[clamp(1.2rem,4.5vw,1.5rem)] leading-[1.35] font-display text-ink" style={{ animationDelay: `${0.4 + index * 0.9}s` }}>
               {line}
             </p>
           ))}

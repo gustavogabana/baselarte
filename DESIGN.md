@@ -1,76 +1,79 @@
 ---
 name: Baselarte
-description: Apple-style. White and #f5f5f7, near-black text, one link blue, the system San Francisco type, big tight headlines, 18px tiles, a translucent bar on top; the magnolia as a plain outline drawing.
+description: Editorial. A warm off-white page, one narrow reading column, headings in a condensed serif, text in a quiet sans, greys for everything else, and one navy for hover and the current item. The magnolia only as a small detail in the footer.
 colors:
-  ink: "#1d1d1f"
-  blue: "#0066cc"
-  button-blue: "#0071e3"
-  page: "#ffffff"
-  page-faint: "#f5f5f7"
-  surface-strong: "#e8e8ed"
-  text-label: "#424245"
-  text-faint: "#6e6e73"
-  border: "#d2d2d7"
-  border-faint: "#e8e8ed"
-  night: "#000000"
-  night-tile: "#161617"
-  night-blue: "#2997ff"
+  page: "#faf9f7"
+  page-faint: "#f4f2ee"
+  hairline: "#ece9e4"
+  ink: "#1a1a1a"
+  text: "#555555"
+  label: "#6f6f6f"
+  faint: "#8a8a8a"
+  ghost: "#aaaaaa"
+  navy: "#1b2a4e"
+  navy-hover: "#0f1a33"
+  night: "#141413"
+  night-navy: "#9fb2dc"
 typography:
-  family: "-apple-system / SF Pro, Inter as the stand-in elsewhere (Google Fonts); SF Mono for code"
-  display: "clamp(2.75rem, 7vw, 5rem), 600, -0.035em (home name)"
-  headline: "clamp(2.25rem, 5.4vw, 3.5rem), 600, -0.03em, 1.07 (note title)"
-  section: "clamp(1.75rem, 3.6vw, 2.5rem), 600, -0.028em"
-  lede: "1.3125rem, 400, faint"
-  body: "1.0625rem / 1.53, -0.012em"
-  eyebrow: "0.75rem to 1.0625rem, 600, faint"
+  display: "Instrument Serif 400 (roman and italic), Google Fonts"
+  text: "Inter 400/500, Google Fonts; ui-monospace for code"
+  home-title: "clamp(2.5rem, 6vw, 3.25rem), serif, 1.12"
+  note-title: "clamp(2.375rem, 5.6vw, 3.25rem), serif, 1.1"
+  section: "2.125rem to 2.5rem, serif (ghost grey on the index, ink in notes)"
+  row-title: "1.5rem serif"
+  body: "0.9375rem / 1.6"
 rounded:
-  tile: "18px (index tiles, code, callouts, figures, contents)"
-  segmented: "9px track, 7px thumb"
-  button: "999px"
+  sheets: "6px (code, callouts, figures)"
+  controls: "4px"
 ---
 
 # Design System: Baselarte
 
 ## Overview
 
-**North star: an Apple product page.** White ground and the pale grey `#f5f5f7`, near-black text, generous space, large headlines set tight, one blue for links and the primary pill, 18px tiles without borders, a thin translucent bar on top. The reference is apple.com's craft (type scale, spacing, restraint); none of its trademarks, logos, imagery or copy are used.
+**North star: a personal editorial page.** One reading column of 600px centred on a warm off-white page, generous vertical space, sections divided by hairlines, large serif headings and small grey sans text. Colour is almost absent: greys do the work, and **navy** marks the only two states that matter, hover and "you are here".
 
-## Colors
+## Colours
 
-- **Ink** `#1d1d1f`: headings and body. **Faint** `#6e6e73`: ledes, eyebrows, numbers, captions. **Label** `#424245`.
-- **Blue**: links `#0066cc` (dark `#2997ff`), the primary pill `#0071e3`. Focus rings are blue.
-- **Grey ground** `#f5f5f7`: index tiles, code, figures, the footer. Hairlines `#d2d2d7` / `#e8e8ed`.
-- **Status tints** (no borders): blue, orange `#a14300`, green `#1a7f37`, red `#d70015`.
-- **Dark:** pure black ground, tiles `#161617` / `#1d1d1f`, text `#e8e8ed`, borders `#424245`.
+- **Page** `#faf9f7`, **hairlines** `#ece9e4`, pale sheets `#f4f2ee` (code, figures).
+- **Ink** `#1a1a1a`: headings, row titles. **Text** `#555`: body. **Faint** `#8a8a8a`: excerpts, chrome. **Ghost** `#aaa`: index headings, separators, footer.
+- **Navy** `#1b2a4e`: every link and control turns navy on hover; the current header item, language and theme are navy. Focus rings are navy. Dark theme: `#141413` page, navy lifted to `#9fb2dc`.
+- Status tints (callouts) stay muted: green, amber, red, navy.
 
 ## Typography
 
-The system font first (San Francisco on Apple devices), Inter from Google Fonts as the stand-in elsewhere; SF Mono / ui-monospace for code. Headlines are semibold (600) with negative tracking; body is 17px with slight negative tracking. Numbers are tabular.
+Headings in **Instrument Serif** (condensed, roman; italic for the motto and for emphasis in titles). Text in **Inter**, 15px. Code in ui-monospace.
 
 ## Layout
 
-70rem page. **Header:** 48px, sticky, page colour at 80% with backdrop blur, a faint hairline. **Home:** centred hero (magnolia, name in display size, "Study notes" in faint, the IBM quote as the headline, a blue pill "Browse the notes" plus a chevron link, counts), then a centred section headline and the series as grey 18px tiles in CSS columns (1 / 2 / 3). **Note:** 43rem column: breadcrumbs, eyebrow (format), title, lede, facts over a hairline; contents on the right above 1360px, in a grey tile below.
+- **Header:** sticky, page colour, no hairline; only `início / notas` lower case at the right edge of the column.
+- **Home:** two serif lines ("Baselarte. / Notas de estudo."), a grey paragraph, the IBM quote and the counts in paler type; a hairline; then each series: a ghost-grey serif heading with its number, and its notes as rows (serif title, one-line grey summary with the note number, a chevron), separated by hairlines. On hover the title and chevron turn navy.
+- **Note:** same column: breadcrumbs, kicker, serif title, lede, facts over a hairline; "On this page" on the right above 1360px.
+- **Footer:** a hairline; the motto in small italic serif and "© year · domain" on the left; `en / pt` and `auto / claro / escuro` on the right; below, the machine files and, in the right corner, the magnolia (20px, ghost grey) with "baselarte magnolia" under it in tiny type.
 
 ## Components
 
-- **Index tile:** eyebrow "Series 03" + count, title, then rows of "03.4 Title" links divided by faint hairlines.
-- **Segmented control:** grey track, chosen option on a white thumb with a soft shadow (iOS style).
-- **Buttons:** pills; primary solid blue, normal a blue outline.
-- **Callouts, code, figures:** grey or tinted sheets, 18px corners, no border.
-- **Tables:** semibold headers over a hairline, faint row dividers; grey cards on phones.
-- **Links:** no underline in chrome; in prose a faint blue underline that darkens on hover.
+- **Text toggle** (`src/components/ui/toggle.ts`): words separated by slashes, chosen one navy.
+- **Rows** with a chevron (`src/components/ui/Chevron.tsx`).
+- **Back to top:** a 32px square with a hairline and an up chevron.
+- **Buttons:** small corners; primary solid navy, normal a hairline that turns navy.
+- **Prose links:** ink with a pale underline; both navy on hover.
 
 ## The magnolia
 
-The uncoloured outline mark from `dee7a23` stays: header, footer, favicon, and centred above the name on the home page. No fills, no colour.
+Only in the footer corner, small and grey, as a detail. Not in the header, the hero or the favicon.
+
+## Favicon
+
+A light grey rounded tile (`#e6e7e8`) with a navy rounded square inside (`public/favicon.svg`, PNG/ICO sizes in `public/`, preview in `favicon.png`).
 
 ## Implementation
 
-Tailwind CSS v4, utilities in the components; `src/styles/app.css` is the only stylesheet (tokens redefined under `[data-theme="dark"]`, the `@theme inline` mapping, base layer, note vocabulary).
+Tailwind CSS v4, utilities in the components; `src/styles/app.css` is the only stylesheet (tokens redefined under `[data-theme="dark"]`, the `@theme inline` mapping: `text-accent`, `text-ghost`, `font-display`…, base layer, note vocabulary).
 
 ## Do's and Don'ts
 
-- **Do** keep space generous and headlines big and tight.
-- **Do** write Tailwind class names literally.
-- **Don't** use Apple's logo, product names, photos or copy.
-- **Don't** add borders to tiles, or colour beyond the blue and the status tints.
+- **Do** let greys and hairlines carry the structure.
+- **Do** use navy only for hover, current state and focus.
+- **Don't** add tiles, shadows or colour fills to lists.
+- **Don't** put the magnolia anywhere but the footer.

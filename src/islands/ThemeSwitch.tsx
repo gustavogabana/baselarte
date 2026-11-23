@@ -1,9 +1,8 @@
-import type { JSX } from "react";
 import { useLocalize } from "../i18n/useLocalize.ts";
 import type { Localized } from "../i18n/localized.ts";
 import { ui } from "../i18n/ui.ts";
 import { Text } from "../components/ui/T.tsx";
-import { segmentedGroup, segmentedOption } from "../components/ui/segmented.ts";
+import { toggleGroup, toggleOption } from "../components/ui/toggle.ts";
 import { themeMode, usePreference } from "../preferences/store.ts";
 import type { ThemeMode } from "../preferences/settings.ts";
 
@@ -18,40 +17,17 @@ export interface ThemeSwitchProps {
   placement: "header" | "footer";
 }
 
-/** The site's own theme glyphs: an open ring (light), a full disc (dark), half of each (auto). */
-const GLYPHS: Record<ThemeMode, JSX.Element> = {
-  auto: (
-    <>
-      <circle cx="8" cy="8" r="5.5" />
-      <path d="M8 2.5a5.5 5.5 0 0 1 0 11z" className="fill-current" />
-    </>
-  ),
-  light: <circle cx="8" cy="8" r="5.5" />,
-  dark: <circle cx="8" cy="8" r="5.5" className="fill-current" />,
-};
-
-/** auto / light / dark. */
+/** "auto / light / dark", as words in the footer. */
 export function ThemeSwitch({ placement }: ThemeSwitchProps) {
   const localize = useLocalize();
   const currentMode = usePreference(themeMode);
   const modes: ThemeMode[] = ["auto", "light", "dark"];
 
   return (
-    <div role="group" className={segmentedGroup} aria-label={localize(ui.theme)}>
+    <div role="group" className={toggleGroup} data-placement={placement} aria-label={localize(ui.theme)}>
       {modes.map((mode) => (
-        <button
-          key={mode}
-          type="button"
-          aria-pressed={mode === currentMode}
-          onClick={() => themeMode.set(mode)}
-          className={`${segmentedOption} ${placement === "header" ? "min-w-[34px] justify-center px-2" : ""}`}
-        >
-          <svg className="size-3.5 fill-none stroke-current stroke-[1.5]" viewBox="0 0 16 16" aria-hidden="true">
-            {GLYPHS[mode]}
-          </svg>
-          <span className={placement === "header" ? "sr-only" : undefined}>
-            <Text value={LABELS[mode]} />
-          </span>
+        <button key={mode} type="button" aria-pressed={mode === currentMode} onClick={() => themeMode.set(mode)} className={toggleOption}>
+          <Text value={LABELS[mode]} />
         </button>
       ))}
     </div>

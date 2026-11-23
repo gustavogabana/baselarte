@@ -18,12 +18,12 @@ interface DiagramProps {
 export function Diagram({ children, caption, minWidth }: DiagramProps) {
   const style = minWidth ? ({ "--diagram-min-width": `${minWidth}px` } as CSSProperties) : undefined;
   return (
-    <figure className="fig my-8 rounded-[18px] bg-page-faint p-6">
+    <figure className="fig my-8 rounded-md bg-page-faint p-6">
       <div className="fig-scroll" style={style}>
         {children}
       </div>
       {caption && <figcaption className="mt-3 text-sm text-faint">{caption}</figcaption>}
-      <button type="button" className="fig-expand requires-js mt-3 hidden items-center gap-1.5 text-sm text-blue in-[html.js-enabled]:max-[760px]:inline-flex" data-diagram-expand="">
+      <button type="button" className="fig-expand requires-js mt-3 hidden items-center gap-1.5 text-sm text-faint hover:text-accent in-[html.js-enabled]:max-[760px]:inline-flex" data-diagram-expand="">
         <Icon name="expand" /> <Text value={ui.expandDiagram} />
       </button>
     </figure>

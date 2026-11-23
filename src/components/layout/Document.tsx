@@ -6,7 +6,7 @@ import { IconSprite, IconUsageProvider } from "../ui/Icon.tsx";
 import type { IconName } from "../ui/icons.tsx";
 import { Head, type PageAssets, type PageHead } from "./Head.tsx";
 import { SiteFooter } from "./SiteFooter.tsx";
-import { SiteHeader } from "./SiteHeader.tsx";
+import { SiteHeader, type HeaderSection } from "./SiteHeader.tsx";
 
 interface DocumentProps {
   head: PageHead;
@@ -17,6 +17,13 @@ interface DocumentProps {
 }
 
 /** The whole HTML document every page shares: head, header, main, footer. */
+/** The header item a path belongs to: the home page, a note, or neither (404). */
+function headerSection(path: string): HeaderSection {
+  if (path === "/") return "home";
+  if (path.startsWith("/notas/")) return "notes";
+  return "none";
+}
+
 export function Document({ head, assets, runtimeIcons = [], children }: DocumentProps) {
   const usedIcons = new Set<IconName>(runtimeIcons);
   return (
@@ -25,13 +32,14 @@ export function Document({ head, assets, runtimeIcons = [], children }: Document
       <body>
         <IconUsageProvider value={usedIcons}>
           <a
-            className="fixed top-3 left-3 z-200 -translate-y-[200%] rounded-full bg-primary px-4 py-2 font-medium text-on-primary focus:translate-y-0"
+            className="fixed top-3 left-3 z-200 -translate-y-[200%] rounded-sm bg-primary px-4 py-2 text-on-primary focus:translate-y-0"
             href="#main"
           >
             <Text value={ui.skipLink} />
           </a>
-          <SiteHeader />
-          <main id="main" className="mx-auto w-full max-w-[calc(var(--page-max)+2*var(--gutter))] flex-1 px-(--gutter) pt-10 pb-28">
+          <SiteHeader current={headerSection(head.path)} />
+          {/* Full width: each page sets its own column (the note page needs room for its contents). */}
+          <main id="main" className="w-full flex-1 px-(--gutter) pt-14 pb-24 tab:pt-20">
             {children}
           </main>
           <SiteFooter />
