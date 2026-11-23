@@ -3,7 +3,7 @@ export const llmsIntro = `# Baselarte
 
 > Baselarte (Baselarte Ltda.) is a software engineering and creative technology company. It builds systems, interfaces and infrastructure that are simple on the surface and rigorous underneath.
 
-The public website is a landing page plus a notes section (an AWS study guide, the site's design system a GitHub-to-AWS OIDC CI/CD guide and Cloudflare/R2/SSL notes), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
+The public website is a landing page plus a notes section (books, web apps, databases, AWS and deploy, web app security, AI), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
 
 ## Principles
 

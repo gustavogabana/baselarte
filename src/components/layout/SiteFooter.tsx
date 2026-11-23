@@ -35,9 +35,9 @@ export function SiteFooter() {
             </a>
           ))}
         </nav>
-        <div className="flex flex-col items-center gap-1 text-ghost" aria-hidden="true">
-          <FlowerLogo className="size-5 [&_circle]:fill-ghost [&_path]:stroke-ghost" />
-          <span className="text-[0.625rem] leading-none tracking-[0.04em] lowercase">baselarte magnolia</span>
+        <div className="group flex cursor-default flex-col items-center gap-1 text-ghost" aria-hidden="true">
+          <FlowerLogo className="size-5 transition-transform duration-700 ease-out group-hover:scale-125 group-hover:rotate-72 motion-reduce:transition-none motion-reduce:group-hover:transform-none [&_circle]:fill-ghost [&_circle]:transition-colors [&_path]:stroke-ghost [&_path]:transition-colors group-hover:[&_circle]:fill-accent group-hover:[&_path]:stroke-accent" />
+          <span className="text-[0.625rem] leading-none tracking-[0.04em] lowercase transition-colors duration-300 group-hover:text-accent">baselarte magnolia</span>
         </div>
       </div>
     </footer>

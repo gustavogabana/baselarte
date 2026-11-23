@@ -1,6 +1,6 @@
 # Baselarte
 
-Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (AWS, Cloudflare, Linux, books). Live at [baselarte.com](https://baselarte.com).
+Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (books, web apps, databases, AWS, security, AI). Live at [baselarte.com](https://baselarte.com).
 
 ```
  src/notes/*  ─┐                              ┌─▶ dist/  plain HTML, one file per page
@@ -51,7 +51,7 @@ Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the 
 
 ## Behaviour
 
-- **Layout:** editorial: a warm off-white page, one 600px reading column, serif headings (Instrument Serif), quiet grey sans text (Inter), hairlines between sections, and navy for hover and the current item. Home: two serif lines, a short intro, then the eight numbered series (01 to 08), each a list of rows (serif title, one-line summary, chevron); each note has its number in the series (04.2). The magnolia appears only in the footer corner, small, over "baselarte magnolia". Styling is Tailwind CSS v4: utilities sit in the components; `src/styles/app.css` is the only stylesheet. Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
+- **Layout:** editorial: a warm off-white page, one 600px reading column, serif headings (Instrument Serif), quiet grey sans text (Inter), hairlines between sections, and navy for hover and the current item. Home: two serif lines, a short intro, then the six numbered series (01 to 06), each a list of rows (serif title, one-line summary, chevron); each note has its number in the series (04.2). The magnolia appears only in the footer corner, small, over "baselarte magnolia". Styling is Tailwind CSS v4: utilities sit in the components; `src/styles/app.css` is the only stylesheet. Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
 - **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens at the top of `src/styles/app.css` (mapped to Tailwind theme values); the dark theme only redefines them.
 - **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
 - **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.
