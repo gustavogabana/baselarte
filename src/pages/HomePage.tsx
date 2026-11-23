@@ -1,6 +1,4 @@
 import { NoteList } from "../components/layout/NoteList.tsx";
-import { buttonPrimary } from "../components/ui/button.ts";
-import { FlowerLogo } from "../components/ui/FlowerLogo.tsx";
 import { T, Text } from "../components/ui/T.tsx";
 import { ui } from "../i18n/ui.ts";
 import { catalog } from "../notes/catalog.ts";
@@ -8,40 +6,37 @@ import { site } from "../site.ts";
 
 const noteCount = catalog.reduce((total, group) => total + group.notes.length, 0);
 
-/** The opening, centred like a product page: the magnolia, the name in large type, the IBM quote as
- *  the headline, one blue pill to the index and the counts in small grey type. */
+/** The opening: two short lines in large serif, what the site is in grey text, the IBM quote and
+ *  the counts in paler type. */
 function Hero() {
   return (
-    <section className="mx-auto max-w-4xl pt-6 pb-16 text-center tab:pt-14 tab:pb-24" aria-labelledby="home-title">
-      <FlowerLogo className="mx-auto size-16 tab:size-20 [&_path]:[vector-effect:non-scaling-stroke] [&_path]:[stroke-width:1.5px]" />
-      <h1 id="home-title" className="mt-5 text-[clamp(2.75rem,7vw,5rem)] leading-[1.05] font-semibold tracking-[-0.035em] text-ink">
-        {site.name}
+    <section className="pb-16" aria-labelledby="home-title">
+      <h1 id="home-title" className="font-display text-[clamp(2.5rem,6vw,3.25rem)] leading-[1.12] text-ink">
+        {site.name}.
+        <br />
+        <Text value={ui.studyNotes} />.
       </h1>
-      <p className="mt-1 text-[clamp(1.25rem,2.6vw,1.75rem)] leading-tight tracking-[-0.02em] text-faint">
-        <Text value={ui.studyNotes} />
+      <p className="mt-7 text-fg">
+        <Text value={ui.siteDescription} />{" "}
+        <T
+          en="Each note is written to be understood, in English and Portuguese."
+          pt="Cada nota é escrita para ser entendida, em português e inglês."
+        />
       </p>
-      <figure className="mx-auto mt-12 max-w-3xl">
-        <blockquote>
-          <p className="text-[clamp(1.5rem,3.2vw,2.5rem)] leading-[1.15] font-semibold tracking-[-0.025em] text-balance text-ink">
-            <Text value={ui.quote} />
+      <figure className="mt-5 text-sm text-faint">
+        <blockquote className="inline">
+          <p className="inline">
+            “<Text value={ui.quote} />”
           </p>
-        </blockquote>
-        <figcaption className="mt-4 text-[1.0625rem] text-faint">
-          <Text value={ui.quoteCitation} />
+        </blockquote>{" "}
+        <figcaption className="inline text-ghost">
+          — <Text value={ui.quoteCitation} />
         </figcaption>
       </figure>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-x-7 gap-y-4">
-        <a href="#indice" className={buttonPrimary}>
-          <T en="Browse the notes" pt="Ver as notas" />
-        </a>
-        <a href="/llms.txt" className="text-[1.0625rem]">
-          llms.txt <span aria-hidden="true">›</span>
-        </a>
-      </div>
-      <p className="mt-6 text-sm text-faint tabular-nums">
+      <p className="mt-5 text-sm text-ghost tabular-nums">
         <T
-          en={`${noteCount} notes · ${catalog.length} series · English and Portuguese`}
-          pt={`${noteCount} notas · ${catalog.length} séries · português e inglês`}
+          en={`${noteCount} notes · ${catalog.length} series`}
+          pt={`${noteCount} notas · ${catalog.length} séries`}
         />
       </p>
     </section>
@@ -50,9 +45,11 @@ function Hero() {
 
 export function HomePage() {
   return (
-    <div>
+    <div className="mx-auto max-w-(--page-max)">
       <Hero />
-      <NoteList />
+      <div className="border-t border-line pt-16">
+        <NoteList />
+      </div>
     </div>
   );
 }

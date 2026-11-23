@@ -10,11 +10,11 @@ interface CalloutProps {
   children: ReactNode;
 }
 
-/** Alerts: a softly tinted sheet with 18px corners and no border; the icon carries the colour.
- *  Info (and "use") is blue, warning orange, "good" green, the personal note grey. */
+/** Alerts: a softly tinted sheet with small corners and no border; the icon carries the colour.
+ *  Info (and "use") is navy, warning amber, "good" green, the personal note grey. */
 const TONES: Record<CalloutTone, string> = {
-  info: "bg-blue-tint [&>.icon]:text-blue",
-  use: "bg-blue-tint [&>.icon]:text-blue",
+  info: "bg-accent-tint [&>.icon]:text-accent",
+  use: "bg-accent-tint [&>.icon]:text-accent",
   warn: "bg-warning-tint [&>.icon]:text-warning",
   good: "bg-success-tint [&>.icon]:text-success",
   personal: "bg-surface [&>.icon]:text-ink",
@@ -24,7 +24,7 @@ const TONES: Record<CalloutTone, string> = {
 export function Callout({ tone = "info", icon, children }: CalloutProps) {
   return (
     <div
-      className={`callout ${tone} my-7 rounded-[18px] px-6 py-5 text-fg [&_code]:bg-page/70 [&_strong]:text-ink [&>.icon]:mr-1 ${TONES[tone]}`}
+      className={`callout ${tone} my-7 rounded-md px-5 py-4 text-fg [&_code]:bg-page/70 [&_strong]:text-ink [&>.icon]:mr-1 ${TONES[tone]}`}
     >
       {icon && <Icon name={icon} />} {children}
     </div>

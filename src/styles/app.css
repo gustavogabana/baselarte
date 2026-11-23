@@ -1,8 +1,9 @@
 /* The only stylesheet. Tailwind v4 (utilities live in the components, next to their markup);
-   this file holds what markup cannot: the design tokens (Apple-style: white and #f5f5f7, near-black
-   text, one link blue, system San Francisco type), the theme mapping,
-   the page base, and the vocabulary the 45 notes write by class name (diagram SVG classes, code
-   tokens, lists, the AWS note's simulators). See DESIGN.md. */
+   this file holds what markup cannot: the design tokens (editorial: a warm off-white page, a
+   condensed serif for headings, a quiet sans for text, greys for everything else and one navy for
+   hover and the current item), the theme mapping, the page base, and the vocabulary the notes
+   write by class name (diagram SVG classes, code tokens, lists, the AWS note's simulators).
+   See DESIGN.md. */
 
 @import "tailwindcss";
 
@@ -14,99 +15,98 @@
    --------------------------------------------------------------------------------------------- */
 
 :root {
-  /* Ink: text, the primary button, the utility details */
-  --ink: #1d1d1f;
-  --ink-raised: #1d1d1f;
-  --ink-hover: #424245;
+  /* Ink: headings and the strongest text */
+  --ink: #1a1a1a;
+  --ink-raised: #1a1a1a;
+  --ink-hover: #000000;
 
-  /* Signal blue: links, focus, the chosen option, the active state */
-  --blue: #0066cc;
-  --blue-hover: #004f9e;
-  --blue-tint: #eaf3fd;
-  --blue-border: #b3d3f5;
+  /* Navy: the only colour. Hover, the current page or option, focus. */
+  --accent: #1b2a4e;
+  --accent-hover: #0f1a33;
+  --accent-tint: #eef0f5;
+  --accent-border: #c5cbd9;
 
-  --page: #ffffff;
-  --page-faint: #f5f5f7;
-  --surface: #f5f5f7;
-  --surface-strong: #e8e8ed;
-  --surface-hover: #ededf0;
+  --page: #faf9f7;
+  --page-faint: #f4f2ee;
+  --surface: #f4f2ee;
+  --surface-strong: #ece9e4;
+  --surface-hover: #efece7;
 
   --fg-strong: var(--ink);
-  --fg: #1d1d1f;
-  --fg-label: #424245;
-  --fg-faint: #6e6e73;
+  --fg: #555555;
+  --fg-label: #6f6f6f;
+  --fg-faint: #8a8a8a;
+  --fg-ghost: #aaaaaa;
   --fg-on-action: #ffffff;
 
-  /* Borders: containers and dividers, then the darker line of controls */
-  --border: #d2d2d7;
-  --border-faint: #e8e8ed;
-  --border-control: #86868b;
+  /* Borders: the hairline between sections and rows, then controls */
+  --border: #ece9e4;
+  --border-faint: #f0ede8;
+  --border-control: #d9d5ce;
   --border-strong: var(--ink);
 
-  /* The primary action is ink, not blue (blue is for links and state) */
-  --action: var(--blue);
-  --action-hover: var(--blue-hover);
-  --action-active: var(--blue-hover);
-  --action-surface: var(--blue-tint);
-  --action-border: var(--blue-border);
-  --primary: #0071e3;
-  --primary-hover: #0077ed;
+  --action: var(--accent);
+  --action-hover: var(--accent-hover);
+  --action-active: var(--accent-hover);
+  --action-surface: var(--accent-tint);
+  --action-border: var(--accent-border);
+  --primary: var(--accent);
+  --primary-hover: var(--accent-hover);
   --on-primary: #ffffff;
-  --visited: var(--blue);
-  --focus-inner: var(--blue);
-  --focus-outer: #0071e355;
+  --visited: var(--accent);
+  --focus-inner: var(--accent);
+  --focus-outer: #1b2a4e44;
 
-  /* Status: tinted sheet, coloured hairline, coloured icon */
-  --success-fg: #1a7f37;
-  --success-surface: #f0faf2;
-  --success-border: #a8dbb5;
-  --warning-fg: #a14300;
-  --warning-surface: #fff6eb;
-  --warning-border: #f3cfa3;
-  --critical-fg: #d70015;
-  --critical-surface: #fff2f2;
-  --critical-border: #f5b8b8;
+  /* Status: tinted sheet, coloured icon */
+  --success-fg: #2f6b3a;
+  --success-surface: #eef4ee;
+  --success-border: #bcd5c0;
+  --warning-fg: #8a4b12;
+  --warning-surface: #f8f1e6;
+  --warning-border: #e3cfae;
+  --critical-fg: #a3262a;
+  --critical-surface: #f8eded;
+  --critical-border: #e2bcbc;
   --highlight-fg: var(--ink);
   --highlight-surface: var(--surface);
   --highlight-border: var(--border);
 
   /* Names kept for the note stylesheets */
-  --brand: var(--blue);
-  --brand-fg: var(--blue);
-  --brand-surface: var(--blue-tint);
-  --brand-border: var(--blue-border);
-  --accent: var(--blue);
-  --accent-fg: var(--blue);
+  --brand: var(--accent);
+  --brand-fg: var(--accent);
+  --brand-surface: var(--accent-tint);
+  --brand-border: var(--accent-border);
+  --accent-fg: var(--accent);
 
-  /* Code: a pale sheet with a hairline; syntax in blue, violet, green and amber */
-  --code-bg: #f5f5f7;
-  --code-fg: var(--ink);
+  /* Code: a warm pale sheet; quiet syntax colours */
+  --code-bg: #f2f0eb;
+  --code-fg: #2a2a2a;
   --code-border: transparent;
-  --code-faint: #6e6e73;
-  --code-keyword: #ad3da4;
-  --code-string: #c41a16;
-  --code-number: #1c00cf;
-  --code-attr: #0b4f79;
+  --code-faint: #8a8a8a;
+  --code-keyword: #1b2a4e;
+  --code-string: #7a4a1e;
+  --code-number: #3b5f8a;
+  --code-attr: #5a4a7a;
 
-
-  --shadow-pop: 0 4px 24px rgb(0 0 0 / 0.08), 0 1px 2px rgb(0 0 0 / 0.04);
+  --shadow-pop: 0 4px 20px rgb(40 30 20 / 0.08), 0 1px 2px rgb(40 30 20 / 0.05);
 
   --ease-out: cubic-bezier(0.25, 0.1, 0.25, 1);
 
-  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-  --mono: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --sans: "Inter", system-ui, -apple-system, "Segoe UI", "Noto Sans", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --display: "Instrument Serif", "Iowan Old Style", "Times New Roman", Georgia, serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
-  --content-max: 43rem;
-  --page-max: 70rem;
-  --side-width: 15rem;
-  --grid-gap: clamp(16px, 3vw, 40px);
-  --gutter: clamp(16px, 4vw, 40px);
-  /* Corners: controls 8px, sheets (code, figures, alerts) 12px, containers 16px, buttons pill */
-  --radius-sm: 8px;
-  --radius: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
-  --radius-xl: 18px;
+  --content-max: 37.5rem;
+  --page-max: 37.5rem;
+  --side-width: 13rem;
+  --grid-gap: clamp(16px, 3vw, 48px);
+  --gutter: clamp(20px, 5vw, 40px);
+  /* Corners: small and quiet */
+  --radius-sm: 4px;
+  --radius: 4px;
+  --radius-md: 6px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
   --radius-pill: 999px;
 
   /* Names kept so the older note stylesheets keep working */
@@ -114,77 +114,78 @@
   --black: var(--ink);
   --muted: var(--fg-faint);
   --line: var(--border);
-  --serif: var(--sans);
+  --serif: var(--display);
   --label: var(--sans);
-  --heading: var(--sans);
+  --heading: var(--display);
   --wide: 90rem;
   --column: var(--content-max);
   --glass: var(--page);
   --glass-faint: var(--page-faint);
-  --group-ink: var(--blue);
+  --group-ink: var(--accent);
   --on-group-ink: #ffffff;
 
   color-scheme: light;
 }
 
 [data-theme="dark"] {
-  --ink: #f5f5f7;
-  --ink-raised: #f5f5f7;
+  --ink: #ededeb;
+  --ink-raised: #ededeb;
   --ink-hover: #ffffff;
 
-  --blue: #2997ff;
-  --blue-hover: #6bb6ff;
-  --blue-tint: #0a2440;
-  --blue-border: #1b4a7a;
+  /* Navy cannot be read on a dark page; its light tint keeps the same hue. */
+  --accent: #9fb2dc;
+  --accent-hover: #c3d0ec;
+  --accent-tint: #1a2133;
+  --accent-border: #33405e;
 
-  --page: #000000;
-  --page-faint: #161617;
-  --surface: #1d1d1f;
-  --surface-strong: #2c2c2e;
-  --surface-hover: #232325;
+  --page: #141413;
+  --page-faint: #1b1b1a;
+  --surface: #1f1f1d;
+  --surface-strong: #2a2a28;
+  --surface-hover: #242422;
 
-  --fg: #e8e8ed;
-  --fg-label: #c7c7cc;
-  --fg-faint: #86868b;
-  --fg-on-action: #ffffff;
+  --fg: #b5b5b1;
+  --fg-label: #9a9a96;
+  --fg-faint: #85857f;
+  --fg-ghost: #6f6f6a;
+  --fg-on-action: #141413;
 
-  --border: #424245;
-  --border-faint: #2c2c2e;
-  --border-control: #6e6e73;
+  --border: #2a2a28;
+  --border-faint: #222220;
+  --border-control: #3a3a37;
 
-  --primary: #0071e3;
-  --primary-hover: #0077ed;
-  --on-primary: #ffffff;
-  --focus-outer: #2997ff55;
+  --on-primary: #141413;
+  --focus-outer: #9fb2dc55;
 
-  --success-fg: #30d158;
-  --success-surface: #0c2213;
-  --success-border: #1f5a2e;
-  --warning-fg: #ff9f0a;
-  --warning-surface: #2a1a05;
-  --warning-border: #6b4310;
-  --critical-fg: #ff453a;
-  --critical-surface: #2c0f0d;
-  --critical-border: #6e2420;
+  --success-fg: #8cc79a;
+  --success-surface: #16211a;
+  --success-border: #2e4a35;
+  --warning-fg: #e0b072;
+  --warning-surface: #241c12;
+  --warning-border: #5a4426;
+  --critical-fg: #e89090;
+  --critical-surface: #261616;
+  --critical-border: #5a2c2c;
 
-  --code-bg: #1d1d1f;
-  --code-faint: #98989d;
-  --code-keyword: #ff7ab2;
-  --code-string: #ff8170;
-  --code-number: #d9c97c;
-  --code-attr: #6bdfff;
+  --code-bg: #1d1d1b;
+  --code-fg: #dcdcd8;
+  --code-faint: #85857f;
+  --code-keyword: #9fb2dc;
+  --code-string: #d9b38a;
+  --code-number: #a9c4e6;
+  --code-attr: #c2b2e0;
 
-
-  --shadow-pop: 0 6px 28px rgb(0 0 0 / 0.6), 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-pop: 0 6px 28px rgb(0 0 0 / 0.55), 0 1px 2px rgb(0 0 0 / 0.4);
 
   color-scheme: dark;
 }
 
 
-/* Tokens as Tailwind theme values: bg-page, text-ink, border-line, rounded-2xl… follow the theme
+/* Tokens as Tailwind theme values: bg-page, text-ink, border-line, text-accent… follow the theme
    because they point at the custom properties above. */
 @theme inline {
   --font-sans: var(--sans);
+  --font-display: var(--display);
   --font-mono: var(--mono);
 
   --color-page: var(--page);
@@ -195,13 +196,14 @@
   --color-fg: var(--fg);
   --color-label: var(--fg-label);
   --color-faint: var(--fg-faint);
+  --color-ghost: var(--fg-ghost);
   --color-line: var(--border);
   --color-line-faint: var(--border-faint);
   --color-control: var(--border-control);
-  --color-blue: var(--blue);
-  --color-blue-hover: var(--blue-hover);
-  --color-blue-tint: var(--blue-tint);
-  --color-blue-border: var(--blue-border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-tint: var(--accent-tint);
+  --color-accent-border: var(--accent-border);
   --color-primary: var(--primary);
   --color-primary-hover: var(--primary-hover);
   --color-on-primary: var(--on-primary);
@@ -233,10 +235,10 @@
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
     scroll-behavior: smooth;
-    scroll-padding-top: 64px;
+    scroll-padding-top: 72px;
     overflow-x: clip;
     scrollbar-color: var(--surface-strong) var(--page);
-    accent-color: var(--blue);
+    accent-color: var(--accent);
   }
 
   body {
@@ -246,32 +248,31 @@
     overflow-x: clip;
     background: var(--page);
     color: var(--fg);
-    font: 400 1.0625rem/1.53 var(--sans);
-    letter-spacing: -0.012em;
+    font: 400 0.9375rem/1.6 var(--sans);
     font-optical-sizing: auto;
     font-feature-settings: "kern", "liga";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    caret-color: var(--blue);
+    caret-color: var(--accent);
   }
 
   ::selection {
-    background: color-mix(in srgb, var(--blue) 24%, var(--page));
+    background: color-mix(in srgb, var(--accent) 18%, var(--page));
     color: var(--fg-strong);
   }
 
-  /* Links: Apple blue, no underline until hovered (prose links get a faint one, see Section). */
+  /* Links: grey or ink at rest, navy on hover (the reference's dark red, in navy). */
   a {
-    color: var(--action);
+    color: inherit;
     text-decoration: none;
     text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-    transition: color 120ms ease, text-decoration-color 120ms ease;
+    text-underline-offset: 0.25em;
+    transition: color 150ms ease, text-decoration-color 150ms ease;
   }
 
   @media (hover: hover) {
     a:hover {
-      text-decoration: underline;
+      color: var(--accent);
     }
   }
 
@@ -422,10 +423,11 @@
   .ds-guide h3 {
     margin: 40px 0 12px;
     color: var(--fg-strong);
-    font-size: 1.5rem;
-    font-weight: 600;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
+    font-family: var(--display);
+    font-size: 1.625rem;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.005em;
   }
 
   .ds-guide h4 {
@@ -441,7 +443,7 @@
 
   :not(pre) > code {
     padding: 0.1em 0.35em;
-    border-radius: 6px;
+    border-radius: 3px;
     background: var(--code-bg);
     color: var(--fg-strong);
     white-space: break-spaces;
@@ -458,7 +460,7 @@
     margin: 20px 0;
     padding: 20px 22px;
     overflow-x: auto;
-    border-radius: 18px;
+    border-radius: var(--radius-md);
     background: var(--code-bg);
     color: var(--code-fg);
     font-size: 0.8125rem;
@@ -607,7 +609,7 @@
     --aws-green-tint: color-mix(in srgb, var(--aws-green) 10%, var(--paper));
     --aws-red-tint: color-mix(in srgb, var(--aws-red) 10%, var(--paper));
     --aws-code-size: 0.85rem;
-    --aws-radius: 12px;
+    --aws-radius: 6px;
   }
 
   [data-theme="dark"] {
@@ -669,17 +671,19 @@
   }
 
   .aws-guide h2 {
-    font-size: clamp(1.625rem, 3vw, 2.125rem);
-    font-weight: 620;
-    line-height: 1.2;
-    letter-spacing: -0.012em;
+    font-family: var(--display);
+    font-size: clamp(1.875rem, 3.4vw, 2.375rem);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
     margin: 8px 0 12px;
     color: var(--fg-strong);
   }
 
   .aws-guide h3 {
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-family: var(--display);
+    font-size: 1.5rem;
+    font-weight: 400;
     line-height: 1.3;
     letter-spacing: -0.01em;
     margin: 36px 0 12px;
@@ -718,9 +722,9 @@
   }
 
   .aws-guide a {
-    color: var(--action);
+    color: var(--fg-strong);
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, currentColor 40%, transparent);
+    text-decoration-color: var(--border-control);
     text-underline-offset: 3px;
     transition: text-decoration-color 0.3s var(--ease);
   }

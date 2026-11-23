@@ -1,28 +1,40 @@
 import { localizedAttribute } from "../../i18n/attributes.ts";
 import { ui } from "../../i18n/ui.ts";
-import { Island } from "../../islands/Island.tsx";
-import { site } from "../../site.ts";
-import { FlowerLogo } from "../ui/FlowerLogo.tsx";
+import { Text } from "../ui/T.tsx";
 
-/** A thin translucent bar that stays on top while reading (blurred page behind it, a hairline
- *  under it): the flower and name on the left, the theme switch on the right. */
-export function SiteHeader() {
+/** Which item of the header is the current page. */
+export type HeaderSection = "home" | "notes" | "none";
+
+const LINKS: { section: Exclude<HeaderSection, "none">; href: string; label: typeof ui.home }[] = [
+  { section: "home", href: "/", label: ui.home },
+  { section: "notes", href: "/#indice", label: ui.notes },
+];
+
+/** A quiet bar that stays on top: only "home / notes", lower case, at the right edge of the reading
+ *  column; the current one is navy, the others grey and navy on hover. */
+export function SiteHeader({ current }: { current: HeaderSection }) {
   return (
-    <header
-      className="site-header sticky top-0 z-90 flex h-12 items-center justify-between gap-4 border-b border-line-faint bg-page/80 px-[max(var(--gutter),calc((100vw-var(--page-max))/2))] backdrop-blur-xl backdrop-saturate-180"
-    >
-      <a
-        className="inline-flex items-center gap-2 text-[1.0625rem] leading-none font-semibold tracking-[-0.02em] text-ink no-underline hover:text-ink hover:no-underline"
-        href="/"
-        {...localizedAttribute("aria-label", ui.home)}
+    <header className="site-header sticky top-0 z-90 bg-page/95 backdrop-blur-sm">
+      <nav
+        className="mx-auto flex h-16 w-full max-w-[calc(var(--page-max)+2*var(--gutter))] items-center justify-end px-(--gutter) text-[0.9375rem] text-faint lowercase"
+        {...localizedAttribute("aria-label", ui.siteNav)}
       >
-        <FlowerLogo className="size-6" />
-        <span>{site.name}</span>
-      </a>
-      <nav className="flex items-center gap-6 text-sm">
-        <div className="requires-js">
-          <Island name="ThemeSwitch" props={{ placement: "header" }} />
-        </div>
+        {LINKS.map((link, index) => (
+          <span key={link.section} className="inline-flex items-center">
+            {index > 0 && (
+              <span className="mx-1.5 text-ghost" aria-hidden="true">
+                /
+              </span>
+            )}
+            <a
+              href={link.href}
+              className={`py-2 hover:text-accent ${current === link.section ? "text-accent" : ""}`}
+              aria-current={current === link.section ? "page" : undefined}
+            >
+              <Text value={link.label} />
+            </a>
+          </span>
+        ))}
       </nav>
     </header>
   );

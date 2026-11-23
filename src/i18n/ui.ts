@@ -5,7 +5,13 @@ export const ui = {
   skipLink: { en: "Skip to content", pt: "Pular para o conteúdo" },
   home: { en: "Home", pt: "Início" },
   notes: { en: "Notes", pt: "Notas" },
+  siteNav: { en: "Site", pt: "Site" },
+  seeAll: { en: "See all", pt: "Ver todas" },
   studyNotes: { en: "Study notes", pt: "Notas de estudo" },
+  siteDescription: {
+    en: "Study notes on software engineering, cloud, security and AI.",
+    pt: "Notas de estudo sobre engenharia de software, nuvem, segurança e IA.",
+  },
   series: { en: "Series", pt: "Séries" },
   number: { en: "No.", pt: "Nº" },
   category: { en: "Category", pt: "Categoria" },

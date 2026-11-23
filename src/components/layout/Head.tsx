@@ -2,9 +2,10 @@ import type { Localized } from "../../i18n/localized.ts";
 import { bootScript } from "../../preferences/boot.ts";
 import { absoluteUrl, site } from "../../site.ts";
 
-/** Text is set in the system's San Francisco on Apple devices; elsewhere Inter (variable optical
- *  size and weight, from Google Fonts) stands in for it. */
-const FONTS_URL = "https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap";
+/** Headings in Instrument Serif (a condensed display serif, roman and italic); text in Inter.
+ *  Both from Google Fonts. */
+const FONTS_URL =
+  "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:opsz,wght@14..32,400..600&display=swap";
 
 export interface PageHead {
   /** Site path of the page, e.g. "/notas/aws/". */
@@ -68,9 +69,9 @@ export function Head({ head, assets }: { head: PageHead; assets: PageAssets }) {
         </>
       )}
 
-      <link rel="icon" href="/favicon.svg?v=10" type="image/svg+xml" />
-      <link rel="icon" href="/favicon.ico?v=7" sizes="any" />
-      <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
+      <link rel="icon" href="/favicon.svg?v=11" type="image/svg+xml" />
+      <link rel="icon" href="/favicon.ico?v=8" sizes="any" />
+      <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=2" />
       <link rel="manifest" href="/site.webmanifest" />
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />

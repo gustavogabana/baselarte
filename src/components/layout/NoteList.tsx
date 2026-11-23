@@ -2,49 +2,50 @@ import { localizedAttribute } from "../../i18n/attributes.ts";
 import { ui } from "../../i18n/ui.ts";
 import { catalog } from "../../notes/catalog.ts";
 import { getNote, noteNumber, notePath, seriesNumber } from "../../notes/registry.ts";
-import { T, Text } from "../ui/T.tsx";
+import { Chevron } from "../ui/Chevron.tsx";
+import { Text } from "../ui/T.tsx";
 
-/** The index: a large centred heading, then every series as a pale grey tile with 18px corners
- *  (number, title, count, then its notes as blue links), flowing in up to three columns. */
+/** The index, one series after another: its title in large pale serif, then its notes as rows
+ *  (title in serif, a one-line summary in small grey type, a chevron) over hairlines. On hover
+ *  the title and the chevron turn navy. */
 export function NoteList() {
   return (
-    <section id="indice" className="scroll-mt-16" {...localizedAttribute("aria-label", ui.index)}>
-      <h2 className="mb-10 text-center text-[clamp(2rem,4.4vw,3rem)] leading-[1.08] font-semibold tracking-[-0.03em] text-ink tab:mb-14">
-        <T en="Every note, by series." pt="Todas as notas, por série." />
-      </h2>
-      <div className="columns-1 gap-x-5 sm:columns-2 desk:columns-3">
-        {catalog.map((group) => (
-          <section
-            key={group.id}
-            id={`series-${group.id}`}
-            className="mb-5 scroll-mt-16 break-inside-avoid rounded-[18px] bg-page-faint px-6 pt-6 pb-5 tab:px-7 tab:pt-7"
-            aria-labelledby={`series-title-${group.id}`}
-          >
-            <p className="flex items-baseline justify-between text-xs font-semibold text-faint tabular-nums">
-              <span>
-                <T en="Series" pt="Série" /> {seriesNumber(group.id)}
-              </span>
-              <span className="font-normal">{group.notes.length}</span>
-            </p>
-            <h3 id={`series-title-${group.id}`} className="mt-1 mb-3 text-[1.3125rem] leading-tight font-semibold tracking-[-0.02em] text-ink">
-              <Text value={group.title} />
-            </h3>
-            <ol>
-              {group.notes.map((slug) => (
-                <li key={slug} className="border-t border-line-faint first:border-t-0">
-                  <a
-                    href={notePath(slug)}
-                    className="grid grid-cols-[2.5rem_minmax(0,1fr)] items-baseline py-2 text-[0.9375rem] leading-snug"
-                  >
-                    <span className="text-xs text-faint tabular-nums">{noteNumber(slug)}</span>
-                    <Text value={getNote(slug).title} />
+    <section id="indice" className="scroll-mt-20" {...localizedAttribute("aria-label", ui.index)}>
+      {catalog.map((group) => (
+        <section
+          key={group.id}
+          id={`series-${group.id}`}
+          className="scroll-mt-20 border-t border-line py-16 first:border-t-0 first:pt-0"
+          aria-labelledby={`series-title-${group.id}`}
+        >
+          <h2 id={`series-title-${group.id}`} className="mb-6 font-display text-[2.125rem] leading-[1.1] text-ghost">
+            <Text value={group.title} />
+            <span className="ml-3 align-[0.35em] font-sans text-xs tabular-nums">{seriesNumber(group.id)}</span>
+          </h2>
+          <ol>
+            {group.notes.map((slug) => {
+              const note = getNote(slug);
+              return (
+                <li key={slug} className="border-b border-line last:border-b-0">
+                  <a href={notePath(slug)} className="group flex items-center gap-4 py-4 hover:text-inherit">
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate font-display text-[1.5rem] leading-[1.2] text-ink transition-colors duration-150 group-hover:text-accent">
+                        <Text value={note.title} />
+                      </span>
+                      <span className="mt-1 block truncate text-sm text-faint">
+                        <span className="tabular-nums">{noteNumber(slug)}</span>
+                        <span className="mx-1.5 text-ghost" aria-hidden="true">·</span>
+                        <Text value={note.seo.description} />
+                      </span>
+                    </span>
+                    <Chevron className="size-4 flex-none text-ghost transition-[color,translate] duration-150 group-hover:translate-x-0.5 group-hover:text-accent" />
                   </a>
                 </li>
-              ))}
-            </ol>
-          </section>
-        ))}
-      </div>
+              );
+            })}
+          </ol>
+        </section>
+      ))}
     </section>
   );
 }

@@ -38,10 +38,10 @@ Readers arrive mostly deep-linked into a note, on desktop and phone. Notes are l
 
 - Name: Baselarte. Mark: the five-petal magnolia (shape fixed; colour may change).
 - The IBM 1979 quote ("A computer can never be held accountable…") stays on the home page.
-- Typeface: the system San Francisco (Inter as the stand-in off Apple devices).
-- Colour: Apple-style (white and #f5f5f7, near-black text, one blue for links and the primary button). The mark is black and white.
-- Imagery: one picture only, the magnolia as an uncoloured outline drawing (the mark from dee7a23); no photographs, no decorative art.
-- Reference: apple.com's product pages (type scale, spacing, tiles, translucent bar), as the author asked; no Apple trademarks, imagery or copy.
+- Typeface: Instrument Serif for headings, Inter for text.
+- Colour: warm off-white page, greys, and one navy (#1b2a4e) for hover and the current item. The mark is grey.
+- Imagery: one picture only, the magnolia as a small grey outline in the footer corner; no photographs, no decorative art. Favicon: a navy square on a light grey tile.
+- Reference: a minimal personal editorial site (narrow column, serif headings, grey text, hairlines), as the author asked, with navy in place of its dark red.
 
 ## Evidence on Hand
 
