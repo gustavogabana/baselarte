@@ -1,81 +1,82 @@
 # Baselarte
 
-Site of **Baselarte Ltda.**, a software engineering and creative technology company: a landing page plus a section of study notes (books, web apps, databases, AWS, security, AI). Live at [baselarte.com](https://baselarte.com).
+Site da **Baselarte Ltda.**, uma empresa de engenharia de software e tecnologia criativa: uma página inicial e uma seção de notas de estudo (livros, aplicações web, bancos de dados, AWS, segurança, IA). No ar em [baselarte.com](https://baselarte.com). Todo o site é em português do Brasil.
 
 ```
- src/notes/*  ─┐                              ┌─▶ dist/  plain HTML, one file per page
- src/pages/*  ─┼─▶ React render (build time) ──┤
- src/styles/* ─┘                              └─▶ islands: theme, language (hydrated)
+ src/notes/*  ─┐                                  ┌─▶ dist/  HTML puro, um arquivo por página
+ src/pages/*  ─┼─▶ render do React (no build) ────┤
+ src/styles/* ─┘                                  └─▶ ilhas: tema, player (hidratadas)
 
  git push ─▶ main ─▶ GitHub Actions ─▶ pnpm build ─▶ dist/ ─▶ GitHub Pages ─▶ baselarte.com
 ```
 
-Every page is rendered to static HTML when the site is built. The browser receives finished pages; JavaScript only adds the few interactive parts.
+Cada página vira HTML estático no build. O navegador recebe páginas prontas; o JavaScript só acrescenta as poucas partes interativas.
 
-## Tools (besides HTML, CSS and JavaScript)
+## Ferramentas (além de HTML, CSS e JavaScript)
 
-| Tool | How it is used | Problem it solves |
+| Ferramenta | Como é usada | Problema que resolve |
 | --- | --- | --- |
-| **React** | Components render every page to HTML at build time; a few (theme, language, player) are hydrated as islands in the browser. | 46 pages used to repeat the same head, header, footer and markup by hand; now each piece is written once. |
-| **TypeScript** | All source, including the notes; `pnpm build` type-checks first. | A broken prop, a missing translation or a note without metadata fails the build instead of the live site. |
-| **Vite** | Dev server that renders pages on request, and the bundler for the browser code and CSS. | Fast feedback while writing, and small hashed assets in production. |
-| **Motion** | Animations in the AWS note's simulators, loaded only on that page. | Smooth, interruptible animations without hand-written timing code. |
-| **GitHub Actions** | Builds on every push to `main` and publishes `dist/` to Pages. | GitHub Pages only receives the finished static files, never the source. |
+| **React** | Componentes renderizam cada página em HTML no build; alguns (tema, player) são hidratados como ilhas no navegador. | 46 páginas repetiam à mão o mesmo head, cabeçalho, rodapé e marcação; agora cada peça é escrita uma vez. |
+| **TypeScript** | Todo o código, inclusive as notas; o `pnpm build` checa os tipos antes. | Uma prop quebrada ou uma nota sem metadados falha no build, não no site no ar. |
+| **Vite** | Servidor de desenvolvimento que renderiza as páginas a cada pedido, e o bundler do código do navegador e do CSS. | Retorno rápido enquanto se escreve, e assets pequenos com hash em produção. |
+| **Motion** | Animações nos simuladores da nota de AWS, carregadas só nessa página. | Animações suaves e interrompíveis sem código de tempo escrito à mão. |
+| **GitHub Actions** | Faz o build a cada push na `main` e publica o `dist/` no Pages. | O GitHub Pages recebe só os arquivos estáticos prontos, nunca o código-fonte. |
 
-## Structure
+## Estrutura
 
 ```
 src/
-  notes/        one folder per note (index.tsx: metadata + body); catalog.ts orders them
-  components/   note/ building blocks (Section, Callout, Diagram, Table, CodeBlock, Sources),
-                layout/ (Document, Head, header, footer) and ui/ (T, Icon, FlowerLogo)
-  pages/        home, notes index, note page, 404
-  islands/      the interactive React components hydrated in the browser
-  client/       browser entry: hydrates islands, copy buttons, reading progress
-  preferences/  theme and language: settings, the inline boot script, the shared store
-  i18n/         Localized type and the chrome's copy
-  server/       renders every page, sitemap.xml and llms.txt
-  styles/       app.css: Tailwind v4 entry (tokens, theme, base, note-content classes)
-public/         copied as is: CNAME, robots.txt, favicons, manifest, share image
-                (and audio/, optional: see src/easter-egg/)
-scripts/build.ts  production build
+  notes/        uma pasta por nota (index.tsx: metadados + corpo); catalog.ts define a ordem
+  components/   note/ blocos das notas (Section, Callout, Diagram, Table, CodeBlock, Sources),
+                layout/ (Document, Head, cabeçalho, rodapé) e ui/ (Icon, FlowerLogo)
+  pages/        início, nota, 404
+  islands/      os componentes React interativos hidratados no navegador
+  client/       entrada do navegador: hidrata as ilhas, botões de copiar, progresso de leitura
+  preferences/  tema: configurações, o script de boot inline, o store compartilhado
+  server/       renderiza cada página, o sitemap.xml e o llms.txt
+  styles/       app.css: entrada do Tailwind v4 (tokens, tema, base, classes do conteúdo das notas)
+  ui.ts         os textos da moldura do site (cabeçalho, rodapé, navegação)
+  site.ts       os fatos do site (nome, URL, descrição, imagem de compartilhamento)
+public/         copiado como está: CNAME, robots.txt, favicons, manifest, imagem de compartilhamento
+                (e audio/, opcional: veja src/easter-egg/)
+scripts/build.ts  build de produção
 ```
 
-## Writing a note
+## Escrever uma nota
 
-Create `src/notes/<slug>/index.tsx` exporting `note: Note` (see `src/notes/types.ts`) and add the slug to a group in `src/notes/catalog.ts`. The build fails if one exists without the other. The sitemap, llms.txt, lists and structured data are generated from that metadata.
+Crie `src/notes/<slug>/index.tsx` exportando `note: Note` (veja `src/notes/types.ts`) e acrescente o slug a um grupo em `src/notes/catalog.ts`. O build falha se um existir sem o outro. O sitemap, o llms.txt, as listas e os dados estruturados saem desses metadados.
 
-Then run `pnpm notes:index` to refresh [NOTAS.md](NOTAS.md), the quick index of every note.
+Depois rode `pnpm notes:index` para atualizar o [NOTAS.md](NOTAS.md), o índice rápido de todas as notas.
 
-Text is written in both languages with `<T pt="…" en="…" />`; CSS shows the active one, so both stay in the HTML for crawlers.
+O texto é escrito direto em JSX, em português. O `summary` de cada nota (o parágrafo que vai para o llms.txt) também.
 
-## Behaviour
+## Comportamento
 
-- **Layout:** editorial: a warm off-white page, one 600px reading column, serif headings (Instrument Serif), quiet grey sans text (Inter), hairlines between sections, and navy for hover and the current item. Home: two serif lines, a short intro, then the six numbered series (01 to 06), each a list of rows (serif title, one-line summary, chevron); each note has its number in the series (04.2). The magnolia appears only in the footer corner, small, over "baselarte magnolia". Styling is Tailwind CSS v4: utilities sit in the components; `src/styles/app.css` is the only stylesheet. Product context in [PRODUCT.md](PRODUCT.md), visual system in [DESIGN.md](DESIGN.md).
-- **Theme:** automatic by default (follows the visitor's system setting), or pinned with `auto / light / dark`. All colours are tokens at the top of `src/styles/app.css` (mapped to Tailwind theme values); the dark theme only redefines them.
-- **Language:** English or Brazilian Portuguese, chosen from the browser and the footer.
-- **SEO and AI search:** every note carries a canonical URL, Open Graph and Twitter tags, `TechArticle` + `BreadcrumbList` JSON-LD and a link to `llms.txt`; `sitemap.xml` and `llms.txt` are generated at build time.
-- **Preferences** are saved in `localStorage`.
-- Works without JavaScript: all text is in the HTML.
+- **Layout:** editorial: página off-white quente, uma coluna de leitura de 600px, títulos em serifa (Instrument Serif), texto sem serifa em cinza discreto (Inter), filetes entre as seções e azul-marinho para hover e para o item atual. Início: duas linhas em serifa, uma introdução curta e as seis séries numeradas (01 a 06), cada uma uma lista de linhas (título em serifa, resumo de uma linha, chevron); cada nota tem o seu número na série (04.2). A magnólia aparece só no canto do rodapé, pequena, sobre "baselarte magnolia". O estilo é Tailwind CSS v4: as utilities ficam nos componentes; `src/styles/app.css` é a única folha de estilo. Contexto do produto em [PRODUCT.md](PRODUCT.md), sistema visual em [DESIGN.md](DESIGN.md).
+- **Tema:** automático por padrão (segue o sistema do visitante), ou fixado com `auto / claro / escuro`. Todas as cores são tokens no topo de `src/styles/app.css` (mapeados para valores do tema do Tailwind); o tema escuro só os redefine.
+- **Idioma:** só português do Brasil (`<html lang="pt-BR">`, `og:locale` `pt_BR`, `inLanguage` `pt-BR` no JSON-LD).
+- **SEO e busca por IA:** cada nota tem URL canônica, tags Open Graph e Twitter, JSON-LD `TechArticle` + `BreadcrumbList` e link para o `llms.txt`; o `sitemap.xml` e o `llms.txt` são gerados no build.
+- **Preferências** ficam no `localStorage`.
+- Funciona sem JavaScript: todo o texto está no HTML.
 
-## Conventions
+## Convenções
 
-- One source per setting: theme and storage keys in `src/preferences/settings.ts`, colours in `src/styles/app.css`, site facts in `src/site.ts`.
-- Nothing time-dependent is hardcoded (year, time and day period are read in the browser).
-- No silent failures: every `catch` recovers and logs, or rethrows.
-- Descriptive names for variables, classes and data attributes.
+- Uma fonte por configuração: tema e chaves de armazenamento em `src/preferences/settings.ts`, cores em `src/styles/app.css`, fatos do site em `src/site.ts`, textos da moldura em `src/ui.ts`.
+- Nada que dependa do tempo fica fixo no código (ano, hora e período do dia são lidos no navegador).
+- Nenhuma falha silenciosa: todo `catch` se recupera e registra, ou relança.
+- Nomes descritivos para variáveis, classes e atributos de dados.
 
-## Run
+## Rodar
 
-Requires Node 22.18 or newer and [pnpm](https://pnpm.io) (`corepack enable` picks the version pinned in `package.json`).
+Precisa de Node 22.18 ou mais novo e de [pnpm](https://pnpm.io) (`corepack enable` escolhe a versão fixada no `package.json`).
 
 ```bash
 pnpm install
-pnpm dev          # http://localhost:5173, pages rendered on request
-pnpm build        # type-check, then write the static site to dist/
-pnpm preview      # serve dist/ as GitHub Pages would
+pnpm dev          # http://localhost:5173, páginas renderizadas a cada pedido
+pnpm build        # checa os tipos e escreve o site estático em dist/
+pnpm preview      # serve o dist/ como o GitHub Pages serviria
 ```
 
 ## Deploy
 
-`.github/workflows/deploy.yml` builds on every push to `main` and publishes `dist/` to GitHub Pages (Settings → Pages → Source: **GitHub Actions**). Only the built files are published; `baselarte.com` points at it through `public/CNAME`.
+O `.github/workflows/deploy.yml` faz o build a cada push na `main` e publica o `dist/` no GitHub Pages (Settings → Pages → Source: **GitHub Actions**). Só os arquivos do build são publicados; o `baselarte.com` aponta para ele pelo `public/CNAME`.

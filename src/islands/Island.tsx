@@ -1,13 +1,11 @@
 import type { ComponentType } from "react";
 import { EasterEgg } from "./EasterEgg.tsx";
-import { LanguageSwitch } from "./LanguageSwitch.tsx";
 import { MusicPlayer } from "./MusicPlayer.tsx";
 import { ThemeSwitch } from "./ThemeSwitch.tsx";
 import type { IslandName, IslandProps } from "./registry.ts";
 
 const serverComponents: { [Name in IslandName]: ComponentType<IslandProps[Name]> } = {
   ThemeSwitch,
-  LanguageSwitch,
   EasterEgg,
   MusicPlayer,
 };

@@ -1,8 +1,8 @@
 {
   "name": "Baselarte",
   "short_name": "Baselarte",
-  "description": "Study notes on software engineering, cloud, security and AI.",
-  "lang": "en",
+  "description": "Notas de estudo sobre engenharia de software, nuvem, segurança e IA.",
+  "lang": "pt-BR",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

@@ -1,12 +1,9 @@
-import { useLocalize } from "../i18n/useLocalize.ts";
-import type { Localized } from "../i18n/localized.ts";
-import { ui } from "../i18n/ui.ts";
-import { Text } from "../components/ui/T.tsx";
+import { ui } from "../ui.ts";
 import { toggleGroup, toggleOption } from "../components/ui/toggle.ts";
 import { themeMode, usePreference } from "../preferences/store.ts";
 import type { ThemeMode } from "../preferences/settings.ts";
 
-const LABELS: Record<ThemeMode, Localized> = {
+const LABELS: Record<ThemeMode, string> = {
   auto: ui.themeAuto,
   light: ui.themeLight,
   dark: ui.themeDark,
@@ -19,15 +16,14 @@ export interface ThemeSwitchProps {
 
 /** "auto / light / dark", as words in the footer. */
 export function ThemeSwitch({ placement }: ThemeSwitchProps) {
-  const localize = useLocalize();
   const currentMode = usePreference(themeMode);
   const modes: ThemeMode[] = ["auto", "light", "dark"];
 
   return (
-    <div role="group" className={toggleGroup} data-placement={placement} aria-label={localize(ui.theme)}>
+    <div role="group" className={toggleGroup} data-placement={placement} aria-label={ui.theme}>
       {modes.map((mode) => (
         <button key={mode} type="button" aria-pressed={mode === currentMode} onClick={() => themeMode.set(mode)} className={toggleOption}>
-          <Text value={LABELS[mode]} />
+          {LABELS[mode]}
         </button>
       ))}
     </div>

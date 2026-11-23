@@ -1,20 +1,20 @@
 // The fixed part of llms.txt; the page list after it is generated from the notes.
 export const llmsIntro = `# Baselarte
 
-> Baselarte (Baselarte Ltda.) is a software engineering and creative technology company. It builds systems, interfaces and infrastructure that are simple on the surface and rigorous underneath.
+> A Baselarte (Baselarte Ltda.) é uma empresa de engenharia de software e tecnologia criativa. Constrói sistemas, interfaces e infraestrutura simples por fora e rigorosos por dentro.
 
-The public website is a landing page plus a notes section (books, web apps, databases, AWS and deploy, web app security, AI), available in English and Brazilian Portuguese (switchable on the page). There is no product, pricing, blog or contact form published yet; inquiries are by introduction only. Motto: "Non desistas. Non exieris."
+O site público é uma página inicial mais uma seção de notas (livros, aplicações web, bancos de dados, AWS e deploy, segurança de aplicações web, IA), em português do Brasil. Ainda não há produto, preços, blog ou formulário de contato publicados; contatos só por indicação. Lema: "Non desistas. Non exieris."
 
-## Principles
+## Princípios
 
-- Simplicity is a discipline, not a starting point.
-- Fundamentals over fashion.
-- Build only what is necessary, then make it excellent.
-- Clarity over abstraction.
+- Simplicidade é uma disciplina, não um ponto de partida.
+- Fundamentos acima de modismos.
+- Construir só o necessário, e então torná-lo excelente.
+- Clareza acima de abstração.
 
-## Accountability
+## Responsabilidade
 
-The site quotes an IBM internal training presentation (1979): "A computer can never be held accountable, therefore a computer must never make a management decision." Baselarte builds tools that help people decide, not tools that decide for them.
+O site cita uma apresentação interna de treinamento da IBM (1979): "Um computador nunca pode ser responsabilizado; portanto, um computador nunca deve tomar uma decisão de gestão." A Baselarte constrói ferramentas que ajudam pessoas a decidir, não ferramentas que decidem por elas.
 
-## Pages
+## Páginas
 `;

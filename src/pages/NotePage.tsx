@@ -3,11 +3,8 @@ import { groupOf, noteNumber, seriesNumber } from "../notes/registry.ts";
 import { Chevron } from "../components/ui/Chevron.tsx";
 import { site } from "../site.ts";
 import { DiagramViewer } from "../components/note/DiagramViewer.tsx";
-import { localizedAttribute } from "../i18n/attributes.ts";
-import { ui } from "../i18n/ui.ts";
-import { Text } from "../components/ui/T.tsx";
+import { ui } from "../ui.ts";
 import type { Note, TocGroup } from "../notes/types.ts";
-import type { Localized } from "../i18n/localized.ts";
 import type { ReactNode } from "react";
 
 export function NotePage({ note }: { note: Note }) {
@@ -18,7 +15,7 @@ export function NotePage({ note }: { note: Note }) {
     <article
       className={`${articleClass} block wide:grid wide:grid-cols-[minmax(0,1fr)_minmax(0,var(--content-max))_minmax(0,1fr)] wide:gap-x-(--grid-gap)`}
     >
-      <nav className={`breadcrumbs ${column} mb-8 text-xs wide:col-start-2 wide:row-start-1`} {...localizedAttribute("aria-label", ui.breadcrumbs)}>
+      <nav className={`breadcrumbs ${column} mb-8 text-xs wide:col-start-2 wide:row-start-1`} aria-label={ui.breadcrumbs}>
         <ol className="m-0! flex list-none! flex-wrap items-center p-0! text-faint [&>li+li]:before:mx-2 [&>li+li]:before:text-ghost [&>li+li]:before:content-['/']">
           <li className="inline-flex items-center">
             <a href="/" className={crumbLink}>
@@ -27,7 +24,7 @@ export function NotePage({ note }: { note: Note }) {
           </li>
           <li className="inline-flex items-center">
             <a href={`/#series-${group.id}`} className={crumbLink}>
-              <span className="text-ghost tabular-nums">{seriesNumber(group.id)}</span> <Text value={group.title} />
+              <span className="text-ghost tabular-nums">{seriesNumber(group.id)}</span> {group.title}
             </a>
           </li>
           <li className="inline-flex items-center text-accent tabular-nums" aria-current="page">
@@ -37,33 +34,33 @@ export function NotePage({ note }: { note: Note }) {
       </nav>
       <header className={`hero ${column} mb-16 wide:col-start-2 wide:row-start-2`} aria-labelledby="hero-title">
         <p className="mb-4 text-sm text-faint">
-          <Text value={note.kicker} />
+          {note.kicker}
         </p>
         <h1
           id="hero-title"
           className="font-display text-[clamp(2.375rem,5.6vw,3.25rem)] leading-[1.1] text-balance text-ink"
         >
-          <Text value={note.heroTitle} />
+          {note.heroTitle}
         </h1>
         <p className="mt-6 text-base leading-[1.6] text-pretty text-fg">
-          <Text value={note.heroLede} />
+          {note.heroLede}
         </p>
         <dl className="mt-10 flex flex-wrap gap-x-9 gap-y-4 border-t border-line pt-5 text-sm">
           <Fact label={ui.number}>
             <span className="tabular-nums">{noteNumber(note.slug)}</span>
           </Fact>
           <Fact label={ui.format}>
-            <Text value={note.kicker} />
+            {note.kicker}
           </Fact>
           <Fact label={ui.author}>{site.name}</Fact>
           <Fact label={ui.published}>
             <time dateTime={note.published}>
-              <Text value={formatDate(note.published)} />
+              {formatDate(note.published)}
             </time>
           </Fact>
           <Fact label={ui.updated}>
             <time dateTime={note.updated}>
-              <Text value={formatDate(note.updated)} />
+              {formatDate(note.updated)}
             </time>
           </Fact>
         </dl>
@@ -85,7 +82,7 @@ export function NotePage({ note }: { note: Note }) {
       >
         <Chevron direction="up" className="size-4" />
         <span className="sr-only">
-          <Text value={ui.backToTop} />
+          {ui.backToTop}
         </span>
       </button>
     </article>
@@ -97,11 +94,11 @@ const column = "mx-auto w-full max-w-(--content-max) wide:mx-0 wide:max-w-none";
 
 const crumbLink = "inline-flex min-h-8 items-center gap-1 text-faint hover:text-accent";
 
-function Fact({ label, children }: { label: Localized; children: ReactNode }) {
+function Fact({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
       <dt className="text-xs text-ghost">
-        <Text value={label} />
+        {label}
       </dt>
       <dd className="mt-0.5 text-fg">{children}</dd>
     </div>
@@ -114,9 +111,9 @@ function TableOfContents({ groups }: { groups: TocGroup[] }) {
       className={`side-nav ${column} mb-14 border-y border-line py-5 text-[0.8125rem] leading-[1.35] wide:sticky wide:top-24 wide:col-start-3 wide:row-start-3 wide:max-h-[calc(100vh-112px)] wide:max-w-(--side-width) wide:self-start wide:overflow-y-auto wide:border-0 wide:py-0 wide:pr-0 wide:pl-1`}
       id="side-nav"
     >
-      <nav {...localizedAttribute("aria-label", ui.onThisPage)}>
+      <nav aria-label={ui.onThisPage}>
         <h2 className="mb-3 text-xs text-ghost">
-          <Text value={ui.onThisPage} />
+          {ui.onThisPage}
         </h2>
         {groups.map((group, index) => (
           <div key={index}>

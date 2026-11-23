@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { Text, T } from "../components/ui/T.tsx";
 import { CHORUS, SECRET_TAPS, SECRET_TAP_WINDOW_MS, SECRET_WORD } from "../easter-egg/chorus.ts";
-import { ui } from "../i18n/ui.ts";
+import { ui } from "../ui.ts";
 import { hurricaneUnlocked } from "../preferences/store.ts";
 import { buttonPrimary } from "../components/ui/button.ts";
 
@@ -53,7 +52,7 @@ export function EasterEgg({ year }: EasterEggProps) {
       </span>
       <dialog ref={dialogRef} className="m-auto w-[min(32rem,calc(100vw-2*var(--gutter)))] rounded-md border border-line bg-page px-7 pt-8 pb-6 text-fg shadow-pop backdrop:bg-black/40" aria-labelledby="chorus-title" onClick={(event) => event.target === event.currentTarget && event.currentTarget.close()}>
         <p className="text-[0.8125rem] tracking-[0.08em] text-faint uppercase" id="chorus-title">
-          <T en="You found it." pt="Você achou." />
+          Você achou.
         </p>
         <blockquote className="mt-5 mb-7">
           {CHORUS.map((line, index) => (
@@ -64,7 +63,7 @@ export function EasterEgg({ year }: EasterEggProps) {
         </blockquote>
         <div className="flex flex-wrap gap-3">
           <button type="button" className={`${buttonPrimary} min-h-10 px-5`} onClick={() => dialogRef.current?.close()}>
-            <Text value={ui.closeDiagram} />
+            {ui.closeDiagram}
           </button>
         </div>
       </dialog>

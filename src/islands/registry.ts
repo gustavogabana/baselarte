@@ -10,7 +10,6 @@ import type { ThemeSwitchProps } from "./ThemeSwitch.tsx";
  */
 export interface IslandProps {
   ThemeSwitch: ThemeSwitchProps;
-  LanguageSwitch: Record<string, never>;
   EasterEgg: EasterEggProps;
   MusicPlayer: MusicPlayerProps;
 }
@@ -20,7 +19,6 @@ export type IslandName = keyof IslandProps;
 /** Loaded on demand in the browser, so a page only downloads the islands it contains. */
 export const islandLoaders: { [Name in IslandName]: () => Promise<ComponentType<IslandProps[Name]>> } = {
   ThemeSwitch: () => import("./ThemeSwitch.tsx").then((module) => module.ThemeSwitch),
-  LanguageSwitch: () => import("./LanguageSwitch.tsx").then((module) => module.LanguageSwitch),
   EasterEgg: () => import("./EasterEgg.tsx").then((module) => module.EasterEgg),
   MusicPlayer: () => import("./MusicPlayer.tsx").then((module) => module.MusicPlayer),
 };

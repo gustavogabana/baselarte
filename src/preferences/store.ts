@@ -1,5 +1,4 @@
 import { useSyncExternalStore } from "react";
-import { DEFAULT_LANGUAGE, isLanguage, type Language } from "../i18n/localized.ts";
 import { STORAGE_KEYS, THEME_MODES, readStorage, type ThemeMode } from "./settings.ts";
 
 /**
@@ -48,10 +47,6 @@ function createPreference<T extends string>(key: string, initial: T, parse: (raw
 
 export const themeMode = createPreference<ThemeMode>(STORAGE_KEYS.themeMode, "auto", (raw) =>
   THEME_MODES.includes(raw as ThemeMode) ? (raw as ThemeMode) : "auto",
-);
-
-export const language = createPreference<Language>(STORAGE_KEYS.language, DEFAULT_LANGUAGE, (raw) =>
-  isLanguage(raw) ? raw : isLanguage(document.documentElement.lang) ? (document.documentElement.lang as Language) : DEFAULT_LANGUAGE,
 );
 
 export const hurricaneUnlocked = createPreference<"yes" | "no">(STORAGE_KEYS.hurricaneUnlocked, "no", (raw) =>

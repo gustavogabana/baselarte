@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
-import { ui } from "../../i18n/ui.ts";
+import { ui } from "../../ui.ts";
 import { Icon } from "../ui/Icon.tsx";
-import { Text } from "../ui/T.tsx";
 
 interface CodeBlockProps {
   /** Plain source text. */
@@ -36,13 +35,13 @@ export function CodeBlock({ code, children }: CodeBlockProps) {
       >
         <Icon name="copy" />
         <span className={state("idle")} data-when="idle">
-          <Text value={ui.copy} />
+          {ui.copy}
         </span>
         <span className={state("copied")} data-when="copied">
-          <Text value={ui.copied} />
+          {ui.copied}
         </span>
         <span className={state("failed")} data-when="failed">
-          <Text value={ui.copyFailed} />
+          {ui.copyFailed}
         </span>
       </button>
     </pre>

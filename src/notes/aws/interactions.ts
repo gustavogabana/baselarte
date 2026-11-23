@@ -25,10 +25,6 @@ function findAll<T extends Element = HTMLElement>(selector: string, scope: Paren
   return [...scope.querySelectorAll<T>(selector)];
 }
 
-function bilingual(portuguese: string, english: string): string {
-  return `<span class="pt">${portuguese}</span><span class="en">${english}</span>`;
-}
-
 function icon(name: "check" | "ban"): string {
   return `<svg class="icon" aria-hidden="true"><use href="#i-${name}"/></svg>`;
 }
@@ -181,7 +177,7 @@ function setUpLoadBalancerDemos(): void {
       const healthyTargets = targets.filter((target) => !target.classList.contains("down"));
       const chosenTarget = healthyTargets[nextTargetIndex++ % healthyTargets.length];
       if (!chosenTarget) {
-        output.innerHTML = bilingual("Nenhum destino saudável: erro 503.", "No healthy target: 503 error.");
+        output.innerHTML = "Nenhum destino saudável: erro 503.";
         return;
       }
       targets.forEach((target) => target.classList.remove("hit"));
@@ -200,7 +196,7 @@ function setUpLoadBalancerDemos(): void {
       }
       chosenTarget.classList.add("hit");
       const targetName = chosenTarget.dataset.name ?? "";
-      output.innerHTML = bilingual(`Requisição enviada para <b>${targetName}</b>.`, `Request sent to <b>${targetName}</b>.`);
+      output.innerHTML = `Requisição enviada para <b>${targetName}</b>.`;
       requestInFlight = false;
     });
   });
@@ -243,14 +239,8 @@ function setUpSecurityGroupSimulators(): void {
       const isAllowed = SECURITY_GROUP_INBOUND_RULES.some((rule) => rule.port === portSelect.value && rule.source === sourceSelect.value);
       output.className = `result sg-out ${isAllowed ? "ok" : "no"}`;
       output.innerHTML = isAllowed
-        ? bilingual(
-            `${icon("check")} Permitido. Como o SG é stateful, a resposta volta sozinha, sem regra outbound.`,
-            `${icon("check")} Allowed. SGs are stateful, so the reply goes back on its own, no outbound rule needed.`,
-          )
-        : bilingual(
-            `${icon("ban")} Bloqueado. Nenhuma regra inbound libera essa origem nessa porta (tudo é negado por padrão).`,
-            `${icon("ban")} Blocked. No inbound rule allows this source on this port (everything is denied by default).`,
-          );
+        ? `${icon("check")} Permitido. Como o SG é stateful, a resposta volta sozinha, sem regra outbound.`
+        : `${icon("ban")} Bloqueado. Nenhuma regra inbound libera essa origem nessa porta (tudo é negado por padrão).`;
       animateIfEnabled(output, { opacity: [0, 1], x: [-10, 0] }, { duration: 0.3 });
     }
 

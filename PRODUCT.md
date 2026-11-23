@@ -1,55 +1,55 @@
-# Product
+# Produto
 
 <!-- impeccable:product-schema 1 -->
 
-## Platform
+## Plataforma
 
 web
 
-## Users
+## Público
 
-Three audiences, all confirmed as primary:
+Três públicos, todos confirmados como principais:
 
-- Developers who land on a note from a search engine or an AI answer and want to learn one subject (AWS, Docker, security, AI agents, databases).
-- Prospective clients assessing Baselarte Ltda. as a supplier; the notes are the evidence of competence.
-- The author, who uses the notes as a working reference.
+- Pessoas desenvolvedoras que chegam a uma nota por um buscador ou por uma resposta de IA e querem aprender um assunto (AWS, Docker, segurança, agentes de IA, bancos de dados).
+- Possíveis clientes avaliando a Baselarte Ltda. como fornecedora; as notas são a prova de competência.
+- O autor, que usa as notas como referência de trabalho.
 
-## Product Purpose
+## Propósito do produto
 
-baselarte.com is the site of Baselarte Ltda., a software engineering and creative technology company. Its content is a library of long-form study notes (27 at the time of writing, in six numbered series), each written in English and Brazilian Portuguese. Success: a reader finds the note they need fast and stays to read it; a client leaves convinced the company understands its craft.
+O baselarte.com é o site da Baselarte Ltda., uma empresa de engenharia de software e tecnologia criativa. O conteúdo é uma biblioteca de notas de estudo longas (27 quando isto foi escrito, em seis séries numeradas), escritas em português do Brasil. Sucesso: quem lê encontra rápido a nota de que precisa e fica para ler; um cliente sai convencido de que a empresa domina o ofício.
 
-## Positioning
+## Posicionamento
 
-Notes written from practice, in two languages, with diagrams, simulators and runnable labs, built as a static site that works without JavaScript.
+Notas escritas a partir da prática, com diagramas, simuladores e laboratórios para rodar, num site estático que funciona sem JavaScript.
 
-## Operating Context
+## Contexto de uso
 
-Readers arrive mostly deep-linked into a note, on desktop and phone. Notes are long (tables, code, diagrams, Q&A lists, sources). The home page is the index of every note, grouped by topic.
+A maior parte dos leitores chega direto numa nota, no computador e no celular. As notas são longas (tabelas, código, diagramas, listas de perguntas e respostas, fontes). A página inicial é o índice de todas as notas, agrupadas por tema.
 
-## Capabilities and Constraints
+## Capacidades e restrições
 
-- Static site: React renders every page at build time; islands for theme, language and the music player.
-- Bilingual: both languages stay in the HTML; CSS shows the active one.
-- Works without JavaScript; SEO/AI-search metadata generated from each note.
-- Theme: auto (system setting) / light / dark, must stay.
-- Home page leads with the index of notes.
+- Site estático: o React renderiza cada página no build; ilhas para o tema e o player de música.
+- Um idioma só, português do Brasil.
+- Funciona sem JavaScript; os metadados de SEO e de busca por IA saem de cada nota.
+- Tema: auto (sistema) / claro / escuro, precisa ficar.
+- A página inicial abre com o índice das notas.
 
-## Brand Commitments
+## Compromissos de marca
 
-- Name: Baselarte. Mark: the five-petal magnolia (shape fixed; colour may change).
-- The IBM 1979 quote ("A computer can never be held accountable…") stays on the home page.
-- Typeface: Instrument Serif for headings, Inter for text.
-- Colour: warm off-white page, greys, and one navy (#1b2a4e) for hover and the current item. The mark is grey.
-- Imagery: one picture only, the magnolia as a small grey outline in the footer corner; no photographs, no decorative art. Favicon: a navy square on a light grey tile.
-- Reference: a minimal personal editorial site (narrow column, serif headings, grey text, hairlines), as the author asked, with navy in place of its dark red.
+- Nome: Baselarte. Marca: a magnólia de cinco pétalas (forma fixa; a cor pode mudar).
+- A citação da IBM de 1979 ("Um computador nunca pode ser responsabilizado…") fica na página inicial.
+- Tipografia: Instrument Serif nos títulos, Inter no texto.
+- Cor: página off-white quente, cinzas e um azul-marinho (#1b2a4e) para hover e para o item atual. A marca é cinza.
+- Imagens: uma só, a magnólia como um pequeno contorno cinza no canto do rodapé; sem fotografias, sem arte decorativa. Favicon: um quadrado azul-marinho num bloco cinza-claro.
+- Referência: um site editorial pessoal e mínimo (coluna estreita, títulos em serifa, texto cinza, filetes), como o autor pediu, com azul-marinho no lugar do vermelho-escuro dele.
 
-## Evidence on Hand
+## Evidências disponíveis
 
-The notes themselves (src/notes/*), their diagrams and simulators. No testimonials, client list or metrics exist; none may be invented.
+As próprias notas (src/notes/*), os seus diagramas e simuladores. Não existem depoimentos, lista de clientes nem métricas; nada disso pode ser inventado.
 
-## Product Principles
+## Princípios do produto
 
-- Reading comes first: structure, wayfinding and measure before decoration.
-- Simple and expressive: few elements, each with conviction.
-- Inspired, never copied: references set the craft bar, not the look.
-- Everything bilingual and working without JavaScript.
+- A leitura vem primeiro: estrutura, orientação e medida antes de decoração.
+- Simples e expressivo: poucos elementos, cada um com convicção.
+- Inspirado, nunca copiado: as referências definem o nível de acabamento, não a aparência.
+- Tudo em português e funcionando sem JavaScript.

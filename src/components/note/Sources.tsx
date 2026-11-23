@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
-import { ui } from "../../i18n/ui.ts";
-import { Text } from "../ui/T.tsx";
+import { ui } from "../../ui.ts";
 
 interface SourceLink {
   label: string;
@@ -17,7 +16,7 @@ type SourcesProps = {
 export function Sources({ title, links, children }: SourcesProps) {
   return (
     <div className="sources">
-      <b>{title ?? <Text value={ui.sources} />}</b>
+      <b>{title ?? ui.sources}</b>
       {links ? (
         <ul>
           {links.map((link) => (

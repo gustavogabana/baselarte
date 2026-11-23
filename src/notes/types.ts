@@ -1,5 +1,4 @@
 import type { ComponentType, ReactNode } from "react";
-import type { Localized } from "../i18n/localized.ts";
 import type { IconName } from "../components/ui/icons.tsx";
 
 export interface TocItem {
@@ -17,14 +16,14 @@ export interface Note {
   /** Folder name and URL: /notas/<slug>/ */
   slug: string;
   /** Name in the lists on the home and notes pages. */
-  title: Localized;
+  title: string;
   /** <title>, meta description, Open Graph and JSON-LD. */
-  seo: { title: Localized; description: Localized };
+  seo: { title: string; description: string };
   /** One paragraph for llms.txt, written for machines that summarise the site. */
   summary: string;
-  kicker: Localized<ReactNode>;
-  heroTitle: Localized<ReactNode>;
-  heroLede: Localized<ReactNode>;
+  kicker: ReactNode;
+  heroTitle: ReactNode;
+  heroLede: ReactNode;
   /** ISO dates (YYYY-MM-DD). */
   published: string;
   updated: string;
