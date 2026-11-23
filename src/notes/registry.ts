@@ -35,7 +35,7 @@ export function groupOf(slug: string) {
 
 const pad = (n: number) => String(n).padStart(2, "0");
 
-/** A series' number: its place in the catalog, "01" to "08". */
+/** A series' number: its place in the catalog, "01", "02"…. */
 export function seriesNumber(groupId: string): string {
   return pad(catalog.findIndex((group) => group.id === groupId) + 1);
 }
