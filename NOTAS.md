@@ -1,6 +1,6 @@
 # Notas
 
-Índice rápido das 27 notas de [baselarte.com](https://baselarte.com/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
+Índice rápido das 28 notas de [baselarte.com](https://baselarte.com/), na ordem do site. Gerado por `pnpm notes:index` a partir de `src/notes/catalog.ts`; não edite à mão.
 
 ## Livros
 
@@ -29,6 +29,7 @@
 - [Deploy do GitHub para a AWS com OIDC](https://baselarte.com/notas/github-aws-oidc/) · [fonte](src/notes/github-aws-oidc/index.tsx)
 - [ECS na prática: um app com ALB, Cloudflare e RDS](https://baselarte.com/notas/ecs-todo-app/) · [fonte](src/notes/ecs-todo-app/index.tsx)
 - [Front e back no ECS atrás de um ALB](https://baselarte.com/notas/front-back-ecs-cloudflare/) · [fonte](src/notes/front-back-ecs-cloudflare/index.tsx)
+- [Cloudflare Containers e Neon: dev e prod](https://baselarte.com/notas/cloudflare-containers-neon/) · [fonte](src/notes/cloudflare-containers-neon/index.tsx)
 
 ## Segurança de apps web
 

@@ -51,6 +51,7 @@ export const catalog: NoteGroup[] = [
       "github-aws-oidc",
       "ecs-todo-app",
       "front-back-ecs-cloudflare",
+      "cloudflare-containers-neon",
     ],
   },
   {
