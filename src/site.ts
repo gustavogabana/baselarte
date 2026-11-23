@@ -4,14 +4,14 @@ export const site = {
   name: "Baselarte",
   legalName: "Baselarte Ltda.",
   url: "https://baselarte.com",
-  description: "Software engineering and creative technology company building precise systems, interfaces and infrastructure.",
+  description: "Empresa de engenharia de software e tecnologia criativa que constrói sistemas, interfaces e infraestrutura precisos.",
   slogan: "Non desistas. Non exieris.",
   themeColor: "#faf9f7",
   shareImage: {
     path: "/assets/og-image.png",
     width: 1200,
     height: 630,
-    alt: "Baselarte: the site name beside the five-petal magnolia drawn in black outline",
+    alt: "Baselarte: o nome do site ao lado da magnólia de cinco pétalas desenhada em contorno preto",
   },
 } as const;
 

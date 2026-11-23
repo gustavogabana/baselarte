@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import type { PageHead } from "../components/layout/Head.tsx";
 import type { IconName } from "../components/ui/icons.tsx";
-import { ui } from "../i18n/ui.ts";
+import { ui } from "../ui.ts";
 import { site } from "../site.ts";
 import { HomePage } from "../pages/HomePage.tsx";
 import { NotFoundPage } from "../pages/NotFoundPage.tsx";
@@ -43,7 +43,7 @@ export function allPages(): Page[] {
     {
       path: "/",
       file: "index.html",
-      head: { path: "/", title: { en: site.name, pt: site.name }, description: siteDescription, structuredData: websiteGraph() },
+      head: { path: "/", title: site.name, description: siteDescription, structuredData: websiteGraph() },
       lastModified: newestNote,
       element: <HomePage />,
     },
@@ -51,7 +51,7 @@ export function allPages(): Page[] {
     {
       path: "/404.html",
       file: "404.html",
-      head: { path: "/404.html", title: { en: "Not found", pt: "Página não encontrada" }, indexable: false },
+      head: { path: "/404.html", title: "Página não encontrada", indexable: false },
       element: <NotFoundPage />,
     },
   ];

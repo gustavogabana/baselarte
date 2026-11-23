@@ -302,12 +302,6 @@
     outline-offset: 2px;
   }
 
-  /* Both languages stay in the HTML (crawlable); the inactive one is hidden. */
-  html[lang="en"] .pt,
-  html[lang="pt-BR"] .en {
-    display: none !important;
-  }
-
   html:not(.js-enabled) .requires-js {
     display: none !important;
   }

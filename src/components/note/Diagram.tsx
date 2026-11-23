@@ -1,7 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
-import { ui } from "../../i18n/ui.ts";
+import { ui } from "../../ui.ts";
 import { Icon } from "../ui/Icon.tsx";
-import { Text } from "../ui/T.tsx";
 
 interface DiagramProps {
   /** The inline <svg>. Its colours come from CSS classes, so it follows the theme. */
@@ -24,7 +23,7 @@ export function Diagram({ children, caption, minWidth }: DiagramProps) {
       </div>
       {caption && <figcaption className="mt-3 text-sm text-faint">{caption}</figcaption>}
       <button type="button" className="fig-expand requires-js mt-3 hidden items-center gap-1.5 text-sm text-faint hover:text-accent in-[html.js-enabled]:max-[760px]:inline-flex" data-diagram-expand="">
-        <Icon name="expand" /> <Text value={ui.expandDiagram} />
+        <Icon name="expand" /> {ui.expandDiagram}
       </button>
     </figure>
   );

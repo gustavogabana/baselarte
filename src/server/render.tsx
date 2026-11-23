@@ -36,12 +36,12 @@ function llmsTxt(): string {
   const noteLines = catalog.flatMap((group) =>
     group.notes.map((slug) => {
       const note = getNote(slug);
-      return `- [${note.seo.title.en}](${absoluteUrl(notePath(slug))}): ${note.summary}`;
+      return `- [${note.seo.title}](${absoluteUrl(notePath(slug))}): ${note.summary}`;
     }),
   );
   return [
     llmsIntro,
-    `- [Home](${absoluteUrl("/")}): landing page describing the company, its principles.`,
+    `- [Início](${absoluteUrl("/")}): página inicial que apresenta a empresa e os seus princípios.`,
     ...noteLines,
     `- [Sitemap](${absoluteUrl("/sitemap.xml")})`,
     "",

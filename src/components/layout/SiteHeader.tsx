@@ -1,6 +1,4 @@
-import { localizedAttribute } from "../../i18n/attributes.ts";
-import { ui } from "../../i18n/ui.ts";
-import { Text } from "../ui/T.tsx";
+import { ui } from "../../ui.ts";
 
 /** Which item of the header is the current page. */
 export type HeaderSection = "home" | "notes" | "none";
@@ -17,7 +15,7 @@ export function SiteHeader({ current }: { current: HeaderSection }) {
     <header className="site-header sticky top-0 z-90 bg-page/95 backdrop-blur-sm">
       <nav
         className="mx-auto flex h-16 w-full max-w-[calc(var(--page-max)+2*var(--gutter))] items-center justify-end px-(--gutter) text-[0.9375rem] text-faint lowercase"
-        {...localizedAttribute("aria-label", ui.siteNav)}
+        aria-label={ui.siteNav}
       >
         {LINKS.map((link, index) => (
           <span key={link.section} className="inline-flex items-center">
@@ -31,7 +29,7 @@ export function SiteHeader({ current }: { current: HeaderSection }) {
               className={`py-2 hover:text-accent ${current === link.section ? "text-accent" : ""}`}
               aria-current={current === link.section ? "page" : undefined}
             >
-              <Text value={link.label} />
+              {link.label}
             </a>
           </span>
         ))}

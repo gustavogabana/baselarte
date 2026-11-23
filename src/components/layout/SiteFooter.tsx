@@ -1,5 +1,4 @@
-import { localizedAttribute } from "../../i18n/attributes.ts";
-import { ui } from "../../i18n/ui.ts";
+import { ui } from "../../ui.ts";
 import { Island } from "../../islands/Island.tsx";
 import { site } from "../../site.ts";
 import { FlowerLogo } from "../ui/FlowerLogo.tsx";
@@ -7,7 +6,7 @@ import { FlowerLogo } from "../ui/FlowerLogo.tsx";
 const MACHINE_FILES = ["llms.txt", "sitemap.xml", "robots.txt"];
 
 /** The footer of an editorial page, on the reading column: the motto in small italic serif and the
- *  copyright on the left, language and theme as words on the right; below, the files for
+ *  copyright on the left, the theme as words on the right; below, the files for
  *  machines and, in the corner, the magnolia as a small detail with its name under it. */
 export function SiteFooter() {
   const domain = new URL(site.url).host;
@@ -23,12 +22,11 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="requires-js flex flex-col items-end gap-1">
-          <Island name="LanguageSwitch" props={{}} />
           <Island name="ThemeSwitch" props={{ placement: "footer" }} />
         </div>
       </div>
       <div className="mt-10 flex items-end justify-between gap-6">
-        <nav className="flex flex-wrap gap-x-4 gap-y-1 text-xs" {...localizedAttribute("aria-label", ui.filesForMachines)}>
+        <nav className="flex flex-wrap gap-x-4 gap-y-1 text-xs" aria-label={ui.filesForMachines}>
           {MACHINE_FILES.map((file) => (
             <a key={file} href={`/${file}`} className="text-ghost hover:text-accent">
               {file}

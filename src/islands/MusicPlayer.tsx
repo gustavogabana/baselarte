@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
-import { T } from "../components/ui/T.tsx";
 import { CHORUS } from "../easter-egg/chorus.ts";
-import { useLocalize } from "../i18n/useLocalize.ts";
 import { hurricaneUnlocked, usePreference } from "../preferences/store.ts";
 
 export interface MusicPlayerProps {
@@ -20,7 +18,6 @@ function formatTime(seconds: number): string {
 /** A small player for the song, shown once the easter egg has been found. */
 export function MusicPlayer({ src }: MusicPlayerProps) {
   const isUnlocked = usePreference(hurricaneUnlocked) === "yes";
-  const localize = useLocalize();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -64,7 +61,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
   };
 
   return (
-    <section className="music-player fixed bottom-[max(16px,env(safe-area-inset-bottom,0px))] left-[max(var(--gutter),env(safe-area-inset-left,0px))] z-90 flex w-[min(26rem,calc(100vw-2*var(--gutter)))] items-center gap-3 rounded-md border border-line bg-page px-3.5 py-2.5 text-[0.8125rem] text-fg shadow-pop max-[520px]:bottom-0 max-[520px]:left-0 max-[520px]:w-screen max-[520px]:rounded-none max-[520px]:border-x-0 max-[520px]:border-b-0 max-[520px]:pb-[max(10px,env(safe-area-inset-bottom,0px))] [&_svg]:size-[18px] [&_svg]:fill-current [&_.stroke]:fill-none [&_.stroke]:stroke-current [&_.stroke]:stroke-2 [&_.stroke]:[stroke-linecap:round]" aria-label={localize({ en: "Music player", pt: "Player de música" })}>
+    <section className="music-player fixed bottom-[max(16px,env(safe-area-inset-bottom,0px))] left-[max(var(--gutter),env(safe-area-inset-left,0px))] z-90 flex w-[min(26rem,calc(100vw-2*var(--gutter)))] items-center gap-3 rounded-md border border-line bg-page px-3.5 py-2.5 text-[0.8125rem] text-fg shadow-pop max-[520px]:bottom-0 max-[520px]:left-0 max-[520px]:w-screen max-[520px]:rounded-none max-[520px]:border-x-0 max-[520px]:border-b-0 max-[520px]:pb-[max(10px,env(safe-area-inset-bottom,0px))] [&_svg]:size-[18px] [&_svg]:fill-current [&_.stroke]:fill-none [&_.stroke]:stroke-current [&_.stroke]:stroke-2 [&_.stroke]:[stroke-linecap:round]" aria-label={"Player de música"}>
       <audio
         ref={audioRef}
         src={src}
@@ -81,7 +78,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
         className="grid size-11 flex-none place-items-center rounded-sm bg-primary text-on-primary disabled:cursor-not-allowed disabled:opacity-40"
         onClick={togglePlayback}
         disabled={loadFailed}
-        aria-label={localize(isPlaying ? { en: "Pause", pt: "Pausar" } : { en: "Play", pt: "Tocar" })}
+        aria-label={isPlaying ? "Pausar" : "Tocar"}
       >
         <svg viewBox="0 0 24 24" aria-hidden="true">
           {isPlaying ? <path d="M7 5h3v14H7zM14 5h3v14h-3z" /> : <path d="M8 5v14l11-7z" />}
@@ -89,7 +86,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
       </button>
 
       <div className="grid min-w-0 flex-1 grid-cols-[1fr_auto] items-center gap-x-2 gap-y-0.5">
-        <span className="col-span-full truncate font-semibold text-ink">{loadFailed ? <T en="The song could not be loaded." pt="Não foi possível carregar a música." /> : TRACK_TITLE}</span>
+        <span className="col-span-full truncate font-semibold text-ink">{loadFailed ? "Não foi possível carregar a música." : TRACK_TITLE}</span>
         <input
           type="range"
           className="w-full min-w-0 accent-accent"
@@ -99,7 +96,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
           value={currentTime}
           onChange={seek}
           disabled={!duration}
-          aria-label={localize({ en: "Position in the song", pt: "Posição na música" })}
+          aria-label={"Posição na música"}
         />
         <span className="text-faint tabular-nums">
           {formatTime(currentTime)} / {formatTime(duration)}
@@ -112,7 +109,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
           className="grid size-8 place-items-center text-faint aria-pressed:text-accent"
           onClick={() => setIsMuted(!isMuted)}
           aria-pressed={isMuted}
-          aria-label={localize({ en: "Mute", pt: "Silenciar" })}
+          aria-label={"Silenciar"}
         >
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M4 9h4l5-4v14l-5-4H4z" />
@@ -127,7 +124,7 @@ export function MusicPlayer({ src }: MusicPlayerProps) {
           className="w-full min-w-0 accent-accent max-[520px]:hidden"
           value={isMuted ? 0 : volume}
           onChange={changeVolume}
-          aria-label={localize({ en: "Volume", pt: "Volume" })}
+          aria-label={"Volume"}
         />
       </div>
     </section>

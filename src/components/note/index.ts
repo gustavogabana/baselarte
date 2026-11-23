@@ -6,5 +6,4 @@ export { Table } from "./Table.tsx";
 export { QA } from "./QA.tsx";
 export { CodeBlock } from "./CodeBlock.tsx";
 export { Sources } from "./Sources.tsx";
-export { T } from "../ui/T.tsx";
 export { Icon } from "../ui/Icon.tsx";

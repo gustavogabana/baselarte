@@ -1,4 +1,4 @@
-// Theme and language settings shared by the boot script (runs in <head>, before paint) and the
+// Theme settings shared by the boot script (runs in <head>, before paint) and the
 // interactive islands. Keep the functions below self-contained: the boot script inlines their
 // source text, so they cannot reach anything outside their own body.
 
@@ -8,7 +8,6 @@ export type Theme = Exclude<ThemeMode, "auto">;
 
 export const STORAGE_KEYS = {
   themeMode: "baselarte:theme",
-  language: "baselarte:language",
   hurricaneUnlocked: "baselarte:hurricane",
 } as const;
 

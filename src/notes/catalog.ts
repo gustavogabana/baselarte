@@ -1,8 +1,7 @@
-import type { Localized } from "../i18n/localized.ts";
 
 export interface NoteGroup {
   id: string;
-  title: Localized;
+  title: string;
   /** Note slugs, in reading order: the basics of the subject first, applied cases after. */
   notes: string[];
 }
@@ -15,7 +14,7 @@ export interface NoteGroup {
 export const catalog: NoteGroup[] = [
   {
     id: "books",
-    title: { en: "Books", pt: "Livros" },
+    title: "Livros",
     notes: [
       "entendendo-algoritmos",
       "software-engineering-at-google",
@@ -24,7 +23,7 @@ export const catalog: NoteGroup[] = [
   },
   {
     id: "apps",
-    title: { en: "Building web apps", pt: "Aplicações web" },
+    title: "Aplicações web",
     notes: [
       "idempotency",
       "multi-tenant-saas",
@@ -34,7 +33,7 @@ export const catalog: NoteGroup[] = [
   },
   {
     id: "data",
-    title: { en: "Databases", pt: "Bancos de dados" },
+    title: "Bancos de dados",
     notes: [
       "postgres-for-devs",
       "db-migrations",
@@ -45,7 +44,7 @@ export const catalog: NoteGroup[] = [
   },
   {
     id: "aws",
-    title: { en: "AWS and deploy", pt: "AWS e deploy" },
+    title: "AWS e deploy",
     notes: [
       "aws",
       "github-aws-oidc",
@@ -56,7 +55,7 @@ export const catalog: NoteGroup[] = [
   },
   {
     id: "security",
-    title: { en: "Web app security", pt: "Segurança de apps web" },
+    title: "Segurança de apps web",
     notes: [
       "web-app-security",
       "owasp-top-10",
@@ -68,7 +67,7 @@ export const catalog: NoteGroup[] = [
   },
   {
     id: "ai",
-    title: { en: "Artificial intelligence", pt: "Inteligência artificial" },
+    title: "Inteligência artificial",
     notes: [
       "attention-is-all-you-need",
       "agent-harness",
